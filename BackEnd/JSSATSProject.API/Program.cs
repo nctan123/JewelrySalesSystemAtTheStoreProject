@@ -70,6 +70,7 @@ namespace JSSATSProject.API
                 app.UseSwaggerUI();
                
             }
+            // the 2 commit
 
             app.UseHttpsRedirection();
 
