@@ -1,0 +1,242 @@
+1.Product(id, category_id ,stalls_id, code,name,material_cost,production_cost,gem_cost,img, price_rate, status)
+id: INT, PK, Auto Increment
+category_id: INT, FK referencing ProductCategory.id
+stalls_id: INT, FKreferencing Stall.id
+code: VARCHAR(50), Unique
+name: VARCHAR(100)
+material_cost: DECIMAL(10,2)
+production_cost: DECIMAL(10,2)
+gem_cost: DECIMAL(10,2)
+img: VARCHAR(255)
+price_rate: INT(%)
+status: ENUM('active', 'inactive’)
+
+2.Material(id,name)
+id: INT, PK, Auto Increment
+name: VARCHAR(100)
+3.ProductMaterial(material_id, product_id, weight)
+material_id: INT, FK referencing Material.id
+product_id: INT, FKreferencing Product.id
+weight: DECIMAL(10,2)
+
+4.MateriaPriceList(id, material_id, buy_price, sell_price, effective_date)
+id: INT, PK, Auto Increment
+material_id: INT, FK referencing Material.id
+buy_price: DECIMAL(10,2)(VND)
+sell_price: DECIMAL(10,2)(VND)
+effective_date: DATE
+
+5. MaterialDetail(id, material_id,quantity_in_stock)
+id: INT, PK, Auto Increment
+material_id: INT, FKreferencing Material.id
+quantity_in_stock: INT
+
+6.ProductCategory(id,name,type,status)
+id: INT, PK, Auto Increment
+name: VARCHAR(100)
+type_id: INT FK  referencing CategoryType_id
+status: ENUM('active', 'inactive')
+
+7.Promotion(id,name,discount_rate,description,start_date,end_date,status)
+id: INT, PK, Auto Increment
+name: VARCHAR(100)
+discount_rate: INT(%)
+description: TEXT
+effective_date: DATE
+expired_date: DATE
+status: ENUM('active', 'inactive')
+
+8.Grurantee(id, product_id, description, effective_date,expired_date)
+id: INT, PK, Auto Increment
+product_id: INT, FK referencing Product.id
+description: TEXT
+effective_date: DATE
+expired_date: DATE
+
+9.Origin(id, name, description) 
+id: INT, PK, Auto Increment
+name: VARCHAR(100) (natural,labgrown)
+description: TEXT
+
+10.Shape(id,name,description)
+id: INT,PK, Auto Increment
+name: VARCHAR(100)(Round,Princess,Emerald,Asscher,Marquise,Oval,Radiant,PearHeart,Cushion)
+description: TEXT
+
+11.Fluorescence(id,level,description)
+id: INT,PK, Auto Increment
+level: ENUM('none', 'faint', 'medium', 'strong')
+description: TEXT
+
+12.Symmetry(id,level,description)
+id: INT, Primary Key, Auto Increment
+level: ENUM('poor', 'fair', 'good', 'very_good', 'excellent')
+description: TEXT
+
+13.Polish(id,level,description)
+id: INT, Primary Key, Auto Increment
+level: ENUM('poor', 'fair', 'good', 'very_good', 'excellent')
+description: TEXT
+
+14.Color(id,name.description)
+id: INT, PK, Auto Increment
+name:varchar(50) (D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z)
+description: TEXT (Colorless,NearColorless,FaintYellow,VeryLightYellow,LightYellow)
+
+15.Cut(id,level,description)
+id: INT, Primary Key, Auto Increment
+level: ENUM('poor', 'fair', 'good', 'very_good', 'excellent')
+description: TEXT
+
+16.Clarity(id,level.description)
+id: INT, Primary Key, Auto Increment
+level: ENUM('I1', 'I2', 'I3', 'SI1', 'SI2', 'VS1', 'VS2', 'VVS1', 'VVS2', 'IF')
+description: TEXT
+
+17.Carat(id,weight,description)
+id: INT, Primary Key, Auto Increment
+weight: DECIMAL(5,2) (đơn vị ct: carat)
+description: TEXT
+
+18.Diamond(id, code,name, origin_id,shape_id, fluorescence_id,color_id,summetry_id,polish_id,cut_id,clarity_id,carat_id,status)
+id: INT, PK, Auto Increment
+code: VARCHAR(50), Unique
+name: VARCHAR(100)
+origin_id: INT, FK referencing Origin.id
+shape_id: INT, FKreferencing Shape.id
+fluorescence_id: INT, FK Fluorescence.id
+color_id: INT, FKColor.id
+symmetry_id: INT, FK Symmetry.id
+polish_id: INT, FK Polish.id
+cut_id: INT, FK Cut.id
+clarity_id: INT, FK Clarity.id
+carat_id: INT, FK Carat.id
+status: ENUM(‘active’,’inactive’)
+
+19.DiamondPriceList(id,color_id,cut_id,origin_id,clarity_id,carat_id,price, effective_date)
+id: INT, PK, Auto Increment
+color_id: INT, FK Color.id
+cut_id: INT, FK Cut.id
+origin_id: INT, FK referencing Origin.id
+clarity_id: INT, FK referencing Clarity.id
+carat_id: INT, FK referencing Carat.id
+price: DECIMAL(10,2) (VND)
+effective_date: DATE
+
+20.Role(id, name, description)
+id: INT, PK, Auto Increment
+name: VARCHAR(100)(Staff,Customer,Manager,Cashier)
+description: TEXT
+
+21. Account(id, role_id,usename, password, status)
+id: INT, PK Auto Increment
+role_id: INT, FK Role.id
+username: VARCHAR(100)
+password: VARCHAR(255)
+status: ENUM('active', 'inactive', 'suspended')
+
+22.Staff(id, account_id,firstname, lastname, phone, email, address,gender,status)
+id: INT, PK, Auto Increment
+account_id: INT, FK referencing Account.id
+firstname: VARCHAR(50)
+lastname: VARCHAR(50)
+phone: VARCHAR(20) ([0-9]{10})
+email: VARCHAR(100)(@gmail.com)
+address: TEXT
+gender: ENUM('male', 'female', 'other')
+status: ENUM('active', 'inactive'')
+
+23.Customer(id, point_id, firstname, lastname,phone,email,gender,address)
+id: INT, Primary Key, Auto Increment
+point_id: INT, Foreign Key referencing Point.id
+firstname: VARCHAR(50)
+lastname: VARCHAR(50)
+phone: VARCHAR(20)
+email: VARCHAR(100)
+gender: ENUM('male', 'female', 'other')
+address: TEXT
+
+24.Point(id,avaliable_point,totalpoint)
+id: INT, PK, Auto Increment
+available_point: INT
+total_point: INT
+
+25.PaymentMethod(id,name,status)
+id: INT, PK, Auto Increment
+name: VARCHAR(100)(cash,visa)
+status: ENUM('active', 'inactive')
+
+26.PaymentDetails(id,payment_id,payment_method_id,amount,ExternalTransactionCode,status)
+id: INT, PK, Auto Increment
+payment_id: INT, FKreferencing Payment.id
+payment_method_id: INT, FK referencing PaymentMethod.id
+amount: DECIMAL(10,2)(VND)
+ExternalTransactionCode: VARCHAR(100)
+status: ENUM( 'completed', 'failed')
+
+27.Payment(id,order_id,customer_id,create_date,amount,status)
+id: INT, Primary Key, Auto Increment
+order_id: INT, Foreign Key referencing Order.id
+customer_id: INT, Foreign Key referencing Customer.id
+create_date: DATETIME
+amount: DECIMAL(10,2)(VND)
+status: ENUM('processing', 'completed', 'cancelled')
+
+28.Stall(id,name,type,description,status)
+id: INT, PK, Auto Increment
+name: VARCHAR(100)
+type_id: INT, FK  referencing StallType_id
+description: TEXT
+status: ENUM('active', 'inactive')
+
+29.Order(id,customer_id,seller_id,total_amount,create_date,is_draft,type,description)
+id: INT, PK, Auto Increment
+customer_id: INT, FK referencing Customer.id
+staff_id: INT, FK referencing Staff.id
+total_amount: DECIMAL(10,2)(VND)
+create_date: DATETIME
+
+30.OrderDetails(id,order_id,product_id,size,unit_price,size_price,status)
+id: INT, Primary Key, Auto Increment 
+order_id: INT, Foreign Key referencing 
+Order.id product_id: INT, Foreign Key referencing
+Product.id size: VARCHAR(50) 
+unit_price: DECIMAL(10,2) 
+size_price: DECIMAL(10,2) 
+status: ENUM( 'delivered', 'returned')
+description: nvarchar(100)
+
+31.PromotionCategory(promotion_id,category_id)
+promotion_id: INT, FKreferencing Promotion.id
+category_id: INT, FK ProductCategory.id
+
+
+32.ProductDiamond(product_id,diamond_id)
+product_id: INT, FKProduct.id
+diamond_id: INT, FK Diamond.id
+
+
+33.ReturnBuybackPolicy(id, description,effective_date,status)
+
+id: INT, Primary Key, Auto Increment 
+description: nvarchar(100)
+effective_date: DATE
+status: ENUM('active', 'inactive'')
+
+34. CategoryType
+id: INT, Primary Key, Auto Increment 
+name: nvarchar(100)
+status: ENUM('active', 'inactive'')
+
+34. StallType
+id: INT, Primary Key, Auto Increment 
+name: nvarchar(100)
+status: ENUM('active', 'inactive'')
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSSATSProject.API", "JSSATSProject.API\JSSATSProject.API.csproj", "{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSSATSProject.Repository", "JSSATSProject.Repository\JSSATSProject.Repository.csproj", "{1085B115-5EE1-4F08-9432-DCFAEEB20C14}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JSSATSProject.Service", "JSSATSProject.Service\JSSATSProject.Service.csproj", "{15ABE9B5-F887-48D9-B9A0-A377B6276994}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1085B115-5EE1-4F08-9432-DCFAEEB20C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1085B115-5EE1-4F08-9432-DCFAEEB20C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1085B115-5EE1-4F08-9432-DCFAEEB20C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1085B115-5EE1-4F08-9432-DCFAEEB20C14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15ABE9B5-F887-48D9-B9A0-A377B6276994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15ABE9B5-F887-48D9-B9A0-A377B6276994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15ABE9B5-F887-48D9-B9A0-A377B6276994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15ABE9B5-F887-48D9-B9A0-A377B6276994}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {48345500-FCBC-40BA-90F0-4AF31697F6B1}
+	EndGlobalSection
+EndGlobal

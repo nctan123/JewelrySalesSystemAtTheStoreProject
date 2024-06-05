@@ -1,0 +1,6 @@
+@JSSATSProject.API_HostAddress = http://localhost:5262
+
+GET {{JSSATSProject.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
