@@ -90,9 +90,9 @@ export default function LoginToStore() {
       >
         Admin
       </button>
-      <button onClick={() => handleSeller()} >
+      {/* <button onClick={() => handleSeller()} >
         seller
-      </button>
+      </button> */}
 
 
 
