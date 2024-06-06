@@ -89,7 +89,7 @@ namespace JSSATSProject.API
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            // CORS
             app.MapControllers();
 
             app.Run();
