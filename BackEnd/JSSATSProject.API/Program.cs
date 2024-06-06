@@ -1,11 +1,11 @@
-using AutoMapper;
-using JSSATSProject.Repository;
+﻿using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.AutoMapper;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
-using Microsoft.Data.SqlClient;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace JSSATSProject.API
 {
@@ -16,9 +16,7 @@ namespace JSSATSProject.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -27,13 +25,10 @@ namespace JSSATSProject.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefautConnection"));
             });
 
-
             builder.Services.AddTransient<UnitOfWork>();
 
-            //AutoMapper
+            // AutoMapper
             builder.Services.AddAutoMapper(typeof(ApplicationMapper));
-
-            
 
             // Service
             builder.Services.AddScoped<ICustomerService, CustomerService>();
@@ -50,16 +45,21 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
             builder.Services.AddScoped<IProductCategoryTypeService, ProductCategoryTypeService>();
             builder.Services.AddScoped<IProductService, ProductService>();
-            builder.Services.AddScoped<IPromotionService,  PromotionService>();
+            builder.Services.AddScoped<IPromotionService, PromotionService>();
             builder.Services.AddScoped<IReturnBuyBackPolicyService, ReturnBuyBackPolicyService>();
             builder.Services.AddScoped<IStaffService, StaffService>();
             builder.Services.AddScoped<IStallService, StallService>();
-         
 
-
-
-
-
+            // Cấu hình dịch vụ CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
             var app = builder.Build();
 
@@ -68,14 +68,14 @@ namespace JSSATSProject.API
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-               
             }
-            // the 2 commit
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
+            // Áp dụng middleware CORS
+            app.UseCors();
 
             app.MapControllers();
 
