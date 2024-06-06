@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class MaterialController : ControllerBase
     {
         private readonly IMaterialService _materialService;
@@ -16,7 +18,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _materialService.GetAllAsync();
@@ -24,7 +26,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _materialService.GetByIdAsync(id);
@@ -32,7 +34,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateMaterial")]
+        [Route("CreateMaterial")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateMaterial requestMaterial)
         {
             var responseModel = await _materialService.CreateMaterialAsync(requestMaterial);

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class StaffController : ControllerBase
     {
         private readonly IStaffService _staffService;
@@ -15,7 +17,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _staffService.GetAllAsync();
@@ -23,7 +25,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _staffService.GetByIdAsync(id);
@@ -31,7 +33,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateStaff")]
+        [Route("CreateStaff")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateStaff requestStaff)
         {
             var responseModel = await _staffService.CreateStaffAsync(requestStaff);
@@ -39,7 +41,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdateStaff")]
+        [Route("UpdateStaff")]
         public async Task<IActionResult> UpdateStaffAsync(int id, [FromBody] RequestUpdateStaff requestStaff)
         {
             var response = await _staffService.UpdateStaffAsync(id, requestStaff);

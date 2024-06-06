@@ -11,7 +11,7 @@ namespace JSSATSProject.Service.Models.PointModel
     {
        
         public int? AvailablePoint { get; set;}
-        public int? TotalPoint { get; set;}
+        public int? TotalPoints { get; set;}
 
     
     }

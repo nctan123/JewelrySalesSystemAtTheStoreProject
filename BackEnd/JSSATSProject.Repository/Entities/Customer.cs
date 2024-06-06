@@ -8,7 +8,7 @@ namespace JSSATSProject.Repository.Entities;
 
 public partial class Customer
 {
-    [Key] public int Id { get; set; }
+    public int Id { get; set; }
 
     public int? PointId { get; set; }
 

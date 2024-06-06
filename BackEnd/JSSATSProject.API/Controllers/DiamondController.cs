@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace JSSATSProject.API.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
+
     public class DiamondController : ControllerBase
     {
         private IDiamondService _diamondService;
@@ -17,7 +19,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _diamondService.GetAllAsync();
@@ -25,7 +27,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _diamondService.GetByIdAsync(id);
@@ -33,7 +35,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetByName")]
+        [Route("GetByName")]
         public async Task<IActionResult> GetByNameAsync(string name)
         {
             var responseModel = await _diamondService.GetByNameAsync(name);
@@ -41,7 +43,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetByCode")]
+        [Route("GetByCode")]
         public async Task<IActionResult> GetByCodeAsync(string code)
         {
             var responseModel = await _diamondService.GetByCodeAsync(code);
@@ -49,7 +51,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateDiamond")]
+        [Route("CreateDiamond")]
         public async Task<IActionResult> CreateAsync(RequestCreateDiamond requestDiamond)
         {
             var responseModel = await _diamondService.CreateDiamondAsync(requestDiamond);
@@ -57,7 +59,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdateDiamond")]
+        [Route("UpdateDiamond")]
         public async Task<IActionResult> UpdateAsync(int id, [FromBody] RequestUpdateDiamond requestDiamond)
         {
             var response = await _diamondService.UpdateDiamondAsync(id, requestDiamond);

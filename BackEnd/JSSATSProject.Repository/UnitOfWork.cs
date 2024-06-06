@@ -4,379 +4,379 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JSSATSProject.Repository.Repos;
 
 namespace JSSATSProject.Repository
 {
     public class UnitOfWork
     {
         private DBContext _context;
-        private GenericRepository<Account> _account;
-        private GenericRepository<Customer> _customer;
-        private GenericRepository<Diamond> _diamond;
-        private GenericRepository<DiamondPriceList> _diamondpricelist;
-        private GenericRepository<Guarantee> _guarantee;
-        private GenericRepository<MaterialPriceList> _materialpricelist;
-        private GenericRepository<Material> _material;
-        private GenericRepository<Order> _order;
-        private GenericRepository<Payment> _payment;
-        private GenericRepository<PaymentMethod> _paymentmethod;
-        private GenericRepository<Point> _Point;
-        private GenericRepository<Product> _product;
-        private GenericRepository<ProductCategory> _productcategory;
-        private GenericRepository<ProductCategoryType> _prodcutcategorytype;
-        private GenericRepository<Promotion> _promotion;
-        private GenericRepository<ReturnBuyBackPolicy> _returnbuybackpolicy;
-        private GenericRepository<Staff> _staff;
-        private GenericRepository<Stall> _stall;
-        private GenericRepository<StallType> _stalltype;
-        private GenericRepository<Origin> _origin;
-        private GenericRepository<Cut> _cut;
-        private GenericRepository<Color> _color;
-        private GenericRepository<Clarity> _clarity;
-        private GenericRepository<Carat> _carat;
-        private GenericRepository<Fluorescence> _fluorescence;
-        private GenericRepository<Polish> _polish;
-        private GenericRepository<Symmetry> _symmetry;
-        private GenericRepository<Role> _role;
-
-
+        private AccountRepository _account;
+        private CustomerRepository _customer;
+        private DiamondRepository _diamond;
+        private DiamondPriceListRepository _diamondpricelist;
+        private GuaranteeRepository _guarantee;
+        private MaterialPriceListRepository _materialpricelist;
+        private MaterialRepository _material;
+        private OrderRepository _order;
+        private PaymentRepository _payment;
+        private PaymentMethodRepository _paymentmethod;
+        private PointRepository _point;
+        private ProductRepository _product;
+        private ProductCategoryRepository _productcategory;
+        private ProductCategoryTypeRepository _prodcutcategorytype;
+        private PromotionRepository _promotion;
+        private ReturnBuyBackPolicyRepository _returnbuybackpolicy;
+        private StaffRepository _staff;
+        private StallRepository _stall;
+        private StallTypeRepository _stalltype;
+        private OriginRepository _origin;
+        private CutRepository _cut;
+        private ColorRepository _color;
+        private ClarityRepository _clarity;
+        private CaratRepository _carat;
+        private FluorescenceRepository _fluorescence;
+        private PolishRepository _polish;
+        private SymmetryRepository _symmetry;
+        private RoleRepository _role;
+        
 
         public UnitOfWork(DBContext context)
         {
             _context = context;
         }
 
-        public GenericRepository<StallType> StallTypeRepository
+        public StallTypeRepository StallTypeRepository
         {
             get
             {
                 if (_stalltype == null)
                 {
-                    _stalltype = new GenericRepository<StallType>(_context);
+                    _stalltype = new StallTypeRepository(_context);
                 }
                 return _stalltype;
             }
 
         }
-        public GenericRepository<Account> AccountRepository
+        public AccountRepository AccountRepository
         {
             get
             {
                 if (_account == null)
                 {
-                    _account = new GenericRepository<Account>(_context);
+                    _account = new AccountRepository(_context);
                 }
                 return _account;
             }
         }
 
-        public GenericRepository<Customer> CustomerRepository
+        public CustomerRepository CustomerRepository
         {
             get
             {
                 if (_customer == null)
                 {
-                    _customer = new GenericRepository<Customer>(_context);
+                    _customer = new CustomerRepository(_context);
                 }
                 return _customer;
             }
         }
 
-        public GenericRepository<Diamond> DiamondRepository
+        public DiamondRepository DiamondRepository
         {
             get
             {
                 if (_diamond == null)
                 {
-                    _diamond = new GenericRepository<Diamond>(_context);
+                    _diamond = new DiamondRepository(_context);
                 }
                 return _diamond;
             }
         }
 
-        public GenericRepository<DiamondPriceList> DiamondPriceListRepository
+        public DiamondPriceListRepository DiamondPriceListRepository
         {
             get
             {
                 if (_diamondpricelist == null)
                 {
-                    _diamondpricelist = new GenericRepository<DiamondPriceList>(_context);
+                    _diamondpricelist = new DiamondPriceListRepository(_context);
                 }
                 return _diamondpricelist;
             }
         }
 
-        public GenericRepository<Guarantee> GuaranteeRepository
+        public GuaranteeRepository GuaranteeRepository
         {
             get
             {
                 if (_guarantee == null)
                 {
-                    _guarantee = new GenericRepository<Guarantee>(_context);
+                    _guarantee = new GuaranteeRepository(_context);
                 }
                 return _guarantee;
             }
         }
 
-        public GenericRepository<MaterialPriceList> MaterialPriceListRepository
+        public MaterialPriceListRepository MaterialPriceListRepository
         {
             get
             {
                 if (_materialpricelist == null)
                 {
-                    _materialpricelist = new GenericRepository<MaterialPriceList>(_context);
+                    _materialpricelist = new MaterialPriceListRepository(_context);
                 }
                 return _materialpricelist;
             }
         }
 
-        public GenericRepository<Material> MaterialRepository
+        public MaterialRepository MaterialRepository
         {
             get
             {
                 if (_material == null)
                 {
-                    _material = new GenericRepository<Material>(_context);
+                    _material = new MaterialRepository(_context);
                 }
                 return _material;
             }
         }
 
-        public GenericRepository<Order> OrderRepository
+        public OrderRepository OrderRepository
         {
             get
             {
                 if (_order == null)
                 {
-                    _order = new GenericRepository<Order>(_context);
+                    _order = new OrderRepository(_context);
                 }
                 return _order;
             }
         }
 
-        public GenericRepository<Payment> PaymentRepository
+        public PaymentRepository PaymentRepository
         {
             get
             {
                 if (_payment == null)
                 {
-                    _payment = new GenericRepository<Payment>(_context);
+                    _payment = new PaymentRepository(_context);
                 }
                 return _payment;
             }
         }
 
-        public GenericRepository<PaymentMethod> PaymentMethodRepository
+        public PaymentMethodRepository PaymentMethodRepository
         {
             get
             {
                 if (_paymentmethod == null)
                 {
-                    _paymentmethod = new GenericRepository<PaymentMethod>(_context);
+                    _paymentmethod = new PaymentMethodRepository(_context);
                 }
                 return _paymentmethod;
             }
         }
 
-        public GenericRepository<Point> PointRepository
+        public PointRepository PointRepository
         {
             get
             {
-                if (_Point == null)
+                if (_point == null)
                 {
-                    _Point = new GenericRepository<Point>(_context);
+                    _point = new PointRepository(_context);
                 }
-                return _Point;
+                return _point;
             }
         }
 
-        public GenericRepository<Product> ProductRepository
+        public ProductRepository ProductRepository
         {
             get
             {
                 if (_product == null)
                 {
-                    _product = new GenericRepository<Product>(_context);
+                    _product = new ProductRepository(_context);
                 }
                 return _product;
             }
         }
 
-        public GenericRepository<ProductCategory> ProductCategoryRepository
+        public ProductCategoryRepository ProductCategoryRepository
         {
             get
             {
                 if (_productcategory == null)
                 {
-                    _productcategory = new GenericRepository<ProductCategory>(_context);
+                    _productcategory = new ProductCategoryRepository(_context);
                 }
                 return _productcategory;
             }
         }
 
-        public GenericRepository<ProductCategoryType> ProductCategoryTypeRepository
+        public ProductCategoryTypeRepository ProductCategoryTypeRepository
         {
             get
             {
                 if (_prodcutcategorytype == null)
                 {
-                    _prodcutcategorytype = new GenericRepository<ProductCategoryType>(_context);
+                    _prodcutcategorytype = new ProductCategoryTypeRepository(_context);
                 }
                 return _prodcutcategorytype;
             }
         }
 
-        public GenericRepository<Promotion> PromotionRepository
+        public PromotionRepository PromotionRepository
         {
             get
             {
                 if (_promotion == null)
                 {
-                    _promotion = new GenericRepository<Promotion>(_context);
+                    _promotion = new PromotionRepository(_context);
                 }
                 return _promotion;
             }
         }
 
-        public GenericRepository<ReturnBuyBackPolicy> ReturnBuybackPolicyRepository
+        public ReturnBuyBackPolicyRepository ReturnBuyBackPolicyRepository
         {
             get
             {
                 if (_returnbuybackpolicy == null)
                 {
-                    _returnbuybackpolicy = new GenericRepository<ReturnBuyBackPolicy>(_context);
+                    _returnbuybackpolicy = new ReturnBuyBackPolicyRepository(_context);
                 }
                 return _returnbuybackpolicy;
             }
         }
 
-        public GenericRepository<Staff> StaffRepository
+        public StaffRepository StaffRepository
         {
             get
             {
                 if (_staff == null)
                 {
-                    _staff = new GenericRepository<Staff>(_context);
+                    _staff = new StaffRepository(_context);
                 }
                 return _staff;
             }
         }
 
-        public GenericRepository<Stall> StallRepository
+        public StallRepository StallRepository
         {
             get
             {
                 if (_stall == null)
                 {
-                    _stall = new GenericRepository<Stall>(_context);
+                    _stall = new StallRepository(_context);
                 }
                 return _stall;
             }
         }
 
-        public GenericRepository<Cut> CutRepository
+        public CutRepository CutRepository
         {
             get
             {
                 if (_cut == null)
                 {
-                    _cut = new GenericRepository<Cut>(_context);
+                    _cut = new CutRepository(_context);
                 }
                 return _cut;
             }
         }
 
-        public GenericRepository<Clarity> ClariryRepository
+        public ClarityRepository ClarityRepository
         {
             get
             {
                 if (_clarity == null)
                 {
-                    _clarity = new GenericRepository<Clarity>(_context);
+                    _clarity = new ClarityRepository(_context);
                 }
                 return _clarity;
             }
         }
 
-        public GenericRepository<Color> ColorRepository
+        public ColorRepository ColorRepository
         {
             get
             {
                 if (_color == null)
                 {
-                    _color = new GenericRepository<Color>(_context);
+                    _color = new ColorRepository(_context);
                 }
                 return _color;
             }
         }
 
-        public GenericRepository<Carat> CaratRepository
+        public CaratRepository CaratRepository
         {
             get
             {
                 if (_carat == null)
                 {
-                    _carat = new GenericRepository<Carat>(_context);
+                    _carat = new CaratRepository(_context);
                 }
                 return _carat;
             }
         }
 
-        public GenericRepository<Polish> PolishRepository
+        public PolishRepository PolishRepository
         {
             get
             {
                 if (_polish == null)
                 {
-                    _polish = new GenericRepository<Polish>(_context);
+                    _polish = new PolishRepository(_context);
                 }
                 return _polish;
             }
         }
 
-        public GenericRepository<Fluorescence> FluorescenceRepository
+        public FluorescenceRepository FluorescenceRepository
         {
             get
             {
                 if (_fluorescence == null)
                 {
-                    _fluorescence = new GenericRepository<Fluorescence>(_context);
+                    _fluorescence = new FluorescenceRepository(_context);
                 }
                 return _fluorescence;
             }
         }
 
-        public GenericRepository<Symmetry> SymmetryRepository
+        public SymmetryRepository SymmetryRepository
         {
             get
             {
                 if (_symmetry == null)
                 {
-                    _symmetry = new GenericRepository<Symmetry>(_context);
+                    _symmetry = new SymmetryRepository(_context);
                 }
                 return _symmetry;
             }
         }
 
-        public GenericRepository<Origin> OriginRepository
+        public OriginRepository OriginRepository
         {
             get
             {
                 if (_origin == null)
                 {
-                    _origin = new GenericRepository<Origin>(_context);
+                    _origin = new OriginRepository(_context);
                 }
                 return _origin;
             }
         }
 
-        public GenericRepository<Role> RoleRepository
+        public RoleRepository RoleRepository
         {
             get
             {
                 if (_role == null)
                 {
-                    _role = new GenericRepository<Role>(_context);
+                    _role = new RoleRepository(_context);
                 }
                 return _role;
             }

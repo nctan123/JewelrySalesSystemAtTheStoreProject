@@ -75,17 +75,14 @@ namespace JSSATSProject.Service.AutoMapper
 
             //PaymentMethod
             CreateMap<PaymentMethod, RequestCreatePaymentMethod>().ReverseMap();
-            CreateMap<PaymentMethod, RequestUpdatePaymentMethod>().ReverseMap();
             CreateMap<PaymentMethod, ResponsePaymentMethod>().ReverseMap();
 
             //Payment
             CreateMap<Payment, RequestCreatePayment>().ReverseMap();
-            CreateMap<Payment, RequestUpdatePayment>().ReverseMap();
             CreateMap<Payment, ResponsePayment>().ReverseMap();
 
             //Point
             CreateMap<Point, RequestCreatePoint>().ReverseMap();
-            CreateMap<Point, RequestUpdatePoint>().ReverseMap();
             CreateMap<Point, ResponsePoint>().ReverseMap();
 
             //ProductCategory
@@ -98,17 +95,14 @@ namespace JSSATSProject.Service.AutoMapper
 
             //Product
             CreateMap<Product, RequestCreateProduct>().ReverseMap();
-            CreateMap<Product, RequestUpdateProduct>().ReverseMap();
             CreateMap<Product, ResponseProduct>().ReverseMap();
 
             //Promotion
             CreateMap<Promotion, RequestCreatePromotion>().ReverseMap();
-            CreateMap<Promotion, RequestUpdatePromotion>().ReverseMap();
             CreateMap<Promotion, ResponsePromotion>().ReverseMap();
 
             //ReturnBuyBackPolicy
             CreateMap<ReturnBuyBackPolicy, RequestCreateReturnBuyBackPolicy>().ReverseMap();
-            CreateMap<ReturnBuyBackPolicy, RequestUpdateReturnBuyBackPolicy>().ReverseMap();
             CreateMap<ReturnBuyBackPolicy, ResponseReturnBuyBackPolicy>().ReverseMap();
 
             //Staff

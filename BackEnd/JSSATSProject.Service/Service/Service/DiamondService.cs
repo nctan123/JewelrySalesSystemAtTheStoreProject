@@ -2,6 +2,9 @@
 using JSSATSProject.Repository;
 using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using JSSATSProject.Service.Service.IService;
 
@@ -92,37 +95,24 @@ public class DiamondService : IDiamondService
 
     public async Task<ResponseModel> UpdateDiamondAsync(int diamondId, RequestUpdateDiamond requestDiamond)
     {
-        try
+        var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
+        if (diamond == null)
         {
-            var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
-            if (diamond != null)
-            {
-               
-                _mapper.Map(requestDiamond, diamond);
-               
-                await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
-
-                return new ResponseModel
-                {
-                    Data = diamond,
-                    MessageError = "",
-                };
-            }
-
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "Not Found",
+                MessageError = "Diamond not found.",
             };
         }
-        catch (Exception ex)
+
+        _mapper.Map(requestDiamond, diamond);
+        await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
+        await _unitOfWork.SaveAsync();
+
+        return new ResponseModel
         {
-            // Log the exception and return an appropriate error response
-            return new ResponseModel
-            {
-                Data = null,
-                MessageError = "An error occurred while updating the customer: " + ex.Message
-            };
-        }
+            Data = diamond,
+            MessageError = "",
+        };
     }
 }

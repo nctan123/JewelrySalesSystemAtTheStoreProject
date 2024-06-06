@@ -62,10 +62,9 @@ namespace JSSATSProject.Service.Service.Service
                 var paymentmethod = await _unitOfWork.PaymentMethodRepository.GetByIDAsync(paymentmethodid);
                 if (paymentmethod != null)
                 {
-
-                    _mapper.Map(requestPaymentMethod, paymentmethod);
-
+                    paymentmethod = _mapper.Map<PaymentMethod>(requestPaymentMethod);
                     await _unitOfWork.PaymentMethodRepository.UpdateAsync(paymentmethod);
+                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {

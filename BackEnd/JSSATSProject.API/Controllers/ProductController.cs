@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -17,7 +19,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _productService.GetAllAsync();
@@ -25,7 +27,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _productService.GetByIdAsync(id);
@@ -33,7 +35,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetByName")]
+        [Route("GetByName")]
         public async Task<IActionResult> GetByNameAsync(string name)
         {
             var responseModel = await _productService.GetByNameAsync(name);
@@ -41,7 +43,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetByCode")]
+        [Route("GetByCode")]
         public async Task<IActionResult> GetByCodeAsync(string code)
         {
             var responseModel = await _productService.GetByCodeAsync(code);
@@ -49,7 +51,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateProduct")]
+        [Route("CreateProduct")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateProduct requestProduct)
         {
             var responseModel = await _productService.CreateProductAsync(requestProduct);
@@ -57,7 +59,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdateProduct")]
+        [Route("UpdateProduct")]
         public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] RequestUpdateProduct requestProduct)
         {
             var response = await _productService.UpdateProductAsync(id, requestProduct);

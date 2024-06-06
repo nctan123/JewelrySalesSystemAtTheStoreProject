@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductCategoryController : ControllerBase
     {
         private readonly IProductCategoryService _productCategoryService;
@@ -15,7 +17,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _productCategoryService.GetAllAsync();
@@ -23,7 +25,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _productCategoryService.GetByIdAsync(id);
@@ -31,7 +33,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateProductCategory")]
+        [Route("CreateProductCategory")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateProductCategory requestProductCategory)
         {
             var responseModel = await _productCategoryService.CreateProductCategoryAsync(requestProductCategory);

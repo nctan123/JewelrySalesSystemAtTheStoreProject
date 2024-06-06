@@ -59,11 +59,11 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByNameAsync(string name)
         {
             var response = await _unitOfWork.CustomerRepository.GetAsync(
-                    c => c.Firstname.Equals(name),
-                    null,
-                    includeProperties: "",
-                    pageIndex: null,
-                    pageSize: null
+                c => c.Firstname.Equals(name),
+                null,
+                includeProperties: "",
+                pageIndex: null,
+                pageSize: null
             );
 
             if (!response.Any())
@@ -85,11 +85,11 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByPhoneAsync(string phonenumber)
         {
             var response = await _unitOfWork.CustomerRepository.GetAsync(
-                    c => c.Phone.Equals(phonenumber),
-                    null,
-                    includeProperties: "",
-                    pageIndex: null,
-                    pageSize: null
+                c => c.Phone.Equals(phonenumber),
+                null,
+                includeProperties: "",
+                pageIndex: null,
+                pageSize: null
             );
 
             if (!response.Any())
@@ -112,21 +112,16 @@ namespace JSSATSProject.Service.Service.Service
         {
             try
             {
-                var customer = await _unitOfWork.CustomerRepository.GetByIDAsync(customerId);
-                if (customer != null)
+                var customer = _mapper.Map<Customer>(requestCustomer);
+                customer.Id = customerId;
+                await _unitOfWork.CustomerRepository.UpdateAsync(customer);
+                // await _unitOfWork.SaveAsync();
+
+                return new ResponseModel
                 {
-                    int id = customer.Id;
-                    _mapper.Map(requestCustomer, customer);
-                    customer.Id = id;
-                    await _unitOfWork.CustomerRepository.UpdateAsync(customer);
-
-                    return new ResponseModel
-                    {
-                        Data = customer,
-                        MessageError = "",
-                    };
-                }
-
+                    Data = customer,
+                    MessageError = "",
+                };
                 return new ResponseModel
                 {
                     Data = null,

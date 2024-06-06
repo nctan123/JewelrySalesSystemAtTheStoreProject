@@ -58,28 +58,26 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> UpdateOrderAsync(int orderId, RequestUpdateOrder requestOrder)
         {
-
             try
             {
                 var order = await _unitOfWork.OrderRepository.GetByIDAsync(orderId);
                 if (order != null)
                 {
-
-                    _mapper.Map(requestOrder, order);
-
-                    await _unitOfWork.OrderRepository.UpdateAsync(order);
+                    order = _mapper.Map<Order>(requestOrder);
+                    await   _unitOfWork.OrderRepository.UpdateAsync(order);
+                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {
                         Data = order,
-                        MessageError = "",
+                        MessageError = ""
                     };
                 }
 
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "Not Found",
+                    MessageError = "Not Found"
                 };
             }
             catch (Exception ex)
@@ -88,7 +86,7 @@ namespace JSSATSProject.Service.Service.Service
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "An error occurred while updating the customer: " + ex.Message
+                    MessageError = "An error occurred while updating the order: " + ex.Message
                 };
             }
         }

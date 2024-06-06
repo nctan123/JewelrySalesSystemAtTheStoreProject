@@ -1,11 +1,15 @@
-﻿using JSSATSProject.Repository;
+using System.Configuration;
+using System.Text;
+using AutoMapper;
+using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.AutoMapper;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
-using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace JSSATSProject.API
 {
@@ -14,9 +18,27 @@ namespace JSSATSProject.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var config = builder.Configuration;
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidAudience = builder.Configuration["Jwt:Audience"],
+                    IssuerSigningKey =
+                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                };
+            });
+            builder.Services.AddAuthorization();
 
             // Add services to the container.
             builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -25,12 +47,15 @@ namespace JSSATSProject.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefautConnection"));
             });
 
-            builder.Services.AddTransient<UnitOfWork>();
 
-            // AutoMapper
+            builder.Services.AddScoped<UnitOfWork>();
+
+            //AutoMapper
             builder.Services.AddAutoMapper(typeof(ApplicationMapper));
 
+
             // Service
+            builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IDiamondService, DiamondService>();
@@ -49,17 +74,8 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IReturnBuyBackPolicyService, ReturnBuyBackPolicyService>();
             builder.Services.AddScoped<IStaffService, StaffService>();
             builder.Services.AddScoped<IStallService, StallService>();
+            builder.Services.AddScoped<IStallTypeService, StallTypeService>();
 
-            // Cấu hình dịch vụ CORS
-            builder.Services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader();
-                });
-            });
 
             var app = builder.Build();
 
@@ -71,11 +87,8 @@ namespace JSSATSProject.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-
-            // Áp dụng middleware CORS
-            app.UseCors();
 
             app.MapControllers();
 

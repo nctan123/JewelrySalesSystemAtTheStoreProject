@@ -1,11 +1,15 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
+﻿using JSSATSProject.Repository.Entities;
+using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
+
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
@@ -16,7 +20,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAll()
         {
             var responseModel = await _customerService.GetAllAsync();
@@ -24,7 +28,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetById(int id)
         {
             var responseModel = await _customerService.GetByIdAsync(id);
@@ -32,7 +36,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetByName")]
+        [Route("GetByName")]
         public async Task<IActionResult> GetByName(string name)
         {
             var responseModel = await _customerService.GetByNameAsync(name);
@@ -40,7 +44,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetByPhone")]
+        [Route("GetByPhone")]
         public async Task<IActionResult> GetByPhone(string phonenumber)
         {
             var responseModel = await _customerService.GetByPhoneAsync(phonenumber);
@@ -48,15 +52,19 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateCustomer")]
+        [Route("CreateCustomer")]
         public async Task<IActionResult> Create([FromBody] RequestCreateCustomer requestCustomer)
         {
             var responseModel = await _customerService.CreateCustomerAsync(requestCustomer);
-            return Ok(responseModel);
+            var data = (Customer)responseModel.Data!;
+            return CreatedAtAction("GetById", new {id = data.Id} ,responseModel);
+            
+            // var responseModel = await _customerService.CreateCustomerAsync(requestCustomer);
+            // return Ok(responseModel);
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdateCustomer")]
+        [Route("UpdateCustomer")]
         public async Task<IActionResult> UpdateCustomer(int Id, [FromBody] RequestUpdateCustomer requestCustomer)
         {
             var response = await _customerService.UpdateCustomerAsync(Id, requestCustomer);

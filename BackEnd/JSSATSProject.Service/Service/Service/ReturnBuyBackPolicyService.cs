@@ -26,7 +26,7 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> CreateReturnBuyBackPolicyAsync(RequestCreateReturnBuyBackPolicy requestReturnBuyBackPolicy)
         {
             var entity = _mapper.Map<ReturnBuyBackPolicy>(requestReturnBuyBackPolicy);
-            await _unitOfWork.ReturnBuybackPolicyRepository.InsertAsync(entity);
+            await _unitOfWork.ReturnBuyBackPolicyRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
             return new ResponseModel
             {
@@ -37,7 +37,7 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetAllAsync()
         {
-            var entities = await _unitOfWork.ReturnBuybackPolicyRepository.GetAsync();
+            var entities = await _unitOfWork.ReturnBuyBackPolicyRepository.GetAsync();
             var response = _mapper.Map<List<ResponseReturnBuyBackPolicy>>(entities);
             return new ResponseModel
             {
@@ -48,7 +48,7 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByIdAsync(int id)
         {
-            var entity = await _unitOfWork.ReturnBuybackPolicyRepository.GetByIDAsync(id);
+            var entity = await _unitOfWork.ReturnBuyBackPolicyRepository.GetByIDAsync(id);
             var response = _mapper.Map<ResponseReturnBuyBackPolicy>(entity);
             return new ResponseModel
             {
@@ -59,20 +59,18 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> UpdateReturnBuyBackPolicyAsync(int Id, RequestUpdateReturnBuyBackPolicy requestReturnBuyBackPolicy)
         {
-
             try
             {
-                var returnbuybackpolicy = await _unitOfWork.ReturnBuybackPolicyRepository.GetByIDAsync(Id);
-                if (requestReturnBuyBackPolicy != null)
+                var returnBBP = await _unitOfWork.ReturnBuyBackPolicyRepository.GetByIDAsync(Id);
+                if (returnBBP != null)
                 {
-
-                    _mapper.Map(requestReturnBuyBackPolicy, returnbuybackpolicy);
-
-                    await _unitOfWork.ReturnBuybackPolicyRepository.UpdateAsync(returnbuybackpolicy);
+                    returnBBP = _mapper.Map<ReturnBuyBackPolicy>(requestReturnBuyBackPolicy);
+                    await _unitOfWork.ReturnBuyBackPolicyRepository.UpdateAsync(returnBBP);
+                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {
-                        Data = returnbuybackpolicy,
+                        Data = returnBBP,
                         MessageError = "",
                     };
                 }

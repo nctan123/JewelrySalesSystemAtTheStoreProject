@@ -6,6 +6,7 @@ namespace JSSATSProject.Service.Service.IService
 {
     public interface IAccountService
     {
+        public Task<ResponseModel> GetByUsernameAndPassword(string username, string password);
         public Task<ResponseModel> GetAllAsync();
         public Task<ResponseModel> SignUpAsync(RequestSignUp signUpModel);
         public Task<ResponseModel> SignInAsync(RequestSignIn signInModel);

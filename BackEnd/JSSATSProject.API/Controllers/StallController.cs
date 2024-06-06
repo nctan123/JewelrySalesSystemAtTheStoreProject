@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class StallController : ControllerBase
     {
         private readonly IStallService _stallService;
@@ -15,7 +17,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _stallService.GetAllAsync();
@@ -23,7 +25,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _stallService.GetByIdAsync(id);
@@ -31,7 +33,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateStall")]
+        [Route("CreateStall")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateStall requestStall)
         {
             var responseModel = await _stallService.CreateStallAsync(requestStall);

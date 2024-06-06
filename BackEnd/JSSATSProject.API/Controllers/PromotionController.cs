@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PromotionController : ControllerBase
     {
         private readonly IPromotionService _promotionService;
@@ -17,7 +19,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _promotionService.GetAllAsync();
@@ -25,7 +27,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _promotionService.GetByIdAsync(id);
@@ -33,7 +35,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreatePromotion")]
+        [Route("CreatePromotion")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreatePromotion requestPromotion)
         {
             var responseModel = await _promotionService.CreatePromotionAsync(requestPromotion);
@@ -41,7 +43,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdatePromotion")]
+        [Route("UpdatePromotion")]
         public async Task<IActionResult> UpdatePromotionAsync(int Id, [FromBody] RequestUpdatePromotion requestPromotion)
         {
             var response = await _promotionService.UpdatePromotionAsync(Id, requestPromotion);

@@ -65,10 +65,9 @@ namespace JSSATSProject.Service.Service.Service
                 var diamondpricelist = await _unitOfWork.DiamondPriceListRepository.GetByIDAsync(diamondpricelistId);
                 if (diamondpricelist != null)
                 {
-                   
-                    _mapper.Map(requestDiamondPriceList, diamondpricelist);
-
+                    diamondpricelist = _mapper.Map<DiamondPriceList>(requestDiamondPriceList);
                     await _unitOfWork.DiamondPriceListRepository.UpdateAsync(diamondpricelist);
+                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {

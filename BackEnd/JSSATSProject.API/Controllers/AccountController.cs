@@ -1,10 +1,13 @@
 ﻿using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Authorize]
     [ApiController]
+    [Route("api/[controller]")]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
@@ -15,7 +18,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _accountService.GetAllAsync();

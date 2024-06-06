@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ReturnBuyBackPolicyController : ControllerBase
     {
         private readonly IReturnBuyBackPolicyService _returnBuyBackPolicyService;
@@ -17,7 +19,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _returnBuyBackPolicyService.GetAllAsync();
@@ -25,7 +27,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _returnBuyBackPolicyService.GetByIdAsync(id);
@@ -33,7 +35,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateReturnBuyBackPolicy")]
+        [Route("CreateReturnBuyBackPolicy")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateReturnBuyBackPolicy requestReturnBuyBackPolicy)
         {
             var responseModel = await _returnBuyBackPolicyService.CreateReturnBuyBackPolicyAsync(requestReturnBuyBackPolicy);
@@ -41,7 +43,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdateReturnBuyBackPolicy")]
+        [Route("UpdateReturnBuyBackPolicy")]
         public async Task<IActionResult> UpdateReturnBuyBackPolicyAsync(int Id, [FromBody] RequestUpdateReturnBuyBackPolicy requestReturnBuyBackPolicy)
         {
             var response = await _returnBuyBackPolicyService.UpdateReturnBuyBackPolicyAsync(Id, requestReturnBuyBackPolicy);

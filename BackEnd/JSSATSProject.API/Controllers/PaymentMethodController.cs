@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PaymentMethodController : ControllerBase
     {
         private readonly IPaymentMethodService _paymentMethodService;
@@ -16,7 +18,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _paymentMethodService.GetAllAsync();
@@ -24,7 +26,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _paymentMethodService.GetByIdAsync(id);
@@ -32,7 +34,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreatePaymentMethod")]
+        [Route("CreatePaymentMethod")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreatePaymentMethod requestPaymentMethod)
         {
             var responseModel = await _paymentMethodService.CreatePaymentMethodAsync(requestPaymentMethod);
@@ -40,7 +42,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdatePaymentMethod")]
+        [Route("UpdatePaymentMethod")]
         public async Task<IActionResult> UpdatePaymentMethodAsync(int paymentmethodId, [FromBody] RequestUpdatePaymentMethod requestPaymentMethod)
         {
             var response = await _paymentMethodService.UpdatePaymentMethodAsync(paymentmethodId, requestPaymentMethod);

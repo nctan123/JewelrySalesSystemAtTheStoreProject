@@ -1,10 +1,15 @@
-﻿using JSSATSProject.Service.Models.GuaranteeModel;
+﻿using JSSATSProject.Service.Models.CustomerModel;
+using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
+
     public class GuaranteeController : ControllerBase
     {
         private readonly IGuaranteeService _guaranteeService;
@@ -15,7 +20,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _guaranteeService.GetAllAsync();
@@ -23,7 +28,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _guaranteeService.GetByIdAsync(id);
@@ -31,7 +36,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreateGuarantee")]
+        [Route("CreateGuarantee")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateGuarantee requestGuarantee)
         {
             var responseModel = await _guaranteeService.CreateGuaranteeAsync(requestGuarantee);
@@ -39,7 +44,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdateGuarantee")]
+        [Route("UpdateGuarantee")]
         public async Task<IActionResult> UpdateAsync(int guaranteeId, [FromBody] RequestUpdateGuarantee requestGuarantee)
         {
             var responseModel = await _guaranteeService.UpdateGuaranteeAsync(guaranteeId, requestGuarantee);

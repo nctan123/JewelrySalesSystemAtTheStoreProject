@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PointController : ControllerBase
     {
         private readonly IPointService _pointService;
@@ -17,7 +19,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetAll")]
+        [Route("GetAll")]
         public async Task<IActionResult> GetAllAsync()
         {
             var responseModel = await _pointService.GetAllAsync();
@@ -25,7 +27,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("api/[controller]/GetById")]
+        [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             var responseModel = await _pointService.GetByIdAsync(id);
@@ -33,7 +35,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("api/[controller]/CreatePoint")]
+        [Route("CreatePoint")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreatePoint requestPoint)
         {
             var responseModel = await _pointService.CreatePointAsync(requestPoint);
@@ -41,7 +43,7 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPut]
-        [Route("api/[controller]/UpdatePoint")]
+        [Route("UpdatePoint")]
         public async Task<IActionResult> UpdatePointAsync(int pointId, [FromBody] RequestUpdatePoint requestPoint)
         {
             var response = await _pointService.UpdatePointAsync(pointId, requestPoint);

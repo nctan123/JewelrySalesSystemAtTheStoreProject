@@ -25,9 +25,9 @@ public partial class Order
 
     public virtual Customer Customer { get; set; }
 
-    public virtual ICollection<OrderDetail> OrderDetails { get; set; } 
+    public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
-    public virtual ICollection<Payment> Payments { get; set; } 
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Staff Staff { get; set; }
 
@@ -46,8 +46,8 @@ public partial class Order
         Type = type;
         Description = description;
         Customer = customer;
-        OrderDetails = orderDetails;
-        Payments = payments;
+        OrderDetails = new List<OrderDetail>(orderDetails);
+        Payments = new List<Payment>(payments);
         Staff = staff;
     }
 }

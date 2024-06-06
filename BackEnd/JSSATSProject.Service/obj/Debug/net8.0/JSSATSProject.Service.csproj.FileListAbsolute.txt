@@ -1,0 +1,32 @@
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Service.deps.json
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Service.dll
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Service.pdb
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Repository.dll
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.csproj.AssemblyReference.cache
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.GeneratedMSBuildEditorConfig.editorconfig
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.AssemblyInfoInputs.cache
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.AssemblyInfo.cs
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.csproj.CoreCompileInputs.cache
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.sourcelink.json
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSPr.C9CA8B7D.Up2Date
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.dll
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\refint\JSSATSProject.Service.dll
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.pdb
+D:\KI 5\SWP\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\ref\JSSATSProject.Service.dll
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Service.deps.json
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Service.dll
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Service.pdb
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.csproj.AssemblyReference.cache
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.AssemblyInfoInputs.cache
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.AssemblyInfo.cs
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.csproj.CoreCompileInputs.cache
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.sourcelink.json
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSPr.C9CA8B7D.Up2Date
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.dll
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\refint\JSSATSProject.Service.dll
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\JSSATSProject.Service.pdb
+C:\Users\nhata\Downloads\JSSATSProject\JSSATSProject\JSSATSProject.Service\obj\Debug\net8.0\ref\JSSATSProject.Service.dll

@@ -110,16 +110,14 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> UpdateProductAsync(int productId, RequestUpdateProduct requestProduct)
         {
-
             try
             {
                 var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
                 if (product != null)
                 {
-
-                    _mapper.Map(requestProduct, product);
-
+                    product = _mapper.Map<Product>(requestProduct);
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
+                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {

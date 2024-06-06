@@ -18,6 +18,16 @@ namespace JSSATSProject.Service.Service.Service
             _mapper = mapper;
         }
 
+        public async Task<ResponseModel> GetByUsernameAndPassword(string username, string password)
+        {
+            var matchesAccount = await _unitOfWork.AccountRepository.GetByUsernameAndPassword(username, password);
+            return new ResponseModel
+            {
+                Data = matchesAccount,
+                MessageError = "",
+            };
+        }
+        
         public async Task<ResponseModel> GetAllAsync()
         {
             var entities = await _unitOfWork.AccountRepository.GetAsync();
