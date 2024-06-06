@@ -3,7 +3,23 @@
   "WorkspaceRootPath": "C:\\SWP\\BackEnd\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|c:\\swp\\backend\\jssatsproject.api\\controllers\\diamondpricelistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|c:\\swp\\backend\\jssatsproject.api\\jssatsproject.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\jssatsproject.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\controllers\\diamondpricelistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\controllers\\diamondpricelistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -14,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -33,25 +49,65 @@
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "JSSATSProject.API.csproj",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
+              "RelativeDocumentMoniker": "JSSATSProject.API\\JSSATSProject.API.csproj",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
+              "RelativeToolTip": "JSSATSProject.API\\JSSATSProject.API.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-06-06T16:54:46.962Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "JSSATSProject.API\\appsettings.Development.json",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.Development.json",
+              "RelativeToolTip": "JSSATSProject.API\\appsettings.Development.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-06-06T16:53:14.962Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.json",
+              "RelativeDocumentMoniker": "JSSATSProject.API\\appsettings.json",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.json",
+              "RelativeToolTip": "JSSATSProject.API\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-06-06T16:53:11.524Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Program.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.API\\Program.cs",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Program.cs",
+              "RelativeToolTip": "JSSATSProject.API\\Program.cs",
+              "ViewState": "AQIAAFYAAAAAAAAAAAAIwGMAAAAaAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-06T16:09:25.213Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "DiamondPriceListController.cs",
               "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
               "RelativeDocumentMoniker": "JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
               "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
               "RelativeToolTip": "JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "ViewState": "AQIAABgAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-06T15:58:15.635Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-06T15:58:15.635Z"
             }
           ]
         },
