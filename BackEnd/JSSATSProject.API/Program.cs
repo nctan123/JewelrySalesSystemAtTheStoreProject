@@ -1,4 +1,4 @@
-using System.Configuration;
+﻿using System.Configuration;
 using System.Text;
 using AutoMapper;
 using JSSATSProject.Repository;
@@ -35,6 +35,17 @@ namespace JSSATSProject.API
                 };
             });
             builder.Services.AddAuthorization();
+
+            // Cấu hình dịch vụ CORS
+            builder.Services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader();
+                });
+            });
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -85,7 +96,8 @@ namespace JSSATSProject.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            // Áp dụng middleware CORS
+            app.UseCors();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
