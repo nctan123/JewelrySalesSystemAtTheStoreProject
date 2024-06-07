@@ -11,7 +11,7 @@ namespace JSSATSProject.Service.Models.OrderModel
     public class RequestCreateOrder
     {
 
-        public int CustomerId { get; set; }
+        public string CustomerPhoneNumber { get; set; } //
 
         public int StaffId { get; set; }
 
@@ -21,11 +21,9 @@ namespace JSSATSProject.Service.Models.OrderModel
 
         public bool IsDraft { get; set; }
 
-        public string? Type { get; set; }
+        public required string Type { get; set; }
 
         public string? Description { get; set; }
-
-        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
-
+        public required Dictionary<string, int> ProductCodes { get; set; }
     }
 }
