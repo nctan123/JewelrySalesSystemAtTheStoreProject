@@ -57,25 +57,38 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> UpdateGuaranteeAsync(int guaranteeId, RequestUpdateGuarantee requestGuarantee)
         {
-            var entity = await _unitOfWork.GuaranteeRepository.GetByIDAsync(guaranteeId);
-            if (entity == null)
+            try
             {
+                var guarantee = await _unitOfWork.GuaranteeRepository.GetByIDAsync(guaranteeId);
+                if (guarantee != null)
+                {
+
+                    _mapper.Map(requestGuarantee, guarantee);
+
+                    await _unitOfWork.GuaranteeRepository.UpdateAsync(guarantee);
+
+                    return new ResponseModel
+                    {
+                        Data = guarantee,
+                        MessageError = "",
+                    };
+                }
+
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "Guarantee not found."
+                    MessageError = "Not Found",
                 };
             }
-
-            _mapper.Map(requestGuarantee, entity);
-            await _unitOfWork.GuaranteeRepository.UpdateAsync(entity);
-            await _unitOfWork.SaveAsync();
-
-            return new ResponseModel
+            catch (Exception ex)
             {
-                Data = entity,
-                MessageError = ""
-            };
+                // Log the exception and return an appropriate error response
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "An error occurred while updating the customer: " + ex.Message
+                };
+            }
         }
     }
 }

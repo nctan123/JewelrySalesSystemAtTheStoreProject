@@ -115,9 +115,10 @@ namespace JSSATSProject.Service.Service.Service
                 var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
                 if (product != null)
                 {
-                    product = _mapper.Map<Product>(requestProduct);
+
+                    _mapper.Map(requestProduct, product);
+
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
-                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {
