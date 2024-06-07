@@ -1,12 +1,13 @@
 import React from 'react'
 import { useState } from 'react'
+import clsx from 'clsx'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import { useNavigate } from 'react-router-dom';
-import './Login.css'
+import style from './Login.module.css'
 import { loginApi } from '../../apis/jewelryService';
 import { toast } from 'react-toastify'
 
@@ -53,8 +54,8 @@ export default function LoginToStore() {
     navigate('/public')
   }
   return (
-    <div className='login-container' >
-      <div className='title-login' >Log in</div>
+    <div className={clsx(style.login_container)} >
+      <div className='title_login' >Log in</div>
       <div className='text'> Email or username</div>
       <input
         type='text'
@@ -62,7 +63,7 @@ export default function LoginToStore() {
         value={email}
         onChange={(event) => setEmail(event.target.value)}
       />
-      <div className='input-2'>
+      <div className={clsx(style.input_2)}>
         <input
           type={isShowPassword === true ? 'text' : 'password'}
           placeholder='Password...'
@@ -90,13 +91,13 @@ export default function LoginToStore() {
       >
         Admin
       </button>
-      {/* <button onClick={() => handleSeller()} >
+      <button onClick={() => handleSeller()} >
         seller
-      </button> */}
+      </button>
 
 
 
-      <div className='back' onClick={handleBackClick}>
+      <div className={clsx(style.back)} onClick={handleBackClick}>
         <span> <FontAwesomeIcon icon={faRotateLeft} />     Back</span>
       </div>
 
