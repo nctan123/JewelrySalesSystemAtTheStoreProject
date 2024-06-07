@@ -4,10 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -47,22 +44,25 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByCodeAsync(string code)
         {
-            var response = await _unitOfWork.ProductRepository.GetAsync(
-                    c => c.Code.Equals(code),
-                    null,
-                    includeProperties: "",
-                    pageIndex: null,
-                    pageSize: null
-            );
+            var entities = await _unitOfWork.ProductRepository.GetAsync(
+                c => c.Code.Equals(code),
+                includeProperties: "Category,Stalls");
 
-            if (!response.Any())
+
+            var response = entities.Select(product => new ResponseProductDetails
             {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = $"Customer with name '{code}' not found.",
-                };
-            }
+                Id = product.Id,
+                CategoryName = product.Category.Name,
+                StallName = product.Stalls.Name,
+                Code = product.Code,
+                Name = product.Name,
+                MaterialCost = product.MaterialCost,
+                ProductionCost = product.ProductionCost,
+                GemCost = product.GemCost,
+                Img = product.Img,
+                PriceRate = product.PriceRate,
+                Status = product.Status
+            }).ToList();
 
             return new ResponseModel
             {
@@ -73,8 +73,26 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByIdAsync(int id)
         {
-            var entity = await _unitOfWork.ProductRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponseProduct>(entity);
+            var entities = await _unitOfWork.ProductRepository.GetAsync(
+                c => c.Id.Equals(id),
+                includeProperties: "Category,Stalls");
+
+
+            var response = entities.Select(product => new ResponseProductDetails
+            {
+                Id = product.Id,
+                CategoryName = product.Category.Name,
+                StallName = product.Stalls.Name,
+                Code = product.Code,
+                Name = product.Name,
+                MaterialCost = product.MaterialCost,
+                ProductionCost = product.ProductionCost,
+                GemCost = product.GemCost,
+                Img = product.Img,
+                PriceRate = product.PriceRate,
+                Status = product.Status
+            }).ToList();
+
             return new ResponseModel
             {
                 Data = response,
@@ -84,22 +102,25 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByNameAsync(string name)
         {
-            var response = await _unitOfWork.ProductRepository.GetAsync(
-                    c => c.Name.Equals(name),
-                    null,
-                    includeProperties: "",
-                    pageIndex: null,
-                    pageSize: null
-            );
+            var entities = await _unitOfWork.ProductRepository.GetAsync(
+               c => c.Name.Equals(name),
+               includeProperties: "Category,Stalls");
 
-            if (!response.Any())
+
+            var response = entities.Select(product => new ResponseProductDetails
             {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = $"Customer with name '{name}' not found.",
-                };
-            }
+                Id = product.Id,
+                CategoryName = product.Category.Name,
+                StallName = product.Stalls.Name,
+                Code = product.Code,
+                Name = product.Name,
+                MaterialCost = product.MaterialCost,
+                ProductionCost = product.ProductionCost,
+                GemCost = product.GemCost,
+                Img = product.Img,
+                PriceRate = product.PriceRate,
+                Status = product.Status
+            }).ToList();
 
             return new ResponseModel
             {
@@ -109,6 +130,42 @@ namespace JSSATSProject.Service.Service.Service
         }
 
         public async Task<ResponseModel> UpdateProductAsync(int productId, RequestUpdateProduct requestProduct)
+        {
+            try
+            {
+                var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
+                if (product != null)
+                {
+
+                    _mapper.Map(requestProduct, product);
+
+                    await _unitOfWork.ProductRepository.UpdateAsync(product);
+
+                    return new ResponseModel
+                    {
+                        Data = product,
+                        MessageError = "",
+                    };
+                }
+
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Not Found",
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and return an appropriate error response
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "An error occurred while updating the customer: " + ex.Message
+                };
+            }
+        }
+
+        public async Task<ResponseModel> UpdateStatusProductAsync(int productId, RequestUpdateStatusProduct requestProduct)
         {
             try
             {

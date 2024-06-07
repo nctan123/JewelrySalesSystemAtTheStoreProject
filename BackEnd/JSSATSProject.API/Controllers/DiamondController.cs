@@ -65,5 +65,13 @@ namespace JSSATSProject.API.Controllers
             var response = await _diamondService.UpdateDiamondAsync(id, requestDiamond);
             return Ok(response);
         }
+
+        [HttpPut]
+        [Route("UpdateStatusDiamond")]
+        public async Task<IActionResult> UpdateStatusAsync(int id, [FromBody] RequestUpdateStatusDiamond requestDiamond)
+        {
+            var response = await _diamondService.UpdateStatusDiamondAsync(id, requestDiamond);
+            return Ok(response);
+        }
     }
 }

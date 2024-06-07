@@ -36,14 +36,32 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetAllAsync()
         {
-            var entities = await _unitOfWork.CustomerRepository.GetAsync();
-            var response = _mapper.Map<List<ResponseCustomer>>(entities.ToList());
+            // Retrieve entities from the repository
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,Orders,Payments");
+
+            // Map the retrieved entities to ResponseCustomer objects
+            var response = entities.Select(entity => new ResponseCustomer
+            {
+                Id = entity.Id,
+                Firstname = entity.Firstname,
+                Lastname = entity.Lastname,
+                Phone = entity.Phone,
+                Email = entity.Email,
+                Gender = entity.Gender,
+                Address = entity.Address,
+                Orders = entity.Orders, 
+                Payments = entity.Payments,
+                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
+            }).ToList();
+
+            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
                 MessageError = "",
             };
         }
+
 
         public async Task<ResponseModel> GetByIdAsync(int id)
         {

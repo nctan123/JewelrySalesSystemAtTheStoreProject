@@ -65,5 +65,13 @@ namespace JSSATSProject.API.Controllers
             var response = await _productService.UpdateProductAsync(id, requestProduct);
             return Ok(response);
         }
+
+        [HttpPut]
+        [Route("UpdateStatusProduct")]
+        public async Task<IActionResult> UpdateStatusProductAsync(int id, [FromBody] RequestUpdateStatusProduct requestProduct)
+        {
+            var response = await _productService.UpdateStatusProductAsync(id, requestProduct);
+            return Ok(response);
+        }
     }
 }

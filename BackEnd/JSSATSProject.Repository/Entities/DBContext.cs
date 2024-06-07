@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using JSSATSProject.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Repository.Entities;
@@ -150,6 +151,17 @@ public partial class DBContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("level");
         });
+
+        //modelBuilder.Entity<ProductDiamond>(entity =>
+        //{
+        //    entity.HasKey(e => new { e.ProductId, e.DiamondId }).HasName("PK__ProductD__CDF418BE5860E29A");
+
+        //    entity.ToTable("ProductDiamond");
+
+        //    entity.Property(e => e.ProductId).HasColumnName("product_id");
+        //    entity.Property(e => e.DiamondId).HasColumnName("diamond_id");
+        //});
+
 
         modelBuilder.Entity<Color>(entity =>
         {
