@@ -189,12 +189,15 @@ type_id: INT, FK  referencing StallType_id
 description: TEXT
 status: ENUM('active', 'inactive')
 
-29.Order(id,customer_id,seller_id,total_amount,create_date,is_draft,type,description)
+29.Order(id,customer_id,staff_id,total_amount,create_date,is_draft,type,description)
 id: INT, PK, Auto Increment
 customer_id: INT, FK referencing Customer.id
 staff_id: INT, FK referencing Staff.id
 total_amount: DECIMAL(10,2)(VND)
 create_date: DATETIME
+is_draft: BIT 
+type: Varchar(50) (purchase, repurchase, exchange, return)
+description: TEXT
 
 30.OrderDetails(id,order_id,product_id,size,unit_price,size_price,status)
 id: INT, Primary Key, Auto Increment 
