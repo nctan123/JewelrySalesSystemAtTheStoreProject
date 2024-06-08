@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { CartProduct } from '../page/Seller/Ring';
+import { useSelector, useDispatch } from 'react-redux'
 // import dayjs from 'dayjs';
 // import { SelectedItemContext } from '../page/Seller/Ring'
 // import { useContext } from 'react';
@@ -14,9 +16,11 @@ const SidebarRight = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // const listScreenRing = useContext(SelectedItemContext);
-  // console.log(listScreenRing)
- 
+  const CartProduct = useSelector(state => state.cart.CartArr);
+  // console.log(CartProduct)
+
+
+
   return (<>
 
 
@@ -33,17 +37,17 @@ const SidebarRight = () => {
         </div>
         <div className='grid grid-cols-3 border mx-[10px] border-b-black pb-[2px]'>
           <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
-          <div className='col-start-3  flex justify-start'>Price</div>
+          <div className='col-start-3 ml-6 flex justify-start'>Price</div>
         </div>
-        <div id='screenSeller' className=' h-[45%]'>
-        {/* {listScreenRing && listScreenRing.map((item, index) => {
-         return (
-          <div key={`ring-${index}`}>
-              <div className=' flex justify-center text-[0.7em] mt-[5px] font-normal'>{item.name}</div>
-              <div className=' flex justify-center text-[#d48c20]'>{item.gemCost}</div>
-          </div>
-        )
-})} */}
+        <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
+          {CartProduct && CartProduct.map((item, index) => {
+            return (
+              <div key={`ring-${index}`} className='grid grid-cols-3'>
+                <div className='col-start-1 col-span-2 flex px-[10px] py-2 text-sm'>{item.name}</div>
+                <div className='col-start-3 flex justify-center text-[#d48c20] px-[10px] py-2'>{item.productValue}</div>
+              </div>
+            )
+          })}
         </div>
         <div className='border mx-[15px] border-t-black grid grid-cols-2 py-2'>
           <div className='font-bold'>PAYMENT</div>
