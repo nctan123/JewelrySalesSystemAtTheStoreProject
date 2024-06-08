@@ -53,6 +53,9 @@ export default function LoginToStore() {
   const handleSeller = () => {
     navigate('/public')
   }
+  const handleCashier = () => {
+    navigate('/cs_public')
+  }
   return (
     <div className={clsx(style.login_container)} >
       <div className='title_login' >Log in</div>
@@ -94,7 +97,9 @@ export default function LoginToStore() {
       <button onClick={() => handleSeller()} >
         seller
       </button>
-
+      <button onClick={() => handleCashier()} >
+       Cashier
+      </button>
 
 
       <div className={clsx(style.back)} onClick={handleBackClick}>
