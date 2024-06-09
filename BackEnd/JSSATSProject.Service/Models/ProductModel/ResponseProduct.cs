@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JSSATSProject.Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,7 +10,6 @@ namespace JSSATSProject.Service.Models.ProductModel
     public class ResponseProduct
     {
         public int Id { get; set; }
-
         public int CategoryId { get; set; }
 
         public string? Code { get; set; }
@@ -18,10 +18,14 @@ namespace JSSATSProject.Service.Models.ProductModel
 
         public string? Img { get; set; }
 
-        public decimal ProductValue { get; set; } 
+        public decimal ProductValue { get; set; }
 
         public decimal PriceRate { get; set; }
 
         public string? Status { get; set; }
+
+        public ICollection<ProductDiamond>? ProductDiamonds { get; set; }
+
+        public ICollection<ProductMaterial>? ProductMaterials { get; set; }
     }
 }

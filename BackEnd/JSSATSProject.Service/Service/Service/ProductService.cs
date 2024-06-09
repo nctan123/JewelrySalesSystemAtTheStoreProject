@@ -46,7 +46,7 @@ namespace JSSATSProject.Service.Service.Service
         {
             var entities = await _unitOfWork.ProductRepository.GetAsync(
                 c => c.Code.Equals(code),
-                includeProperties: "Category,Stalls");
+                includeProperties: "Category,Stalls,");
 
 
             var response = entities.Select(product => new ResponseProductDetails
@@ -60,7 +60,7 @@ namespace JSSATSProject.Service.Service.Service
                 ProductionCost = product.ProductionCost,
                 GemCost = product.GemCost,
                 Img = product.Img,
-                PriceRate = product.PriceRate,
+                //Weight = _unitOfWork.ProductMaterialRepository.GetByIDAsync(1).,
                 Status = product.Status
             }).ToList();
 
@@ -89,7 +89,7 @@ namespace JSSATSProject.Service.Service.Service
                 ProductionCost = product.ProductionCost,
                 GemCost = product.GemCost,
                 Img = product.Img,
-                PriceRate = product.PriceRate,
+                //PriceRate = product.PriceRate,
                 Status = product.Status
             }).ToList();
 
@@ -118,7 +118,7 @@ namespace JSSATSProject.Service.Service.Service
                 ProductionCost = product.ProductionCost,
                 GemCost = product.GemCost,
                 Img = product.Img,
-                PriceRate = product.PriceRate,
+                //PriceRate = product.PriceRate,
                 Status = product.Status
             }).ToList();
 
