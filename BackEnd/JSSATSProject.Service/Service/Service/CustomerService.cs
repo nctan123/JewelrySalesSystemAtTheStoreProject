@@ -131,16 +131,21 @@ namespace JSSATSProject.Service.Service.Service
         {
             try
             {
-                var customer = _mapper.Map<Customer>(requestCustomer);
-                customer.Id = customerId;
-                await _unitOfWork.CustomerRepository.UpdateAsync(customer);
-                // await _unitOfWork.SaveAsync();
-
-                return new ResponseModel
+                var customer = await _unitOfWork.CustomerRepository.GetByIDAsync(customerId);
+                if (customer != null)
                 {
-                    Data = customer,
-                    MessageError = "",
-                };
+                    int id = customer.Id;
+                    _mapper.Map(requestCustomer, customer);
+                    customer.Id = id;
+                    await _unitOfWork.CustomerRepository.UpdateAsync(customer);
+
+                    return new ResponseModel
+                    {
+                        Data = customer,
+                        MessageError = "",
+                    };
+                }
+
                 return new ResponseModel
                 {
                     Data = null,

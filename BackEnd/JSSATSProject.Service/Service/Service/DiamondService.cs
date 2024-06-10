@@ -95,24 +95,37 @@ public class DiamondService : IDiamondService
 
     public async Task<ResponseModel> UpdateDiamondAsync(int diamondId, RequestUpdateDiamond requestDiamond)
     {
-        var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
-        if (diamond == null)
+        try
         {
+            var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
+            if (diamond != null)
+            {
+
+                _mapper.Map(requestDiamond, diamond);
+
+                await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
+
+                return new ResponseModel
+                {
+                    Data = diamond,
+                    MessageError = "",
+                };
+            }
+
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "Diamond not found.",
+                MessageError = "Not Found",
             };
         }
-
-        _mapper.Map(requestDiamond, diamond);
-        await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
-        await _unitOfWork.SaveAsync();
-
-        return new ResponseModel
+        catch (Exception ex)
         {
-            Data = diamond,
-            MessageError = "",
-        };
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
+        }
     }
 }

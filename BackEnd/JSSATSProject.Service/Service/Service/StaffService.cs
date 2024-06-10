@@ -63,9 +63,10 @@ namespace JSSATSProject.Service.Service.Service
                 var staff = await _unitOfWork.StaffRepository.GetByIDAsync(staffId);
                 if (staff != null)
                 {
-                    staff = _mapper.Map<Staff>(requestStaff);
+
+                    _mapper.Map(requestStaff, staff);
+
                     await _unitOfWork.StaffRepository.UpdateAsync(staff);
-                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {
