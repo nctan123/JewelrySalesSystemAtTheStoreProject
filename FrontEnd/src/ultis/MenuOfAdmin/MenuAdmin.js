@@ -7,7 +7,8 @@ const { FaChartSimple,
     MdOutlineAssignmentReturned,
     TbDeviceIpadCancel,
     RiAccountPinCircleFill,
-    BiLogOut, FaChevronDown, IoMdArrowDropdown, IoMdArrowDropup } = iconAdmin
+    BiLogOut, FaChevronDown, IoMdArrowDropdown, IoMdArrowDropup, TbFileInvoice, CgUserList, LiaFileInvoiceDollarSolid, GrUserManager,
+    MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges } = iconAdmin
 
 export const sidebarMenuAdmin = [
     // {
@@ -17,30 +18,30 @@ export const sidebarMenuAdmin = [
     // },
     {
         path: 'Dashboard',
-        text: 'dashboard',
+        text: 'Dashboard',
         iconAdmin: <FaChartSimple size={24} color="white" />
     },
     {
         path: 'Report',
-        text: 'report',
+        text: 'Report',
         iconAdmin: <TbReportSearch size={24} color="white" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
                 path: 'Report/Invoice',
-                text: 'invoice',
-                iconAdmin: <TbReportSearch size={24} color="white" />
+                text: 'Invoice',
+                iconAdmin: <TbFileInvoice size={24} color="white" />
             },
             {
                 path: 'Report/ProductSold',
-                text: 'product sold',
-                iconAdmin: <TbReportSearch size={24} color="white" />
+                text: 'Product sold',
+                iconAdmin: <LiaFileInvoiceDollarSolid size={24} color="white" />
             },
             {
                 path: 'Report/Employee',
-                text: 'employee',
-                iconAdmin: <TbReportSearch size={24} color="white" />
+                text: 'Employee',
+                iconAdmin: <CgUserList size={24} color="white" />
             }
 
         ],
@@ -48,28 +49,57 @@ export const sidebarMenuAdmin = [
     },
     {
         path: 'Manage',
-        text: 'manage',
-        iconAdmin: <MdManageAccounts size={24} color="white" />
+        text: 'Manage',
+        iconAdmin: <MdManageAccounts size={24} color="white" />,
+        iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
+        iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
+        subMenu: [
+            {
+                path: 'Manage/customeradmin',
+                text: 'Customer',
+                iconAdmin: <GrUserManager size={24} color="white" />
+            },
+            {
+                path: 'Manage/productadmin',
+                text: 'Product',
+                iconAdmin: <GiStonePile size={24} color="white" />
+            },
+            {
+                path: 'Manage/staff',
+                text: 'Staff',
+                iconAdmin: <MdOutlineManageAccounts size={24} color="white" />
+            }
+
+        ],
     },
     {
         path: 'Promotion',
-        text: 'promotion',
-        iconAdmin: <CiGift size={24} color="white" />
+        text: 'Promotion',
+        iconAdmin: <CiGift size={24} color="white" />,
+        iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
+        iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
+        subMenu: [
+            {
+                path: 'Promotion/promotionlist',
+                text: 'Promotion list',
+                iconAdmin: <LiaGiftsSolid size={24} color="white" />
+            },
+            {
+                path: 'Promotion/promotionrequest',
+                text: 'Request',
+                iconAdmin: <VscGitPullRequestGoToChanges size={24} color="white" />
+            }
+        ],
     },
     {
         path: 'ReturnPolicy',
-        text: 'return policy',
+        text: 'Return policy',
         iconAdmin: <MdOutlineAssignmentReturned size={24} color="white" />
     },
     {
         path: 'VoidBill',
-        text: 'void bill',
+        text: 'Void bill',
         iconAdmin: <TbDeviceIpadCancel size={24} color="white" />
-    },
-    {
-        path: 'SellerFuction',
-        text: 'seller fuction',
-        iconAdmin: <RiAccountPinCircleFill size={24} color="white" />
     },
     {
         path: '/login',

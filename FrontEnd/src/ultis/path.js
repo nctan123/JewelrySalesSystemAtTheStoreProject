@@ -1,24 +1,36 @@
 const path = {
-    HOME: '/',
-    ADMIN: '/admin',
-    LOGIN: '/login',
-
-    PUBLIC: '/public',
+    PUBLIC: 'public',
     DIAMOND: '',
-    LOGIN: 'login',
+    LOGIN: '/login',
     STAR: '*',
     CUSTOMER: 'customer',
     JEWELRY: 'jewelry',
-    NECKLACE:'necklace',
+    NECKLACE: 'necklace',
     RING: 'ring',
-    EARRING: 'earring',
-    BANGLES: 'bangles',
-    WHOLESALEGOLD: 'wholesalegold',
-    RETAILGOLD: 'retailgold',
-    SEARCHINVOICE: 'searchinvoice',
-    PROMOTION: 'promotion',
-    RETURN_EX: 'returnExchange',
 
-    CS_PUBLIC: '/cs_public',
+    HOME: '/',
+
+    ADMIN: '/admin',
+    DASHBOARD: 'Dashboard',
+
+    MANAGE: 'Manage',
+    CUSTOMERADMIN: 'customeradmin',
+    PRODUCTADMIN: 'productadmin',
+    STAFF: 'staff',
+
+    REPORT: 'Report',
+    INVOICE: 'Invoice',
+    PRODUCSOLD: 'ProductSold',
+    EMPLOYEE: 'Employee',
+
+    PROMOTION: 'Promotion',
+    PROMOTIONLIST: 'promotionlist',
+    PROMOTIONREQUEST: 'promotionrequest',
+
+    RETURNPOLICY: 'ReturnPolicy',
+
+    VOIDBILL: 'VoidBill',
+
+
 }
 export default path
