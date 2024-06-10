@@ -91,12 +91,5 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
-
-        public async Task<bool> IsValidStaff(int id)
-        {
-            var staff = await _unitOfWork.StaffRepository.GetByIDAsync(id);
-            return staff is not null;
-        }
-
     }
 }
