@@ -4,6 +4,7 @@ using JSSATSProject.Service.Models.AccountModel;
 using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.Material;
 using JSSATSProject.Service.Models.StaffModel;
+
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Models.MaterialPriceListModel;
 using JSSATSProject.Service.Models.OrderModel;
@@ -19,6 +20,12 @@ using JSSATSProject.Service.Models.StallModel;
 using JSSATSProject.Service.Models.StallTypeModel;
 using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.DiamondPriceListModel;
+using JSSATSProject.Service.Models.OrderDetail;
+using JSSATSProject.Service.Models.NewFolder;
+
+
+
+
 
 
 namespace JSSATSProject.Service.AutoMapper
@@ -90,14 +97,8 @@ namespace JSSATSProject.Service.AutoMapper
 
             //Product
             CreateMap<Product, RequestCreateProduct>().ReverseMap();
-            CreateMap<Product, ResponseProduct>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
-                .ForMember(dest => dest.Diamond,
-                    opt => opt.MapFrom(src => src.ProductDiamonds.FirstOrDefault()!.Diamond))
-                .ReverseMap()
-                .ForMember(dest => dest.Category, opt => opt.Ignore()) //Ignore mapping Category back to Product
-                .ForMember(dest => dest.ProductDiamonds, opt => opt.Ignore())
-                ;
+            CreateMap<Product, ResponseProduct>().ReverseMap();
+
             //Promotion
             CreateMap<Promotion, RequestCreatePromotion>().ReverseMap();
             CreateMap<Promotion, ResponsePromotion>().ReverseMap();
@@ -118,6 +119,14 @@ namespace JSSATSProject.Service.AutoMapper
             //StallType
             CreateMap<StallType, RequestCreateStallType>().ReverseMap();
             CreateMap<StallType, ResponseStallType>().ReverseMap();
+
+            //OrderDetail
+            CreateMap<OrderDetail, RequestCreateOrderDetail>().ReverseMap();
+            CreateMap<OrderDetail, RequestUpdateOrderDetail>().ReverseMap();
+            CreateMap<OrderDetail, ResponseOrderDetail>().ReverseMap();
+   
+
+
         }
     }
 }
