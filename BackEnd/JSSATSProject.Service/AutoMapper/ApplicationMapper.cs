@@ -97,7 +97,15 @@ namespace JSSATSProject.Service.AutoMapper
 
             //Product
             CreateMap<Product, RequestCreateProduct>().ReverseMap();
-            CreateMap<Product, ResponseProduct>().ReverseMap();
+            CreateMap<Product, ResponseProduct>()
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Category.Id))
+                .ForMember(dest => dest.Diamond,
+                    opt => opt.MapFrom(src => src.ProductDiamonds.FirstOrDefault()!.Diamond))
+                .ReverseMap()
+                .ForMember(dest => dest.Category, opt => opt.Ignore()) //Ignore mapping Category back to Product
+                .ForMember(dest => dest.ProductDiamonds, opt => opt.Ignore())
+                ;
 
             //Promotion
             CreateMap<Promotion, RequestCreatePromotion>().ReverseMap();

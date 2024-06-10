@@ -13,7 +13,7 @@ const activeStyleJew = 'py-1 gap-4 w-[94%] rounded-xl font-thin font-serif itali
 
 const Sildebar = () => {
   const [isJewelrySubmenuOpen, setIsJewelrySubmenuOpen] = useState(false);
-  const handleJewelrySubmenuToggle = () => {
+const handleJewelrySubmenuToggle = () => {
   setIsJewelrySubmenuOpen(!isJewelrySubmenuOpen);
 };
 const handleMenuItemClick = (item) => {
@@ -29,7 +29,7 @@ const handleMenuItemClick = (item) => {
         <img className='mt-[20px] w-[60px] object-contain' src={logo} alt='logo' />
         <span >Jewelry Store</span>
       </div>
-      <div className='flex flex-col pb-16'>
+      <div className='flex flex-col'>
       {sidebarMenu.map(item => (
       <div key={item.path}>
         <NavLink
