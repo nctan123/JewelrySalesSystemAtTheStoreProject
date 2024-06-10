@@ -12,26 +12,24 @@ namespace JSSATSProject.Service.Models.DiamondModel
 
         public string Name { get; set; } = null!;
 
-        public int OriginId { get; set; }
+        public string Origin { get; set; }
 
-        public int ShapeId { get; set; }
+        public string Shape{ get; set; }
 
-        public int FluorescenceId { get; set; }
+        public string Fluorescence { get; set; }
 
-        public int ColorId { get; set; }
+        public string Color{ get; set; }
 
-        public int SymmetryId { get; set; }
+        public string Symmetry{ get; set; }
 
-        public int PolishId { get; set; }
+        public string Polish { get; set; }
 
-        public int CutId { get; set; }
+        public string Cut { get; set; }
 
-        public int ClarityId { get; set; }
+        public string Clarity{ get; set; }
 
-        public int CaratId { get; set; }
+        public string Carat { get; set; }
 
         public string? Status { get; set; }
-
-
     }
 }

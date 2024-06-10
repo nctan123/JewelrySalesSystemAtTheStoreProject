@@ -1,5 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Text.RegularExpressions;
+using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
@@ -90,6 +92,12 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public bool IsValidOrderType(string? input)
+        {
+            if (String.IsNullOrEmpty(input)) return false;
+            return Regex.IsMatch(input, Constants.OrderTypeRegex);
         }
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JSSATSProject.Repository.ConstantsContainer;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -53,6 +54,24 @@ namespace JSSATSProject.Service.Service.Service
             {
                 Data = response,
                 MessageError = "",
+            };
+        }
+
+        public async Task<ResponseModel> FindByPhoneNumber(string phoneNumberStr)
+        {
+            if (!int.TryParse(phoneNumberStr, out int phoneNumber))
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = Constants.InvalidPhoneNumberFormat
+                };
+
+            var customer = await _unitOfWork.CustomerRepository.FindByPhoneNumber(phoneNumberStr);
+
+            return new ResponseModel
+            {
+                Data = customer,
+                MessageError = customer is null ? Constants.CustomerNotFound : "",
             };
         }
 

@@ -7,4 +7,5 @@ public class ProductRepository : GenericRepository<Product>
     public ProductRepository(DBContext context) : base(context)
     {
     }
+    
 }

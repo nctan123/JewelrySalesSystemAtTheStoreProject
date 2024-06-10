@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using JSSATSProject.Repository.CacheManagers;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -17,14 +18,18 @@ namespace JSSATSProject.Service.Service.Service
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly DiamondPriceCacheManager _diamondPriceCacheManager;
+        
 
-        public DiamondPriceListService(UnitOfWork unitOfWork, IMapper mapper)
+        public DiamondPriceListService(UnitOfWork unitOfWork, IMapper mapper, DiamondPriceCacheManager diamondPriceCacheManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _diamondPriceCacheManager = diamondPriceCacheManager;
         }
 
-        public async Task<ResponseModel> CreateDiamondPriceListAsync(RequestCreateDiamondPriceList requestDiamondPriceList)
+        public async Task<ResponseModel> CreateDiamondPriceListAsync(
+            RequestCreateDiamondPriceList requestDiamondPriceList)
         {
             var entity = _mapper.Map<DiamondPriceList>(requestDiamondPriceList);
             await _unitOfWork.DiamondPriceListRepository.InsertAsync(entity);
@@ -58,7 +63,8 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> UpdateDiamondPriceListAsync(int diamondpricelistId, RequestUpdateDiamondPriceList requestDiamondPriceList)
+        public async Task<ResponseModel> UpdateDiamondPriceListAsync(int diamondpricelistId,
+            RequestUpdateDiamondPriceList requestDiamondPriceList)
         {
             try
             {
@@ -92,6 +98,19 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public async Task<decimal> FindPriceBy4CAndOrigin(int cutId, int clarityId, int colorId, int caratId, int originId)
+        {
+            var key = (cutId, clarityId, colorId, caratId, originId);
+            if (_diamondPriceCacheManager.TryGetValue(key, out var cachedPrice))
+            {
+                return cachedPrice;
+            }
+
+            var price = await _unitOfWork.DiamondPriceListRepository.FindPriceBy4CAndOrigin(cutId, clarityId, colorId, caratId, originId);
+            _diamondPriceCacheManager.SetValue(key, price);
+            return price;
         }
     }
 }
