@@ -8,17 +8,11 @@ import './SildebarLeftMenu.css'
 //const notActive = 'py-4 px-[25px] font-[300] font-sans italic flex gap-3 items-center text-white text-[14px]'
 // const activeStyle = 'py-4 justify-center  w-[90%] ml-[10px] rounded-2xl font-thin font-serif italic flex gap-3 items-center text-white text-[14px] bg-[#90A0F4]'
 const Sildebar = () => {
-    const [isReportOpen, setIsReportOpen] = useState(null);
-    const [isOpen, setIsOpen] = useState();
-    const handleReportOpenToggle = (menuItem) => {
-        setIsReportOpen((prevState) => {
-            if (prevState === menuItem) {
-                return null;
-            } else {
-                return menuItem;
-            }
-        });
-    };
+    const [isReportOpen, setIsReportOpen] = useState(false);
+
+    const handleReportOpenToggle = () => {
+        setIsReportOpen(!isReportOpen);
+    }
     // className='mt-[20px] w-[60px] object-contain'
     return (
         <div className='container_sidebarleft flex flex-col'>
@@ -36,31 +30,17 @@ const Sildebar = () => {
                         <NavLink
                             to={item.path}
                             end={item.end}
-                            value={item.text}
                             activeClassName='active'
-                            onClick={
-                                item.text === 'Report'
-                                    ? () => handleReportOpenToggle('report')
-                                    : item.text === 'Manage'
-                                        ? () => handleReportOpenToggle('manage')
-                                        : item.text === 'Promotion'
-                                            ? () => handleReportOpenToggle('promotion')
-                                            : undefined
-                            }
+                            onClick={item.text === 'report' ? handleReportOpenToggle : undefined}
                         >
                             {item.iconAdmin}
                             <span className='ml-4'>{item.text}</span>
-                            {isReportOpen === 'report' && item.text === 'Report'
-                                ? item.iconAdmin3
-                                : isReportOpen === 'manage' && item.text === 'Manage'
-                                    ? item.iconAdmin3
-                                    : isReportOpen === 'promotion' && item.text === 'Promotion'
-                                        ? item.iconAdmin3
-                                        : item.iconAdmin2}
+                            {isReportOpen === false ? item.iconAdmin2 : item.iconAdmin3}
                         </NavLink>
 
-                        {isReportOpen === 'report' && item.text === 'Report' && item.subMenu.length > 0 && (
+                        {item.text === 'report' && isReportOpen && item.subMenu.length > 0 && (
                             <div className='dropdown'>
+
                                 {item.subMenu.map((subItem) => (
                                     <NavLink
                                         to={subItem.path}
@@ -68,43 +48,13 @@ const Sildebar = () => {
                                         activeClassName='active-1'
                                     >
                                         {subItem.iconAdmin}
-                                        <span className='ml-4'>{subItem.text}</span>
+                                        <span className='ml-4'> {subItem.text}</span>
                                     </NavLink>
                                 ))}
+
+
                             </div>
                         )}
-
-                        {isReportOpen === 'manage' && item.text === 'Manage' && item.subMenu.length > 0 && (
-                            <div className='dropdown'>
-                                {item.subMenu.map((subItem) => (
-                                    <NavLink
-                                        to={subItem.path}
-                                        key={subItem.path}
-                                        activeClassName='active-1'
-                                    >
-                                        {subItem.iconAdmin}
-                                        <span className='ml-4'>{subItem.text}</span>
-                                    </NavLink>
-                                ))}
-                            </div>
-                        )}
-                        {isReportOpen === 'promotion' && item.text === 'Promotion' && item.subMenu.length > 0 && (
-                            <div className='dropdown'>
-                                {item.subMenu.map((subItem) => (
-                                    <NavLink
-                                        to={subItem.path}
-                                        key={subItem.path}
-                                        activeClassName='active-1'
-                                    >
-                                        {subItem.iconAdmin}
-                                        <span className='ml-4'>{subItem.text}</span>
-                                    </NavLink>
-                                ))}
-                            </div>
-                        )}
-
-
-
                     </div>
                 ))}
             </div>

@@ -36,8 +36,25 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetAllAsync()
         {
-            var entities = await _unitOfWork.CustomerRepository.GetAsync();
-            var response = _mapper.Map<List<ResponseCustomer>>(entities.ToList());
+        
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,Orders,Payments");
+            var response = entities.Select(entity => new ResponseCustomer
+            {
+                Id = entity.Id,
+                PointId = entity.PointId,
+                Firstname = entity.Firstname,
+                Lastname = entity.Lastname,
+                Phone = entity.Phone,
+                Email = entity.Email,
+                Gender = entity.Gender,
+                Address = entity.Address,
+                Orders = entity.Orders, 
+                Payments = entity.Payments,
+                TotalPoint = entity.Point?.Totalpoint?? 0,
+                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
+            }).ToList();
+
+            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -45,10 +62,29 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
+
         public async Task<ResponseModel> GetByIdAsync(int id)
         {
-            var entity = await _unitOfWork.CustomerRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponseCustomer>(entity);
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(
+                c => c.Id.Equals(id),
+                includeProperties: "Point,Orders,Payments");
+            var response = entities.Select(entity => new ResponseCustomer
+            {
+                Id = entity.Id,
+                PointId = entity.PointId,
+                Firstname = entity.Firstname,
+                Lastname = entity.Lastname,
+                Phone = entity.Phone,
+                Email = entity.Email,
+                Gender = entity.Gender,
+                Address = entity.Address,
+                Orders = entity.Orders,
+                Payments = entity.Payments,
+                TotalPoint = entity.Point?.Totalpoint ?? 0,
+                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
+            }).ToList();
+
+            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -58,23 +94,26 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByNameAsync(string name)
         {
-            var response = await _unitOfWork.CustomerRepository.GetAsync(
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Firstname.Equals(name),
-                null,
-                includeProperties: "",
-                pageIndex: null,
-                pageSize: null
-            );
-
-            if (!response.Any())
+                includeProperties: "Point,Orders,Payments");
+            var response = entities.Select(entity => new ResponseCustomer
             {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = $"Customer with name '{name}' not found.",
-                };
-            }
+                Id = entity.Id,
+                PointId = entity.PointId,
+                Firstname = entity.Firstname,
+                Lastname = entity.Lastname,
+                Phone = entity.Phone,
+                Email = entity.Email,
+                Gender = entity.Gender,
+                Address = entity.Address,
+                Orders = entity.Orders,
+                Payments = entity.Payments,
+                TotalPoint = entity.Point?.Totalpoint ?? 0,
+                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
+            }).ToList();
 
+            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -84,31 +123,33 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByPhoneAsync(string phonenumber)
         {
-            var response = await _unitOfWork.CustomerRepository.GetAsync(
-                c => c.Phone.Equals(phonenumber),
-                null,
-                includeProperties: "",
-                pageIndex: null,
-                pageSize: null
-            );
-
-            if (!response.Any())
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(
+                 c => c.Phone.Equals(phonenumber),
+                 includeProperties: "Point,Orders,Payments");
+            var response = entities.Select(entity => new ResponseCustomer
             {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = $"Customer with name '{phonenumber}' not found.",
-                };
-            }
+                Id = entity.Id,
+                PointId = entity.PointId,
+                Firstname = entity.Firstname,
+                Lastname = entity.Lastname,
+                Phone = entity.Phone,
+                Email = entity.Email,
+                Gender = entity.Gender,
+                Address = entity.Address,
+                Orders = entity.Orders,
+                Payments = entity.Payments,
+                TotalPoint = entity.Point?.Totalpoint ?? 0,
+                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
+            }).ToList();
 
+            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
                 MessageError = "",
             };
         }
-
-        public async Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer)
+            public async Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer)
         {
             try
             {
