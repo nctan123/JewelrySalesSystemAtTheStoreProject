@@ -14,7 +14,7 @@ const Public = () => {
 
         <div className='flex-auto border '>
           <div className='h-[70px] px-[30px] flex items-center mb-2'><Header/></div>
-          <div className='h-[90%] flex justify-center overflow-y-auto'><Outlet/></div>
+          <div className='h-[88%] flex justify-center overflow-y-auto '><Outlet/></div>
         </div>
 
         <div className='w-[400px] flex-none bg-[#56565821]'>

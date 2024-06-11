@@ -2,6 +2,7 @@ const path = {
     HOME: '/',
     ADMIN: '/admin',
     LOGIN: '/login',
+   
 // Seller
     PUBLIC: '/public',
     DIAMOND: '',
@@ -24,6 +25,34 @@ const path = {
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
+ // ADMIN
+ DASHBOARD: 'Dashboard',
+
+ MANAGE: 'Manage',
+ CUSTOMERADMIN: 'customeradmin',
+ PRODUCTADMIN: 'productadmin',
+ STAFF: 'staff',
+ POINT: 'point',
+
+ REPORT: 'Report',
+ INVOICE: 'Invoice',
+ PRODUCSOLD: 'ProductSold',
+ EMPLOYEE: 'Employee',
+
+ PROMOTIONADMIN: 'Promotionadmin',
+ PROMOTIONLIST: 'promotionlist',
+ PROMOTIONREQUEST: 'promotionrequest',
+
+ RETURNPOLICY: 'ReturnPolicy',
+
+ VOIDBILL: 'VoidBill',
+
+ // end admin
+
+
+ // manager
+ MANAGER: 'manager'
+ // end manager
 
 
 }

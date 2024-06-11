@@ -22,7 +22,7 @@ const fetchAllReGold = () => {
     return axios.get("https://jssats.azurewebsites.net/api/product/getall");
 }
 const fetchAllDiamond = () => {
-    return axios.get("https://jssats.azurewebsites.net/api/diamond/getall");
+    return axios.get("https://jssatsproject.azurewebsites.net/api/diamond/getall");
 }
 const fetchAllPromotion = () => {
     return axios.get("https://jssats.azurewebsites.net/api/promotion/getAll");

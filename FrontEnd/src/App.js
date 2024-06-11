@@ -11,6 +11,22 @@ import Admin from './page/Admin/Admin';
 import Home from './page/Home/Home';
 import path from './ultis/path'
 import Cs_Order from './page/Cashier/Cs_Order';
+import Dashboard from './page/Admin/Dashboard'
+import Report from './page/Admin/Report/Report';
+import Manage from './page/Admin/Manage/Manage';
+import Invoice from '../src/page/Admin/Report/Invoice'
+import Employee from '../src/page/Admin/Report/Employee'
+import ProductSold from '../src/page/Admin/Report/ProductSold'
+import CustomerAdmin from './page/Admin/Manage/CustomerAdmin';
+import ProductAdmin from './page/Admin/Manage/ProductAdmin';
+import Staff from '../src/page/Admin/Manage/Staff';
+import PromotionAdmin from './page/Admin/Promotion/PromotionAdmin';
+import PromotionList from './page/Admin/Promotion/PromotionList';
+import PromotionRequest from './page/Admin/Promotion/PromotionRequest';
+import ReturnPolicy from './page/Admin/ReturnPolicy';
+import VoidBill from './page/Admin/VoidBill'
+import Point from './page/Admin/Manage/Point';
+import Manager from './page/Manager/Manager';
 
 
 function App() {
@@ -22,10 +38,40 @@ function App() {
     <>
       <div className=''>
         <Routes>
-          {/* home */}
-          <Route path={path.HOME} element={<Home />} />
+        {/* home */}
+        <Route path={path.HOME} element={<Home />} />
           <Route path={path.LOGIN} element={<Login />} />
-          <Route path={path.ADMIN} element={<Admin />} />
+          {/* admin */}
+          <Route path={path.ADMIN} element={<Admin />} exact >
+            <Route path={path.ADMIN} element={<Dashboard />} />
+            <Route path={path.DASHBOARD} element={<Dashboard />} />
+
+            <Route path={path.REPORT} element={<Report />} exact>
+              <Route path={path.INVOICE} element={<Invoice />} />
+              <Route path={path.PRODUCSOLD} element={<ProductSold />} />
+              <Route path={path.EMPLOYEE} element={<Employee />} />
+            </Route>
+
+            <Route path={path.MANAGE} element={<Manage />} >
+              <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
+              <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
+              <Route path={path.STAFF} element={<Staff />} />
+              <Route path={path.POINT} element={<Point />} />
+            </Route>
+
+            <Route path={path.PROMOTIONADMIN} element={<PromotionAdmin />} >
+              <Route path={path.PROMOTIONLIST} element={<PromotionList />} />
+              <Route path={path.PROMOTIONREQUEST} element={<PromotionRequest />} />
+            </Route>
+
+            <Route path={path.RETURNPOLICY} element={<ReturnPolicy />} />
+
+            <Route path={path.VOIDBILL} element={<VoidBill />} />
+
+          </Route >
+          {/* manager */}
+          <Route path={path.MANAGER} element={<Manager />}>
+          </Route>
           {/* Seller */}
           <Route path={path.PUBLIC} element={<Public />}>
             <Route path={path.DIAMOND} element={<Diamond />} />
@@ -58,17 +104,7 @@ function App() {
       </div>
 
       <ToastContainer
-        position="top-right"
-        autoClose={1999}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition="Zoom"
+        
       />
     </>
   );

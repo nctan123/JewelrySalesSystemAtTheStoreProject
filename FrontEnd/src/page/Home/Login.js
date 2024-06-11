@@ -1,111 +1,105 @@
-import React from 'react'
-import { useState } from 'react'
-import clsx from 'clsx'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons'
+import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-
 import { useNavigate } from 'react-router-dom';
-import style from './Login.module.css'
 import { loginApi } from '../../apis/jewelryService';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
+import clsx from 'clsx';
+import style from './Login.module.css';
 
 export default function LoginToStore() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [loadingApi, setLoadingApi] = useState(false);
 
   const navigate = useNavigate();
+
   const handleBackClick = () => {
     navigate('/');
-    // toast.success('Edit succeed');
   };
+
   const handleLogin = async () => {
-    if (!email || !password) {
-      toast.error('Email/Password is required!!!');
+    if (!username || !password) {
+      toast.error('Username/Password is required!!!');
       return;
     }
     setLoadingApi(true);
     try {
-      const res = await loginApi(email, password);
-      if (res && res.token) {
-        localStorage.setItem('token', res.token);
-        // Xử lý thành công, ví dụ: chuyển hướng tới trang khác
-        navigate('/Dashboard');
-      } else {
-        if (res && res.status === 400) {
-          toast.error(res.data.error);
-        } else {
-          toast.error('Login failed. Please try again.');
-        }
+      const response = await fetch('https://jssats.azurewebsites.net/api/account/getall');
+      const data = await response.json();
+      console.log('>>> check res', data.data)
+      const user = data.data.find(user => user.username === username && user.password === password);
+
+      // Determine user role and redirect or show appropriate UI
+      switch (user.roleId) {
+        case 2:
+          navigate('/admin');
+          break;
+        case 1:
+          navigate('/public');
+          break;
+        case 4:
+          navigate('/manager');
+          break;
+        case 3:
+          navigate('/cs_public');
+          break;
+        // Add more cases for other roles if needed
+        default:
+          toast.error('Unknown user role');
+          break;
       }
     } catch (error) {
-      console.error('Login error:', error);
-      toast.error('An error occurred during login. Please try again later.');
+      toast.error('Invalid username or password');
     }
     setLoadingApi(false);
-  }
-  const handleAdmin = () => {
-    navigate('/admin')
-  }
-  const handleSeller = () => {
-    navigate('/public')
-  }
-  const handleCashier = () => {
-    navigate('/cs_public')
-  }
+  };
+
   return (
-    <div className={clsx(style.login_container)} >
-      <div className='title_login' >Log in</div>
-      <div className='text'> Email or username</div>
+    <div className={clsx(style.login_container)}>
+      <div className={clsx(style.title_login)}>Log in</div>
       <input
         type='text'
-        placeholder='Email or username...'
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
+        placeholder='Username...'
+        value={username}
+        onChange={(event) => setUsername(event.target.value)}
       />
       <div className={clsx(style.input_2)}>
         <input
-          type={isShowPassword === true ? 'text' : 'password'}
+          type={isShowPassword ? 'text' : 'password'}
           placeholder='Password...'
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <span> <FontAwesomeIcon icon={isShowPassword === false ? faEyeSlash : faEye} onClick={() => setIsShowPassword(!isShowPassword)} /></span>
+        <span>
+          <FontAwesomeIcon
+            icon={isShowPassword ? faEyeSlash : faEye}
+            onClick={() => setIsShowPassword(!isShowPassword)}
+          />
+        </span>
       </div>
 
       <button
-        className={email && password ? 'active' : ''}
-        disabled={email && password ? false : true}
+        className={username && password ? clsx(style.active) : ''}
+        disabled={!username || !password}
         onClick={() => handleLogin()}
       >
-        {loadingApi &&
+        {loadingApi && (
           <FontAwesomeIcon
             icon={faSpinner}
-            className="fa-spin-pulse fa-spin-reverse fa-1.5x me-2"
-          // style={{ fontSize: '1.5rem' }}
-          />}Login
+            className='fa-spin-pulse fa-spin-reverse fa-1.5x me-2'
+          />
+        )}
+        Login
       </button>
-      {/* phân luồng tạm */}
-      <button
-        onClick={() => handleAdmin()}
-      >
-        Admin
-      </button>
-      <button onClick={() => handleSeller()} >
-        seller
-      </button>
-      <button onClick={() => handleCashier()} >
-       Cashier
-      </button>
-
 
       <div className={clsx(style.back)} onClick={handleBackClick}>
-        <span> <FontAwesomeIcon icon={faRotateLeft} />     Back</span>
+        <span>
+          <FontAwesomeIcon icon={faRotateLeft} /> Back
+        </span>
       </div>
-
     </div>
-  )
+  );
 }
