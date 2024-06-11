@@ -41,13 +41,14 @@ namespace JSSATSProject.Service.AutoMapper
 
             // Customer
             CreateMap<Customer, RequestCreateCustomer>().ReverseMap();
-
-            //CreateMap<Customer, ResponseCustomer>()
-            //    .ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point?.Totalpoint ?? 0))
-            //    .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point?.AvailablePoint ?? 0))
-            //    .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders))
-            //    .ForMember(dest => dest.Payments, opt => opt.MapFrom(src => src.Payments))
-            //    .ReverseMap();
+            
+            CreateMap<Customer, ResponseCustomer>()
+                    .ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.Totalpoint : 0))
+                    .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
+                    .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders))
+                    .ForMember(dest => dest.Payments, opt => opt.MapFrom(src => src.Payments))
+                    .ReverseMap();
+            
 
             CreateMap<Customer, RequestUpdateCustomer>().ReverseMap();
 
