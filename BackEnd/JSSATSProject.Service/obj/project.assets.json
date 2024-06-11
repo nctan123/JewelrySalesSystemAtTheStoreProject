@@ -2963,11 +2963,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
+      "projectUniqueName": "C:\\SWP\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
       "projectName": "JSSATSProject.Service",
-      "projectPath": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
+      "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
       "packagesPath": "C:\\Users\\nhata\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Service\\obj\\",
+      "outputPath": "C:\\SWP\\BackEnd\\JSSATSProject.Service\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nhata\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -2984,8 +2984,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
-              "projectPath": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj"
+            "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
+              "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj"
             }
           }
         }

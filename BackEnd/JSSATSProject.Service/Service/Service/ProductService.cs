@@ -4,12 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using JSSATSProject.Repository.CacheManagers;
-using JSSATSProject.Repository.ConstantsContainer;
 
 namespace JSSATSProject.Service.Service.Service
 {
