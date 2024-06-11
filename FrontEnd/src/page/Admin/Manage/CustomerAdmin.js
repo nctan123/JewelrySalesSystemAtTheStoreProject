@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import React, { useEffect, useState } from 'react'
 // import { fetchAllCustomer } from '../../../apis/jewelryService'
 // import clsx from 'clsx'
@@ -379,12 +378,3 @@ const Customer = () => {
 
 export default Customer;
 
-=======
-import React from 'react'
-
-export default function CustomerAdmin() {
-    return (
-        <div>CustomerAdmin</div>
-    )
-}
->>>>>>> develop

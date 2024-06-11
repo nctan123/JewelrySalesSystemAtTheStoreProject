@@ -18,10 +18,7 @@ import { GrUserManager } from "react-icons/gr";//manage customer
 import { GiStonePile } from "react-icons/gi";//product
 import { LiaGiftsSolid } from "react-icons/lia";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";//request
-<<<<<<< HEAD
 import { GiGoldNuggets } from "react-icons/gi";//point
-=======
->>>>>>> develop
 const iconAdmin = {
     FaChartSimple,
     TbReportSearch,
@@ -41,12 +38,8 @@ const iconAdmin = {
     MdOutlineManageAccounts,
     GiStonePile,
     LiaGiftsSolid,
-<<<<<<< HEAD
     VscGitPullRequestGoToChanges,
     GiGoldNuggets
-=======
-    VscGitPullRequestGoToChanges
->>>>>>> develop
 }
 
 export default iconAdmin

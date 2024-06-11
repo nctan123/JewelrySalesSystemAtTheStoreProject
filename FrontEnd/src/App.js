@@ -12,12 +12,6 @@ import Home from './page/Home/Home';
 import path from './ultis/path'
 import Cs_Order from './page/Cashier/Cs_Order';
 import Dashboard from './page/Admin/Dashboard'
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace } from './page/public';
-import Home from './page/Home/Home';
-import path from './ultis/path'
-import Login from './page/Home/Login'
-import Admin from './page/Admin/Admin';
-import Dashboard from './page/Admin/Dashboard';
 import Report from './page/Admin/Report/Report';
 import Manage from './page/Admin/Manage/Manage';
 import Invoice from '../src/page/Admin/Report/Invoice'
@@ -27,16 +21,15 @@ import CustomerAdmin from './page/Admin/Manage/CustomerAdmin';
 import ProductAdmin from './page/Admin/Manage/ProductAdmin';
 import Staff from '../src/page/Admin/Manage/Staff';
 import PromotionAdmin from './page/Admin/Promotion/PromotionAdmin';
-import Promotion from './page/Admin/Promotion/Promotion';
 import PromotionList from './page/Admin/Promotion/PromotionList';
 import PromotionRequest from './page/Admin/Promotion/PromotionRequest';
 import ReturnPolicy from './page/Admin/ReturnPolicy';
 import VoidBill from './page/Admin/VoidBill'
-
 import Point from './page/Admin/Manage/Point';
 import Manager from './page/Manager/Manager';
 
 import ProductManager from './page/Manager/Product/ProductManager';
+
 
 function App() {
   // test redux có hoạt động không
@@ -62,22 +55,13 @@ function App() {
             </Route>
 
             <Route path={path.MANAGE} element={<Manage />} >
-
               <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
               <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
               <Route path={path.STAFF} element={<Staff />} />
               <Route path={path.POINT} element={<Point />} />
-            </Route >
-
-            <Route path={path.PROMOTIONADMIN} element={<PromotionAdmin />} >
-
-              <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
-              <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
-              <Route path={path.STAFF} element={<Staff />} />
             </Route>
 
-            <Route path={path.PROMOTION} element={<Promotion />} >
-
+            <Route path={path.PROMOTIONADMIN} element={<PromotionAdmin />} >
               <Route path={path.PROMOTIONLIST} element={<PromotionList />} />
               <Route path={path.PROMOTIONREQUEST} element={<PromotionRequest />} />
             </Route>
@@ -86,20 +70,19 @@ function App() {
 
             <Route path={path.VOIDBILL} element={<VoidBill />} />
 
-
           </Route >
           {/* manager */}
-          < Route path={path.MANAGER} element={< Manager />}>
+          <Route path={path.MANAGER} element={<Manager />}>
             <Route path={path.MANAGER} element={<ProductManager />} />
             <Route path={path.PRODUCTMANAGER} element={<ProductManager />} >
               <Route path={path.DIAMOND} element={<Diamond />} />
               <Route path={path.RETAILGOLD} element={<RetailGold />} />
               <Route path={path.WHOLESALEGOLD} element={<WholesaleGold />} />
             </Route>
-          </Route>
 
+          </Route>
           {/* Seller */}
-          < Route path={path.PUBLIC} element={< Public />}>
+          <Route path={path.PUBLIC} element={<Public />}>
             <Route path={path.DIAMOND} element={<Diamond />} />
             <Route path={path.CUSTOMER} element={<Customer />} />
             <Route path={path.JEWELRY} element={<Jewelry />}>
@@ -115,34 +98,22 @@ function App() {
             <Route path={path.RETURN_EX} element={<Return_Ex />} />
           </Route>
           {/* Cashier */}
-          < Route path={path.CS_PUBLIC} element={< Cs_Public />}>
+          <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
             <Route path={path.CS_ORDER} element={<Cs_Order />}>
               <Route path={path.CS_ONPROCESS} element={<Cs_OnProcess />} />
               <Route path={path.CS_COMPLETE} element={<Cs_Complete />} />
             </Route>
             <Route path={path.CS_REVENUE} element={<Cs_Revenue />} />
-
-
-          </Route >
-
-          {/* seller */}
-          <Route path={path.PUBLIC} element={<Public />}>
-
-            <Route path={path.DIAMOND} element={<Diamond />} />
-            <Route path={path.CUSTOMER} element={<Customer />} />
-            <Route path={path.JEWELRY} element={<Jewelry />}>
-              <Route path={path.RING} element={<Ring />} />
-              <Route path={path.NECKLACE} element={<Necklace />} />
-            </Route>
-
           </Route>
 
-        </Routes >
+        </Routes>
 
 
 
-      </div >
+      </div>
+
       <ToastContainer
+
       />
     </>
   );

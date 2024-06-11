@@ -8,11 +8,7 @@ const { FaChartSimple,
     TbDeviceIpadCancel,
     RiAccountPinCircleFill,
     BiLogOut, FaChevronDown, IoMdArrowDropdown, IoMdArrowDropup, TbFileInvoice, CgUserList, LiaFileInvoiceDollarSolid, GrUserManager,
-<<<<<<< HEAD
     MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges, GiGoldNuggets } = iconAdmin
-=======
-    MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges } = iconAdmin
->>>>>>> develop
 
 export const sidebarMenuAdmin = [
     // {
@@ -59,28 +55,19 @@ export const sidebarMenuAdmin = [
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-<<<<<<< HEAD
                 path: 'Manage/productadmin',
                 text: 'Product',
                 iconAdmin: <GiStonePile size={24} color="white" />
             },
             {
-=======
->>>>>>> develop
                 path: 'Manage/customeradmin',
                 text: 'Customer',
                 iconAdmin: <GrUserManager size={24} color="white" />
             },
             {
-<<<<<<< HEAD
                 path: 'Manage/point',
                 text: 'Point of customer',
                 iconAdmin: <GiGoldNuggets size={24} color="white" />
-=======
-                path: 'Manage/productadmin',
-                text: 'Product',
-                iconAdmin: <GiStonePile size={24} color="white" />
->>>>>>> develop
             },
             {
                 path: 'Manage/staff',
@@ -91,31 +78,19 @@ export const sidebarMenuAdmin = [
         ],
     },
     {
-<<<<<<< HEAD
         path: 'Promotionadmin',
-=======
-        path: 'Promotion',
->>>>>>> develop
         text: 'Promotion',
         iconAdmin: <CiGift size={24} color="white" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-<<<<<<< HEAD
                 path: 'Promotionadmin/promotionlist',
-=======
-                path: 'Promotion/promotionlist',
->>>>>>> develop
                 text: 'Promotion list',
                 iconAdmin: <LiaGiftsSolid size={24} color="white" />
             },
             {
-<<<<<<< HEAD
                 path: 'Promotionadmin/promotionrequest',
-=======
-                path: 'Promotion/promotionrequest',
->>>>>>> develop
                 text: 'Request',
                 iconAdmin: <VscGitPullRequestGoToChanges size={24} color="white" />
             }

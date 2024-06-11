@@ -1,13 +1,9 @@
 
 
 import { SlPeople,SlDiamond } from "react-icons/sl";
-<<<<<<< HEAD
 import { GiReceiveMoney,GiEmeraldNecklace,GiStonePile,GiCrystalEarrings,GiDiamondRing,GiNecklaceDisplay } from "react-icons/gi";
-=======
-import { GiHeartNecklace,GiStonePile } from "react-icons/gi";
->>>>>>> develop
 import { AiOutlineGold } from "react-icons/ai";
-import { LiaFileInvoiceDollarSolid,LiaMoneyBillWaveSolid } from "react-icons/lia";
+import { LiaFileInvoiceDollarSolid,LiaMoneyBillWaveSolid,LiaCircleNotchSolid } from "react-icons/lia";
 import { CiGift,CiSearch } from "react-icons/ci";
 import { TbArrowsExchange2,TbLogout2 } from "react-icons/tb";
 import { MdDiamond } from "react-icons/md";
@@ -20,7 +16,7 @@ const icons = {
     BsCartPlus,
     LiaMoneyBillWaveSolid,
     SlPeople,
-    GiHeartNecklace,
+    GiEmeraldNecklace,
     GiStonePile,
     AiOutlineGold,
     SlDiamond,
@@ -31,7 +27,11 @@ const icons = {
     MdDiamond,
     IoIosArrowRoundBack,
     IoIosArrowRoundForward,
-    CiSearch
+    CiSearch,
+    GiCrystalEarrings,
+    LiaCircleNotchSolid,
+    GiDiamondRing,
+    GiNecklaceDisplay
 }
 
 export default icons

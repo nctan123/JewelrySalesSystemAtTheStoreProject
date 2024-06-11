@@ -1,22 +1,17 @@
 const path = {
-<<<<<<< HEAD
     HOME: '/',
     ADMIN: '/admin',
     LOGIN: '/login',
 
     // Seller
     PUBLIC: '/public',
-=======
-    PUBLIC: 'public',
->>>>>>> develop
     DIAMOND: '',
-    LOGIN: '/login',
+    LOGIN: 'login',
     STAR: '*',
     CUSTOMER: 'customer',
     JEWELRY: 'jewelry',
     NECKLACE: 'necklace',
     RING: 'ring',
-<<<<<<< HEAD
     EARRING: 'earring',
     BANGLES: 'bangles',
     WHOLESALEGOLD: 'wholesalegold',
@@ -61,32 +56,5 @@ const path = {
     // end manager
 
 
-=======
-
-    HOME: '/',
-
-    ADMIN: '/admin',
-    DASHBOARD: 'Dashboard',
-
-    MANAGE: 'Manage',
-    CUSTOMERADMIN: 'customeradmin',
-    PRODUCTADMIN: 'productadmin',
-    STAFF: 'staff',
-
-    REPORT: 'Report',
-    INVOICE: 'Invoice',
-    PRODUCSOLD: 'ProductSold',
-    EMPLOYEE: 'Employee',
-
-    PROMOTION: 'Promotion',
-    PROMOTIONLIST: 'promotionlist',
-    PROMOTIONREQUEST: 'promotionrequest',
-
-    RETURNPOLICY: 'ReturnPolicy',
-
-    VOIDBILL: 'VoidBill',
-
-
->>>>>>> develop
 }
 export default path

@@ -1,10 +1,5 @@
-import axios from "axios";
+import axios from "axios"
 
-const fetchAllRing = () => {
-    return axios.get("https://reqres.in/api/users?page=1");
-}
-
-<<<<<<< HEAD
 const fetchAllRing = () => {
     return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
 }
@@ -37,12 +32,3 @@ const fetchAllCustomer = () => {
 }
 
 export { fetchAllReGold, fetchAllWhGold, fetchAllRing, fetchAllEarring, fetchAllNecklace, fetchAllBangles, fetchAllPromotion, fetchAllInvoice, fetchAllCustomer, fetchAllDiamond };
-=======
-const loginApi = (email, password) => {
-    return axios.post("https://reqres.in/api/login", { email, password });
-}
-
-export { fetchAllRing, loginApi };
-
-
->>>>>>> develop
