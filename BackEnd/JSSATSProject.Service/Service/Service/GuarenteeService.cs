@@ -2,11 +2,8 @@
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
-using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Service.IService;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -55,27 +52,51 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
+        public async Task<ResponseModel> GetByProductIdAsync(int productId)
+        {
+            var entity = await _unitOfWork.GuaranteeRepository.GetByProductIdAsync(productId);
+            var response = _mapper.Map<ResponseGuarantee>(entity);
+            return new ResponseModel
+            {
+                Data = response,
+                MessageError = "",
+            };
+        }
+
         public async Task<ResponseModel> UpdateGuaranteeAsync(int guaranteeId, RequestUpdateGuarantee requestGuarantee)
         {
-            var entity = await _unitOfWork.GuaranteeRepository.GetByIDAsync(guaranteeId);
-            if (entity == null)
+            try
             {
+                var guarantee = await _unitOfWork.GuaranteeRepository.GetByIDAsync(guaranteeId);
+                if (guarantee != null)
+                {
+
+                    _mapper.Map(requestGuarantee, guarantee);
+
+                    await _unitOfWork.GuaranteeRepository.UpdateAsync(guarantee);
+
+                    return new ResponseModel
+                    {
+                        Data = guarantee,
+                        MessageError = "",
+                    };
+                }
+
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "Guarantee not found."
+                    MessageError = "Not Found",
                 };
             }
-
-            _mapper.Map(requestGuarantee, entity);
-            await _unitOfWork.GuaranteeRepository.UpdateAsync(entity);
-            await _unitOfWork.SaveAsync();
-
-            return new ResponseModel
+            catch (Exception ex)
             {
-                Data = entity,
-                MessageError = ""
-            };
+                // Log the exception and return an appropriate error response
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "An error occurred while updating the customer: " + ex.Message
+                };
+            }
         }
     }
 }

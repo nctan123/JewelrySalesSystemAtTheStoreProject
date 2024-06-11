@@ -1,13 +1,19 @@
+<<<<<<< HEAD
 ﻿using System.Net;
 using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.OrderModel;
+=======
+﻿using JSSATSProject.Service.Models.OrderModel;
+>>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
+<<<<<<< HEAD
 using System.Threading.Tasks;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Service.Models;
+=======
+>>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
 
 namespace JSSATSProject.API.Controllers
 {

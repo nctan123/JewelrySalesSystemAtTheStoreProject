@@ -19,6 +19,8 @@ using JSSATSProject.Service.Models.StallModel;
 using JSSATSProject.Service.Models.StallTypeModel;
 using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.DiamondPriceListModel;
+using JSSATSProject.Service.Models.OrderDetail;
+using JSSATSProject.Service.Models.NewFolder;
 
 
 namespace JSSATSProject.Service.AutoMapper
@@ -126,6 +128,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<StallType, RequestCreateStallType>().ReverseMap();
             CreateMap<StallType, ResponseStallType>().ReverseMap();
 
+<<<<<<< HEAD
             //LoginType
             CreateMap<Account, ResponseToken>()
                 .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => src.Staff.Id))
@@ -134,6 +137,15 @@ namespace JSSATSProject.Service.AutoMapper
                     opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
                 .ForMember(dest => dest.Token, opt => opt.Ignore())
                 .ReverseMap();
+=======
+            //OrderDetail
+            CreateMap<OrderDetail, RequestCreateOrderDetail>().ReverseMap();
+            CreateMap<OrderDetail, RequestUpdateOrderDetail>().ReverseMap();
+            CreateMap<OrderDetail, ResponseOrderDetail>().ReverseMap();
+   
+
+
+>>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
         }
     }
 }

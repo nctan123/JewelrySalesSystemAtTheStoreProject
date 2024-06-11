@@ -93,6 +93,9 @@ public partial class Diamond
         Polish = polish;
         Shape = shape;
         Symmetry = symmetry;
+<<<<<<< HEAD
         ProductDiamonds = products;
+=======
+>>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
     }
 }

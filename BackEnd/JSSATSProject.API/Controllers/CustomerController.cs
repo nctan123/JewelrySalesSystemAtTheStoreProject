@@ -6,7 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
+<<<<<<< HEAD
     // [Authorize]
+=======
+    //[Authorize]
+>>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
     [ApiController]
     [Route("api/[controller]")]
 

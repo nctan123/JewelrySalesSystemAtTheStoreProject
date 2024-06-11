@@ -61,16 +61,17 @@ namespace JSSATSProject.Service.Service.Service
         {
             try
             {
-                var returnBBP = await _unitOfWork.ReturnBuyBackPolicyRepository.GetByIDAsync(Id);
-                if (returnBBP != null)
+                var returnbuybackpolicy = await _unitOfWork.ReturnBuyBackPolicyRepository.GetByIDAsync(Id);
+                if (requestReturnBuyBackPolicy != null)
                 {
-                    returnBBP = _mapper.Map<ReturnBuyBackPolicy>(requestReturnBuyBackPolicy);
-                    await _unitOfWork.ReturnBuyBackPolicyRepository.UpdateAsync(returnBBP);
-                    await _unitOfWork.SaveAsync();
+
+                    _mapper.Map(requestReturnBuyBackPolicy, returnbuybackpolicy);
+
+                    await _unitOfWork.ReturnBuyBackPolicyRepository.UpdateAsync(returnbuybackpolicy);
 
                     return new ResponseModel
                     {
-                        Data = returnBBP,
+                        Data = returnbuybackpolicy,
                         MessageError = "",
                     };
                 }
