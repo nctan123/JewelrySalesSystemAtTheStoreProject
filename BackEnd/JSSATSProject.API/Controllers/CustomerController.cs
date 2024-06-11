@@ -1,7 +1,6 @@
 ﻿using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Service.IService;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers

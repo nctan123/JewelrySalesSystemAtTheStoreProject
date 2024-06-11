@@ -41,7 +41,14 @@ namespace JSSATSProject.Service.AutoMapper
 
             // Customer
             CreateMap<Customer, RequestCreateCustomer>().ReverseMap();
-            CreateMap<Customer, ResponseCustomer>().ReverseMap();
+
+            //CreateMap<Customer, ResponseCustomer>()
+            //    .ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point?.Totalpoint ?? 0))
+            //    .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point?.AvailablePoint ?? 0))
+            //    .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders))
+            //    .ForMember(dest => dest.Payments, opt => opt.MapFrom(src => src.Payments))
+            //    .ReverseMap();
+
             CreateMap<Customer, RequestUpdateCustomer>().ReverseMap();
 
             //Diamond
@@ -109,7 +116,11 @@ namespace JSSATSProject.Service.AutoMapper
 
             //Promotion
             CreateMap<Promotion, RequestCreatePromotion>().ReverseMap();
-            CreateMap<Promotion, ResponsePromotion>().ReverseMap();
+            CreateMap<Promotion, RequestUpdatePromotion>().ReverseMap();
+            CreateMap<Promotion, ResponsePromotion>()
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
+                .ReverseMap();
+            
 
             //ReturnBuyBackPolicy
             CreateMap<ReturnBuyBackPolicy, RequestCreateReturnBuyBackPolicy>().ReverseMap();
@@ -132,7 +143,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<OrderDetail, RequestCreateOrderDetail>().ReverseMap();
             CreateMap<OrderDetail, RequestUpdateOrderDetail>().ReverseMap();
             CreateMap<OrderDetail, ResponseOrderDetail>().ReverseMap();
-   
+
 
 
         }

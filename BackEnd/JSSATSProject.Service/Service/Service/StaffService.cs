@@ -46,19 +46,20 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllByDateAsync(DateTime startDate, DateTime endDate)
+        public async Task<ResponseModel> GetAllByDateAsync(DateTime? startDate, DateTime? endDate)
         {
             var entities = await _unitOfWork.StaffRepository.GetAsync(includeProperties: "Orders");
             var response = _mapper.Map<List<ResponseStaff>>(entities);
 
-            
             foreach (var staff in response)
             {
-                staff.TotalRevennue = entities
-                    .Where(entity => entity.Id == staff.Id) 
+                var staffOrders = entities
+                    .Where(entity => entity.Id == staff.Id)
                     .SelectMany(entity => entity.Orders)
-                    .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate)
-                    .Sum(order => order.TotalAmount);
+                    .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+
+                staff.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
+                staff.TotalOrder = staffOrders.Count();
             }
 
             return new ResponseModel
@@ -67,7 +68,6 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = "",
             };
         }
-
 
 
         public async Task<ResponseModel> GetByIdAsync(int id)

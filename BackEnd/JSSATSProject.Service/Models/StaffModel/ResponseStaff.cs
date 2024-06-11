@@ -25,6 +25,8 @@ namespace JSSATSProject.Service.Models.StaffModel
 
         public decimal TotalRevennue { get; set; }
 
+        public int TotalOrder { get; set; }
+
         public virtual ICollection<Order> Orders { get; set; }
     }
 }
