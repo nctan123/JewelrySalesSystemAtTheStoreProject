@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 // import  addProduct, deleteProduct  from '../../../'
-import {deleteProduct} from '../store/slice/cardSilec'
+import { deleteProduct } from '../store/slice/cardSilec'
 
 
 const SidebarRight = () => {
@@ -31,7 +31,7 @@ const SidebarRight = () => {
     };
     calculateTotal();
   }, [CartProduct]);
-  const tax = total*5/100
+  const tax = total * 5 / 100
   const totalInvoice = tax + total
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -70,7 +70,7 @@ const SidebarRight = () => {
             return (
               <div key={`ring-${index}`} className='grid grid-cols-3 cursor-pointer' onClick={() => dispatch(deleteProduct(item))}  >
                 <div className='col-start-1 col-span-2 flex px-[10px] py-2 text-sm' >{item.name}</div>
-                <div className='col-start-3 flex justify-center text-[#d48c20] px-[10px] py-2'>{formatPrice(item.productValue)}</div>
+                <div className='col-start-3 flex justify-center text-[#d48c20] px-[10px] py-2'>{formatPrice(item.code)}</div>
               </div>
             )
           })}
