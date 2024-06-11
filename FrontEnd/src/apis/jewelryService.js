@@ -1,8 +1,10 @@
-import axios from "axios"
+import axios from "axios";
+
 
 const loginApi = (email, password) => {
     return axios.post("https://reqres.in/api/login", { email, password });
 }
+
 const fetchAllRing = () => {
     return axios.get("https://jssats.azurewebsites.net/api/product/getall");
 }
@@ -34,3 +36,6 @@ const fetchAllCustomer = () => {
     return axios.get("https://jssats.azurewebsites.net/api/customer/getAll");
 }
 export {fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond};
+
+
+

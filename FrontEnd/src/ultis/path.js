@@ -1,17 +1,20 @@
 const path = {
+
     HOME: '/',
     ADMIN: '/admin',
     LOGIN: '/login',
    
 // Seller
     PUBLIC: '/public',
+
     DIAMOND: '',
-    LOGIN: 'login',
+    LOGIN: '/login',
     STAR: '*',
     CUSTOMER: 'customer',
     JEWELRY: 'jewelry',
-    NECKLACE:'necklace',
+    NECKLACE: 'necklace',
     RING: 'ring',
+
     EARRING: 'earring',
     BANGLES: 'bangles',
     WHOLESALEGOLD: 'wholesalegold',
@@ -53,6 +56,7 @@ const path = {
  // manager
  MANAGER: 'manager'
  // end manager
+
 
 
 }

@@ -1,8 +1,12 @@
+
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
+
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+
+
 import { loginApi } from '../../apis/jewelryService';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
@@ -58,15 +62,17 @@ export default function LoginToStore() {
   };
 
   return (
+
     <div className={clsx(style.login_container)}>
       <div className={clsx(style.title_login)}>Log in</div>
+
       <input
         type='text'
         placeholder='Username...'
         value={username}
         onChange={(event) => setUsername(event.target.value)}
       />
-      <div className={clsx(style.input_2)}>
+      <div className='input-2'>
         <input
           type={isShowPassword ? 'text' : 'password'}
           placeholder='Password...'
@@ -95,10 +101,12 @@ export default function LoginToStore() {
         Login
       </button>
 
+
       <div className={clsx(style.back)} onClick={handleBackClick}>
         <span>
           <FontAwesomeIcon icon={faRotateLeft} /> Back
         </span>
+
       </div>
     </div>
   );

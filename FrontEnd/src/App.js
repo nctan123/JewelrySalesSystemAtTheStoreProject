@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; //mang action đến redux, sử dụng useSeletor để lấy giá trị
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
+
 import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex } from './page/Seller';
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
 import Login from './page/Home/Login';
@@ -12,6 +13,7 @@ import Home from './page/Home/Home';
 import path from './ultis/path'
 import Cs_Order from './page/Cashier/Cs_Order';
 import Dashboard from './page/Admin/Dashboard'
+
 import Report from './page/Admin/Report/Report';
 import Manage from './page/Admin/Manage/Manage';
 import Invoice from '../src/page/Admin/Report/Invoice'
@@ -21,12 +23,15 @@ import CustomerAdmin from './page/Admin/Manage/CustomerAdmin';
 import ProductAdmin from './page/Admin/Manage/ProductAdmin';
 import Staff from '../src/page/Admin/Manage/Staff';
 import PromotionAdmin from './page/Admin/Promotion/PromotionAdmin';
+
 import PromotionList from './page/Admin/Promotion/PromotionList';
 import PromotionRequest from './page/Admin/Promotion/PromotionRequest';
 import ReturnPolicy from './page/Admin/ReturnPolicy';
 import VoidBill from './page/Admin/VoidBill'
+
 import Point from './page/Admin/Manage/Point';
 import Manager from './page/Manager/Manager';
+
 
 
 function App() {
@@ -45,6 +50,7 @@ function App() {
           <Route path={path.ADMIN} element={<Admin />} exact >
             <Route path={path.ADMIN} element={<Dashboard />} />
             <Route path={path.DASHBOARD} element={<Dashboard />} />
+
 
             <Route path={path.REPORT} element={<Report />} exact>
               <Route path={path.INVOICE} element={<Invoice />} />
@@ -97,14 +103,14 @@ function App() {
             <Route path={path.CS_REVENUE} element={<Cs_Revenue />} />
           </Route>
 
+
         </Routes>
 
 
 
       </div>
-
       <ToastContainer
-        
+
       />
     </>
   );

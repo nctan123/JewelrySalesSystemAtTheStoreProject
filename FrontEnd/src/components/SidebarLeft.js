@@ -15,6 +15,7 @@ const notActiveJew =
 const activeStyleJew =
   'py-1 gap-4 w-[94%] rounded-xl font-thin font-serif italic flex  text-white text-[14px] bg-[#33333330] mt-[10px]';
 
+
 const Sidebar = () => {
   const [isOrderSubmenuOpen, setIsOrderSubmenuOpen] = useState(false);
 
@@ -35,6 +36,7 @@ const Sidebar = () => {
         <img className="mt-[20px] w-[70px] object-contain" src={logo_v2_seller} alt="logo" />
         <span>Jewelry Store</span>
       </div>
+
 
       <div className="flex flex-col pb-16 ">
         {sidebarMenu.map((item) => (
@@ -70,6 +72,7 @@ const Sidebar = () => {
                 ))}
               </div>
             )}
+
           </div>
         ))}
       </div>
