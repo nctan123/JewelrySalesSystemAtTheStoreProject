@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.CacheManagers;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.AutoMapper;
 using JSSATSProject.Service.Service.IService;
@@ -18,6 +19,8 @@ namespace JSSATSProject.API
         {
             var builder = WebApplication.CreateBuilder(args);
             var config = builder.Configuration;
+            var services = builder.Services;
+
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -69,7 +72,7 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IDiamondService, DiamondService>();
-            builder.Services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
+            //builder.Services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
             builder.Services.AddScoped<IGuaranteeService, GuaranteeService>();
             builder.Services.AddScoped<IMaterialPriceListService, MaterialPriceListService>();
             builder.Services.AddScoped<IMaterialService, MaterialService>();
@@ -79,13 +82,19 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IPointService, PointService>();
             builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
             builder.Services.AddScoped<IProductCategoryTypeService, ProductCategoryTypeService>();
-            builder.Services.AddScoped<IProductService, ProductService>();
+            //builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IPromotionService, PromotionService>();
             builder.Services.AddScoped<IReturnBuyBackPolicyService, ReturnBuyBackPolicyService>();
             builder.Services.AddScoped<IStaffService, StaffService>();
             builder.Services.AddScoped<IStallService, StallService>();
             builder.Services.AddScoped<IStallTypeService, StallTypeService>();
 
+            services.AddSingleton(typeof(CacheManager<>)); // Register generic CacheManager
+            services.AddSingleton<CacheManager<Product>>(); // Register cache for products
+            services.AddSingleton<CacheManager<MaterialPriceList>>(); // Register cache for material price lists
+            services.AddSingleton<DiamondPriceCacheManager>(); // Register cache for diamond prices
+            services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
+            services.AddScoped<IProductService, ProductService>();
 
             var app = builder.Build();
 

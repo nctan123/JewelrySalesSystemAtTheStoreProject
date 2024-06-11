@@ -1,11 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { CartProduct } from '../page/Seller/Ring';
-import { useSelector, useDispatch } from 'react-redux'
-// import dayjs from 'dayjs';
-// import { SelectedItemContext } from '../page/Seller/Ring'
-// import { useContext } from 'react';
+import React from 'react'
 
 const SidebarRight = () => {
+<<<<<<< HEAD
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -88,6 +84,10 @@ const SidebarRight = () => {
 
 
   </>
+=======
+  return (
+    <div>SidebarRight</div>
+>>>>>>> develop
   )
 }
 

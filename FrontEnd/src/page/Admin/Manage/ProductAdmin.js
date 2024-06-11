@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react'
 import { fetchAllRing } from '../../../apis/jewelryService'
 import clsx from 'clsx'
@@ -131,3 +132,12 @@ const ProductAdmin = () => {
 }
 
 export default ProductAdmin
+=======
+import React from 'react'
+
+export default function ProductAdmin() {
+    return (
+        <div>ProductAdmin</div>
+    )
+}
+>>>>>>> develop

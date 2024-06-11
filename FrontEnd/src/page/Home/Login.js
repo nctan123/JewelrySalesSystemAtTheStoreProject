@@ -1,11 +1,25 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
+=======
+import React from 'react'
+import { useState } from 'react'
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons'
+>>>>>>> develop
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 import style from './Login.module.css';
+=======
+import './Login.css'
+import { loginApi } from '../../apis/jewelryService';
+import { toast } from 'react-toastify'
+>>>>>>> develop
 
 export default function LoginToStore() {
   const [username, setUsername] = useState('');
@@ -57,15 +71,21 @@ export default function LoginToStore() {
   };
 
   return (
+<<<<<<< HEAD
     <div className={clsx(style.login_container)}>
       <div className={clsx(style.title_login)}>Log in</div>
+=======
+    <div className='login-container' >
+      <div className='title-login' >Log in</div>
+      <div className='text'> Email or username</div>
+>>>>>>> develop
       <input
         type='text'
         placeholder='Username...'
         value={username}
         onChange={(event) => setUsername(event.target.value)}
       />
-      <div className={clsx(style.input_2)}>
+      <div className='input-2'>
         <input
           type={isShowPassword ? 'text' : 'password'}
           placeholder='Password...'
@@ -93,11 +113,28 @@ export default function LoginToStore() {
         )}
         Login
       </button>
+<<<<<<< HEAD
 
       <div className={clsx(style.back)} onClick={handleBackClick}>
         <span>
           <FontAwesomeIcon icon={faRotateLeft} /> Back
         </span>
+=======
+      {/* phân luồng tạm */}
+      <button
+        onClick={() => handleAdmin()}
+      >
+        Admin
+      </button>
+      {/* <button onClick={() => handleSeller()} >
+        seller
+      </button> */}
+
+
+
+      <div className='back' onClick={handleBackClick}>
+        <span> <FontAwesomeIcon icon={faRotateLeft} />     Back</span>
+>>>>>>> develop
       </div>
     </div>
   );

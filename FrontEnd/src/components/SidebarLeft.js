@@ -15,6 +15,7 @@ const notActiveJew =
 const activeStyleJew =
   'py-1 gap-4 w-[94%] rounded-xl font-thin font-serif italic flex  text-white text-[14px] bg-[#33333330] mt-[10px]';
 
+<<<<<<< HEAD
 const Sidebar = () => {
   const [isOrderSubmenuOpen, setIsOrderSubmenuOpen] = useState(false);
 
@@ -28,6 +29,19 @@ const Sidebar = () => {
     }
     // Xử lý sự kiện nhấp vào menu item ở đây
   };
+=======
+const Sildebar = () => {
+  const [isJewelrySubmenuOpen, setIsJewelrySubmenuOpen] = useState(false);
+const handleJewelrySubmenuToggle = () => {
+  setIsJewelrySubmenuOpen(!isJewelrySubmenuOpen);
+};
+const handleMenuItemClick = (item) => {
+  if (item.text !== 'Jewelry') {
+    setIsJewelrySubmenuOpen(false);
+  }
+  // Xử lý sự kiện nhấp vào menu item ở đây
+};
+>>>>>>> develop
 
   return (
     <div className="container_sidebarleft flex flex-col">
@@ -35,6 +49,7 @@ const Sidebar = () => {
         <img className="mt-[20px] w-[70px] object-contain" src={logo_v2_seller} alt="logo" />
         <span>Jewelry Store</span>
       </div>
+<<<<<<< HEAD
 
       <div className="flex flex-col pb-16 ">
         {sidebarMenu.map((item) => (
@@ -70,6 +85,31 @@ const Sidebar = () => {
                 ))}
               </div>
             )}
+=======
+      <div className='flex flex-col'>
+      {sidebarMenu.map(item => (
+      <div key={item.path}>
+        <NavLink
+          to={item.path}
+          end={item.end}
+          className={({ isActive }) =>`flex items-center p-4 text-white transition-colors ${isActive ?activeStyle : notActive}`}
+          onClick={item.text === 'Jewelry' ? handleJewelrySubmenuToggle : () => handleMenuItemClick(item)}>
+          {item.icons}
+          <span className="ml-4">{item.text}</span>
+          
+        </NavLink>
+        {item.text === 'Jewelry' && isJewelrySubmenuOpen && (
+          <div className="pl-8">
+            {item.subMenu.map(subItem => (
+              <NavLink
+                to={subItem.path}
+                key={subItem.path}
+                className={({ isActive }) =>`flex items-center p-4 text-white transition-colors ${isActive ? activeStyleJew : notActiveJew}`}>
+                {subItem.icons}
+                <span className="ml-4">{subItem.text}</span>
+              </NavLink>
+            ))}
+>>>>>>> develop
           </div>
         ))}
       </div>

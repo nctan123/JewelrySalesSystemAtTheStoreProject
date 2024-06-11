@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,6 +45,30 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = "",
             };
         }
+
+        public async Task<ResponseModel> GetAllByDateAsync(DateTime startDate, DateTime endDate)
+        {
+            var entities = await _unitOfWork.StaffRepository.GetAsync(includeProperties: "Orders");
+            var response = _mapper.Map<List<ResponseStaff>>(entities);
+
+            
+            foreach (var staff in response)
+            {
+                staff.TotalRevennue = entities
+                    .Where(entity => entity.Id == staff.Id) 
+                    .SelectMany(entity => entity.Orders)
+                    .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate)
+                    .Sum(order => order.TotalAmount);
+            }
+
+            return new ResponseModel
+            {
+                Data = response,
+                MessageError = "",
+            };
+        }
+
+
 
         public async Task<ResponseModel> GetByIdAsync(int id)
         {

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import { fetchAllPromotion } from '../../../apis/jewelryService';
 import clsx from 'clsx';
@@ -164,3 +165,12 @@ const PromotionList = () => {
 }
 
 export default PromotionList;
+=======
+import React from 'react'
+
+export default function PromotionList() {
+  return (
+    <div>PromotionList</div>
+  )
+}
+>>>>>>> develop

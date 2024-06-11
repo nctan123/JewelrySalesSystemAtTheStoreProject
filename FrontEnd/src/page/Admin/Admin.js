@@ -6,7 +6,11 @@ import { Header } from '../../components';
 export default function Admin() {
     return (
         <>
+<<<<<<< HEAD
             <div className='w-full flex h-[100vh] '>
+=======
+            <div className='w-full flex '>
+>>>>>>> develop
                 <div className='w-[240px] h-[100vh] flex-none bg-[#5D5FEF] '>
                     <Sildebar />
 
