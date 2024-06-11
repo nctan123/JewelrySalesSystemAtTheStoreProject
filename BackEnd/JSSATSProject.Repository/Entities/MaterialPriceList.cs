@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -16,7 +17,7 @@ public partial class MaterialPriceList
     public decimal SellPrice { get; set; }
 
     public DateTime EffectiveDate { get; set; }
-
+[JsonIgnore]
     public virtual Material Material { get; set; }
 
     public MaterialPriceList()

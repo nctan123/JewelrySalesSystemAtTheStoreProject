@@ -2,18 +2,22 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
 public partial class Color
-{
+{    [JsonIgnore]
+
     public int Id { get; set; }
 
     public string Name { get; set; }
-
+    [JsonIgnore]
     public string Description { get; set; }
+    [JsonIgnore]
 
     public virtual ICollection<DiamondPriceList> DiamondPriceLists { get; set; } = new List<DiamondPriceList>();
+    [JsonIgnore]
 
     public virtual ICollection<Diamond> Diamonds { get; set; } = new List<Diamond>();
 }

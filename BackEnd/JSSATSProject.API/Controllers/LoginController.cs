@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models.AccountModel;
 using JSSATSProject.Service.Service.IService;
@@ -19,11 +20,14 @@ namespace JSSATSProject.API.Controllers
     {
         private readonly IAccountService _accountService;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public LoginController(IAccountService accountService, IConfiguration config)
+
+        public LoginController(IAccountService accountService, IConfiguration config, IMapper mapper)
         {
             _accountService = accountService;
             _config = config;
+            _mapper = mapper;
         }
 
         [AllowAnonymous]
@@ -31,10 +35,12 @@ namespace JSSATSProject.API.Controllers
         public ActionResult Login([FromBody] RequestSignIn userLogin)
         {
             var user = Authenticate(userLogin);
+            var tokenResponse = _mapper.Map<ResponseToken>(user);
             if (user is not null)
             {
                 var token = GenerateToken(user);
-                return Ok(token);
+                tokenResponse.Token = token;
+                return Ok(tokenResponse);
             }
 
             return Problem(detail: $"User {userLogin.Username} not found.", statusCode: Convert.ToInt32(HttpStatusCode.Unauthorized), title: "Login Failed");

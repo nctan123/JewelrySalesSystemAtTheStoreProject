@@ -3,7 +3,27 @@
   "WorkspaceRootPath": "C:\\SWP\\BackEnd\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|c:\\swp\\backend\\jssatsproject.api\\jssatsproject.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|c:\\swp\\backend\\jssatsproject.repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|solutionrelative:jssatsproject.repository\\genericrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|C:\\SWP\\BackEnd\\jssatsproject.repository\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|solutionrelative:jssatsproject.repository\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|C:\\SWP\\BackEnd\\jssatsproject.repository\\.gitignore||{68B46364-D378-42F2-9E72-37D86C5F4468}",
+      "RelativeMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|solutionrelative:jssatsproject.repository\\.gitignore||{68B46364-D378-42F2-9E72-37D86C5F4468}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|C:\\SWP\\BackEnd\\jssatsproject.repository\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|solutionrelative:jssatsproject.repository\\entities\\product.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\jssatsproject.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\jssatsproject.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
@@ -13,10 +33,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\controllers\\diamondpricelistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,7 +46,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -49,8 +65,60 @@
               "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\.gitignore",
+              "RelativeDocumentMoniker": "JSSATSProject.Repository\\.gitignore",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\.gitignore",
+              "RelativeToolTip": "JSSATSProject.Repository\\.gitignore",
+              "ViewState": "AQIAAHQBAAAAAAAAAAAzwIEBAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-07T16:37:44.402Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\.gitignore",
+              "RelativeDocumentMoniker": "JSSATSProject.Repository\\.gitignore",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\.gitignore",
+              "RelativeToolTip": "JSSATSProject.Repository\\.gitignore",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2024-06-07T16:37:32.592Z"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "GenericRepository.cs",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\GenericRepository.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.Repository\\GenericRepository.cs",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\GenericRepository.cs",
+              "RelativeToolTip": "JSSATSProject.Repository\\GenericRepository.cs",
+              "ViewState": "AQIAACcAAAAAAAAAAAA0wDAAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T08:50:17.985Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Product.cs",
+              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\Entities\\Product.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\Product.cs",
+              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\Entities\\Product.cs*",
+              "RelativeToolTip": "JSSATSProject.Repository\\Entities\\Product.cs*",
+              "ViewState": "AQIAABQAAAAAAAAAAAA0wCAAAAAjAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-07T08:46:49.364Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "JSSATSProject.API.csproj",
               "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
               "RelativeDocumentMoniker": "JSSATSProject.API\\JSSATSProject.API.csproj",
@@ -58,12 +126,11 @@
               "RelativeToolTip": "JSSATSProject.API\\JSSATSProject.API.csproj",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-06-06T16:54:46.962Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-06T16:54:46.962Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "appsettings.Development.json",
               "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.Development.json",
               "RelativeDocumentMoniker": "JSSATSProject.API\\appsettings.Development.json",
@@ -75,7 +142,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.json",
               "RelativeDocumentMoniker": "JSSATSProject.API\\appsettings.json",
@@ -93,13 +160,13 @@
               "RelativeDocumentMoniker": "JSSATSProject.API\\Program.cs",
               "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Program.cs",
               "RelativeToolTip": "JSSATSProject.API\\Program.cs",
-              "ViewState": "AQIAAFYAAAAAAAAAAAAIwGMAAAAaAAAA",
+              "ViewState": "AQIAAA8AAAAAAAAAAAAAAGMAAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-06T16:09:25.213Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "DiamondPriceListController.cs",
               "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
               "RelativeDocumentMoniker": "JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",

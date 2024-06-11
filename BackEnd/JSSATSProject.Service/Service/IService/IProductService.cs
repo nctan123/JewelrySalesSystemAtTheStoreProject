@@ -12,5 +12,7 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByCodeAsync(string code);
         public Task<ResponseModel> CreateProductAsync(RequestCreateProduct requestProduct);
         public Task<ResponseModel> UpdateProductAsync(int productId, RequestUpdateProduct requestProduct);
+
+        public Task<bool> AreValidProducts(Dictionary<string, int> productCodes);
     }
 }

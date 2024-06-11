@@ -12,5 +12,7 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByPhoneAsync(string phonenumber);
         public Task<ResponseModel> CreateCustomerAsync(RequestCreateCustomer requestCustomer);
         public Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer);
+
+        public Task<ResponseModel> FindByPhoneNumber(string phoneNumberStr);
     }
 }

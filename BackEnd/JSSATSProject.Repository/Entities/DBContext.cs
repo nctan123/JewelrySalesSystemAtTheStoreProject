@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using JSSATSProject.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Repository.Entities;
@@ -80,11 +81,7 @@ public partial class DBContext : DbContext
     public virtual DbSet<StallType> StallTypes { get; set; }
 
     public virtual DbSet<Symmetry> Symmetries { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer(@"Data Source=LEGION-5\SQLEXPRESS;Initial Catalog=JSSATS;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -680,25 +677,7 @@ public partial class DBContext : DbContext
             entity.HasOne(d => d.Stalls).WithMany(p => p.Products)
                 .HasForeignKey(d => d.StallsId)
                 .HasConstraintName("FK__Product__stalls___5AEE82B9");
-
-            entity.HasMany(d => d.Diamonds).WithMany(p => p.Products)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ProductDiamond",
-                    r => r.HasOne<Diamond>().WithMany()
-                        .HasForeignKey("DiamondId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ProductDi__diamo__3B40CD36"),
-                    l => l.HasOne<Product>().WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__ProductDi__produ__3A4CA8FD"),
-                    j =>
-                    {
-                        j.HasKey("ProductId", "DiamondId").HasName("PK__ProductD__CDF418BE86F03A04");
-                        j.ToTable("ProductDiamond");
-                        j.IndexerProperty<int>("ProductId").HasColumnName("product_id");
-                        j.IndexerProperty<int>("DiamondId").HasColumnName("diamond_id");
-                    });
+  
         });
 
         modelBuilder.Entity<ProductCategory>(entity =>
@@ -770,6 +749,27 @@ public partial class DBContext : DbContext
                 .HasConstraintName("FK__ProductMa__produ__72C60C4A");
         });
 
+        modelBuilder.Entity<ProductDiamond>(entity =>
+        {
+            entity.HasKey(e => new { e.DiamondId, e.ProductId }).HasName("PK__ProductD__CDF418BEA247F926");
+
+            entity.ToTable("ProductDiamond");
+
+            entity.Property(e => e.DiamondId).HasColumnName("diamond_id");
+            entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+
+            entity.HasOne(d => d.Diamond).WithMany(p => p.ProductDiamonds)
+                .HasForeignKey(d => d.DiamondId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ProductDi__diamo__531856C7");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.ProductDiamonds)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ProductDi__produ__5224328E");
+        });
+        
         modelBuilder.Entity<Promotion>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Promotio__3213E83F7CFC9FDD");

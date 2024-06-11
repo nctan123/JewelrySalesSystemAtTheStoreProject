@@ -12,6 +12,7 @@ namespace JSSATSProject.Repository
         public GenericRepository(DBContext context)
         {
             this.context = context;
+            this.context.ChangeTracker.LazyLoadingEnabled = false;
             this.dbSet = context.Set<TEntity>();
         }
 
@@ -33,7 +34,7 @@ namespace JSSATSProject.Repository
             foreach (var includeProperty in includeProperties.Split
                 (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                query = query.Include(includeProperty);
+                query = query.Include(includeProperty.Trim());
             }
 
             if (orderBy != null)

@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -39,5 +40,5 @@ public partial class Product
 
     public virtual Stall Stalls { get; set; }
 
-    public virtual ICollection<Diamond> Diamonds { get; set; } = new List<Diamond>();
+    public virtual ICollection<ProductDiamond> ProductDiamonds { get; set; } = new List<ProductDiamond>();
 }
