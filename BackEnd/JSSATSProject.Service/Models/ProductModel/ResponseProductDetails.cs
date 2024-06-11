@@ -26,7 +26,7 @@ namespace JSSATSProject.Service.Models.ProductModel
 
         public string? Img { get; set; }
 
-        public decimal PriceRate { get; set; }
+        public decimal? Weight { get; set; }
 
         public string? Status { get; set; }
     }

@@ -13,6 +13,7 @@ namespace JSSATSProject.Service.Service.IService
     {
         public Task<ResponseModel> GetAllAsync();
         public Task<ResponseModel> GetByIdAsync(int id);
+        public Task<ResponseModel> GetByProductIdAsync(int productId);
         public Task<ResponseModel> CreateGuaranteeAsync(RequestCreateGuarantee requestGuarantee);
         public Task<ResponseModel> UpdateGuaranteeAsync(int guaranteeId, RequestUpdateGuarantee requestGuarantee);
     }

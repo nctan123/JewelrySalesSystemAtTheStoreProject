@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -51,7 +52,8 @@ public partial class Diamond
 
     public virtual Symmetry Symmetry { get; set; }
 
-    public virtual ICollection<Product> Products { get; set; } = new List<Product>();
+    [JsonIgnore]
+    public virtual ICollection<ProductDiamond> ProductDiamonds { get; set; } = new List<ProductDiamond>();
 
     public Diamond()
     {
@@ -81,6 +83,5 @@ public partial class Diamond
         Polish = polish;
         Shape = shape;
         Symmetry = symmetry;
-        Products = products;
     }
 }

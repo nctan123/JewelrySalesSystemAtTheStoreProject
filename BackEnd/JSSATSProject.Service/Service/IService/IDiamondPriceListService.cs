@@ -15,5 +15,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> CreateDiamondPriceListAsync(RequestCreateDiamondPriceList requestDiamondPriceList);
         public Task<ResponseModel> UpdateDiamondPriceListAsync(int diamondpricelistId, RequestUpdateDiamondPriceList requestDiamondPriceList);
+        public Task<decimal> FindPriceBy4CAndOrigin(int cutId, int clarityId, int colorId, int caratId, int originId);
     }
 }

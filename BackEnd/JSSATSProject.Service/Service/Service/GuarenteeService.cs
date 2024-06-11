@@ -2,11 +2,8 @@
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
-using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Service.IService;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -47,6 +44,17 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByIdAsync(int id)
         {
             var entity = await _unitOfWork.GuaranteeRepository.GetByIDAsync(id);
+            var response = _mapper.Map<ResponseGuarantee>(entity);
+            return new ResponseModel
+            {
+                Data = response,
+                MessageError = "",
+            };
+        }
+
+        public async Task<ResponseModel> GetByProductIdAsync(int productId)
+        {
+            var entity = await _unitOfWork.GuaranteeRepository.GetByProductIdAsync(productId);
             var response = _mapper.Map<ResponseGuarantee>(entity);
             return new ResponseModel
             {

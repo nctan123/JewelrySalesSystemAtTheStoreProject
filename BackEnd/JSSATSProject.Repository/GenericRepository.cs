@@ -54,49 +54,49 @@ namespace JSSATSProject.Repository
         }
 
         public virtual async Task<TEntity> GetByIDAsync(int id)
-                 {
-                     return await dbSet.FindAsync(id);
-                 }
-         
-                 public virtual async Task InsertAsync(TEntity entity)
-                 {
-                     await dbSet.AddAsync(entity);
-                 }
-         
-                 public virtual async Task DeleteAsync(object id)
-                 {
-                     TEntity entityToDelete = await dbSet.FindAsync(id);
-                     await DeleteAsync(entityToDelete);
-                 }
-         
-                 public virtual async Task DeleteAsync(TEntity entityToDelete)
-                 {
-                     if (context.Entry(entityToDelete).State == EntityState.Detached)
-                     {
-                         dbSet.Attach(entityToDelete);
-                     }
-                     dbSet.Remove(entityToDelete);
-                     await context.SaveChangesAsync();
-                 }
-         
-                 public virtual async Task UpdateAsync(TEntity entityToUpdate)
-                 {
-                     // context.Entry(entityToUpdate).State = EntityState.Detached;
-                     context.Attach(entityToUpdate);
-                     context.Entry(entityToUpdate).State =  EntityState.Modified;
-                     await context.SaveChangesAsync();
-                 }
-        
-                 
-                 public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> filter = null)
-                 {
-                     IQueryable<TEntity> query = dbSet;
-         
-                     if (filter != null)
-                     {
-                         query = query.Where(filter);
-                     }
-                     return await query.CountAsync();
-                 }
+        {
+            return await dbSet.FindAsync(id);
+        }
+
+        public virtual async Task InsertAsync(TEntity entity)
+        {
+            await dbSet.AddAsync(entity);
+        }
+
+        public virtual async Task DeleteAsync(object id)
+        {
+            TEntity entityToDelete = await dbSet.FindAsync(id);
+            await DeleteAsync(entityToDelete);
+        }
+
+        public virtual async Task DeleteAsync(TEntity entityToDelete)
+        {
+            if (context.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                dbSet.Attach(entityToDelete);
+            }
+            dbSet.Remove(entityToDelete);
+            await context.SaveChangesAsync();
+        }
+
+        public virtual async Task UpdateAsync(TEntity entityToUpdate)
+        {
+            // context.Entry(entityToUpdate).State = EntityState.Detached;
+            context.Attach(entityToUpdate);
+            context.Entry(entityToUpdate).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+        }
+
+
+        public virtual async Task<int> CountAsync(Expression<Func<TEntity, bool>> filter = null)
+        {
+            IQueryable<TEntity> query = dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+            return await query.CountAsync();
+        }
     }
 }
