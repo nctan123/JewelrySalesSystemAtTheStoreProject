@@ -1,14 +1,14 @@
 import React from 'react'
-import Sildebar from '../../components/Admin/SildebarLeftMenu'
+import SildebarManager from '../../components/Manager/SildebarLeftManager';
 import { RiAccountCircleLine } from "react-icons/ri";
 import { Outlet } from 'react-router-dom'
-import { Header } from '../../components';
-export default function Admin() {
+
+export default function Manager() {
     return (
         <>
             <div className='w-full flex h-[100vh] '>
                 <div className='w-[240px] h-[100vh] flex-none bg-[#5D5FEF] '>
-                    <Sildebar />
+                    <SildebarManager />
 
                 </div>
                 <div className='flex-auto border overflow-y-auto'>

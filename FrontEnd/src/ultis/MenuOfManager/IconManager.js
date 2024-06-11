@@ -19,7 +19,11 @@ import { GiStonePile } from "react-icons/gi";//product
 import { LiaGiftsSolid } from "react-icons/lia";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";//request
 import { GiGoldNuggets } from "react-icons/gi";//point
-const iconAdmin = {
+
+import { GiReceiveMoney, GiEmeraldNecklace, GiCrystalEarrings, GiDiamondRing, GiNecklaceDisplay } from "react-icons/gi";
+import { AiOutlineGold } from "react-icons/ai";
+import { LiaMoneyBillWaveSolid, LiaCircleNotchSolid } from "react-icons/lia";
+const IconManager = {
     FaChartSimple,
     TbReportSearch,
     MdManageAccounts,
@@ -39,7 +43,10 @@ const iconAdmin = {
     GiStonePile,
     LiaGiftsSolid,
     VscGitPullRequestGoToChanges,
-    GiGoldNuggets
+    GiGoldNuggets,
+    GiReceiveMoney, GiEmeraldNecklace, GiCrystalEarrings, GiDiamondRing, GiNecklaceDisplay, AiOutlineGold,
+    LiaMoneyBillWaveSolid, LiaCircleNotchSolid
+
 }
 
-export default iconAdmin
+export default IconManager

@@ -1,12 +1,12 @@
 import React from 'react'
 import logo from '../../assets/logo.png'
-import { sidebarMenuAdmin } from '../../ultis/MenuOfAdmin/MenuAdmin'
+import { sidebarMenuManager } from '../../ultis/MenuOfManager/MenuManage'
 import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import './SildebarLeftMenu.css'
 
 
-const Sildebar = () => {
+const SildebarManager = () => {
     const [isReportOpen, setIsReportOpen] = useState(null);
     const [isOpen, setIsOpen] = useState();
     const handleReportOpenToggle = (menuItem) => {
@@ -29,7 +29,7 @@ const Sildebar = () => {
                 {/* <NavLink to={'/'} className='py-8 px-[25px] font-bold rounded-md'>
           Home
         </NavLink> */}
-                {sidebarMenuAdmin.map(item => (
+                {sidebarMenuManager.map(item => (
                     <div key={item.path} className='silderleft'>
 
                         <NavLink
@@ -42,8 +42,8 @@ const Sildebar = () => {
                                     ? () => handleReportOpenToggle('report')
                                     : item.text === 'Manage'
                                         ? () => handleReportOpenToggle('manage')
-                                        : item.text === 'Promotion'
-                                            ? () => handleReportOpenToggle('promotion')
+                                        : item.text === 'Product'
+                                            ? () => handleReportOpenToggle('productManager')
                                             : () => handleReportOpenToggle('')
                             }
                         >
@@ -53,7 +53,7 @@ const Sildebar = () => {
                                 ? item.iconAdmin3
                                 : isReportOpen === 'manage' && item.text === 'Manage'
                                     ? item.iconAdmin3
-                                    : isReportOpen === 'promotion' && item.text === 'Promotion'
+                                    : isReportOpen === 'productManager' && item.text === 'Product'
                                         ? item.iconAdmin3
                                         : item.iconAdmin2}
                         </NavLink>
@@ -87,7 +87,7 @@ const Sildebar = () => {
                                 ))}
                             </div>
                         )}
-                        {isReportOpen === 'promotion' && item.text === 'Promotion' && item.subMenu.length > 0 && (
+                        {isReportOpen === 'productManager' && item.text === 'Product' && item.subMenu.length > 0 && (
                             <div className='dropdown'>
                                 {item.subMenu.map((subItem) => (
                                     <NavLink
@@ -107,4 +107,4 @@ const Sildebar = () => {
         </div >
     )
 }
-export default Sildebar
+export default SildebarManager
