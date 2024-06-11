@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JSSATSProject.Repository")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e7d4e9b95e369bf89b4c5f2180848ea1cb8a1039")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+31eee2f5eaab7fc2c84dd295fee8df408210988d")]
 [assembly: System.Reflection.AssemblyProductAttribute("JSSATSProject.Repository")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JSSATSProject.Repository")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

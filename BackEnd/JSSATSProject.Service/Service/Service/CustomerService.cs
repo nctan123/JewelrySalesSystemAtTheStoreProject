@@ -7,6 +7,7 @@ using JSSATSProject.Service.Service.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace JSSATSProject.Service.Service.Service
@@ -22,6 +23,7 @@ namespace JSSATSProject.Service.Service.Service
             _mapper = mapper;
         }
 
+
         public async Task<ResponseModel> CreateCustomerAsync(RequestCreateCustomer requestCustomer)
         {
             var entity = _mapper.Map<Customer>(requestCustomer);
@@ -36,23 +38,9 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetAllAsync()
         {
-        
             var entities = await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,Orders,Payments");
-            var response = entities.Select(entity => new ResponseCustomer
-            {
-                Id = entity.Id,
-                PointId = entity.PointId,
-                Firstname = entity.Firstname,
-                Lastname = entity.Lastname,
-                Phone = entity.Phone,
-                Email = entity.Email,
-                Gender = entity.Gender,
-                Address = entity.Address,
-                Orders = entity.Orders, 
-                Payments = entity.Payments,
-                TotalPoint = entity.Point?.Totalpoint?? 0,
-                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
-            }).ToList();
+
+            var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
             // Return the mapped response
             return new ResponseModel
@@ -149,7 +137,7 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = "",
             };
         }
-            public async Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer)
+        public async Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer)
         {
             try
             {
@@ -184,5 +172,20 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
+        public async Task<ResponseModel> CountCustomerByOrderDateTime(DateTime startDate, DateTime endDate)
+        {
+            Expression<Func<Customer, bool>> filter = customer =>
+                customer.Orders.Any(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+
+            int count = await _unitOfWork.CustomerRepository.CountAsync(filter);
+
+            return new ResponseModel
+            {
+                Data = count,
+                MessageError = count == 0 ? "Not Found" : null,
+            };
+        }
+
     }
 }
