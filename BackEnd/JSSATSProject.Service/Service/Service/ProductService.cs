@@ -5,6 +5,12 @@ using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Repository.CacheManagers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using JSSATSProject.Repository.CacheManagers;
+using JSSATSProject.Repository.ConstantsContainer;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -79,6 +85,11 @@ namespace JSSATSProject.Service.Service.Service
             {
                 diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOrigin(diamond.CutId, diamond.ClarityId,
                     diamond.ColorId, diamond.CaratId, diamond.OriginId);
+
+            if (responseProduct.CategoryId == 7)
+            {
+                var diamond = responseProduct.ProductDiamonds!.First().Diamond;
+                diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOrigin(diamond.CutId, diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId);
                 totalPrice = priceRate * diamondPrice;
             }
             else if (responseProduct.CategoryId is 1 or 2 or 3 or 4 or 5 or 6)
@@ -87,6 +98,11 @@ namespace JSSATSProject.Service.Service.Service
                 if (diamond is not null)
                     diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOrigin(diamond.CutId,
                         diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId);
+                var diamondsOfProduct = responseProduct.ProductDiamonds;
+                var diamond = diamondsOfProduct?.FirstOrDefault()?.Diamond;
+                //not all product has diamond (retail gold, wholesale gold,...)
+                if (diamond is not null)
+                    diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOrigin(diamond.CutId, diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId);
 
                 //except diamond category, all the rest product categories has material 
                 var productMaterial = responseProduct.ProductMaterials!.First();
@@ -104,6 +120,9 @@ namespace JSSATSProject.Service.Service.Service
                 totalPrice = priceRate * (diamondPrice + materialPrice + gemCost + materialCost + productionCost);
             }
 
+                var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
+                totalPrice = priceRate * (diamondPrice + materialPrice + gemCost + materialCost + productionCost);
+            }
             return totalPrice;
         }
 
@@ -206,6 +225,18 @@ namespace JSSATSProject.Service.Service.Service
         }
 
         public async Task<bool> AreValidProducts(Dictionary<string, int> productCodes)
+        public async Task<bool> AreValidProducts(List<string> productCodes)
+        {
+            if (!productCodes.Any())
+            {
+                return false;
+            }
+
+            var validProducts = await _unitOfWork.ProductRepository.GetAsync(p => productCodes.Contains(p.Code));
+            return validProducts.Count() == productCodes.Count;
+        }
+
+        public async Task<ResponseModel> UpdateStatusProductAsync(int productId, RequestUpdateStatusProduct requestProduct)
         {
             if (!productCodes.Any())
             {
@@ -234,5 +265,6 @@ namespace JSSATSProject.Service.Service.Service
             //check if the count of valid products matches the count of provided product codes
             return validProductsDictionary.Count == productCodes.Count;
         }
+
     }
 }

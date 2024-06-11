@@ -10,7 +10,7 @@ public partial class Fluorescence
 {    [JsonIgnore]
 
     public int Id { get; set; }
-
+    [JsonIgnore]
     public string Level { get; set; }
     [JsonIgnore]
     public string Description { get; set; }

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JSSATSProject.Repository.Entities;
+
 
 namespace JSSATSProject.Service.Models.PromotionModel
 {
@@ -20,5 +17,7 @@ namespace JSSATSProject.Service.Models.PromotionModel
         public DateTime EndDate { get; set; }
 
         public string? Status { get; set; }
+
+        public virtual ICollection<ProductCategory> Categories { get; set; } =  new List<ProductCategory>();
     }
 }

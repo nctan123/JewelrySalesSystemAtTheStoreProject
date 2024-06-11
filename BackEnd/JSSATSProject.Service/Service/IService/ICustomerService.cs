@@ -14,5 +14,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer);
 
         public Task<ResponseModel> FindByPhoneNumber(string phoneNumberStr);
+        public Task<ResponseModel> CountCustomerByOrderDateTime(DateTime startDate, DateTime endDate);
     }
 }

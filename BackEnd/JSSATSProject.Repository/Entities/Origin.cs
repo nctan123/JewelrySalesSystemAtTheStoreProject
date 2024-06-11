@@ -10,7 +10,7 @@ public partial class Origin
 {    [JsonIgnore]
 
     public int Id { get; set; }
-
+    [JsonIgnore]
     public string Name { get; set; }
     [JsonIgnore]
     public string Description { get; set; }

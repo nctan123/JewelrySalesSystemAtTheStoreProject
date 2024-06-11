@@ -7,6 +7,7 @@ using JSSATSProject.Service.Service.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using JSSATSProject.Repository.ConstantsContainer;
 
@@ -22,6 +23,7 @@ namespace JSSATSProject.Service.Service.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
 
         public async Task<ResponseModel> CreateCustomerAsync(RequestCreateCustomer requestCustomer)
         {
@@ -39,6 +41,11 @@ namespace JSSATSProject.Service.Service.Service
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync();
             var response = _mapper.Map<List<ResponseCustomer>>(entities.ToList());
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,Orders,Payments");
+
+            var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
+
+            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -157,5 +164,20 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
+        public async Task<ResponseModel> CountCustomerByOrderDateTime(DateTime startDate, DateTime endDate)
+        {
+            Expression<Func<Customer, bool>> filter = customer =>
+                customer.Orders.Any(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+
+            int count = await _unitOfWork.CustomerRepository.CountAsync(filter);
+
+            return new ResponseModel
+            {
+                Data = count,
+                MessageError = count == 0 ? "Not Found" : null,
+            };
+        }
+
     }
 }

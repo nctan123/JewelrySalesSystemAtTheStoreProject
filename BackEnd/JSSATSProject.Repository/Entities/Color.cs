@@ -9,8 +9,9 @@ namespace JSSATSProject.Repository.Entities;
 public partial class Color
 {    [JsonIgnore]
 
-    public int Id { get; set; }
 
+    public int Id { get; set; }
+    [JsonIgnore]
     public string Name { get; set; }
     [JsonIgnore]
     public string Description { get; set; }

@@ -20,6 +20,7 @@ namespace JSSATSProject.API
         {
             var builder = WebApplication.CreateBuilder(args);
             var services = builder.Services;
+            var config = builder.Configuration;
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
