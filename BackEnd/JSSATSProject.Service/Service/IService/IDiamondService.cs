@@ -1,6 +1,6 @@
 ﻿using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.DiamondModel;
-
+using System.Threading.Tasks;
 
 namespace JSSATSProject.Service.Service.IService
 {
@@ -12,6 +12,5 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByCodeAsync(string code);
         public Task<ResponseModel> CreateDiamondAsync(RequestCreateDiamond requestDiamond);
         public Task<ResponseModel> UpdateDiamondAsync(int diamondId, RequestUpdateDiamond requestDiamond);
-        public Task<ResponseModel> UpdateStatusDiamondAsync(int diamondId, RequestUpdateStatusDiamond requestDiamond);
     }
 }

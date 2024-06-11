@@ -11,11 +11,8 @@ namespace JSSATSProject.Service.Models.ProductModel
     public class ResponseProduct
     {
         public int Id { get; set; }
-<<<<<<< HEAD
         public string? Category { get; set; }
         // [JsonIgnore]
-=======
->>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
         public int CategoryId { get; set; }
 
         public string? Code { get; set; }
@@ -23,7 +20,6 @@ namespace JSSATSProject.Service.Models.ProductModel
         public string Name { get; set; } = null!;
 
         public string? Img { get; set; }
-<<<<<<< HEAD
         public decimal ProductValue { get; set; }
         
         [JsonIgnore]
@@ -40,17 +36,5 @@ namespace JSSATSProject.Service.Models.ProductModel
         [JsonIgnore]
         public ICollection<ProductMaterial>? ProductMaterials { get; set; }
         
-=======
-
-        public decimal ProductValue { get; set; }
-
-        public decimal PriceRate { get; set; }
-
-        public string? Status { get; set; }
-
-        public ICollection<ProductDiamond>? ProductDiamonds { get; set; }
-
-        public ICollection<ProductMaterial>? ProductMaterials { get; set; }
->>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
     }
 }

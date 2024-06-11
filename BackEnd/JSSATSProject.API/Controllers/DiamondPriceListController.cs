@@ -1,12 +1,13 @@
-﻿
+﻿using JSSATSProject.Service.Models.CustomerModel;
+using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.DiamondPriceListModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
     public class DiamondPriceListController : ControllerBase
     {

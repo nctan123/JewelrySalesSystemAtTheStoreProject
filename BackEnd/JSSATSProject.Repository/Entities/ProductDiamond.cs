@@ -6,7 +6,6 @@ using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
-<<<<<<< HEAD
 public partial class ProductDiamond {
     [JsonIgnore]
     public int ProductId {
@@ -23,17 +22,4 @@ public partial class ProductDiamond {
     public virtual Diamond Diamond {
         get; set;
     }
-=======
-public partial class ProductDiamond
-{
-    public int ProductId { get; set; }
-   
-    public int DiamondId { get; set; }
-
-    [JsonIgnore]
-    public virtual Product Product { get; set; }
-
-    public virtual Diamond Diamond { get; set; }
-
->>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
 }

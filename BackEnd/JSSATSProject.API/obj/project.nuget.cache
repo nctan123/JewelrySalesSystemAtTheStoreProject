@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OZ6ilvAN4eiCoqDrr2Obm9dW+WxmulMfF9cTSu2oYbw+2nKDJfFrteRLD55NFFq5rQ+zlJ3w4YjyKVC4dwIHrg==",
+  "dgSpecHash": "gKdI6LvrDTnq+yWlsftNKgQQMCMy6OS1AIqB7zLUaDxH9CQd+pl19u/RKOOmcep7l7W7BvWWAO8mKpQ68Zqs+w==",
   "success": true,
-  "projectFilePath": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
+  "projectFilePath": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.API\\JSSATSProject.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nhata\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\nhata\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

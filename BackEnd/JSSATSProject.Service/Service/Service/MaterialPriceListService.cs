@@ -63,10 +63,9 @@ namespace JSSATSProject.Service.Service.Service
                 var materialpricelist = await _unitOfWork.MaterialPriceListRepository.GetByIDAsync(materialpricelistId);
                 if (materialpricelist != null)
                 {
-
-                    _mapper.Map(requestMaterialPriceList, materialpricelist);
-
+                    materialpricelist = _mapper.Map<MaterialPriceList>(requestMaterialPriceList);
                     await _unitOfWork.MaterialPriceListRepository.UpdateAsync(materialpricelist);
+                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {

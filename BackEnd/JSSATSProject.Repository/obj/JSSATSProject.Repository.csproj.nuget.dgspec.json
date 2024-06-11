@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {}
+    "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {}
   },
   "projects": {
-    "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
+    "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
+        "projectUniqueName": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
         "projectName": "JSSATSProject.Repository",
-        "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
+        "projectPath": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
         "packagesPath": "C:\\Users\\nhata\\.nuget\\packages\\",
-        "outputPath": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\obj\\",
+        "outputPath": "C:\\Users\\nhata\\Downloads\\BackEnd (1)\\JSSATSProject.Repository\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nhata\\AppData\\Roaming\\NuGet\\NuGet.Config",

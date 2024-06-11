@@ -39,39 +39,11 @@ namespace JSSATSProject.Repository
         private PolishRepository _polish;
         private SymmetryRepository _symmetry;
         private RoleRepository _role;
-        private ProductMaterialRepository _productmaterial;
-        private OrderDetailRepository _orderdetail;
         
 
         public UnitOfWork(DBContext context)
         {
             _context = context;
-        }
-
-        public OrderDetailRepository OrderDetailRepository
-        {
-            get
-            {
-                if (_orderdetail == null)
-                {
-                    _orderdetail = new OrderDetailRepository(_context);
-                }
-                return _orderdetail;
-            }
-
-        }
-
-        public ProductMaterialRepository ProductMaterialRepository
-        {
-            get
-            {
-                if (_productmaterial == null)
-                {
-                    _productmaterial = new ProductMaterialRepository(_context);
-                }
-                return _productmaterial;
-            }
-
         }
 
         public StallTypeRepository StallTypeRepository
