@@ -24,13 +24,6 @@ namespace JSSATSProject.Service.Models.OrderModel
         public required string Type { get; set; }
 
         public string? Description { get; set; }
-<<<<<<< HEAD
         public required Dictionary<string, int> ProductCodes { get; set; }
-=======
-
-        //public virtual ICollection<OrderDetail> OrderDetails { get; set; }
-
-
->>>>>>> ef1d898c610203bb40990ce34f1644abc601b704
     }
 }

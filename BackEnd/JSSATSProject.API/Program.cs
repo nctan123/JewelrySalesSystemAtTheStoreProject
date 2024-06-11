@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Configuration;
+using System.Text;
 using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.CacheManagers;
@@ -7,7 +8,7 @@ using JSSATSProject.Service.AutoMapper;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -106,7 +107,7 @@ namespace JSSATSProject.API
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-            // CORS
+
             app.MapControllers();
 
             app.Run();

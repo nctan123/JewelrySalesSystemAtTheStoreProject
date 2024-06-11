@@ -13,7 +13,7 @@ public partial class Point
 
     public int? Totalpoint { get; set; }
 
-    public virtual ICollection<Customer> Customers { get; set; }
+    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
 
     public Point()
     {

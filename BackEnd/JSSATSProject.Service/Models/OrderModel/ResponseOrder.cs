@@ -22,7 +22,7 @@ namespace JSSATSProject.Service.Models.OrderModel
 
         public string? Description { get; set; }
 
-       // public virtual ICollection<OrderDetail> OrderDetails { get; set; } 
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; } = new List<OrderDetail>();
 
         
     }

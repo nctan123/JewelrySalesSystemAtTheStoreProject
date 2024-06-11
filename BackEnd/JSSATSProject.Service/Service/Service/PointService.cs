@@ -64,10 +64,9 @@ namespace JSSATSProject.Service.Service.Service
                 var point = await _unitOfWork.PointRepository.GetByIDAsync(pointId);
                 if (point != null)
                 {
-
-                    _mapper.Map(requestPoint, point);
-
+                    point = _mapper.Map<Point>(requestPoint);
                     await _unitOfWork.PointRepository.UpdateAsync(point);
+                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {

@@ -13,7 +13,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace JSSATSProject.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase

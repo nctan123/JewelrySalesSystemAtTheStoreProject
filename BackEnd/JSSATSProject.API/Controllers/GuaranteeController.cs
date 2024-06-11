@@ -35,14 +35,6 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-        [HttpGet]
-        [Route("GetByProductId")]
-        public async Task<IActionResult> GetByProductIdAsync(int productId)
-        {
-            var responseModel = await _guaranteeService.GetByProductIdAsync(productId);
-            return Ok(responseModel);
-        }
-
         [HttpPost]
         [Route("CreateGuarantee")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateGuarantee requestGuarantee)

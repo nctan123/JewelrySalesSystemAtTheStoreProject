@@ -11,61 +11,37 @@
   <component name="ChangeListManager">
     <list default="true" id="0513203b-3ec4-4637-8c29-53ed2097e01a" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.JSSATSProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.JSSATSProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.API.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.API.exe" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.API.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.API.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Repository.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Repository.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Repository.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Repository.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Service.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Service.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/bin/Debug/net8.0/JSSATSProject.Service.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.assets.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/JSSATSProject.API.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/apphost.exe" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/ref/JSSATSProject.API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/ref/JSSATSProject.API.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/refint/JSSATSProject.API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/Debug/net8.0/refint/JSSATSProject.API.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/JSSATSProject.API.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/JSSATSProject.API.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/JSSATSProject.API.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/JSSATSProject.API.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.API/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.API/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/bin/Debug/net8.0/JSSATSProject.Repository.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/bin/Debug/net8.0/JSSATSProject.Repository.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/bin/Debug/net8.0/JSSATSProject.Repository.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/bin/Debug/net8.0/JSSATSProject.Repository.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/ref/JSSATSProject.Repository.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/ref/JSSATSProject.Repository.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/refint/JSSATSProject.Repository.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/refint/JSSATSProject.Repository.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/Debug/net8.0/JSSATSProject.Repository.assets.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/JSSATSProject.Repository.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/JSSATSProject.Repository.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/JSSATSProject.Repository.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/JSSATSProject.Repository.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Repository/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Repository/obj/rider.project.restore.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/AutoMapper/ApplicationMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/AutoMapper/ApplicationMapper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/Models/AccountModel/ResponseToken.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/Models/AccountModel/ResponseToken.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Repository.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Repository.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Repository.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Repository.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Service.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Service.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/bin/Debug/net8.0/JSSATSProject.Service.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/Service/Service/ProductService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/Service/Service/ProductService.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.GeneratedMSBuildEditorConfig.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.GeneratedMSBuildEditorConfig.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.assets.cache" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/JSSATSProject.Service.sourcelink.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/ref/JSSATSProject.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/ref/JSSATSProject.Service.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/refint/JSSATSProject.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/Debug/net8.0/refint/JSSATSProject.Service.dll" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/JSSATSProject.Service.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/JSSATSProject.Service.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/JSSATSProject.Service.csproj.nuget.g.props" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/JSSATSProject.Service.csproj.nuget.g.props" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/project.assets.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/project.packagespec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/rider.project.model.nuget.info" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/JSSATSProject.Service/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/JSSATSProject.Service/obj/rider.project.restore.info" afterDir="false" />
     </list>
@@ -98,9 +74,6 @@
   &quot;associatedIndex&quot;: 2
 }</component>
   <component name="ProjectId" id="2hYjdBL7UwlLaTMRxKLboYFvWIw" />
-  <component name="ProjectLevelVcsManager">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -108,7 +81,6 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;.NET Launch Settings Profile.JSSATSProject.API: https.executor&quot;: &quot;Run&quot;,
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;BE__NhatAnh&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
@@ -197,8 +169,8 @@
       <workItem from="1718085745113" duration="5312000" />
       <workItem from="1718092774729" duration="32000" />
       <workItem from="1718093152589" duration="1507000" />
-      <workItem from="1718095398473" duration="64000" />
-      <workItem from="1718096698009" duration="215000" />
+      <workItem from="1718098074193" duration="63000" />
+      <workItem from="1718098172667" duration="6000" />
     </task>
     <servers />
   </component>
@@ -207,10 +179,25 @@
   </component>
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/OrderController.cs</url>
+          <line>52</line>
+          <properties documentPath="C:\Users\nhata\Downloads\BackEnd (1)\JSSATSProject.API\Controllers\OrderController.cs" containingFunctionPresentation="Method 'CreateAsync'" />
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/OrderController.cs</url>
+          <line>58</line>
+          <properties documentPath="C:\Users\nhata\Downloads\BackEnd (1)\JSSATSProject.API\Controllers\OrderController.cs" containingFunctionPresentation="Method 'CreateAsync'" />
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="LaunchSettings">
         <watch expression="$exception.Source" />

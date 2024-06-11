@@ -1,5 +1,4 @@
-﻿using JSSATSProject.Repository.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +13,6 @@ namespace JSSATSProject.Service.Models.PointModel
         public int? AvailablePoint { get; set;}
         public int? TotalPoints { get; set;}
 
+    
     }
 }
