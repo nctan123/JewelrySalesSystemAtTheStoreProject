@@ -128,6 +128,7 @@ namespace JSSATSProject.Service.AutoMapper
 
             //LoginType
             CreateMap<Account, ResponseToken>()
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => src.Staff.Id))
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name))
                 .ForMember(dest => dest.Name,
                     opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
