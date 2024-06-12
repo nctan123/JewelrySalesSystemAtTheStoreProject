@@ -24,21 +24,4 @@ public partial class Payment
     public virtual Order Order { get; set; }
 
     public virtual ICollection<PaymentDetail> PaymentDetails { get; set; } = new List<PaymentDetail>();
-
-    public Payment()
-    {
-        
-    }
-    public Payment(int id, int orderId, int customerId, DateTime createDate, decimal amount, string status, Customer customer, Order order, ICollection<PaymentDetail> paymentDetails)
-    {
-        Id = id;
-        OrderId = orderId;
-        CustomerId = customerId;
-        CreateDate = createDate;
-        Amount = amount;
-        Status = status;
-        Customer = customer;
-        Order = order;
-        PaymentDetails = paymentDetails;
-    }
 }

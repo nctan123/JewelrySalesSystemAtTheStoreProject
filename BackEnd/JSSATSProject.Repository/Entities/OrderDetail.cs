@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -23,8 +22,12 @@ public partial class OrderDetail
     public decimal SizePrice { get; set; }
 
     public string Status { get; set; }
-    [JsonIgnore]
+
+    public int? PromotionId { get; set; }
+
     public virtual Order Order { get; set; }
 
     public virtual Product Product { get; set; }
+
+    public virtual Promotion Promotion { get; set; }
 }

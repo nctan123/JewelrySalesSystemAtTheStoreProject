@@ -20,19 +20,4 @@ public partial class Account
     public virtual Role Role { get; set; }
 
     public virtual Staff Staff { get; set; }
-
-    public Account()
-    {
-    }
-
-    public Account(int id, int roleId, string username, string password, string status, Role role, Staff staff)
-    {
-        Id = id;
-        RoleId = roleId;
-        Username = username;
-        Password = password;
-        Status = status;
-        Role = role;
-        Staff = staff;
-    }
 }

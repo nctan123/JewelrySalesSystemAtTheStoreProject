@@ -13,19 +13,5 @@ public partial class Point
 
     public int? Totalpoint { get; set; }
 
-    public virtual ICollection<Customer> Customers { get; set; }
-
-    public Point()
-    {
-        
-    }
-
-    public Point(int id, int? availablePoint, int? totalPoint, ICollection<Customer> customers)
-    {
-        Id = id;
-        AvailablePoint = availablePoint;
-        Totalpoint = totalPoint;
-        Customers = customers;
-    }
-
+    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
 }
