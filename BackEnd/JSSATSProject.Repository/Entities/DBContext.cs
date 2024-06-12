@@ -65,6 +65,8 @@ public partial class DBContext : DbContext
     public virtual DbSet<ProductCategoryType> ProductCategoryTypes { get; set; }
 
     public virtual DbSet<ProductMaterial> ProductMaterials { get; set; }
+    
+    public virtual DbSet<ProductDiamond> ProductDiamonds { get; set; }
 
     public virtual DbSet<Promotion> Promotions { get; set; }
 
