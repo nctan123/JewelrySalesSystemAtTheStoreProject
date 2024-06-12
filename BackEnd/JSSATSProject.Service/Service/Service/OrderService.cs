@@ -123,6 +123,31 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        
+        public async Task<ResponseModel> CountOrderByOrderType(int month)
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAsync(
+                filter: o => o.CreateDate.Month == month,
+                includeProperties: "");
+
+            var ordersByType = orders
+                .GroupBy(o => o.Type)
+                .Select(group => new
+                {
+                    Type = group.Key,
+                    Quantity = group.Count()
+                })
+                .ToList();
+
+            var result = ordersByType.Select(item => new Dictionary<string, object>
+        {
+            { "Type", item.Type },
+            { "Quantity", item.Quantity }
+        }).ToList();
+
+            return new ResponseModel
+            {
+                Data = result
+            };
+        }
     }
 }

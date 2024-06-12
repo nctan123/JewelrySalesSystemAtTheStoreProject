@@ -18,6 +18,8 @@ namespace JSSATSProject.Service.Service.Service
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
+
+
         public async Task<ResponseModel> CreateOrderDetailAsync(RequestCreateOrderDetail requestOrderDetail)
         {
             var entity = _mapper.Map<OrderDetail>(requestOrderDetail);
@@ -88,6 +90,34 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public async Task<ResponseModel> CountProductsSoldByCategoryAsync(int month)
+        {
+            var orderDetails = await _unitOfWork.OrderDetailRepository.GetAsync(
+                filter: od => od.Order.CreateDate.Month == month
+                    && od.Order.Type.ToLower() == "sell", 
+                includeProperties: "Product");
+
+            var productsSoldPerCategory = orderDetails
+                .GroupBy(od => od.Product.Category.Name)
+                .Select(group => new
+                {
+                    Category = group.Key,
+                    Quantity = group.Sum(od => od.Quantity)
+                })
+                .ToList();
+
+            var result = productsSoldPerCategory.Select(item => new Dictionary<string, object>
+        {
+            { "Category", item.Category },
+            { "Quantity", item.Quantity }
+        }).ToList();
+
+            return new ResponseModel
+            {
+                Data = result
+            };
         }
     }
 }

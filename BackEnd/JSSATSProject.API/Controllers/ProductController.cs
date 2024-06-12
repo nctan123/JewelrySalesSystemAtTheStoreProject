@@ -1,8 +1,5 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
-using JSSATSProject.Service.Models.ProductModel;
+﻿using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
