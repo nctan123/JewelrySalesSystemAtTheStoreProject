@@ -18,10 +18,11 @@ const Ring = () => {
 
   const getRing = async () => {
     let res = await fetchAllRing();
+    console.log(res)
     if (res && res.data && res.data.data) {
       setListRing(res.data.data)
     }
-  };
+    };
 
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -37,7 +38,7 @@ const Ring = () => {
  
     <div className='grid grid-cols-5 gap-1 w-full ml-3 mt-1'>
       {listRing && listRing.length > 0 &&
-        listRing.filter(item => item.categoryId === 1).map((item, index) => {
+        listRing.filter(item => item.categoryId === 1 && item.status === "active").map((item, index) => {
           return (
             <div key={`ring-${index}`} className={clsx(style.card)} onClick={() => dispatch(addProduct(item))} >
                 <img className=' mt-0 w-[100%] h-[70%] rounded-xl object-cover bg-[#ffffff1f]' src={ring} />

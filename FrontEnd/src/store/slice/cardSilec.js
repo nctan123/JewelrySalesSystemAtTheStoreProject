@@ -32,6 +32,9 @@ export const productSlice = createSlice({
                 state.CusPoint[productIndex].quantity += 1;
             }
         },
+        deleteCustomer: (state, action) => {
+            return { ...state, CusPoint: [] }
+        },
     },
 
 })
@@ -39,6 +42,6 @@ export const productSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { addProduct, deleteProduct, addCustomer } = productSlice.actions
+export const { addProduct, deleteProduct, addCustomer,deleteCustomer } = productSlice.actions
 
 export default productSlice.reducer

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 // import  addProduct, deleteProduct  from '../../../'
-import { deleteProduct } from '../store/slice/cardSilec'
-
+import { deleteProduct,deleteCustomer} from '../store/slice/cardSilec'
+import { MdDeleteOutline } from "react-icons/md";
 
 const SidebarRight = () => {
   const dispatch = useDispatch()
@@ -34,7 +34,7 @@ const SidebarRight = () => {
   const tax = total * 5 / 100
   const totalInvoice = tax + total
   function formatPrice(price) {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   return (<>
@@ -55,11 +55,13 @@ const SidebarRight = () => {
           <p className='font-light'>Address:</p>
           <span className='w-full flex justify-center font-serif'>Jewelry Store</span>
         </div>
-        <div className='flex  px-[15px] text-black'>
-          <p className='w-[260px] font-light '>ID Customer:</p>
+        <div className='flex items-center px-[15px] text-[#000]'>
+          <p className='w-[260px] font-light '>Customer Name:</p>
           {CusPoint && CusPoint[0] && (
-            <span className='w-full flex font-serif'>{CusPoint[0].id}</span>
+            <span className='w-full flex items-center justify-between font-serif' >{CusPoint[0].firstname}  {CusPoint[0].lastname} <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e'/></span></span>
+           
           )}
+         
         </div>
         <div className='grid grid-cols-3 border border-x-0 border-t-0 mx-[10px] border-b-black pb-[2px]'>
           <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
@@ -68,9 +70,11 @@ const SidebarRight = () => {
         <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
           {CartProduct && CartProduct.map((item, index) => {
             return (
-              <div key={`ring-${index}`} className='grid grid-cols-3 cursor-pointer' onClick={() => dispatch(deleteProduct(item))}  >
-                <div className='col-start-1 col-span-2 flex px-[10px] py-2 text-sm' >{item.name}</div>
-                <div className='col-start-3 flex justify-center text-[#d48c20] px-[10px] py-2'>{formatPrice(item.code)}</div>
+              <div key={`ring-${index}`} className='grid grid-cols-6'  >
+                <div className='col-start-1 col-span-4 flex px-[10px] py-2 text-sm' >{item.name}</div>
+                <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px] py-2'>{formatPrice(item.productValue)}</div>
+                <span onClick={() => dispatch(deleteProduct(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md  '><MdDeleteOutline size='17px' color='#ef4e4e'/></span>
+                
               </div>
             )
           })}
