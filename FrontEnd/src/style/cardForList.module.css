@@ -36,6 +36,7 @@
     border-radius: 0px 0px 15px 15px;
   }
   
+ 
   .card .title {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 0.8em;
@@ -95,7 +96,7 @@
     padding: 5px;
     background: #fff;
     border-radius: 5px;
-    width: 30%;
+    width: 56%;
     position: relative;
     transition: all 1s ease-in-out;
     overflow: scroll;
@@ -108,8 +109,8 @@
   }
   .popup .close {
     position: absolute;
-    top: 10px;
-    right: 30px;
+    top: 1px;
+    right: 1px;
     transition: all 100ms;
     font-size: 30px;
     font-weight: bold;

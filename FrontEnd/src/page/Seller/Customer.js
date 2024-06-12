@@ -20,11 +20,11 @@ const Customer = () => {
       setListCustomer(res.data.data)
     }
   }
- 
+
   return (
     <>
       <div>
-     
+
         <button type="button" className="m-0 flex justify-center items-center bg-[#00AC7C] text-white gap-1 cursor-pointer tracking-widest rounded-md hover:bg-[#00ac7b85] duration-300 hover:gap-2 hover:translate-x-3">
           <a href='#popup1' id='openPopUp' className='p-0 flex gap-1 items-center'>
             Add
@@ -116,7 +116,7 @@ const Customer = () => {
                     <option>Female</option>
                   </select>
                 </div>
-
+                <input hidden className='border border-gray-300 bg-gray-50 rounded-md w-fit h-[41.6px] font-normal text-gray-400' value='0' />
               </div>
               <button type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
