@@ -63,8 +63,9 @@ export const sidebarMenu = [
     },
     {
         path: '/login',
-        text: 'Log out',
-        icons: <TbLogout2 size={24} color="white" />
+        text:'Log out',
+        icons: <TbLogout2 size={24} color="white"/>
+
     },
 
 ]

@@ -11,6 +11,7 @@
     border-radius: 15px;
     margin: 0 auto;
     margin-bottom: 10px;
+  
     
     /* margin-bottom: 10px; */
     
@@ -83,6 +84,7 @@
     transition: opacity 1ms;
     visibility: hidden;
     opacity: 0;
+    overflow-y: scroll;
   }
   .overlay:target {
     visibility: visible;
@@ -96,6 +98,7 @@
     width: 30%;
     position: relative;
     transition: all 1s ease-in-out;
+    overflow: scroll;
   }
   .popup img{ width: 100%;}
   .popup h2 {
@@ -120,3 +123,6 @@
     overflow: auto;
    
   }
+
+
+  

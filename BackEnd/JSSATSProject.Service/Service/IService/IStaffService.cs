@@ -12,5 +12,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> CreateStaffAsync(RequestCreateStaff requestStaff);
         public Task<ResponseModel> UpdateStaffAsync(int staffId, RequestUpdateStaff requestStaff);
+        public Task<ResponseModel> GetTop6ByMonthAsync(int month);
     }
 }

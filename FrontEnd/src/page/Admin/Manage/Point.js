@@ -1,10 +1,9 @@
-
 import React, { useEffect, useState } from 'react'
 import { fetchAllCustomer } from '../../../apis/jewelryService'
 import clsx from 'clsx'
 import { IoIosSearch } from "react-icons/io";
 
-const Customer = () => {
+const Point = () => {
     const [originalListCustomer, setOriginalListCustomer] = useState([]);
     const [listCustomer, setListCustomer] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -57,7 +56,7 @@ const Customer = () => {
     return (
         <div className="flex items-center justify-center min-h-screen">
             <div>
-                <h1 className="text-2xl font-bold text-center mb-4">Customer Management List</h1>
+                <h1 className="text-2xl font-bold text-center mb-4">Customer point management list</h1>
                 <div className="flex mb-4">
                     <div className="relative">
                         <input
@@ -74,10 +73,10 @@ const Customer = () => {
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
                         <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
                             <tr>
-                                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Customer ID</th>
+                                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Point ID</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Full Name</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">PhoneNumber</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Gender</th>
+                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Avaliable Point</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Total Point</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
 
@@ -86,10 +85,10 @@ const Customer = () => {
                         <tbody>
                             {currentCustomers.map((item, index) => (
                                 <tr key={index} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">{item.id}</td>
+                                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">{item.pointId}</td>
                                     <td className="text-sm font-normal text-[#637381]">{item.firstname} {item.lastname}</td>
                                     <td className="text-sm font-normal text-[#637381]">{item.phone}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.gender}</td>
+                                    <td className="text-sm font-normal text-[#637381]">{item.avaliablePoint}</td>
                                     <td className="text-sm font-normal text-[#637381]">{item.totalPoint}</td>
                                     <td className="text-sm font-normal text-[#637381]">
                                         <button className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none">
@@ -131,4 +130,4 @@ const Customer = () => {
     )
 }
 
-export default Customer
+export default Point

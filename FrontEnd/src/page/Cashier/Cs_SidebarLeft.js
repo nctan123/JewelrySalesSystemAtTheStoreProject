@@ -1,9 +1,9 @@
 import React from 'react'
-import logo_v2_seller from '../assets/logo_v2_seller.png'
-import { sidebarMenu } from '../ultis/menu'
 import { NavLink } from 'react-router-dom'
 import { hover } from '@testing-library/user-event/dist/hover'
 import { useState } from 'react'
+import logo_v2_seller from '../../assets/logo_v2_seller.png'
+import {sidebarMenuCashier} from '../../ultis/MenuOfCashier/MenuCashier'
 
 const notActive =
   'py-4 px-[25px] font-[300] font-sans italic flex gap-3 items-center text-white text-[14px]';
@@ -15,8 +15,7 @@ const notActiveJew =
 const activeStyleJew =
   'py-1 gap-4 w-[94%] rounded-xl font-thin font-serif italic flex  text-white text-[14px] bg-[#33333330] mt-[10px]';
 
-
-const Sidebar = () => {
+const Cs_SidebarLeft = () => {
   const [isOrderSubmenuOpen, setIsOrderSubmenuOpen] = useState(false);
 
   const handleOrderSubmenuToggle = () => {
@@ -37,25 +36,24 @@ const Sidebar = () => {
         <span>Jewelry Store</span>
       </div>
 
-
-      <div className="flex flex-col pb-16 ">
-        {sidebarMenu.map((item) => (
+      <div className="flex flex-col pb-16">
+        {sidebarMenuCashier.map((item) => (
           <div key={item.path}>
             <NavLink
               to={item.path}
               end={item.end}
               className={({ isActive }) =>
                 `flex items-center p-4 text-white transition-colors ${
-                  isActive || (item.text === 'Jewelry' && isOrderSubmenuOpen)
+                  isActive || (item.text === 'Order' && isOrderSubmenuOpen)
                     ? activeStyle
                     : notActive
                 }`
               }
-              onClick={item.text === 'Jewelry' ? handleOrderSubmenuToggle : () => handleMenuItemClick(item)}>
+              onClick={item.text === 'Order' ? handleOrderSubmenuToggle : () => handleMenuItemClick(item)}>
               {item.icons}
               <span className="ml-4">{item.text}</span>
             </NavLink>
-            {item.text === 'Jewelry' && isOrderSubmenuOpen && (
+            {item.text === 'Order' && isOrderSubmenuOpen && (
               <div className="pl-8">
                 {item.subMenu.map((subItem) => (
                   <NavLink
@@ -72,7 +70,6 @@ const Sidebar = () => {
                 ))}
               </div>
             )}
-
           </div>
         ))}
       </div>
@@ -80,4 +77,4 @@ const Sidebar = () => {
   );
 };
 
-export default Sidebar;
+export default Cs_SidebarLeft;

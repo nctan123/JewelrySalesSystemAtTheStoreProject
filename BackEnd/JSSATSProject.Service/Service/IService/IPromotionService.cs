@@ -11,5 +11,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> CreatePromotionAsync(RequestCreatePromotion requestPromotion);
         public Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion);
+        public Task<ResponseModel> GetPromotionByProductCategory(int productcategoryId);
     }
 }

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { fetchAllRing } from '../../apis/jewelryService'
 import clsx from 'clsx'
 import style from "../../style/cardForList.module.css"
-import logo from '../../assets/logo.png'
 import ring from '../../assets/img/seller/ring.png'
-import { createContext } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { addProduct, deleteProduct } from '../../store/slice/cardSilec'
+import { useDispatch } from 'react-redux'
+import { addProduct} from '../../store/slice/cardSilec'
+import Barcode from 'react-barcode';
+
   
 const Ring = () => {
   const dispatch = useDispatch()
@@ -31,9 +31,6 @@ const Ring = () => {
     return name.replace(/\s*Ring$/, "");
   }
 
-  // const CartProduct = useSelector(state => state.cart.CartArr);
-  // console.log(CartProduct)
-
   return (<>
 
     {/* <div className='flex px-3 w-full items-center'> */}
@@ -43,10 +40,10 @@ const Ring = () => {
         listRing.filter(item => item.categoryId === 1).map((item, index) => {
           return (
             <div key={`ring-${index}`} className={clsx(style.card)} onClick={() => dispatch(addProduct(item))} >
-                <img className=' mt-0 w-[100%] h-[79%] rounded-xl object-cover bg-[#ffffff1f]' src={ring} />
+                <img className=' mt-0 w-[100%] h-[70%] rounded-xl object-cover bg-[#ffffff1f]' src={ring} />
                 <div className=' flex justify-center text-[0.7em] mt-[5px] font-normal'>{formatName(item.name)}</div>
-                <div className=' flex justify-center text-[0.8em] mt-[5px] font-normal'>ID: {item.id}</div>
-                <div className=' flex justify-center text-[#d48c20]'>{formatPrice(item.productValue)}đ</div>
+                <div className='absolute bottom-8 w-full flex justify-center text-[0.8em] mt-[5px] font-normal'>Code: {item.code}</div>
+                <div className='absolute bottom-2 w-full flex justify-center text-[#d48c20]'>{formatPrice(item.productValue)}đ</div>
             </div>
           )
         })}

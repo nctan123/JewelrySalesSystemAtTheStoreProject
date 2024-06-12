@@ -1,5 +1,12 @@
 const path = {
-    PUBLIC: 'public',
+
+    HOME: '/',
+    ADMIN: '/admin',
+    LOGIN: '/login',
+   
+// Seller
+    PUBLIC: '/public',
+
     DIAMOND: '',
     LOGIN: '/login',
     STAR: '*',
@@ -8,28 +15,48 @@ const path = {
     NECKLACE: 'necklace',
     RING: 'ring',
 
-    HOME: '/',
+    EARRING: 'earring',
+    BANGLES: 'bangles',
+    WHOLESALEGOLD: 'wholesalegold',
+    RETAILGOLD: 'retailgold',
+    SEARCHINVOICE: 'searchinvoice',
+    PROMOTION: 'promotion',
+    RETURN_EX: 'returnExchange',
+// Cashier
+    CS_PUBLIC: 'cs_public',
+    CS_ORDER: 'cs_order',
+    CS_REVENUE: 'cs_revenue',
+    CS_ONPROCESS: 'cs_onprocess',
+    CS_COMPLETE: 'cs_complete',
+ // ADMIN
+ DASHBOARD: 'Dashboard',
 
-    ADMIN: '/admin',
-    DASHBOARD: 'Dashboard',
+ MANAGE: 'Manage',
+ CUSTOMERADMIN: 'customeradmin',
+ PRODUCTADMIN: 'productadmin',
+ STAFF: 'staff',
+ POINT: 'point',
 
-    MANAGE: 'Manage',
-    CUSTOMERADMIN: 'customeradmin',
-    PRODUCTADMIN: 'productadmin',
-    STAFF: 'staff',
+ REPORT: 'Report',
+ INVOICE: 'Invoice',
+ PRODUCSOLD: 'ProductSold',
+ EMPLOYEE: 'Employee',
 
-    REPORT: 'Report',
-    INVOICE: 'Invoice',
-    PRODUCSOLD: 'ProductSold',
-    EMPLOYEE: 'Employee',
+ PROMOTIONADMIN: 'Promotionadmin',
+ PROMOTIONLIST: 'promotionlist',
+ PROMOTIONREQUEST: 'promotionrequest',
 
-    PROMOTION: 'Promotion',
-    PROMOTIONLIST: 'promotionlist',
-    PROMOTIONREQUEST: 'promotionrequest',
+ RETURNPOLICY: 'ReturnPolicy',
 
-    RETURNPOLICY: 'ReturnPolicy',
+ VOIDBILL: 'VoidBill',
 
-    VOIDBILL: 'VoidBill',
+ // end admin
+
+
+ // manager
+ MANAGER: 'manager'
+ // end manager
+
 
 
 }
