@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj": {}
+    "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj": {}
   },
   "projects": {
-    "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj": {
+    "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
+        "projectUniqueName": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
         "projectName": "JSSATSProject.API",
-        "projectPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\obj\\",
+        "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
+        "packagesPath": "C:\\Users\\nhata\\.nuget\\packages\\",
+        "outputPath": "C:\\SWP\\BackEnd\\JSSATSProject.API\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\nhata\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -32,11 +28,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
-                "projectPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj"
+              "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
+                "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj"
               },
-              "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj": {
-                "projectPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj"
+              "C:\\SWP\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj": {
+                "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj"
               }
             }
           }
@@ -101,21 +97,17 @@
         }
       }
     },
-    "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
+    "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
+        "projectUniqueName": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
         "projectName": "JSSATSProject.Repository",
-        "projectPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\obj\\",
+        "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
+        "packagesPath": "C:\\Users\\nhata\\.nuget\\packages\\",
+        "outputPath": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\nhata\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -142,10 +134,6 @@
           "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
-              "target": "Package",
-              "version": "[8.0.5, )"
-            },
-            "Microsoft.EntityFrameworkCore.Proxies": {
               "target": "Package",
               "version": "[8.0.5, )"
             },
@@ -180,21 +168,17 @@
         }
       }
     },
-    "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj": {
+    "C:\\SWP\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
+        "projectUniqueName": "C:\\SWP\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
         "projectName": "JSSATSProject.Service",
-        "projectPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
-        "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
-        "outputPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\obj\\",
+        "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
+        "packagesPath": "C:\\Users\\nhata\\.nuget\\packages\\",
+        "outputPath": "C:\\SWP\\BackEnd\\JSSATSProject.Service\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\nhata\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -208,8 +192,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
-                "projectPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj"
+              "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj": {
+                "projectPath": "C:\\SWP\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj"
               }
             }
           }

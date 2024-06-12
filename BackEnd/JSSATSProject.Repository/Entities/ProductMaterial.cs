@@ -8,14 +8,12 @@ namespace JSSATSProject.Repository.Entities;
 
 public partial class ProductMaterial
 {
-    [JsonIgnore]
     public int MaterialId { get; set; }
-    [JsonIgnore]
+
     public int ProductId { get; set; }
 
     public decimal? Weight { get; set; }
-    [JsonIgnore]
-    public virtual Product Product { get; set; }
-    public virtual Material Material { get; set; }
 
+    public virtual Material Material { get; set; }
+    public virtual Product Product { get; set; }
 }

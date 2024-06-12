@@ -80,14 +80,16 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion)
         {
+
             try
             {
                 var promotion = await _unitOfWork.PromotionRepository.GetByIDAsync(promotionId);
                 if (promotion != null)
                 {
-                    promotion = _mapper.Map<Promotion>(requestPromotion);
+
+                    _mapper.Map(requestPromotion, promotion);
+
                     await _unitOfWork.PromotionRepository.UpdateAsync(promotion);
-                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {

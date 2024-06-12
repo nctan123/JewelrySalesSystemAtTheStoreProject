@@ -1,13 +1,6 @@
-﻿using System.Net;
-using JSSATSProject.Service.Models.CustomerModel;
-using JSSATSProject.Service.Models.OrderModel;
+﻿using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using JSSATSProject.Repository;
-using JSSATSProject.Repository.ConstantsContainer;
-using JSSATSProject.Service.Models;
 
 namespace JSSATSProject.API.Controllers
 {
@@ -16,17 +9,10 @@ namespace JSSATSProject.API.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        private readonly IStaffService _staffService;
-        private readonly IProductService _productService;
-        private readonly ICustomerService _customerService;
 
-        public OrderController(IOrderService orderService, IStaffService staffService, IProductService productService,
-            ICustomerService customerService)
+        public OrderController(IOrderService orderService)
         {
             _orderService = orderService;
-            _staffService = staffService;
-            _productService = productService;
-            _customerService = customerService;
         }
 
         [HttpGet]
@@ -46,39 +32,11 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpPost]
-        [Route("CreateOrder/sell")]
+        [Route("CreateOrder")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateOrder requestOrder)
         {
-            var validateProductsResult = await _productService.AreValidProducts(requestOrder.ProductCodes);
-            if (!validateProductsResult)
-                return Problem(statusCode: Convert.ToInt32(HttpStatusCode.Forbidden), 
-                    title: "Entered Product data issues",
-                    detail: "Provided product codes or quantity is invalid.");
-
-            var customer = await _customerService.FindByPhoneNumber(requestOrder.CustomerPhoneNumber);
-            if (!customer.MessageError.Equals(Constants.Success))
-            {
-                return customer.MessageError switch
-                {
-                    Constants.CustomerNotFound =>
-                        Problem(statusCode: Convert.ToInt32(HttpStatusCode.Forbidden),
-                            title: "Entered Customer data issues",
-                            detail: "Customer is not exist."),
-
-                    Constants.InvalidPhoneNumberFormat => 
-                        Problem(statusCode: Convert.ToInt32(HttpStatusCode.Forbidden),
-                        title: "Entered Phone Number data issues",
-                        detail: "Phone number format is invalid."),
-
-                    _ => Problem(statusCode: Convert.ToInt32(HttpStatusCode.Forbidden),
-                        title: "Unknown error",
-                        detail: "An unknown error occured in the process.")
-                };
-            }
-            
-            // var responseModel = await _orderService.CreateOrderAsync(requestOrder);
-            // return Ok(responseModel);
-            return Ok("dep trai");
+            var responseModel = await _orderService.CreateOrderAsync(requestOrder);
+            return Ok(responseModel);
         }
 
         [HttpPut]

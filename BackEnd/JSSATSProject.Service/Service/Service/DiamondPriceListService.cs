@@ -19,7 +19,7 @@ namespace JSSATSProject.Service.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly DiamondPriceCacheManager _diamondPriceCacheManager;
-        
+
 
         public DiamondPriceListService(UnitOfWork unitOfWork, IMapper mapper, DiamondPriceCacheManager diamondPriceCacheManager)
         {

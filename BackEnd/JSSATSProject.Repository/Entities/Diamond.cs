@@ -7,38 +7,28 @@ using System.Text.Json.Serialization;
 namespace JSSATSProject.Repository.Entities;
 
 public partial class Diamond
-{    [JsonIgnore]
-
+{
     public int Id { get; set; }
 
     public string Code { get; set; }
 
     public string Name { get; set; }
-    [JsonIgnore]
 
     public int OriginId { get; set; }
-    [JsonIgnore]
 
     public int ShapeId { get; set; }
-    [JsonIgnore]
 
     public int FluorescenceId { get; set; }
-    [JsonIgnore]
 
     public int ColorId { get; set; }
-    [JsonIgnore]
 
     public int SymmetryId { get; set; }
-    [JsonIgnore]
 
     public int PolishId { get; set; }
-    [JsonIgnore]
 
     public int CutId { get; set; }
-    [JsonIgnore]
 
     public int ClarityId { get; set; }
-    [JsonIgnore]
 
     public int CaratId { get; set; }
 
@@ -69,7 +59,7 @@ public partial class Diamond
     {
     }
 
-    public Diamond(int id, string code, string name, int originId, int shapeId, int fluorescenceId, int colorId, int symmetryId, int polishId, int cutId, int clarityId, int caratId, string status, Carat carat, Clarity clarity, Color color, Cut cut, Fluorescence fluorescence, Origin origin, Polish polish, Shape shape, Symmetry symmetry, ICollection<ProductDiamond> products)
+    public Diamond(int id, string code, string name, int originId, int shapeId, int fluorescenceId, int colorId, int symmetryId, int polishId, int cutId, int clarityId, int caratId, string status, Carat carat, Clarity clarity, Color color, Cut cut, Fluorescence fluorescence, Origin origin, Polish polish, Shape shape, Symmetry symmetry, ICollection<Product> products)
     {
         Id = id;
         Code = code;
@@ -93,6 +83,5 @@ public partial class Diamond
         Polish = polish;
         Shape = shape;
         Symmetry = symmetry;
-        ProductDiamonds = products;
     }
 }

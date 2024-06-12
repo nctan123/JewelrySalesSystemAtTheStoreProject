@@ -81,7 +81,11 @@ public partial class DBContext : DbContext
     public virtual DbSet<StallType> StallTypes { get; set; }
 
     public virtual DbSet<Symmetry> Symmetries { get; set; }
-    
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+      => optionsBuilder.UseSqlServer(@"Data Source=LAPTOP-R16679DK;Initial Catalog=JSSATS01;User ID=sa;Password=12345;Encrypt=False");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
@@ -677,7 +681,7 @@ public partial class DBContext : DbContext
             entity.HasOne(d => d.Stalls).WithMany(p => p.Products)
                 .HasForeignKey(d => d.StallsId)
                 .HasConstraintName("FK__Product__stalls___5AEE82B9");
-  
+
         });
 
         modelBuilder.Entity<ProductCategory>(entity =>
@@ -769,7 +773,7 @@ public partial class DBContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__ProductDi__produ__5224328E");
         });
-        
+
         modelBuilder.Entity<Promotion>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Promotio__3213E83F7CFC9FDD");

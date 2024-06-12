@@ -5,13 +5,11 @@ using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace JSSATSProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     //[Authorize]
     public class ProductController : ControllerBase
     {
@@ -67,6 +65,14 @@ namespace JSSATSProject.API.Controllers
         public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] RequestUpdateProduct requestProduct)
         {
             var response = await _productService.UpdateProductAsync(id, requestProduct);
+            return Ok(response);
+        }
+
+        [HttpPut]
+        [Route("UpdateStatusProduct")]
+        public async Task<IActionResult> UpdateStatusProductAsync(int id, [FromBody] RequestUpdateStatusProduct requestProduct)
+        {
+            var response = await _productService.UpdateStatusProductAsync(id, requestProduct);
             return Ok(response);
         }
     }

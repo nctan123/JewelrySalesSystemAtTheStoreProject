@@ -2,19 +2,17 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
 public partial class Material
 {
-    [JsonIgnore]
     public int Id { get; set; }
 
     public string Name { get; set; }
-    [JsonIgnore]
+
     public virtual ICollection<MaterialPriceList> MaterialPriceLists { get; set; } = new List<MaterialPriceList>();
-    [JsonIgnore]
+
     public virtual ICollection<ProductMaterial> ProductMaterials { get; set; } = new List<ProductMaterial>();
 
     public Material()

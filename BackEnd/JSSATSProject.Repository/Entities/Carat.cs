@@ -7,8 +7,8 @@ using System.Text.Json.Serialization;
 namespace JSSATSProject.Repository.Entities;
 
 public partial class Carat
-{    [JsonIgnore]
-
+{
+    [JsonIgnore]
     public int Id { get; set; }
 
     public decimal Weight { get; set; }

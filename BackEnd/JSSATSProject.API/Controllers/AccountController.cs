@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace JSSATSProject.API.Controllers
 {
-    // [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
