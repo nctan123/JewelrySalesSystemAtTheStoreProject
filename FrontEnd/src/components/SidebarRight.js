@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 // import  addProduct, deleteProduct  from '../../../'
 import { deleteProduct, deleteCustomer, deleteProductAll } from '../store/slice/cardSilec'
 import { MdDeleteOutline } from "react-icons/md";
+import { VscGitStashApply } from "react-icons/vsc";
 import { Link } from 'react-router-dom';
 import styles from '../style/cardForList.module.css'
 import clsx from 'clsx'
@@ -90,7 +91,7 @@ const SidebarRight = () => {
           <div className='col-start-2 flex justify-end'>{formatPrice(total.toFixed())}</div>
           <div className='row-start-2 font-thin'>Tax:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(tax)}</div>
-          <div className='row-start-3 font-thin'>Point:</div>
+          <div className='row-start-3 font-thin'>Point: {formatPrice(1000000)}</div>
           <div className='col-start-2 flex justify-end text-red-500'>          <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="number" name="point" id="inputPoint" placeholder="Use Point" />
           </div>
         </div>
@@ -153,13 +154,14 @@ const SidebarRight = () => {
                       Apple MacBook Pro 17"
                     </th>
                     <td class="px-6 py-4">
-                      Silver
+                      08191913101
                     </td>
                     <td class="px-6 py-4">
-                      Laptop
+                      I_001
                     </td>
-                    <td class="px-6 py-4">
-                      $2999
+                    <td class="flex py-4 gap-1 items-center justify-center">
+                      <button className='m-0 p-3 bg-green-500'><VscGitStashApply/></button>
+                      <button className='m-0 p-3 bg-red-500'><MdDeleteOutline/></button>
                     </td>
                   </tr>
                 </tbody>

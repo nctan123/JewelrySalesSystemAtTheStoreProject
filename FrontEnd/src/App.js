@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; //mang action đến redux, sử dụng useSeletor để lấy giá trị
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex } from './page/Seller';
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Return, Exchange, Buy ,Warranty} from './page/Seller';
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
@@ -38,8 +38,8 @@ function App() {
     <>
       <div className=''>
         <Routes>
-        {/* home */}
-        <Route path={path.HOME} element={<Home />} />
+          {/* home */}
+          <Route path={path.HOME} element={<Home />} />
           <Route path={path.LOGIN} element={<Login />} />
           {/* admin */}
           <Route path={path.ADMIN} element={<Admin />} exact >
@@ -86,7 +86,12 @@ function App() {
             <Route path={path.RETAILGOLD} element={<RetailGold />} />
             <Route path={path.SEARCHINVOICE} element={<SearchInvoice />} />
             <Route path={path.PROMOTION} element={<Promotion />} />
-            <Route path={path.RETURN_EX} element={<Return_Ex />} />
+            <Route path={path.RETURN_EX} element={<Return_Ex />} >
+              <Route path={path.RETURN} element={<Return />} />
+              <Route path={path.EXCHANGE} element={<Exchange />} />
+              <Route path={path.BUY} element={<Buy />} />
+              <Route path={path.WARRANTY} element={<Warranty/>}/>
+            </Route>
           </Route>
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
@@ -104,7 +109,7 @@ function App() {
       </div>
 
       <ToastContainer
-        
+
       />
     </>
   );
