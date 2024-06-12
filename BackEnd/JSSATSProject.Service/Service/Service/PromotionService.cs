@@ -114,5 +114,10 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
+        public Task<ResponseModel> GetPromotionByProductCategory(int productcategoryId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
