@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -123,5 +124,52 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
+        public async Task<ResponseModel> GetTop6ByMonthAsync(int month)
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAsync(
+                filter: o => o.CreateDate.Month == month && o.CreateDate.Year == DateTime.Now.Year);
+
+            var groupedOrders = orders
+                .GroupBy(o => o.StaffId)
+                .Select(group => new
+                {
+                    StaffId = group.Key,
+                    TotalRevenue = group.Sum(o => o.TotalAmount)
+                })
+                .OrderByDescending(g => g.TotalRevenue)
+                .ToList();
+
+            var top5 = groupedOrders.Take(5).ToList();
+            var otherRevenue = groupedOrders.Skip(5).Sum(g => g.TotalRevenue);
+
+            var result = new List<Dictionary<string, object>>();
+
+            foreach (var staff in top5)
+            {
+                var staffDetails = await _unitOfWork.StaffRepository.GetByIDAsync(staff.StaffId);
+                result.Add(new Dictionary<string, object>
+                {
+                    { "StaffId", staff.StaffId },
+                    { "Firstname", staffDetails.Firstname },
+                    { "Lastname", staffDetails.Lastname },
+                    { "TotalRevenue", staff.TotalRevenue }
+                });
+            }
+
+            result.Add(new Dictionary<string, object>
+            {
+                { "StaffId", 0 },
+                { "Firstname", "Other" },
+                { "Lastname", "" },
+                { "TotalRevenue", otherRevenue }
+            });
+
+            return new ResponseModel
+            {
+                Data = result
+            };
+        }
+
     }
 }

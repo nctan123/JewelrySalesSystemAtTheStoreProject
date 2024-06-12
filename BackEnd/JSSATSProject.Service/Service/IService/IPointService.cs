@@ -9,6 +9,8 @@ namespace JSSATSProject.Service.Service.IService
     {
         public Task<ResponseModel> GetAllAsync();
         public Task<ResponseModel> GetByIdAsync(int id);
+        public Task<ResponseModel> GetByCustomerIdAsync(int id);
+
         public Task<ResponseModel> CreatePointAsync(RequestCreatePoint requestPoint);
         public Task<ResponseModel> UpdatePointAsync(int pointId, RequestUpdatePoint requestPoint);
     }
