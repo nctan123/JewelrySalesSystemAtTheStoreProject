@@ -7,6 +7,7 @@ namespace JSSATSProject.Service.Service.IService
 {
     public interface IStaffService
     {
+        public Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime? startDate, DateTime? endDate);
         public Task<ResponseModel> GetAllAsync();
         public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> CreateStaffAsync(RequestCreateStaff requestStaff);

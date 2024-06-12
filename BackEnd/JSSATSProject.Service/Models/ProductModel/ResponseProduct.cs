@@ -1,33 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JSSATSProject.Repository.Entities;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Service.Models.ProductModel
 {
     public class ResponseProduct
     {
         public int Id { get; set; }
-
+        public string? Category { get; set; }
+        // [JsonIgnore]
         public int CategoryId { get; set; }
-
-        public int? StallsId { get; set; }
 
         public string? Code { get; set; }
 
         public string Name { get; set; } = null!;
 
-        public decimal? MaterialCost { get; set; }
-
-        public decimal? ProductionCost { get; set; }
-
-        public decimal? GemCost { get; set; }
-
         public string? Img { get; set; }
+        public decimal ProductValue { get; set; }
 
+        [JsonIgnore]
         public decimal PriceRate { get; set; }
 
         public string? Status { get; set; }
+        public string? DiamondCode { get; set; }
+        public string? DiamondName { get; set; }
+        public string? MaterialName { get; set; }
+        public decimal? MaterialWeight { get; set; }
+
+        [JsonIgnore]
+        public ICollection<ProductDiamond>? ProductDiamonds { get; set; }
+        [JsonIgnore]
+        public ICollection<ProductMaterial>? ProductMaterials { get; set; }
+
     }
 }

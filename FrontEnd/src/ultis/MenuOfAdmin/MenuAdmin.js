@@ -8,7 +8,8 @@ const { FaChartSimple,
     TbDeviceIpadCancel,
     RiAccountPinCircleFill,
     BiLogOut, FaChevronDown, IoMdArrowDropdown, IoMdArrowDropup, TbFileInvoice, CgUserList, LiaFileInvoiceDollarSolid, GrUserManager,
-    MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges } = iconAdmin
+    MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges, GiGoldNuggets } = iconAdmin
+
 
 export const sidebarMenuAdmin = [
     // {
@@ -48,21 +49,32 @@ export const sidebarMenuAdmin = [
 
     },
     {
-        path: 'Manage',
+
+        path: 'Manage/productadmin',
+
         text: 'Manage',
         iconAdmin: <MdManageAccounts size={24} color="white" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
+
+                path: 'Manage/productadmin',
+                text: 'Product',
+                iconAdmin: <GiStonePile size={24} color="white" />
+            },
+            {
+
                 path: 'Manage/customeradmin',
                 text: 'Customer',
                 iconAdmin: <GrUserManager size={24} color="white" />
             },
             {
-                path: 'Manage/productadmin',
-                text: 'Product',
-                iconAdmin: <GiStonePile size={24} color="white" />
+
+                path: 'Manage/point',
+                text: 'Point of customer',
+                iconAdmin: <GiGoldNuggets size={24} color="white" />
+
             },
             {
                 path: 'Manage/staff',
@@ -73,19 +85,25 @@ export const sidebarMenuAdmin = [
         ],
     },
     {
-        path: 'Promotion',
+
+        path: 'Promotionadmin',
+
         text: 'Promotion',
         iconAdmin: <CiGift size={24} color="white" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-                path: 'Promotion/promotionlist',
+
+                path: 'Promotionadmin/promotionlist',
+
                 text: 'Promotion list',
                 iconAdmin: <LiaGiftsSolid size={24} color="white" />
             },
             {
-                path: 'Promotion/promotionrequest',
+
+                path: 'Promotionadmin/promotionrequest',
+
                 text: 'Request',
                 iconAdmin: <VscGitPullRequestGoToChanges size={24} color="white" />
             }

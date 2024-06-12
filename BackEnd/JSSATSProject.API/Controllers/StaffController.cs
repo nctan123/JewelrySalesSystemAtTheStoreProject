@@ -25,6 +25,14 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
+        [Route("GetDetailsByDate")]
+        public async Task<IActionResult> GetDetailsByDateAsync([FromRoute]int id,DateTime startdate, DateTime enddate)
+        {
+            var responseModel = await _staffService.GetDetailsByDateAsync(id,startdate,enddate);
+            return Ok(responseModel);
+        }
+
+        [HttpGet]
         [Route("GetById")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {

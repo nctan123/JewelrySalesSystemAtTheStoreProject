@@ -2,6 +2,7 @@
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace JSSATSProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -63,6 +65,14 @@ namespace JSSATSProject.API.Controllers
         public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] RequestUpdateProduct requestProduct)
         {
             var response = await _productService.UpdateProductAsync(id, requestProduct);
+            return Ok(response);
+        }
+
+        [HttpPut]
+        [Route("UpdateStatusProduct")]
+        public async Task<IActionResult> UpdateStatusProductAsync(int id, [FromBody] RequestUpdateStatusProduct requestProduct)
+        {
+            var response = await _productService.UpdateStatusProductAsync(id, requestProduct);
             return Ok(response);
         }
     }

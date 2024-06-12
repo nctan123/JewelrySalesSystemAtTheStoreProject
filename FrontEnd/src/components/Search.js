@@ -1,18 +1,8 @@
-import React from 'react'
-import icons from '../ultis/icon'
-// import { Jewelry } from '../page/public/Jewelry'
-const {CiSearch} = icons
+import React,{useState} from 'react'
 const Search = () => {
+  const [keyword, setkeyword] = useState('')
+  
   return (
-    // <div className='w-full flex items-center'>
-    //     <span className=' px-2 py-2 rounded-l-2xl bg-[#dcd5d579] text-gray-500'>
-    //        <CiSearch size='24'/>
-    //     </span>
-    //     <input type='text' 
-    //     className='outline-none w-full bg-[#dcd5d579] py-3 rounded-r-2xl h-[40px] text-gray-500'
-    //     placeholder='Search item ...'
-    //     />
-    // </div>
     <form class="max-w-md mx-auto">   
     <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
     <div class="relative">

@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
+using System.Linq.Expressions;
 
 
 namespace JSSATSProject.Service.Service.Service
@@ -63,21 +64,22 @@ namespace JSSATSProject.Service.Service.Service
                 var order = await _unitOfWork.OrderRepository.GetByIDAsync(orderId);
                 if (order != null)
                 {
-                    order = _mapper.Map<Order>(requestOrder);
-                    await   _unitOfWork.OrderRepository.UpdateAsync(order);
-                    await _unitOfWork.SaveAsync();
+
+                    _mapper.Map(requestOrder, order);
+
+                    await _unitOfWork.OrderRepository.UpdateAsync(order);
 
                     return new ResponseModel
                     {
                         Data = order,
-                        MessageError = ""
+                        MessageError = "",
                     };
                 }
 
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "Not Found"
+                    MessageError = "Not Found",
                 };
             }
             catch (Exception ex)
@@ -86,9 +88,41 @@ namespace JSSATSProject.Service.Service.Service
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "An error occurred while updating the order: " + ex.Message
+                    MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
         }
+
+        public async Task<ResponseModel> SumTotalAmountOrderByDateTime(DateTime? startDate, DateTime? endDate)
+        {
+            Expression<Func<Order, bool>> filter = order =>
+                (!startDate.HasValue || order.CreateDate >= startDate.Value) &&
+                (!endDate.HasValue || order.CreateDate <= endDate.Value);
+
+            decimal sum = await _unitOfWork.OrderRepository.SumAsync(filter, order => order.TotalAmount);
+
+            return new ResponseModel
+            {
+                Data = sum,
+                MessageError = sum == 0 ? "Not Found" : null,
+            };
+        }
+
+        public async Task<ResponseModel> CountOrderByDateTime(DateTime? startDate, DateTime? endDate)
+        {
+            Expression<Func<Order, bool>> filter = order =>
+                (!startDate.HasValue || order.CreateDate >= startDate.Value) &&
+                (!endDate.HasValue || order.CreateDate <= endDate.Value);
+
+            int count = await _unitOfWork.OrderRepository.CountAsync(filter);
+
+            return new ResponseModel
+            {
+                Data = count,
+                MessageError = count == 0 ? "Not Found" : null,
+            };
+        }
+
+        
     }
 }

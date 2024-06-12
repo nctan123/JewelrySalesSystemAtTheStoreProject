@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,37 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
+        public async Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime? startDate, DateTime? endDate)
+        {
+            var entity = await _unitOfWork.StaffRepository.GetAsync(filter: e => e.Id == id, includeProperties: "Orders");
+            var staffEntity = entity.FirstOrDefault();
+
+            if (staffEntity == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found",
+                };
+            }
+
+            var response = _mapper.Map<ResponseStaff>(staffEntity);
+
+            var staffOrders = staffEntity.Orders
+                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+
+            response.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
+            response.TotalOrder = staffOrders.Count();
+
+            return new ResponseModel
+            {
+                Data = response,
+                MessageError = "",
+            };
+        }
+
+
+
         public async Task<ResponseModel> GetByIdAsync(int id)
         {
             var entity = await _unitOfWork.StaffRepository.GetByIDAsync(id);
@@ -63,9 +95,10 @@ namespace JSSATSProject.Service.Service.Service
                 var staff = await _unitOfWork.StaffRepository.GetByIDAsync(staffId);
                 if (staff != null)
                 {
-                    staff = _mapper.Map<Staff>(requestStaff);
+
+                    _mapper.Map(requestStaff, staff);
+
                     await _unitOfWork.StaffRepository.UpdateAsync(staff);
-                    await _unitOfWork.SaveAsync();
 
                     return new ResponseModel
                     {

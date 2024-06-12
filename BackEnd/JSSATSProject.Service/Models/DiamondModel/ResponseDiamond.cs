@@ -7,30 +7,18 @@ namespace JSSATSProject.Service.Models.DiamondModel
     public class ResponseDiamond
     {
         public int Id { get; set; }
-
-        public string Code { get; set; } = null!;
-
-        public string Name { get; set; } = null!;
-
-        public int OriginId { get; set; }
-
-        public int ShapeId { get; set; }
-
-        public int FluorescenceId { get; set; }
-
-        public int ColorId { get; set; }
-
-        public int SymmetryId { get; set; }
-
-        public int PolishId { get; set; }
-
-        public int CutId { get; set; }
-
-        public int ClarityId { get; set; }
-
-        public int CaratId { get; set; }
-
-        public string? Status { get; set; }
+        public string Code { get; set; }
+        public string Name { get; set; }
+        public string OriginName { get; set; }
+        public string ShapeName { get; set; }
+        public string FluorescenceName { get; set; }
+        public string ColorName { get; set; }
+        public string SymmetryName { get; set; }
+        public string PolishName { get; set; }
+        public string CutName { get; set; }
+        public string ClarityName { get; set; }
+        public decimal CaratWeight { get; set; }
+        public string Status { get; set; }
 
 
     }
