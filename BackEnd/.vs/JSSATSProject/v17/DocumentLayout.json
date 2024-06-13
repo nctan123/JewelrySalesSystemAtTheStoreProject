@@ -1,26 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\SWP\\BackEnd\\",
+  "WorkspaceRootPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|c:\\swp\\backend\\jssatsproject.api\\jssatsproject.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\jssatsproject.api.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
       "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{15ABE9B5-F887-48D9-B9A0-A377B6276994}|JSSATSProject.Service\\JSSATSProject.Service.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.service\\automapper\\applicationmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15ABE9B5-F887-48D9-B9A0-A377B6276994}|JSSATSProject.Service\\JSSATSProject.Service.csproj|solutionrelative:jssatsproject.service\\automapper\\applicationmapper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.repository\\entities\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|solutionrelative:jssatsproject.repository\\entities\\customer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|C:\\SWP\\BackEnd\\jssatsproject.api\\controllers\\diamondpricelistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\controllers\\diamondpricelistcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{15ABE9B5-F887-48D9-B9A0-A377B6276994}|JSSATSProject.Service\\JSSATSProject.Service.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.service\\service\\service\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{15ABE9B5-F887-48D9-B9A0-A377B6276994}|JSSATSProject.Service\\JSSATSProject.Service.csproj|solutionrelative:jssatsproject.service\\service\\service\\customerservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.repository\\entities\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|solutionrelative:jssatsproject.repository\\entities\\point.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,11 +30,15 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
               "$type": "Bookmark",
@@ -42,7 +46,11 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+              "Name": "ST:0:0:{0174dea2-fdbe-4ef1-8f99-c0beae78880f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
             },
             {
               "$type": "Bookmark",
@@ -51,63 +59,67 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "JSSATSProject.API.csproj",
-              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
-              "RelativeDocumentMoniker": "JSSATSProject.API\\JSSATSProject.API.csproj",
-              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\JSSATSProject.API.csproj",
-              "RelativeToolTip": "JSSATSProject.API\\JSSATSProject.API.csproj",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABoAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2024-06-06T16:54:46.962Z",
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\appsettings.json",
+              "RelativeDocumentMoniker": "JSSATSProject.API\\appsettings.json",
+              "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\appsettings.json",
+              "RelativeToolTip": "JSSATSProject.API\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-06-11T08:31:43.323Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Point.cs",
+              "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\Point.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\Point.cs",
+              "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\Point.cs",
+              "RelativeToolTip": "JSSATSProject.Repository\\Entities\\Point.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABMAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-11T08:27:23.205Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ApplicationMapper.cs",
+              "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\AutoMapper\\ApplicationMapper.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.Service\\AutoMapper\\ApplicationMapper.cs",
+              "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\AutoMapper\\ApplicationMapper.cs",
+              "RelativeToolTip": "JSSATSProject.Service\\AutoMapper\\ApplicationMapper.cs",
+              "ViewState": "AQIAACMAAAAAAAAAAADgvzEAAAAgAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-11T08:20:42.823Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "appsettings.Development.json",
-              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.Development.json",
-              "RelativeDocumentMoniker": "JSSATSProject.API\\appsettings.Development.json",
-              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.Development.json",
-              "RelativeToolTip": "JSSATSProject.API\\appsettings.Development.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-06-06T16:53:14.962Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.json",
-              "RelativeDocumentMoniker": "JSSATSProject.API\\appsettings.json",
-              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\appsettings.json",
-              "RelativeToolTip": "JSSATSProject.API\\appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-06-06T16:53:11.524Z"
+              "Title": "Customer.cs",
+              "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\Customer.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\Customer.cs",
+              "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\Customer.cs",
+              "RelativeToolTip": "JSSATSProject.Repository\\Entities\\Customer.cs",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAzwCIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-11T08:20:29.275Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Program.cs",
-              "RelativeDocumentMoniker": "JSSATSProject.API\\Program.cs",
-              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Program.cs",
-              "RelativeToolTip": "JSSATSProject.API\\Program.cs",
-              "ViewState": "AQIAAFYAAAAAAAAAAAAIwGMAAAAaAAAA",
+              "Title": "CustomerService.cs",
+              "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\Service\\Service\\CustomerService.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.Service\\Service\\Service\\CustomerService.cs",
+              "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\Service\\Service\\CustomerService.cs",
+              "RelativeToolTip": "JSSATSProject.Service\\Service\\Service\\CustomerService.cs",
+              "ViewState": "AQIAABgAAAAAAAAAAAAQwDIAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-06T16:09:25.213Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "DiamondPriceListController.cs",
-              "DocumentMoniker": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
-              "RelativeDocumentMoniker": "JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
-              "ToolTip": "C:\\SWP\\BackEnd\\JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
-              "RelativeToolTip": "JSSATSProject.API\\Controllers\\DiamondPriceListController.cs",
-              "ViewState": "AQIAABgAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-06T15:58:15.635Z"
+              "WhenOpened": "2024-06-11T08:18:43.516Z",
+              "EditorCaption": ""
             }
           ]
         },

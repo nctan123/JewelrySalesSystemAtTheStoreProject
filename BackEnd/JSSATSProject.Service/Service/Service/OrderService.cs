@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
+using System.Linq.Expressions;
 
 
 namespace JSSATSProject.Service.Service.Service
@@ -90,6 +91,63 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public async Task<ResponseModel> SumTotalAmountOrderByDateTime(DateTime? startDate, DateTime? endDate)
+        {
+            Expression<Func<Order, bool>> filter = order =>
+                (!startDate.HasValue || order.CreateDate >= startDate.Value) &&
+                (!endDate.HasValue || order.CreateDate <= endDate.Value);
+
+            decimal sum = await _unitOfWork.OrderRepository.SumAsync(filter, order => order.TotalAmount);
+
+            return new ResponseModel
+            {
+                Data = sum,
+                MessageError = sum == 0 ? "Not Found" : null,
+            };
+        }
+
+        public async Task<ResponseModel> CountOrderByDateTime(DateTime? startDate, DateTime? endDate)
+        {
+            Expression<Func<Order, bool>> filter = order =>
+                (!startDate.HasValue || order.CreateDate >= startDate.Value) &&
+                (!endDate.HasValue || order.CreateDate <= endDate.Value);
+
+            int count = await _unitOfWork.OrderRepository.CountAsync(filter);
+
+            return new ResponseModel
+            {
+                Data = count,
+                MessageError = count == 0 ? "Not Found" : null,
+            };
+        }
+
+        public async Task<ResponseModel> CountOrderByOrderType(int month)
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAsync(
+                filter: o => o.CreateDate.Month == month,
+                includeProperties: "");
+
+            var ordersByType = orders
+                .GroupBy(o => o.Type)
+                .Select(group => new
+                {
+                    Type = group.Key,
+                    Quantity = group.Count()
+                })
+                .ToList();
+
+            var result = ordersByType.Select(item => new Dictionary<string, object>
+        {
+            { "Type", item.Type },
+            { "Quantity", item.Quantity }
+        }).ToList();
+
+            return new ResponseModel
+            {
+                Data = result
+            };
         }
     }
 }

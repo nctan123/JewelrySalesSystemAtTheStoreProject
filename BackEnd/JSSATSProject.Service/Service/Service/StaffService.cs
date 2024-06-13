@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -46,20 +47,27 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllByDateAsync(DateTime startDate, DateTime endDate)
+        public async Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime? startDate, DateTime? endDate)
         {
-            var entities = await _unitOfWork.StaffRepository.GetAsync(includeProperties: "Orders");
-            var response = _mapper.Map<List<ResponseStaff>>(entities);
+            var entity = await _unitOfWork.StaffRepository.GetAsync(filter: e => e.Id == id, includeProperties: "Orders");
+            var staffEntity = entity.FirstOrDefault();
 
-            
-            foreach (var staff in response)
+            if (staffEntity == null)
             {
-                staff.TotalRevennue = entities
-                    .Where(entity => entity.Id == staff.Id) 
-                    .SelectMany(entity => entity.Orders)
-                    .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate)
-                    .Sum(order => order.TotalAmount);
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found",
+                };
             }
+
+            var response = _mapper.Map<ResponseStaff>(staffEntity);
+
+            var staffOrders = staffEntity.Orders
+                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+
+            response.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
+            response.TotalOrder = staffOrders.Count();
 
             return new ResponseModel
             {
@@ -116,5 +124,52 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
+        public async Task<ResponseModel> GetTop6ByMonthAsync(int month)
+        {
+            var orders = await _unitOfWork.OrderRepository.GetAsync(
+                filter: o => o.CreateDate.Month == month && o.CreateDate.Year == DateTime.Now.Year);
+
+            var groupedOrders = orders
+                .GroupBy(o => o.StaffId)
+                .Select(group => new
+                {
+                    StaffId = group.Key,
+                    TotalRevenue = group.Sum(o => o.TotalAmount)
+                })
+                .OrderByDescending(g => g.TotalRevenue)
+                .ToList();
+
+            var top5 = groupedOrders.Take(5).ToList();
+            var otherRevenue = groupedOrders.Skip(5).Sum(g => g.TotalRevenue);
+
+            var result = new List<Dictionary<string, object>>();
+
+            foreach (var staff in top5)
+            {
+                var staffDetails = await _unitOfWork.StaffRepository.GetByIDAsync(staff.StaffId);
+                result.Add(new Dictionary<string, object>
+                {
+                    { "StaffId", staff.StaffId },
+                    { "Firstname", staffDetails.Firstname },
+                    { "Lastname", staffDetails.Lastname },
+                    { "TotalRevenue", staff.TotalRevenue }
+                });
+            }
+
+            result.Add(new Dictionary<string, object>
+            {
+                { "StaffId", 0 },
+                { "Firstname", "Other" },
+                { "Lastname", "" },
+                { "TotalRevenue", otherRevenue }
+            });
+
+            return new ResponseModel
+            {
+                Data = result
+            };
+        }
+
     }
 }

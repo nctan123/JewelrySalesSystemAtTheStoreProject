@@ -24,9 +24,9 @@ public partial class Customer
 
     public string Address { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; }
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 
-    public virtual ICollection<Payment> Payments { get; set; }
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Point Point { get; set; }
 
