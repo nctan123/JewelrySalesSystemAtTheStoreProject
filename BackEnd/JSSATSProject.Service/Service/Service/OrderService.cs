@@ -93,11 +93,10 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public async Task<ResponseModel> SumTotalAmountOrderByDateTime(DateTime? startDate, DateTime? endDate)
+        public async Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
             Expression<Func<Order, bool>> filter = order =>
-                (!startDate.HasValue || order.CreateDate >= startDate.Value) &&
-                (!endDate.HasValue || order.CreateDate <= endDate.Value);
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
 
             decimal sum = await _unitOfWork.OrderRepository.SumAsync(filter, order => order.TotalAmount);
 
@@ -108,11 +107,10 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> CountOrderByDateTime(DateTime? startDate, DateTime? endDate)
+        public async Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
             Expression<Func<Order, bool>> filter = order =>
-                (!startDate.HasValue || order.CreateDate >= startDate.Value) &&
-                (!endDate.HasValue || order.CreateDate <= endDate.Value);
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
 
             int count = await _unitOfWork.OrderRepository.CountAsync(filter);
 
@@ -123,7 +121,7 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> CountOrderByOrderType(int month)
+        public async Task<ResponseModel> CountOrderByOrderTypeAsync(int month)
         {
             var orders = await _unitOfWork.OrderRepository.GetAsync(
                 filter: o => o.CreateDate.Month == month,

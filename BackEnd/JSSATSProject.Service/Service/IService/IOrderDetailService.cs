@@ -15,6 +15,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByOrderIdAsync(int id);
         public Task<ResponseModel> CreateOrderDetailAsync(RequestCreateOrderDetail requestOrderDetail);
         public Task<ResponseModel> UpdateOrderDetailAsync(int orderdetailId, RequestUpdateOrderDetail requestOrderDetail);
-        public Task<ResponseModel> CountProductsSoldByCategoryAsync(int month);
+        public Task<ResponseModel> CountProductsSoldByCategoryAsync(DateTime startDate, DateTime endDate);
     }
 }

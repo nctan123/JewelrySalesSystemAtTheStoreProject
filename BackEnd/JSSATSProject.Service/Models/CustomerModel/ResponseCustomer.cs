@@ -21,6 +21,7 @@ namespace JSSATSProject.Service.Models.CustomerModel
         public int AvaliablePoint { get; set; }
         public int TotalPoint { get; set; }
         public virtual Point Point { get; set; }
+        public DateTime CreateDate { get; set; }
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 

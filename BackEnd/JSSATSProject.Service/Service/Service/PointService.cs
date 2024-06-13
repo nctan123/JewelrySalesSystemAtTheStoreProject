@@ -23,6 +23,7 @@ namespace JSSATSProject.Service.Service.Service
             _mapper = mapper;
         }
 
+
         public async Task<ResponseModel> CreatePointAsync(RequestCreatePoint requestPoint)
         {
             var entity = _mapper.Map<Point>(requestPoint);
@@ -65,7 +66,7 @@ namespace JSSATSProject.Service.Service.Service
                 if (point != null)
                 {
 
-                    _mapper.Map(requestPoint, point);
+                     _mapper.Map(requestPoint, point);
 
                     await _unitOfWork.PointRepository.UpdateAsync(point);
 

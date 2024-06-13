@@ -7,7 +7,6 @@ namespace JSSATSProject.Service.Models.ProductModel
     {
         public int Id { get; set; }
         public string? Category { get; set; }
-        // [JsonIgnore]
         public int CategoryId { get; set; }
 
         public string? Code { get; set; }

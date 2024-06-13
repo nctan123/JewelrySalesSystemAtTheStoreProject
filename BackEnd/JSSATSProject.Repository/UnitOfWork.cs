@@ -41,6 +41,8 @@ namespace JSSATSProject.Repository
         private RoleRepository _role;
         private ProductMaterialRepository _productmaterial;
         private OrderDetailRepository _orderdetail;
+        private PromotionRequestRepository _promotionrequest;
+        private SpecialDiscountRequestRepository _specialdiscountrequest;
         
 
         public UnitOfWork(DBContext context)
@@ -409,6 +411,35 @@ namespace JSSATSProject.Repository
                 return _role;
             }
         }
+
+        public PromotionRequestRepository PromotionRequestRepository
+        {
+            get
+            {
+                if (_promotionrequest == null)
+                {
+                    _promotionrequest = new PromotionRequestRepository(_context);
+                }
+                return _promotionrequest;
+            }
+        }
+
+        public SpecialDiscountRequestRepository SpecialDiscountRequestRepository
+        {
+            get
+            {
+                if (_specialdiscountrequest == null)
+                {
+                    _specialdiscountrequest = new SpecialDiscountRequestRepository(_context);
+                }
+                return _specialdiscountrequest;
+            }
+        }
+
+
+
+    
+       
 
         public async Task SaveAsync()
         {

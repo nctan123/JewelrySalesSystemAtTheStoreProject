@@ -21,19 +21,4 @@ public partial class ProductCategory
     public virtual ProductCategoryType Type { get; set; }
     [JsonIgnore]
     public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
-
-    public ProductCategory()
-    {
-        
-    }
-    public ProductCategory(int id, string name, int typeId, string status, ICollection<Product> products, ProductCategoryType type, ICollection<Promotion> promotions)
-    {
-        Id = id;
-        Name = name;
-        TypeId = typeId;
-        Status = status;
-        Products = products;
-        Type = type;
-        Promotions = promotions;
-    }
 }

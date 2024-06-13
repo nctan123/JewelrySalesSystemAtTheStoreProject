@@ -1,11 +1,13 @@
 ﻿using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
 namespace JSSATSProject.API.Controllers
 {
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
 

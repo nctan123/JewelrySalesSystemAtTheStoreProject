@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -12,20 +13,6 @@ public partial class Point
     public int? AvailablePoint { get; set; }
 
     public int? Totalpoint { get; set; }
-
-    public virtual ICollection<Customer> Customers { get; set; }
-
-    public Point()
-    {
-        
-    }
-
-    public Point(int id, int? availablePoint, int? totalPoint, ICollection<Customer> customers)
-    {
-        Id = id;
-        AvailablePoint = availablePoint;
-        Totalpoint = totalPoint;
-        Customers = customers;
-    }
-
+    [JsonIgnore]
+    public virtual ICollection<Customer> Customers { get; set; } = new List<Customer>();
 }

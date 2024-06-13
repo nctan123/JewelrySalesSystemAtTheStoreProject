@@ -21,6 +21,8 @@ using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.DiamondPriceListModel;
 using JSSATSProject.Service.Models.OrderDetail;
 using JSSATSProject.Service.Models.NewFolder;
+using JSSATSProject.Service.Models.PromotionRequestModel;
+using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 
 
 
@@ -104,6 +106,7 @@ namespace JSSATSProject.Service.AutoMapper
 
             //Product
             CreateMap<Product, RequestCreateProduct>().ReverseMap();
+            CreateMap<Product, RequestUpdateProduct>().ReverseMap();
             CreateMap<Product, ResponseProduct>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.DiamondCode,
@@ -131,6 +134,7 @@ namespace JSSATSProject.Service.AutoMapper
             //ReturnBuyBackPolicy
             CreateMap<ReturnBuyBackPolicy, RequestCreateReturnBuyBackPolicy>().ReverseMap();
             CreateMap<ReturnBuyBackPolicy, ResponseReturnBuyBackPolicy>().ReverseMap();
+            CreateMap<ReturnBuyBackPolicy, RequestUpdateReturnBuyBackPolicy>().ReverseMap();
 
             //Staff
             CreateMap<Staff, RequestCreateStaff>().ReverseMap();
@@ -163,6 +167,27 @@ namespace JSSATSProject.Service.AutoMapper
                     opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
                 .ForMember(dest => dest.Token, opt => opt.Ignore())
                 .ReverseMap();
+
+            //PromotionRequest
+            CreateMap<PromotionRequest, ResponsePromotionRequest>()
+                .ForMember(dest => dest.ApprovedByNavigation, opt => opt.MapFrom(src => src.ApprovedByNavigation))
+                .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)) 
+                .ReverseMap();
+
+            CreateMap<PromotionRequest, CreatePromotionRequest>().ReverseMap();
+
+            CreateMap<PromotionRequest, UpdatePromotionRequest>().ReverseMap();
+             
+
+
+            //SpecialDiscountRequest
+            CreateMap<SpecialDiscountRequest, ResponseSpecialDiscountRequest>()
+                .ForMember(dest => dest.ApprovedByNavigation, opt => opt.MapFrom(src => src.ApprovedByNavigation))
+                .ForMember(dest => dest.Staff, opt => opt.MapFrom(src => src.Staff))
+                .ForMember(dest => dest.Customer, opt => opt.MapFrom(src => src.Customer))
+                .ReverseMap();
+            CreateMap<SpecialDiscountRequest, CreateSpecialDiscountRequest>().ReverseMap();
+            CreateMap<SpecialDiscountRequest, UpdateSpecialDiscountRequest>().ReverseMap();
         }
     }
 }
