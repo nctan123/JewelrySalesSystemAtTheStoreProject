@@ -1,14 +1,16 @@
-
-import React, { useEffect, useState } from 'react'
-import { fetchAllCustomer } from '../../../apis/jewelryService'
-import clsx from 'clsx'
-import { IoIosSearch } from "react-icons/io";
+import React, { useEffect, useState } from 'react';
+import { fetchAllCustomer } from '../../../apis/jewelryService';
+import axios from 'axios';
+import clsx from 'clsx';
+import { IoIosSearch } from 'react-icons/io';
 
 const Customer = () => {
     const [originalListCustomer, setOriginalListCustomer] = useState([]);
     const [listCustomer, setListCustomer] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const customersPerPage = 10;
 
     useEffect(() => {
@@ -35,15 +37,41 @@ const Customer = () => {
 
     const handleSearch = () => {
         if (searchQuery === '') {
-            // If search query is empty, reset to original list of customers
             setListCustomer(originalListCustomer);
         } else {
             const filteredCustomers = originalListCustomer.filter((customer) =>
                 customer.phone.toLowerCase().includes(searchQuery.toLowerCase())
             );
-
-            // Update state with filtered customers
             setListCustomer(filteredCustomers);
+        }
+    };
+
+    const handleEditClick = (customer) => {
+        setSelectedCustomer(customer);
+        setIsModalOpen(true);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setSelectedCustomer({ ...selectedCustomer, [name]: value });
+    };
+
+    const handleSaveChanges = async () => {
+        try {
+            const res = await axios.put(
+                `https://jssatsproject.azurewebsites.net/api/Customer/UpdateCustomer?id=${selectedCustomer.id}`,
+                selectedCustomer
+            );
+            if (res.status === 200) {
+                const updatedCustomers = originalListCustomer.map((customer) =>
+                    customer.id === selectedCustomer.id ? selectedCustomer : customer
+                );
+                setOriginalListCustomer(updatedCustomers);
+                setListCustomer(updatedCustomers);
+                setIsModalOpen(false);
+            }
+        } catch (error) {
+            console.error('Failed to update customer:', error);
         }
     };
 
@@ -53,6 +81,87 @@ const Customer = () => {
 
     const totalPages = Math.ceil(listCustomer.length / customersPerPage);
     const placeholders = Array.from({ length: customersPerPage - currentCustomers.length });
+
+    const renderModal = () => {
+        if (!isModalOpen || !selectedCustomer) return null;
+        return (
+            <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50">
+                <div className="bg-white p-6 rounded-lg">
+                    <h2 className="text-xl mb-4">Edit Customer</h2>
+                    <form>
+                        <div className="mb-4">
+                            <label className="block mb-1">First Name</label>
+                            <input
+                                type="text"
+                                name="firstname"
+                                value={selectedCustomer.firstname}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-1">Last Name</label>
+                            <input
+                                type="text"
+                                name="lastname"
+                                value={selectedCustomer.lastname}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-1">Phone</label>
+                            <input
+                                type="text"
+                                name="phone"
+                                value={selectedCustomer.phone}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-1">Email</label>
+                            <input
+                                type="text"
+                                name="email"
+                                value={selectedCustomer.email}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block mb-1">Gender</label>
+                            <select
+                                name="gender"
+                                value={selectedCustomer.gender}
+                                onChange={handleInputChange}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                type="button"
+                                onClick={handleSaveChanges}
+                                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                            >
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
+    };
 
     return (
         <div className="flex items-center justify-center min-h-screen">
@@ -80,7 +189,6 @@ const Customer = () => {
                                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Gender</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Total Point</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -92,7 +200,10 @@ const Customer = () => {
                                     <td className="text-sm font-normal text-[#637381]">{item.gender}</td>
                                     <td className="text-sm font-normal text-[#637381]">{item.totalPoint}</td>
                                     <td className="text-sm font-normal text-[#637381]">
-                                        <button className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none">
+                                        <button
+                                            onClick={() => handleEditClick(item)}
+                                            className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
+                                        >
                                             Edit
                                         </button>
                                     </td>
@@ -127,8 +238,10 @@ const Customer = () => {
                     ))}
                 </div>
             </div>
+            {renderModal()}
         </div>
-    )
-}
+    );
+};
 
-export default Customer
+export default Customer;
+
