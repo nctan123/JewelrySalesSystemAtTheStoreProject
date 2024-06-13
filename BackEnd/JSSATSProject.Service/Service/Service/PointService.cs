@@ -23,10 +23,6 @@ namespace JSSATSProject.Service.Service.Service
             _mapper = mapper;
         }
 
-        public Task<ResponseModel> GetByCustomerIdAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<ResponseModel> CreatePointAsync(RequestCreatePoint requestPoint)
         {

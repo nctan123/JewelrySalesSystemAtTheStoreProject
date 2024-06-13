@@ -3,6 +3,7 @@ using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace JSSATSProject.API.Controllers
 {
@@ -39,6 +40,14 @@ namespace JSSATSProject.API.Controllers
         {
             var response = await _orderdetailService.UpdateOrderDetailAsync(id, requestOrderDetail);
             return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("CountProductsSoldByCategory")]
+        public async Task<IActionResult> CountProductsSoldByCategoryAsync(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _orderdetailService.CountProductsSoldByCategoryAsync(startDate,endDate);
+            return Ok(responseModel);
         }
     }
 }

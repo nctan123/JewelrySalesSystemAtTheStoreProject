@@ -23,18 +23,35 @@ namespace JSSATSProject.Service.Service.Service
             _mapper = mapper;
         }
 
-
         public async Task<ResponseModel> CreateCustomerAsync(RequestCreateCustomer requestCustomer)
         {
+       
             var entity = _mapper.Map<Customer>(requestCustomer);
+
+          
+            var point = new Point
+            {
+                AvailablePoint = 0,
+                Totalpoint = 0
+            };
+
+            await _unitOfWork.PointRepository.InsertAsync(point);
+            await _unitOfWork.SaveAsync();
+
+            entity.PointId = point.Id;
+            entity.Point = point;
+
+            
             await _unitOfWork.CustomerRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
+
             return new ResponseModel
             {
                 Data = entity,
                 MessageError = "",
             };
         }
+
 
         public async Task<ResponseModel> GetAllAsync()
         {
@@ -173,19 +190,23 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public async Task<ResponseModel> CountCustomerByOrderDateTime(DateTime startDate, DateTime endDate)
+        public async Task<ResponseModel> CountNewCustomer(DateTime startDate, DateTime endDate)
         {
-            Expression<Func<Customer, bool>> filter = customer =>
-                customer.Orders.Any(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+            
+                var customers = await _unitOfWork.CustomerRepository.GetAsync(
+                     filter: c => c.CreateDate >= startDate && c.CreateDate <= endDate
+                );
 
-            int count = await _unitOfWork.CustomerRepository.CountAsync(filter);
+                var count = customers.Count();
 
-            return new ResponseModel
-            {
-                Data = count,
-                MessageError = count == 0 ? "Not Found" : null,
-            };
+                return new ResponseModel
+                {
+                
+                    MessageError = "",
+                    Data = count
+                };
         }
+           
 
     }
 }

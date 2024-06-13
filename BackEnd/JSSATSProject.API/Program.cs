@@ -88,7 +88,13 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IStaffService, StaffService>();
             builder.Services.AddScoped<IStallService, StallService>();
             builder.Services.AddScoped<IStallTypeService, StallTypeService>();
+            builder.Services.AddScoped<IPromotionRequestService, PromotionRequestService>();
+            builder.Services.AddScoped<ISpecialDiscountRequestService, SpecialDiscountRequestService>();
+            builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
 
+
+
+            //CacheManager
             services.AddSingleton(typeof(CacheManager<>)); // Register generic CacheManager
             services.AddSingleton<CacheManager<Product>>(); // Register cache for products
             services.AddSingleton<CacheManager<MaterialPriceList>>(); // Register cache for material price lists

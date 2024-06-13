@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -30,6 +31,6 @@ public partial class Customer
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Point Point { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<SpecialDiscountRequest> SpecialDiscountRequests { get; set; } = new List<SpecialDiscountRequest>();
 }

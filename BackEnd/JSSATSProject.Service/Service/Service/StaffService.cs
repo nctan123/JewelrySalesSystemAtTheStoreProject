@@ -47,10 +47,10 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime? startDate, DateTime? endDate)
+        public async Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime startDate, DateTime endDate)
         {
-            var entity = await _unitOfWork.StaffRepository.GetAsync(filter: e => e.Id == id, includeProperties: "Orders");
-            var staffEntity = entity.FirstOrDefault();
+            //var entity = await _unitOfWork.StaffRepository.GetAsync(filter: e => e.Id == id, includeProperties: "Orders");
+            var staffEntity = await _unitOfWork.StaffRepository.GetByIDAsync(id);
 
             if (staffEntity == null)
             {
@@ -125,11 +125,13 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public async Task<ResponseModel> GetTop6ByMonthAsync(int month)
+        public async Task<ResponseModel> GetTop6ByDateAsync(DateTime startDate, DateTime endDate)
         {
+            // Fetch orders within the specified date range
             var orders = await _unitOfWork.OrderRepository.GetAsync(
-                filter: o => o.CreateDate.Month == month && o.CreateDate.Year == DateTime.Now.Year);
+                filter: o => o.CreateDate >= startDate && o.CreateDate <= endDate);
 
+            // Group orders by StaffId and calculate total revenue for each group
             var groupedOrders = orders
                 .GroupBy(o => o.StaffId)
                 .Select(group => new
@@ -140,36 +142,42 @@ namespace JSSATSProject.Service.Service.Service
                 .OrderByDescending(g => g.TotalRevenue)
                 .ToList();
 
+            // Get the top 5 staff members by revenue
             var top5 = groupedOrders.Take(5).ToList();
             var otherRevenue = groupedOrders.Skip(5).Sum(g => g.TotalRevenue);
 
+            // Initialize result list
             var result = new List<Dictionary<string, object>>();
 
+            // Add top 5 staff members to result
             foreach (var staff in top5)
             {
                 var staffDetails = await _unitOfWork.StaffRepository.GetByIDAsync(staff.StaffId);
                 result.Add(new Dictionary<string, object>
-                {
-                    { "StaffId", staff.StaffId },
-                    { "Firstname", staffDetails.Firstname },
-                    { "Lastname", staffDetails.Lastname },
-                    { "TotalRevenue", staff.TotalRevenue }
-                });
+        {
+            { "StaffId", staff.StaffId },
+            { "Firstname", staffDetails.Firstname },
+            { "Lastname", staffDetails.Lastname },
+            { "TotalRevenue", staff.TotalRevenue }
+        });
             }
 
+            // Add other revenue to result
             result.Add(new Dictionary<string, object>
-            {
-                { "StaffId", 0 },
-                { "Firstname", "Other" },
-                { "Lastname", "" },
-                { "TotalRevenue", otherRevenue }
-            });
+    {
+        { "StaffId", 0 },
+        { "Firstname", "Other" },
+        { "Lastname", "" },
+        { "TotalRevenue", otherRevenue }
+    });
 
+            // Return the response model with the result data
             return new ResponseModel
             {
                 Data = result
             };
         }
+
 
     }
 }
