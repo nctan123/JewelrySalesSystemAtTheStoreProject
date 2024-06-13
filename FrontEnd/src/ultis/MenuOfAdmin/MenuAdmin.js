@@ -106,9 +106,9 @@ export const sidebarMenuAdmin = [
         text: 'Void bill',
         iconAdmin: <TbDeviceIpadCancel size={24} color="white" />
     },
-    {
-        path: '/login',
-        text: 'Log out',
-        iconAdmin: <BiLogOut size={24} color="white" />
-    },
+    // {
+    //     path: '/login',
+    //     text: 'Log out',
+    //     iconAdmin: <BiLogOut size={24} color="white" />
+    // },
 ]

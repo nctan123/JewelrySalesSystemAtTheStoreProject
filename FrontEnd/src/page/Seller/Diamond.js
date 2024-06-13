@@ -3,9 +3,8 @@ import { fetchAllDiamond } from '../../apis/jewelryService'
 import clsx from 'clsx'
 import style from "../../style/cardForList.module.css"
 import diamond from '../../assets/img/seller/diamond.webp'
-import { createContext } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { addProduct, deleteProduct } from '../../store/slice/cardSilec'
+import {useDispatch } from 'react-redux'
+import { addProduct} from '../../store/slice/cardSilec'
 
 const Diamond = () => {
   const dispatch = useDispatch()
@@ -30,13 +29,13 @@ const Diamond = () => {
     <>
        <div className='grid grid-cols-5 gap-1 w-full ml-3 mt-1'>
       {listDiamond && listDiamond.length > 0 &&
-        listDiamond.map((item, index) => {
+        listDiamond.filter(item => item.categoryId === 7 && item.status === "active").map((item, index) => {
           return (
             <div key={`ring-${index}`} className={clsx(style.card)} onClick={() => dispatch(addProduct(item))} >
                 <img className=' mt-0 w-[100%] h-[79%] rounded-xl object-cover bg-[#ffffff1f]' src={diamond} />
                 <div className=' flex justify-center text-[0.7em] mt-[5px] font-normal'>{item.name}</div>
-                <div className=' flex justify-center text-[0.8em] mt-[5px] font-normal'>ID: {item.id}</div>
-                <div className=' flex justify-center text-[#d48c20]'>1đ</div>
+                <div className=' flex justify-center text-[0.8em] mt-[5px] font-normal'>ID: {item.code}</div>
+                <div className=' flex justify-center text-[#d48c20]'>{formatPrice(item.productValue)}đ</div>
             </div>
           )
         })}

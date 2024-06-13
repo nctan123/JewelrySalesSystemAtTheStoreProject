@@ -2,9 +2,9 @@ import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; //mang action đến redux, sử dụng useSeletor để lấy giá trị
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex } from './page/Seller';
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Return, Exchange, Buy, Warranty } from './page/Seller';
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
@@ -30,6 +30,8 @@ import Manager from './page/Manager/Manager';
 
 import ProductManager from './page/Manager/Product/ProductManager';
 
+import SecurityRoute from './page/Home/SecurityRoute';
+
 
 function App() {
   // test redux có hoạt động không
@@ -38,13 +40,16 @@ function App() {
 
   return (
     <>
+
       <div className=''>
+
         <Routes>
           {/* home */}
           <Route path={path.HOME} element={<Home />} />
           <Route path={path.LOGIN} element={<Login />} />
           {/* admin */}
-          <Route path={path.ADMIN} element={<Admin />} exact >
+          <Route path={path.ADMIN} element={<Admin />} >
+            <Route path={path.LOGIN} element={<Login />} />
             <Route path={path.ADMIN} element={<Dashboard />} />
             <Route path={path.DASHBOARD} element={<Dashboard />} />
 
@@ -95,7 +100,12 @@ function App() {
             <Route path={path.RETAILGOLD} element={<RetailGold />} />
             <Route path={path.SEARCHINVOICE} element={<SearchInvoice />} />
             <Route path={path.PROMOTION} element={<Promotion />} />
-            <Route path={path.RETURN_EX} element={<Return_Ex />} />
+            <Route path={path.RETURN_EX} element={<Return_Ex />} >
+              <Route path={path.RETURN} element={<Return />} />
+              <Route path={path.EXCHANGE} element={<Exchange />} />
+              <Route path={path.BUY} element={<Buy />} />
+              <Route path={path.WARRANTY} element={<Warranty />} />
+            </Route>
           </Route>
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>

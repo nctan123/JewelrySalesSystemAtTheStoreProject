@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { fetchAllPromotion } from '../../../apis/jewelryService';
-import clsx from 'clsx';
 import { IoIosSearch } from "react-icons/io";
 import { format } from 'date-fns'; // Import format function from date-fns
+import axios from "axios";
+import clsx from 'clsx';
 
 const PromotionList = () => {
   const [originalListPromotion, setOriginalListPromotion] = useState([]);
   const [listPromotion, setListPromotion] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
   const promotionsPerPage = 10;
 
   useEffect(() => {
@@ -18,12 +16,31 @@ const PromotionList = () => {
   }, []);
 
   const getPromotion = async () => {
-    let res = await fetchAllPromotion();
-    console.log('... check promotion', res);
-    if (res && res.data && res.data.data) {
-      const promotions = res.data.data;
-      setOriginalListPromotion(promotions);
-      setListPromotion(promotions);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("No token found");
+      }
+      const res = await axios.get('https://jssatsproject.azurewebsites.net/api/promotion/getAll', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log('... check promotion', res);
+      if (res && res.data && res.data.data) {
+        const promotions = res.data.data;
+        setOriginalListPromotion(promotions);
+        setListPromotion(promotions);
+      }
+    } catch (error) {
+      console.error('Error fetching promotions:', error);
+      if (error.response) {
+        console.error('Error response:', error.response.data);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+      } else {
+        console.error('Error message:', error.message);
+      }
     }
   };
 
@@ -44,16 +61,6 @@ const PromotionList = () => {
         promotion.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-
-    //   if (startDate && endDate) {
-    //     const start = new Date(startDate);
-    //     const end = new Date(endDate);
-    //     filteredPromotions = filteredPromotions.filter((promotion) => {
-    //       const promotionStartDate = new Date(promotion.startDate);
-    //       const promotionEndDate = new Date(promotion.endDate);
-    //       return promotionStartDate <= start && promotionEndDate >= end;
-    //     });
-    // }
 
     setListPromotion(filteredPromotions);
   };
@@ -80,23 +87,6 @@ const PromotionList = () => {
             />
             <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSearch} />
           </div>
-          {/* <div className="ml-4">
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md"
-            />
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md ml-2"
-            />
-            <button onClick={handleSearch} className="ml-2 px-3 py-2 border border-gray-300 rounded-md bg-blue-500 text-white">
-              Filter
-            </button>
-          </div> */}
         </div>
         <div className="w-[1000px] overflow-hidden">
           <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
@@ -161,6 +151,6 @@ const PromotionList = () => {
       </div>
     </div>
   );
-}
+};
 
 export default PromotionList;
