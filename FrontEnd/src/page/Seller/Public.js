@@ -9,8 +9,8 @@ const Public = () => {
 
   useEffect(() => {
     const Authorization = localStorage.getItem('token');
-
-    if (!Authorization) {
+    const role = localStorage.getItem('role');
+    if (!Authorization || role !== 'seller') {
       navigate('/login');
     }
   }, [navigate]);

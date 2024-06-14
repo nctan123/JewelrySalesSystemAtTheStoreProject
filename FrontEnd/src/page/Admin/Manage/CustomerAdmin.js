@@ -184,22 +184,22 @@ const Customer = () => {
                         <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
                             <tr>
                                 <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Customer ID</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Full Name</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">PhoneNumber</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Gender</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Total Point</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
+                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">Full Name</th>
+                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">PhoneNumber</th>
+                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">Gender</th>
+                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">Total Point</th>
+                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentCustomers.map((item, index) => (
                                 <tr key={index} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
                                     <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">{item.id}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.firstname} {item.lastname}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.phone}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.gender}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.totalPoint}</td>
-                                    <td className="text-sm font-normal text-[#637381]">
+                                    <td className="text-base  font-normal text-[#637381]">{item.firstname} {item.lastname}</td>
+                                    <td className="text-base  font-normal text-[#637381]">{item.phone}</td>
+                                    <td className="text-base  font-normal text-[#637381]">{item.gender}</td>
+                                    <td className="text-base  font-normal text-[#637381]">{item.totalPoint}</td>
+                                    <td className="text-base  font-normal text-[#637381]">
                                         <button
                                             onClick={() => handleEditClick(item)}
                                             className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
@@ -211,12 +211,12 @@ const Customer = () => {
                             ))}
                             {placeholders.map((_, index) => (
                                 <tr key={`placeholder-${index}`} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)]">
-                                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
+                                    <td className="rounded-l-lg pl-3 text-base  font-normal text-[#637381]">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
                                 </tr>
                             ))}
                         </tbody>
