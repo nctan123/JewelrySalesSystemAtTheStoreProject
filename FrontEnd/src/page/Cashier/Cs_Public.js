@@ -8,8 +8,8 @@ const Cs_Public = () => {
 
   useEffect(() => {
     const Authorization = localStorage.getItem('token');
-
-    if (!Authorization) {
+    const role = localStorage.getItem('role');
+    if (!Authorization || role !== 'cashier') {
       navigate('/login');
     }
   }, [navigate]);
