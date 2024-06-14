@@ -29,7 +29,7 @@ const SidebarRight = () => {
     const calculateTotal = () => {
       let totalValue = 0;
       CartProduct.forEach((product) => {
-        totalValue += product.productValue;
+        totalValue += product.productValue * product.quantity;
       });
       setTotal(totalValue);
     };
@@ -45,13 +45,11 @@ const SidebarRight = () => {
 
 
     <div className='flex justify-center '>
-      <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[33em] bg-[#f3f1ed] mt-[20px]'>
+      <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[34em] bg-[#f3f1ed] mt-[20px]'>
         <div className='flex justify-between'>
           <select className="ml-[15px] relative text-black bg-transparent outline-none border border-white text-sm font-semibold rounded-md block w-[50%] p-1">
             <option>Sell</option>
             <option>Buy</option>
-            <option>Return</option>
-            <option>Exchange</option>
           </select>
           <div className='flex justify-end px-[15px] text-black font-thin'>{currentTime.toLocaleString()}</div>
         </div>
@@ -67,7 +65,7 @@ const SidebarRight = () => {
           )}
 
         </div>
-        <div className='grid grid-cols-3 border border-x-0 border-t-0 mx-[10px] border-b-black pb-[2px]'>
+        <div className='grid grid-cols-3 border border-x-0 border-t-0 mx-[10px] border-b-black pb-[2px] mb-2'>
           <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
           <div className='col-start-3 ml-6 flex justify-start'>Price</div>
         </div>
@@ -75,9 +73,10 @@ const SidebarRight = () => {
           {CartProduct && CartProduct.map((item, index) => {
             return (
               <div key={`ring-${index}`} className='grid grid-cols-6'  >
-                <div className='col-start-1 col-span-4 flex px-[10px] py-2 text-sm' >{item.name}</div>
-                <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px] py-2'>{formatPrice(item.productValue)}</div>
+                <div className='col-start-1 col-span-4 flex px-[10px] text-sm' >{item.name}</div>
+                <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px]'>{formatPrice(item.productValue * item.quantity)}</div>
                 <span onClick={() => dispatch(deleteProduct(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md  '><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
+                <div className='col-start-1 col-span-6 flex px-[14px] text-xs text-red-600 mt-[-6px]' >x{item.quantity}</div>
               </div>
             )
           })}
@@ -86,16 +85,19 @@ const SidebarRight = () => {
           <div className='font-bold'>PAYMENT</div>
           <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="text" name="point" id="inputPoint" placeholder="Note" />
         </div>
-        <div className='px-[15px] grid grid-cols-2 grid-rows-3 pb-2 '>
+        <div className='px-[15px] grid grid-cols-2 grid-rows-2'>
           <div className='row-start-1 font-thin'>Subtotal:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(total.toFixed())}</div>
           <div className='row-start-2 font-thin'>Tax:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(tax)}</div>
-          <div className='row-start-3 font-thin'>Point: {formatPrice(1000000)}</div>
-          <div className='col-start-2 flex justify-end text-red-500'>          <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="number" name="point" id="inputPoint" placeholder="Use Point" />
-          </div>
         </div>
-        <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 '>
+        {CusPoint && CusPoint[0] && (
+          <div className='px-[15px] grid grid-cols-2 pb-2' >
+            <div className='font-thin'>Point: {formatPrice(CusPoint[0].totalPoint)}</div>
+            <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="number" name="point" min="-9" max={CusPoint[0].totalPoint} id="inputPoint" placeholder="Use Point" />
+          </div>
+        )}
+        <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 mt-2 '>
           <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(totalInvoice)}<span>.đ</span></div>
           {/* <div className='col-start-2 flex justify-end items-center mr-[15px]'>
             <a type='submit' href='/' className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Cancel</a>
@@ -141,12 +143,12 @@ const SidebarRight = () => {
                       Phone Number
                     </th>
                     <th scope="col" class="px-6 py-3">
-                     ID Invoice
+                      ID Invoice
                     </th>
                     <th scope="col" class="px-6 py-3">
-                     Action
+                      Action
                     </th>
-                 </tr>
+                  </tr>
                 </thead>
                 <tbody>
                   <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -160,8 +162,8 @@ const SidebarRight = () => {
                       I_001
                     </td>
                     <td class="flex py-4 gap-1 items-center justify-center">
-                      <button className='m-0 p-3 bg-green-500'><VscGitStashApply/></button>
-                      <button className='m-0 p-3 bg-red-500'><MdDeleteOutline/></button>
+                      <button className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                      <button className='m-0 p-3 bg-red-500'><MdDeleteOutline /></button>
                     </td>
                   </tr>
                 </tbody>

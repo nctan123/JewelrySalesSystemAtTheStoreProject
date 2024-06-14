@@ -36,10 +36,10 @@ const Necklace = () => {
         listNecklace.filter(item => item.categoryId === 4).map((item, index) => {
           return (
             <div key={`ring-${index}`} className={clsx(style.card)} onClick={() => dispatch(addProduct(item))} >
-                <img className=' mt-0 w-[100%] h-[79%] rounded-xl object-cover bg-[#ffffff1f]' src={necklace} />
+                <img className=' mt-0 w-[100%] h-[70%] rounded-xl object-cover bg-[#ffffff1f]' src={necklace} />
                 <div className=' flex justify-center text-[0.7em] mt-[5px] font-normal'>{formatName(item.name)}</div>
-                <div className=' flex justify-center text-[0.8em] mt-[5px] font-normal'>ID: {item.id}</div>
-                <div className=' flex justify-center text-[#d48c20]'>{formatPrice(item.productValue)}đ</div>
+                <div className='absolute bottom-8 w-full flex justify-center text-[0.8em] mt-[5px] font-normal'>CODE: {item.code}</div>
+                <div className='absolute bottom-2 w-full flex justify-center text-[#d48c20]'>{formatPrice(item.productValue)}đ</div>
             </div>
           )
         })}

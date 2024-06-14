@@ -8,7 +8,8 @@ export const productSlice = createSlice({
     name: "products",
     initialState: {
         CartArr: [],
-        CusPoint: []
+        CusPoint: [],
+        CartWholesale: [],
     },
     reducers: {
         addProduct: (state, action) => {
@@ -16,7 +17,9 @@ export const productSlice = createSlice({
             if (productIndex === -1) {
                 state.CartArr.push({ ...action.payload, quantity: 1 })
             } else {
-                state.CartArr[productIndex].quantity += 1;
+                if (action.payload.categoryId === 7) {
+                    state.CartArr[productIndex].quantity += 1;
+                }
             }
         },
         deleteProduct: (state, action) => {
@@ -24,9 +27,11 @@ export const productSlice = createSlice({
             const newCart = state.CartArr.filter((item) => item.id !== productIndexRemove)
             return { ...state, CartArr: newCart }
         },
+
         deleteProductAll: (state, action) => {
             return { ...state, CartArr: [] }
         },
+
         addCustomer: (state, action) => {
             const productIndex = state.CusPoint.findIndex((p) => p.id === action.payload.id)
             if (productIndex === -1) {
@@ -45,6 +50,6 @@ export const productSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { addProduct, deleteProduct, addCustomer,deleteCustomer,deleteProductAll } = productSlice.actions
+export const { addProduct, deleteProduct, addCustomer, deleteCustomer, deleteProductAll, addProductWholesale, deleteProductWholesale } = productSlice.actions
 
 export default productSlice.reducer
