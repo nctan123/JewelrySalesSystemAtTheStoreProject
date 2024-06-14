@@ -14,17 +14,4 @@ public partial class PaymentMethod
     public string Status { get; set; }
 
     public virtual ICollection<PaymentDetail> PaymentDetails { get; set; } = new List<PaymentDetail>();
-
-    public PaymentMethod()
-    {
-        
-    }
-
-    public PaymentMethod(int id, string name, string status, ICollection<PaymentDetail> paymentDetails)
-    {
-        Id = id;
-        Name = name;
-        Status = status;
-        PaymentDetails = paymentDetails;
-    }
 }

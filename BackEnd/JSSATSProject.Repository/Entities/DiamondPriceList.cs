@@ -32,27 +32,4 @@ public partial class DiamondPriceList
     public virtual Cut Cut { get; set; }
 
     public virtual Origin Origin { get; set; }
-
-    public DiamondPriceList()
-    {
-        
-    }
-
-    public DiamondPriceList(int id, int colorId, int cutId, int originId, int clarityId, int caratId, decimal price, DateTime effectiveDate,
-                        Carat carat, Clarity clarity, Color color, Cut cut, Origin origin)
-    {
-        Id = id;
-        ColorId = colorId;
-        CutId = cutId;
-        OriginId = originId;
-        ClarityId = clarityId;
-        CaratId = caratId;
-        Price = price;
-        EffectiveDate = effectiveDate;
-        Carat = carat;
-        Clarity = clarity;
-        Color = color;
-        Cut = cut;
-        Origin = origin;
-    }
 }

@@ -81,7 +81,8 @@ namespace JSSATSProject.Service.Service.Service
                     diamond.ColorId, diamond.CaratId, diamond.OriginId);
                 totalPrice = priceRate * diamondPrice;
             }
-            else if (responseProduct.CategoryId is 1 or 2 or 3 or 4 or 5 or 6)
+            else 
+            // if (responseProduct.CategoryId is 1 or 2 or 3 or 4 or 5 or 6)
             {
                 //not all product has diamond (retail gold, wholesale gold,...)
                 if (diamond is not null)

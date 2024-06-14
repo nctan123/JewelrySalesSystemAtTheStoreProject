@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -18,11 +17,13 @@ public partial class Order
 
     public DateTime CreateDate { get; set; }
 
-    public bool IsDraft { get; set; }
+    public string Status { get; set; }
 
     public string Type { get; set; }
 
     public string Description { get; set; }
+
+    public int? SpecialDiscountRequestId { get; set; }
 
     public virtual Customer Customer { get; set; }
 
@@ -30,26 +31,7 @@ public partial class Order
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    [JsonIgnore]
-    public virtual Staff Staff { get; set; }
+    public virtual SpecialDiscountRequest SpecialDiscountRequest { get; set; }
 
-    public Order()
-    {
-        
-    }
-    public Order(int id, int customerId, int staffId, decimal totalAmount, DateTime createDate, bool isDraft, string type, string description, Customer customer, ICollection<OrderDetail> orderDetails, ICollection<Payment> payments, Staff staff)
-    {
-        Id = id;
-        CustomerId = customerId;
-        StaffId = staffId;
-        TotalAmount = totalAmount;
-        CreateDate = createDate;
-        IsDraft = isDraft;
-        Type = type;
-        Description = description;
-        Customer = customer;
-        OrderDetails = new List<OrderDetail>(orderDetails);
-        Payments = new List<Payment>(payments);
-        Staff = staff;
-    }
+    public virtual Staff Staff { get; set; }
 }

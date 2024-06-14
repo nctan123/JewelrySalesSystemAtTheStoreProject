@@ -34,6 +34,7 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
+
         [HttpPost]
         [Route("CreatePoint")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreatePoint requestPoint)

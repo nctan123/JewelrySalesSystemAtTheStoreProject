@@ -92,13 +92,15 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public async Task<ResponseModel> CountProductsSoldByCategoryAsync(int month)
+        public async Task<ResponseModel> CountProductsSoldByCategoryAsync(DateTime startDate, DateTime endDate)
         {
+    
             var orderDetails = await _unitOfWork.OrderDetailRepository.GetAsync(
-                filter: od => od.Order.CreateDate.Month == month
-                    && od.Order.Type.ToLower() == "sell", 
+                filter: od => od.Order.CreateDate >= startDate
+                           && od.Order.CreateDate <= endDate,               
                 includeProperties: "Product");
 
+            
             var productsSoldPerCategory = orderDetails
                 .GroupBy(od => od.Product.Category.Name)
                 .Select(group => new
@@ -108,16 +110,18 @@ namespace JSSATSProject.Service.Service.Service
                 })
                 .ToList();
 
+          
             var result = productsSoldPerCategory.Select(item => new Dictionary<string, object>
-        {
-            { "Category", item.Category },
-            { "Quantity", item.Quantity }
-        }).ToList();
+    {
+        { "Category", item.Category },
+        { "Quantity", item.Quantity }
+    }).ToList();
 
             return new ResponseModel
             {
                 Data = result
             };
         }
+
     }
 }

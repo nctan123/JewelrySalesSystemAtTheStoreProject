@@ -46,5 +46,29 @@ namespace JSSATSProject.API.Controllers
             var response = await _orderService.UpdateOrderAsync(id, requestOrder);
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("SumTotalAmountOrderByDateTime")]
+        public async Task<IActionResult> SumTotalAmountOrderAsync(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _orderService.SumTotalAmountOrderByDateTimeAsync(startDate,endDate);
+            return Ok(responseModel);
+        }
+
+        [HttpGet]
+        [Route("CountOrderByDateTime")]
+        public async Task<IActionResult> CountOrderByDatetimeAsync(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _orderService.CountOrderByDateTimeAsync(startDate,endDate);
+            return Ok(responseModel);
+        }
+
+        [HttpGet]
+        [Route("CountOrderByOrderType")]
+        public async Task<IActionResult> CountOrderByOrderTypeAsync(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _orderService.CountOrderByDateTimeAsync(startDate, endDate);
+            return Ok(responseModel);
+        }
     }
 }

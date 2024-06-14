@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -15,5 +14,6 @@ public partial class ProductMaterial
     public decimal? Weight { get; set; }
 
     public virtual Material Material { get; set; }
+
     public virtual Product Product { get; set; }
 }

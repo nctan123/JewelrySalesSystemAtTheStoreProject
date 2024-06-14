@@ -25,12 +25,13 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetDetailsByDate")]
-        public async Task<IActionResult> GetDetailsByDateAsync([FromRoute]int id,DateTime startdate, DateTime enddate)
+        [Route("GetDetailsByDate/{id}")]
+        public async Task<IActionResult> GetDetailsByDateAsync([FromRoute] int id, [FromQuery] DateTime startdate, [FromQuery] DateTime enddate)
         {
-            var responseModel = await _staffService.GetDetailsByDateAsync(id,startdate,enddate);
+            var responseModel = await _staffService.GetDetailsByDateAsync(id, startdate, enddate);
             return Ok(responseModel);
         }
+
 
         [HttpGet]
         [Route("GetById")]
@@ -58,9 +59,9 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetTop6ByMonth")]
-        public async Task<IActionResult> GetTop6Async(int month)
+        public async Task<IActionResult> GetTop6Async(DateTime startDate, DateTime endDate)
         {
-            var responseModel = await _staffService.GetTop6ByMonthAsync(month);
+            var responseModel = await _staffService.GetTop6ByDateAsync(startDate, endDate);
             return Ok(responseModel);
         }
     }
