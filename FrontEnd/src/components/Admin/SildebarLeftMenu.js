@@ -23,7 +23,8 @@ const Sildebar = () => {
     const handleLogOut = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("role");
-
+        localStorage.removeItem("staffId");
+        localStorage.removeItem("name");
         toast.success('Log out success!!!')
     }
     // className='mt-[20px] w-[60px] object-contain'
@@ -46,8 +47,6 @@ const Sildebar = () => {
                             value={item.text}
                             ClassName='active'
                             onClick={
-                                // item.text === 'Log out' ? handleLogOut()
-                                //     : 
                                 item.text === 'Report'
                                     ? () => handleReportOpenToggle('report')
                                     : item.text === 'Manage'
@@ -114,7 +113,7 @@ const Sildebar = () => {
                         )}
                     </div>
                 ))}
-                <NavLink to='login' onClick={() => handleLogOut()}><BiLogOut size={24} color="white" /> Logout</NavLink>
+                <NavLink to='/login' onClick={() => handleLogOut()}><BiLogOut size={24} color="white" /> Logout</NavLink>
             </div>
         </div >
     )

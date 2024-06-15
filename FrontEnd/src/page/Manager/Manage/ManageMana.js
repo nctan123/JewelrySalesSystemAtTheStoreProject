@@ -1,14 +1,14 @@
 import React from 'react';
 import { Outlet, useOutlet } from 'react-router-dom';
-import ProductAdmin from './ProductAdmin';
+import ProductMana from './ProductMana';
 
 
-export default function Manage() {
+export default function ManageMana() {
   const outlet = useOutlet();
 
   return (
     <div>
-      {outlet ? outlet : <ProductAdmin />}
+      {outlet ? outlet : <ProductMana />}
 
     </div>
   );

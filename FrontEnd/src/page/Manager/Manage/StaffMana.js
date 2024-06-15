@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 // Set the app element for accessibility
 Modal.setAppElement('#root');
 
-const Staff = () => {
+const StaffMana = () => {
     const [originalListaccount, setOriginalListaccount] = useState([]);
     const [listaccount, setListaccount] = useState([]);
     const [listStaff, setListStaff] = useState([]);
@@ -259,4 +259,4 @@ const Staff = () => {
     )
 }
 
-export default Staff;
+export default StaffMana;

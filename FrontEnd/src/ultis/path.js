@@ -57,6 +57,10 @@ const path = {
     // manager
     MANAGER: 'manager',
     PRODUCTMANAGER: 'productManager',
+    DIAMONDMANAGER: 'diamond',
+    RETAILGOLDMANAGER: 'rgold',
+    PROMOTIONMANAGER: 'Promotionmanager'
+
     // end manager
 
 

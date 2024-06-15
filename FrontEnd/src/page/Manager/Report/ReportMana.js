@@ -1,11 +1,12 @@
 import React from 'react'
 import { Outlet, useOutlet } from 'react-router-dom';
-import DiamondManager from './DiamondManager';
-export default function ProductManager() {
+import InvoiceMana from './InvoiceMana';
+export default function ReportMana() {
     const outlet = useOutlet();
+
     return (
         <div>
-            {outlet ? outlet : <DiamondManager />}
+            {outlet ? outlet : <InvoiceMana />}
         </div>
-    )
+    );
 }
