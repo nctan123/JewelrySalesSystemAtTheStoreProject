@@ -18,7 +18,7 @@ namespace JSSATSProject.Repository
         private GuaranteeRepository _guarantee;
         private MaterialPriceListRepository _materialpricelist;
         private MaterialRepository _material;
-        private OrderRepository _order;
+        private SellOrderRepository _sellorder;
         private PaymentRepository _payment;
         private PaymentMethodRepository _paymentmethod;
         private PointRepository _point;
@@ -40,25 +40,26 @@ namespace JSSATSProject.Repository
         private SymmetryRepository _symmetry;
         private RoleRepository _role;
         private ProductMaterialRepository _productmaterial;
-        private OrderDetailRepository _orderdetail;
+        private SellOrderDetailRepository _sellorderdetail;
         private PromotionRequestRepository _promotionrequest;
         private SpecialDiscountRequestRepository _specialdiscountrequest;
-        
+        private PaymentDetailRepository _paymentdetailrepository;
+
 
         public UnitOfWork(DBContext context)
         {
             _context = context;
         }
 
-        public OrderDetailRepository OrderDetailRepository
+        public SellOrderDetailRepository SellOrderDetailRepository
         {
             get
             {
-                if (_orderdetail == null)
+                if (_sellorderdetail == null)
                 {
-                    _orderdetail = new OrderDetailRepository(_context);
+                    _sellorderdetail = new SellOrderDetailRepository(_context);
                 }
-                return _orderdetail;
+                return _sellorderdetail;
             }
 
         }
@@ -172,15 +173,15 @@ namespace JSSATSProject.Repository
             }
         }
 
-        public OrderRepository OrderRepository
+        public SellOrderRepository SellOrderRepository
         {
             get
             {
-                if (_order == null)
+                if (_sellorder == null)
                 {
-                    _order = new OrderRepository(_context);
+                    _sellorder = new SellOrderRepository(_context);
                 }
-                return _order;
+                return _sellorder;
             }
         }
 
@@ -436,10 +437,23 @@ namespace JSSATSProject.Repository
             }
         }
 
+        public PaymentDetailRepository PaymentDetailRepository
+        {
+            get
+            {
+                if (_paymentdetailrepository == null)
+                {
+                    _paymentdetailrepository = new PaymentDetailRepository(_context);
+                }
+                return _paymentdetailrepository;
+            }
+        }
 
 
-    
-       
+
+
+
+
 
         public async Task SaveAsync()
         {
