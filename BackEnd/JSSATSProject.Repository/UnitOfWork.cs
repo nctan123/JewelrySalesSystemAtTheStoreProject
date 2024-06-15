@@ -45,6 +45,11 @@ namespace JSSATSProject.Repository
         private SpecialDiscountRequestRepository _specialdiscountrequest;
         private PurchasePriceRatioRepository _purchasePriceRatioRepository;
         
+        private SellOrderDetailRepository _sellorderdetail;
+        private PromotionRequestRepository _promotionrequest;
+        private SpecialDiscountRequestRepository _specialdiscountrequest;
+        private PaymentDetailRepository _paymentdetailrepository;
+
 
         public UnitOfWork(DBContext context)
         {
@@ -64,15 +69,21 @@ namespace JSSATSProject.Repository
 
         }
         
+=======
+>>>>>>> develop
         public SellOrderDetailRepository SellOrderDetailRepository
         {
             get
             {
-                if (_orderdetail == null)
+                if (_sellorderdetail == null)
                 {
+<<<<<<< HEAD
                     _orderdetail = new SellOrderDetailRepository(_context);
+=======
+                    _sellorderdetail = new SellOrderDetailRepository(_context);
+>>>>>>> develop
                 }
-                return _orderdetail;
+                return _sellorderdetail;
             }
 
         }
@@ -190,11 +201,19 @@ namespace JSSATSProject.Repository
         {
             get
             {
+<<<<<<< HEAD
                 if (_sellOrder == null)
                 {
                     _sellOrder = new SellOrderRepository(_context);
                 }
                 return _sellOrder;
+=======
+                if (_sellorder == null)
+                {
+                    _sellorder = new SellOrderRepository(_context);
+                }
+                return _sellorder;
+>>>>>>> develop
             }
         }
 
@@ -450,10 +469,23 @@ namespace JSSATSProject.Repository
             }
         }
 
+        public PaymentDetailRepository PaymentDetailRepository
+        {
+            get
+            {
+                if (_paymentdetailrepository == null)
+                {
+                    _paymentdetailrepository = new PaymentDetailRepository(_context);
+                }
+                return _paymentdetailrepository;
+            }
+        }
 
 
-    
-       
+
+
+
+
 
         public async Task SaveAsync()
         {

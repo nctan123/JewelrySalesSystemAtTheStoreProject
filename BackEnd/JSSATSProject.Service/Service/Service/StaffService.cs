@@ -67,7 +67,7 @@ namespace JSSATSProject.Service.Service.Service
                 .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
             //them buy order vao
             response.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
-            response.TotalOrder = staffOrders.Count();
+            response.TotalSellOrder = staffOrders.Count();
 
             return new ResponseModel
             {

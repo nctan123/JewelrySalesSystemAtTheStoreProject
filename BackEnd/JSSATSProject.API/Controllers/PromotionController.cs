@@ -49,5 +49,7 @@ namespace JSSATSProject.API.Controllers
             var response = await _promotionService.UpdatePromotionAsync(Id, requestPromotion);
             return Ok(response);
         }
+
+        
     }
 }

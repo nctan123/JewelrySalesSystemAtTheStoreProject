@@ -21,5 +21,6 @@ public partial class ProductCategory
 
     public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
 
+    [JsonIgnore]
     public virtual ICollection<PromotionRequest> Requests { get; set; } = new List<PromotionRequest>();
 }

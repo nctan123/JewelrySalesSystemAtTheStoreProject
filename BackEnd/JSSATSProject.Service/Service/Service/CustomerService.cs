@@ -52,10 +52,15 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
         {
             var entities =
                 await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(
+                includeProperties: "Point,SellOrders,Payments",
+                pageIndex: pageIndex,
+                pageSize: pageSize
+                );
 
             var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
@@ -84,6 +89,7 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 // Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
@@ -113,6 +119,7 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 // Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
@@ -131,6 +138,8 @@ namespace JSSATSProject.Service.Service.Service
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
                 includeProperties: "Point,SellOrders,Payments");
+                 c => c.Phone.Equals(phonenumber),
+                 includeProperties: "Point,SellOrders,Payments");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,
@@ -142,6 +151,7 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 // Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0

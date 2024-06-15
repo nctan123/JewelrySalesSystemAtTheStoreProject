@@ -30,12 +30,14 @@ public partial class Staff
 
     public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
 
+    [JsonIgnore]
     public virtual ICollection<PromotionRequest> PromotionRequestApprovedByNavigations { get; set; } = new List<PromotionRequest>();
 
     public virtual ICollection<PromotionRequest> PromotionRequestManagers { get; set; } = new List<PromotionRequest>();
 
     public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
 [JsonIgnore]
+    [JsonIgnore]
     public virtual ICollection<SpecialDiscountRequest> SpecialDiscountRequestApprovedByNavigations { get; set; } = new List<SpecialDiscountRequest>();
 
     public virtual ICollection<SpecialDiscountRequest> SpecialDiscountRequestStaffs { get; set; } = new List<SpecialDiscountRequest>();

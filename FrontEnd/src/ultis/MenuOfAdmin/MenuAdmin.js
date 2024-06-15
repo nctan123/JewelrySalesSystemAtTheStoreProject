@@ -10,7 +10,6 @@ const { FaChartSimple,
     BiLogOut, FaChevronDown, IoMdArrowDropdown, IoMdArrowDropup, TbFileInvoice, CgUserList, LiaFileInvoiceDollarSolid, GrUserManager,
     MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges, GiGoldNuggets } = iconAdmin
 
-
 export const sidebarMenuAdmin = [
     // {
     //     path: 'revenue',
@@ -49,32 +48,26 @@ export const sidebarMenuAdmin = [
 
     },
     {
-
-        path: 'Manage/productadmin',
-
+        path: 'Manage',
         text: 'Manage',
         iconAdmin: <MdManageAccounts size={24} color="white" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-
                 path: 'Manage/productadmin',
                 text: 'Product',
                 iconAdmin: <GiStonePile size={24} color="white" />
             },
             {
-
                 path: 'Manage/customeradmin',
                 text: 'Customer',
                 iconAdmin: <GrUserManager size={24} color="white" />
             },
             {
-
                 path: 'Manage/point',
                 text: 'Point of customer',
                 iconAdmin: <GiGoldNuggets size={24} color="white" />
-
             },
             {
                 path: 'Manage/staff',
@@ -85,25 +78,19 @@ export const sidebarMenuAdmin = [
         ],
     },
     {
-
         path: 'Promotionadmin',
-
         text: 'Promotion',
         iconAdmin: <CiGift size={24} color="white" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-
                 path: 'Promotionadmin/promotionlist',
-
                 text: 'Promotion list',
                 iconAdmin: <LiaGiftsSolid size={24} color="white" />
             },
             {
-
                 path: 'Promotionadmin/promotionrequest',
-
                 text: 'Request',
                 iconAdmin: <VscGitPullRequestGoToChanges size={24} color="white" />
             }
@@ -119,9 +106,9 @@ export const sidebarMenuAdmin = [
         text: 'Void bill',
         iconAdmin: <TbDeviceIpadCancel size={24} color="white" />
     },
-    {
-        path: '/login',
-        text: 'Log out',
-        iconAdmin: <BiLogOut size={24} color="white" />
-    },
+    // {
+    //     path: '/login',
+    //     text: 'Log out',
+    //     iconAdmin: <BiLogOut size={24} color="white" />
+    // },
 ]
