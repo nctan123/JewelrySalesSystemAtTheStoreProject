@@ -13,7 +13,7 @@ const Public = () => {
         </div>
 
         <div className='flex-auto border '>
-          <div className='h-[70px] px-[30px] flex items-center mb-2'><Header/></div>
+          {/* <div className='h-[70px] px-[30px] flex items-center mb-2'><Header/></div> */}
           <div className='h-[88%] flex justify-center overflow-y-auto '><Outlet/></div>
         </div>
 

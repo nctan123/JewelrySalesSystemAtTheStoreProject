@@ -2,77 +2,125 @@ import React, { useEffect, useState } from 'react'
 import { fetchAllCustomer } from '../../apis/jewelryService'
 import styles from '../../style/cardForList.module.css'
 import clsx from 'clsx'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { addCustomer } from '../../store/slice/cardSilec'
 
 
 const Customer = () => {
-  const dispatch = useDispatch()
-  const [listCustomer, setListCustomer] = useState([])
+
+
+  const dispatch = useDispatch();
+  const [listCustomer, setListCustomer] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     getCustomer();
-  }, [])
+  }, []);
 
   const getCustomer = async () => {
     let res = await fetchAllCustomer();
     if (res && res.data && res.data.data) {
-      setListCustomer(res.data.data)
+      setListCustomer(res.data.data);
     }
-  }
+  };
+
+  const filteredCustomers = listCustomer.filter((customer) =>
+  (customer.id.toString().includes(searchTerm) ||
+    customer.firstname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.lastname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    customer.phone.includes(searchTerm))
+  );
+
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
 
   return (
     <>
-      <div>
+      
 
-        <button type="button" className="m-0 flex justify-center items-center bg-[#00AC7C] text-white gap-1 cursor-pointer tracking-widest rounded-md hover:bg-[#00ac7b85] duration-300 hover:gap-2 hover:translate-x-3">
+        <div className='h-[70px] px-[30px] mt-5 mb-2 w-full'>
+          <form className="max-w-md mx-auto">
+            <div className="relative">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Search Item, ID in here..."
+                required
+                value={searchTerm}
+                onChange={handleSearch}
+              />
+            </div>
+          </form>
+          </div>
+
+        <div className='overflow-y-auto'>
+        <button type="button" className="m-0 mb-2 flex justify-center items-center bg-[#00AC7C] text-white gap-1 cursor-pointer tracking-widest rounded-md hover:bg-[#00ac7b85] duration-300 hover:gap-2 hover:translate-x-3">
           <a href='#popup1' id='openPopUp' className='p-0 flex gap-1 items-center'>
             Add
-            <svg
-              class="w-5 h-5"
-              stroke="currentColor"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
-                stroke-linejoin="round"
-                stroke-linecap="round"
-              ></path>
+            <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+              <path d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" stroke-linejoin="round" stroke-linecap="round" ></path>
             </svg>
           </a>
         </button>
-
-
         <div className="w-[800px] overflow-hidden">
           <table className="font-inter w-full table-auto border-separate border-spacing-y-1 overflow-y-scroll text-left md:overflow-auto">
-            <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white">
-              <tr className="">
-                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36]">Customer ID</th>
-                <th className="whitespace-nowrap py-3 pl-1 text-sm font-normal text-[#212B36]">First Name</th>
-                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Last Name</th>
-                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">PhoneNumber</th>
-                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Total Point</th>
-                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Action</th>
-              </tr>
-            </thead>
+          <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white">
+          <tr className="">
+            <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36]">Customer ID</th>
+            <th className="whitespace-nowrap py-3 pl-1 text-sm font-normal text-[#212B36]">First Name</th>
+            <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Last Name</th>
+            <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">PhoneNumber</th>
+            <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Total Point</th>
+            <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Action</th>
+          </tr>
+        </thead>
             <tbody>
-              {listCustomer && listCustomer.length > 0 && listCustomer.map((item, index) => {
+              {filteredCustomers.map((item, index) => {
                 return (
-                  <tr className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
+                  <tr
+                    key={index}
+                    className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl"
+                  >
                     <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">{item.id}</td>
                     <td className=" text-sm font-normal text-[#637381]">{item.firstname}</td>
                     <td className=" text-sm font-normal text-[#637381]">{item.lastname}</td>
                     <td className=" text-sm font-normal text-[#637381]">{item.phone}</td>
                     <td className=" text-sm font-normal text-[#637381]">{item.totalPoint}</td>
-                    <td className=" text-sm font-normal text-[#637381]"><button onClick={() => dispatch(addCustomer(item))} className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none">Apply</button></td>
+                    <td className=" text-sm font-normal text-[#637381]">
+                      <button
+                        onClick={() => dispatch(addCustomer(item))}
+                        className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
+                      >
+                        Apply
+                      </button>
+                    </td>
                   </tr>
-                )
+                );
               })}
             </tbody>
           </table>
+         
+        </div>
         </div>
 
 
@@ -126,7 +174,7 @@ const Customer = () => {
           </div>
         </div>
 
-      </div>
+     
 
     </>)
 }
