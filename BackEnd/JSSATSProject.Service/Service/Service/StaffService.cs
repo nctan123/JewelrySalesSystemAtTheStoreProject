@@ -63,11 +63,11 @@ namespace JSSATSProject.Service.Service.Service
 
             var response = _mapper.Map<ResponseStaff>(staffEntity);
 
-            var staffOrders = staffEntity.Orders
+            var staffOrders = staffEntity.SellOrders
                 .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
 
             response.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
-            response.TotalOrder = staffOrders.Count();
+            response.TotalSellOrder = staffOrders.Count();
 
             return new ResponseModel
             {
@@ -128,7 +128,7 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetTop6ByDateAsync(DateTime startDate, DateTime endDate)
         {
             // Fetch orders within the specified date range
-            var orders = await _unitOfWork.OrderRepository.GetAsync(
+            var orders = await _unitOfWork.SellOrderRepository.GetAsync(
                 filter: o => o.CreateDate >= startDate && o.CreateDate <= endDate);
 
             // Group orders by StaffId and calculate total revenue for each group

@@ -51,7 +51,7 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByCustomerIdAsync(int customerId)
         {
             var entities = await _unitOfWork.SpecialDiscountRequestRepository.GetAsync(
-                s => s.CustomerId == customerId && s.Orders == null,
+                s => s.CustomerId == customerId && s.SellOrders == null,
                 includeProperties: "ApprovedByNavigation,Customer,Staff"
             );
 

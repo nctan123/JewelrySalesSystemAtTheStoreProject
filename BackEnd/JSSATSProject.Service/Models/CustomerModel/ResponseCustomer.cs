@@ -22,7 +22,7 @@ namespace JSSATSProject.Service.Models.CustomerModel
         public int TotalPoint { get; set; }
         public virtual Point Point { get; set; }
         public DateTime CreateDate { get; set; }
-        public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+        public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     }
