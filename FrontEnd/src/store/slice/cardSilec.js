@@ -24,9 +24,6 @@ export const productSlice = createSlice({
             const newCart = state.CartArr.filter((item) => item.id !== productIndexRemove)
             return { ...state, CartArr: newCart }
         },
-        deleteProductAll: (state, action) => {
-            return { ...state, CartArr: [] }
-        },
         addCustomer: (state, action) => {
             const productIndex = state.CusPoint.findIndex((p) => p.id === action.payload.id)
             if (productIndex === -1) {
@@ -35,9 +32,6 @@ export const productSlice = createSlice({
                 state.CusPoint[productIndex].quantity += 1;
             }
         },
-        deleteCustomer: (state, action) => {
-            return { ...state, CusPoint: [] }
-        },
     },
 
 })
@@ -45,6 +39,6 @@ export const productSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { addProduct, deleteProduct, addCustomer, deleteCustomer, deleteProductAll } = productSlice.actions
+export const { addProduct, deleteProduct, addCustomer } = productSlice.actions
 
 export default productSlice.reducer

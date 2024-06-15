@@ -2,9 +2,10 @@ import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; //mang action đến redux, sử dụng useSeletor để lấy giá trị
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Return, Exchange, Buy, Warranty } from './page/Seller';
+
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex } from './page/Seller';
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
@@ -12,6 +13,7 @@ import Home from './page/Home/Home';
 import path from './ultis/path'
 import Cs_Order from './page/Cashier/Cs_Order';
 import Dashboard from './page/Admin/Dashboard'
+
 import Report from './page/Admin/Report/Report';
 import Manage from './page/Admin/Manage/Manage';
 import Invoice from '../src/page/Admin/Report/Invoice'
@@ -21,16 +23,15 @@ import CustomerAdmin from './page/Admin/Manage/CustomerAdmin';
 import ProductAdmin from './page/Admin/Manage/ProductAdmin';
 import Staff from '../src/page/Admin/Manage/Staff';
 import PromotionAdmin from './page/Admin/Promotion/PromotionAdmin';
+
 import PromotionList from './page/Admin/Promotion/PromotionList';
 import PromotionRequest from './page/Admin/Promotion/PromotionRequest';
 import ReturnPolicy from './page/Admin/ReturnPolicy';
 import VoidBill from './page/Admin/VoidBill'
+
 import Point from './page/Admin/Manage/Point';
 import Manager from './page/Manager/Manager';
 
-import ProductManager from './page/Manager/Product/ProductManager';
-
-import SecurityRoute from './page/Home/SecurityRoute';
 
 
 function App() {
@@ -40,18 +41,16 @@ function App() {
 
   return (
     <>
-
       <div className=''>
-
         <Routes>
-          {/* home */}
-          <Route path={path.HOME} element={<Home />} />
+        {/* home */}
+        <Route path={path.HOME} element={<Home />} />
           <Route path={path.LOGIN} element={<Login />} />
           {/* admin */}
-          <Route path={path.ADMIN} element={<Admin />} >
-            <Route path={path.LOGIN} element={<Login />} />
+          <Route path={path.ADMIN} element={<Admin />} exact >
             <Route path={path.ADMIN} element={<Dashboard />} />
             <Route path={path.DASHBOARD} element={<Dashboard />} />
+
 
             <Route path={path.REPORT} element={<Report />} exact>
               <Route path={path.INVOICE} element={<Invoice />} />
@@ -60,8 +59,8 @@ function App() {
             </Route>
 
             <Route path={path.MANAGE} element={<Manage />} >
-              <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
               <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
+              <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
               <Route path={path.STAFF} element={<Staff />} />
               <Route path={path.POINT} element={<Point />} />
             </Route>
@@ -78,13 +77,6 @@ function App() {
           </Route >
           {/* manager */}
           <Route path={path.MANAGER} element={<Manager />}>
-            <Route path={path.MANAGER} element={<ProductManager />} />
-            <Route path={path.PRODUCTMANAGER} element={<ProductManager />} >
-              <Route path={path.DIAMOND} element={<Diamond />} />
-              <Route path={path.RETAILGOLD} element={<RetailGold />} />
-              <Route path={path.WHOLESALEGOLD} element={<WholesaleGold />} />
-            </Route>
-
           </Route>
           {/* Seller */}
           <Route path={path.PUBLIC} element={<Public />}>
@@ -100,12 +92,7 @@ function App() {
             <Route path={path.RETAILGOLD} element={<RetailGold />} />
             <Route path={path.SEARCHINVOICE} element={<SearchInvoice />} />
             <Route path={path.PROMOTION} element={<Promotion />} />
-            <Route path={path.RETURN_EX} element={<Return_Ex />} >
-              <Route path={path.RETURN} element={<Return />} />
-              <Route path={path.EXCHANGE} element={<Exchange />} />
-              <Route path={path.BUY} element={<Buy />} />
-              <Route path={path.WARRANTY} element={<Warranty />} />
-            </Route>
+            <Route path={path.RETURN_EX} element={<Return_Ex />} />
           </Route>
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
@@ -116,12 +103,12 @@ function App() {
             <Route path={path.CS_REVENUE} element={<Cs_Revenue />} />
           </Route>
 
+
         </Routes>
 
 
 
       </div>
-
       <ToastContainer
 
       />

@@ -10,7 +10,6 @@ const SearchInvoice = () => {
 
   const getInvoice = async () => {
     let res = await fetchAllInvoice();
-    console.log(res)
     if (res && res.data && res.data.data) {
       setListInvoice(res.data.data)
     }

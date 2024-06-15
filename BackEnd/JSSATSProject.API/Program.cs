@@ -21,7 +21,6 @@ namespace JSSATSProject.API
             var config = builder.Configuration;
             var services = builder.Services;
 
-            services.AddHttpContextAccessor();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -93,8 +92,6 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<ISpecialDiscountRequestService, SpecialDiscountRequestService>();
             builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
             services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
-
-            builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 
 
