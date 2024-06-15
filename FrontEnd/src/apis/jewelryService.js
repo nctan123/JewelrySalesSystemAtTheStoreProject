@@ -25,7 +25,7 @@ const fetchAllDiamond = () => {
     return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
 }
 const fetchAllPromotion = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/promotion/getAll");
+    return axios.get("https://jssatsproject.azurewebsites.net/api/Promotion/GetAll");
 }
 const fetchAllInvoice = () => {
     return axios.get("https://reqres.in/api/users?page=1");

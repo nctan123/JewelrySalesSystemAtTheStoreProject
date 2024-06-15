@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { fetchAllPromotion } from '../../apis/jewelryService'
-
+import {useDispatch } from 'react-redux'
+import { addPromotion} from '../../store/slice/cardSilec'
 const Promotion = () => {
-
+  const dispatch = useDispatch()
   const [listPromotion, setListPromotion] = useState([])
 
   useEffect(() => {
@@ -33,12 +34,12 @@ const Promotion = () => {
           <tbody>
             {listPromotion && listPromotion.length > 0 && listPromotion.map((item, index) => {
               return (
-                <tr className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
+                <tr   className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
                   <td className="rounded-l-lg py-4 pl-3 text-sm font-normal text-[#637381]">{item.id}</td>
                   <td className="px-1 py-4 text-sm font-normal text-[#637381]">{item.name}</td>
                   <td className="px-1 py-4 text-sm font-normal text-[#637381]">{item.startDate}</td>
                   <td className="px-1 py-4 text-sm font-normal text-[#637381]">{item.endDate}</td>
-                  <td className="px-1 py-4 text-sm font-normal text-[#637381]"><button className="border border-white bg-[#4741b1d7] text-white px-4 py-2 rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none">Apply</button></td>
+                  <td className="px-1 py-4 text-sm font-normal text-[#637381]"><button onClick={() => dispatch(addPromotion(item))} className="border border-white bg-[#4741b1d7] text-white px-4 py-2 rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none">Apply</button></td>
                 </tr>
               )
             })}

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 // import  addProduct, deleteProduct  from '../../../'
-import { deleteProduct, deleteCustomer, deleteProductAll } from '../store/slice/cardSilec'
+import { deleteProduct, deleteCustomer, deleteProductAll, deletePromotion } from '../store/slice/cardSilec'
 import { MdDeleteOutline } from "react-icons/md";
 import { VscGitStashApply } from "react-icons/vsc";
 import { Link } from 'react-router-dom';
 import styles from '../style/cardForList.module.css'
 import clsx from 'clsx'
+import { toast } from 'react-toastify';
 
 const SidebarRight = () => {
   const dispatch = useDispatch()
@@ -22,25 +23,47 @@ const SidebarRight = () => {
 
   const CartProduct = useSelector(state => state.cart.CartArr);
   const CusPoint = useSelector(state => state.cart.CusPoint);
+  // const CartPromotion = useSelector(state => state.cart.CartPromotion);
 
   const [total, setTotal] = useState(0);
+  const [discount, setDiscount] = useState(0)
 
   useEffect(() => {
     const calculateTotal = () => {
       let totalValue = 0;
       CartProduct.forEach((product) => {
-        totalValue += product.productValue * product.quantity;
+        totalValue += product.productValue * product.quantity
       });
       setTotal(totalValue);
     };
     calculateTotal();
+    const calculateDiscount = () => {
+      let totalDiscount = 0;
+      CartProduct.forEach((product) => {
+        totalDiscount += product.productValue * product.quantity * product.discountRate
+      });
+      setDiscount(totalDiscount);
+    };
+    calculateDiscount();
   }, [CartProduct]);
-  const tax = total * 5 / 100
-  const totalInvoice = tax + total
+
+
+  const totalInvoice = total - discount
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+  const toastSpectial = () => {
+    toast.warning('Sent Special Discount')
+  }
 
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxClick = () => {
+    if (!isChecked) {
+      setIsChecked(true);
+      toastSpectial();
+    }
+  };
   return (<>
 
 
@@ -69,27 +92,47 @@ const SidebarRight = () => {
           <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
           <div className='col-start-3 ml-6 flex justify-start'>Price</div>
         </div>
-        <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
+
+        <div id='screenSeller' className=' h-[45%] overflow-y-auto mb-2'>
           {CartProduct && CartProduct.map((item, index) => {
             return (
-              <div key={`ring-${index}`} className='grid grid-cols-6'  >
-                <div className='col-start-1 col-span-4 flex px-[10px] text-sm' >{item.name}</div>
+              <div key={`ring-${index}`} className='grid grid-cols-6 '>
+                <div className='col-start-1 col-span-4 flex px-[10px] text-sm'>{item.name}</div>
                 <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px]'>{formatPrice(item.productValue * item.quantity)}</div>
-                <span onClick={() => dispatch(deleteProduct(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md  '><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
-                <div className='col-start-1 col-span-6 flex px-[14px] text-xs text-red-600 mt-[-6px]' >x{item.quantity}</div>
+                <span onClick={() => dispatch(deleteProduct(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md'><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
+                {!item.startDate && (
+                  <div className='col-start-1 col-span-6 flex px-[14px] text-xs text-red-600 mt-[-6px]'>x{item.quantity}</div>
+                )}
               </div>
             )
           })}
         </div>
+
+        {/* <div className=' mx-[5px] py-2 mb-2 h-[10%] overflow-y-auto border border-red-500 rounded-md'>
+        
+          {CartPromotion && CartPromotion.map((item, index) => {
+             return (<>
+              <div className='grid grid-cols-6 overflow-y-auto'>
+                
+              <div className='col-start-1 col-span-4 flex px-[10px] text-sm'>{item.name}</div>      
+              <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px]'>{formatPrice(10)}</div>
+              <span onClick={() => dispatch(deletePromotion(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md'><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
+              
+              </div>
+            </>
+               )
+          })} 
+                 
+          </div> */}
         <div className='border mx-[15px] border-x-0 border-b-0 border-t-black grid grid-cols-2 py-2'>
           <div className='font-bold'>PAYMENT</div>
           <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="text" name="point" id="inputPoint" placeholder="Note" />
         </div>
         <div className='px-[15px] grid grid-cols-2 grid-rows-2'>
-          <div className='row-start-1 font-thin'>Subtotal:</div>
+          <div className='row-start-1 font-thin'>Total:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(total.toFixed())}</div>
-          <div className='row-start-2 font-thin'>Tax:</div>
-          <div className='col-start-2 flex justify-end'>{formatPrice(tax)}</div>
+          <div className='row-start-2 font-thin'>Discount:</div>
+          <div className='col-start-2 flex justify-end'>{formatPrice(discount)}</div>
         </div>
         {CusPoint && CusPoint[0] && (
           <div className='px-[15px] grid grid-cols-2 pb-2' >
@@ -148,6 +191,9 @@ const SidebarRight = () => {
                     <th scope="col" class="px-6 py-3">
                       Action
                     </th>
+                    <th scope="col" class="px-6 py-3">
+                      Special Discount
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -164,6 +210,22 @@ const SidebarRight = () => {
                     <td class="flex py-4 gap-1 items-center justify-center">
                       <button className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
                       <button className='m-0 p-3 bg-red-500'><MdDeleteOutline /></button>
+                    </td>
+                    <td class="px-14 py-4 ">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          onClick={handleCheckboxClick}
+                          type="checkbox"
+                          checked={isChecked}
+                          className="sr-only peer"
+                        />
+                        <div
+                          className={`peer ring-0 bg-rose-400 rounded-full outline-none duration-300 after:duration-500 w-8 h-8 shadow-md ${isChecked
+                              ? 'bg-emerald-500 after:content-["✔️"] after:-rotate-180 after:rotate-0'
+                              : 'after:content-["✖️"]'
+                            } after:rounded-full after:absolute after:outline-none after:h-6 after:w-6 after:bg-gray-50 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-75`}
+                        ></div>
+                      </label>
                     </td>
                   </tr>
                 </tbody>

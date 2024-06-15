@@ -10,7 +10,11 @@ export const productSlice = createSlice({
         CartArr: [],
         CusPoint: [],
         CartWholesale: [],
+        CartPromotion: [],
     },
+
+    
+
     reducers: {
         addProduct: (state, action) => {
             const productIndex = state.CartArr.findIndex((p) => p.id === action.payload.id)
@@ -36,12 +40,21 @@ export const productSlice = createSlice({
             const productIndex = state.CusPoint.findIndex((p) => p.id === action.payload.id)
             if (productIndex === -1) {
                 state.CusPoint.push({ ...action.payload, quantity: 1 })
-            } else {
-                state.CusPoint[productIndex].quantity += 1;
-            }
+            } 
         },
         deleteCustomer: (state, action) => {
             return { ...state, CusPoint: [] }
+        },
+        addPromotion: (state, action) => {
+            const productIndex = state.CartPromotion.findIndex((p) => p.id === action.payload.id)
+            if (productIndex === -1) {
+                state.CartPromotion.push({ ...action.payload, quantity: 1 })
+            } 
+        },
+        deletePromotion: (state, action) => {
+            const productIndexRemove = action.payload.id
+            const newPromotion = state.CartPromotion.filter((item) => item.id !== productIndexRemove)
+            return { ...state, CartPromotion: newPromotion }
         },
     },
 
@@ -50,6 +63,6 @@ export const productSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { addProduct, deleteProduct, addCustomer, deleteCustomer, deleteProductAll, addProductWholesale, deleteProductWholesale } = productSlice.actions
+export const { addProduct, deleteProduct, addCustomer, deleteCustomer, deleteProductAll, addProductWholesale, deleteProductWholesale,addPromotion,deletePromotion } = productSlice.actions
 
 export default productSlice.reducer

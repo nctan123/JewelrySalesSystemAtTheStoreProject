@@ -71,9 +71,7 @@ const Customer = () => {
               />
             </div>
           </form>
-          </div>
-
-        <div className='overflow-y-auto'>
+          
         <button type="button" className="m-0 mb-2 flex justify-center items-center bg-[#00AC7C] text-white gap-1 cursor-pointer tracking-widest rounded-md hover:bg-[#00ac7b85] duration-300 hover:gap-2 hover:translate-x-3">
           <a href='#popup1' id='openPopUp' className='p-0 flex gap-1 items-center'>
             Add
@@ -82,9 +80,11 @@ const Customer = () => {
             </svg>
           </a>
         </button>
+
+        <div className='h-[80vh] overflow-y-auto'>
         <div className="w-[800px] overflow-hidden">
           <table className="font-inter w-full table-auto border-separate border-spacing-y-1 overflow-y-scroll text-left md:overflow-auto">
-          <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white">
+          <thead className=" w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white">
           <tr className="">
             <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36]">Customer ID</th>
             <th className="whitespace-nowrap py-3 pl-1 text-sm font-normal text-[#212B36]">First Name</th>
@@ -93,7 +93,7 @@ const Customer = () => {
             <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Total Point</th>
             <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Action</th>
           </tr>
-        </thead>
+         </thead>
             <tbody>
               {filteredCustomers.map((item, index) => {
                 return (
@@ -101,7 +101,7 @@ const Customer = () => {
                     key={index}
                     className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl"
                   >
-                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">{item.id}</td>
+                    <td className="rounded-l-lg text-sm font-normal text-[#637381] flex justify-center py-4">{item.id}</td>
                     <td className=" text-sm font-normal text-[#637381]">{item.firstname}</td>
                     <td className=" text-sm font-normal text-[#637381]">{item.lastname}</td>
                     <td className=" text-sm font-normal text-[#637381]">{item.phone}</td>
@@ -109,7 +109,7 @@ const Customer = () => {
                     <td className=" text-sm font-normal text-[#637381]">
                       <button
                         onClick={() => dispatch(addCustomer(item))}
-                        className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
+                        className="my-2 mx-0 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
                       >
                         Apply
                       </button>
@@ -119,7 +119,7 @@ const Customer = () => {
               })}
             </tbody>
           </table>
-         
+        </div>
         </div>
         </div>
 
