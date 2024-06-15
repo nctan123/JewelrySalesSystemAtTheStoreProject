@@ -24,4 +24,9 @@ public partial class Promotion
     public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; } = new List<SellOrderDetail>();
 
     public virtual ICollection<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
+
+    public static implicit operator int(Promotion v)
+    {
+        throw new NotImplementedException();
+    }
 }

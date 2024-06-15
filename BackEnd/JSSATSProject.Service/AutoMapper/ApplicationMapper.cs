@@ -19,10 +19,9 @@ using JSSATSProject.Service.Models.StallModel;
 using JSSATSProject.Service.Models.StallTypeModel;
 using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.DiamondPriceListModel;
-using JSSATSProject.Service.Models.OrderDetail;
-using JSSATSProject.Service.Models.NewFolder;
 using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
+using Microsoft.AspNetCore.Http.Features.Authentication;
 
 
 
@@ -155,10 +154,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<StallType, RequestCreateStallType>().ReverseMap();
             CreateMap<StallType, ResponseStallType>().ReverseMap();
 
-            //OrderDetail
-            CreateMap<SellOrderDetail, RequestCreateSellOrderDetail>().ReverseMap();
-            CreateMap<SellOrderDetail, RequestUpdateSellOrderDetail>().ReverseMap();
-            CreateMap<SellOrderDetail, ResponseSellOrderDetail>().ReverseMap();
+          
 
 
             //LoginType
@@ -166,8 +162,10 @@ namespace JSSATSProject.Service.AutoMapper
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name))
                 .ForMember(dest => dest.Name,
                     opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => src.Staff.Id))
                 .ForMember(dest => dest.Token, opt => opt.Ignore())
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(dest => dest.Role, opt => opt.Ignore());
 
             //PromotionRequest
             CreateMap<PromotionRequest, ResponsePromotionRequest>()
@@ -179,8 +177,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<PromotionRequest, CreatePromotionRequest>().ReverseMap();
 
             CreateMap<PromotionRequest, UpdatePromotionRequest>().ReverseMap();
-             
-
+            
 
             //SpecialDiscountRequest
             CreateMap<SpecialDiscountRequest, ResponseSpecialDiscountRequest>()
@@ -190,6 +187,9 @@ namespace JSSATSProject.Service.AutoMapper
                 .ReverseMap();
             CreateMap<SpecialDiscountRequest, CreateSpecialDiscountRequest>().ReverseMap();
             CreateMap<SpecialDiscountRequest, UpdateSpecialDiscountRequest>().ReverseMap();
+
+           
+
         }
     }
 }

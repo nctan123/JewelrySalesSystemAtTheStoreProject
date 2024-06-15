@@ -50,12 +50,6 @@ namespace JSSATSProject.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet]
-        [Route("GetPromotionByProductCategory")]
-        public async Task<IActionResult> GetPromotionByProductCategoryAsync(int productCategoryId)
-        {
-            var responseModel = await _promotionService.GetPromotionByProductCategoryAsync(productCategoryId);
-            return Ok(responseModel);
-        }
+        
     }
 }

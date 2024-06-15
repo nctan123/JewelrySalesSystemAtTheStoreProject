@@ -19,7 +19,7 @@ namespace JSSATSProject.Service.Service.Service
             _mapper = mapper;
         }
 
-        public async Task<ResponseModel> CreateSpecialDiscountRequestAsync(CreateSpecialDiscountRequest specialdiscountRequest)
+        public async Task<ResponseModel> CreateAsync(CreateSpecialDiscountRequest specialdiscountRequest)
         {
             var entity = _mapper.Map<SpecialDiscountRequest>(specialdiscountRequest);
             entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
@@ -65,7 +65,7 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-        public async Task<ResponseModel> UpdateSpecialDiscountRequestAsync(int specialdiscountId, UpdateSpecialDiscountRequest specialdiscountRequest)
+        public async Task<ResponseModel> UpdateAsync(int specialdiscountId, UpdateSpecialDiscountRequest specialdiscountRequest)
         {
             try
             {
