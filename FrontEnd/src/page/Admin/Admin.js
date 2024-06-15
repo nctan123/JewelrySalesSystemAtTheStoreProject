@@ -17,11 +17,11 @@ export default function Admin() {
 
     return (
         <>
-            <div className='w-full flex h-[100vh] '>
-                <div className='w-[240px] h-[100vh] flex-none bg-[#5D5FEF] '>
+            <div className='w-full flex h-[100vh]'>
+                <div className='w-[240px] h-[100vh] flex-none bg-[#5D5FEF] overflow-y-auto '>
                     <Sildebar />
                 </div>
-                <div className='flex-auto border overflow-y-auto'>
+                <div className='flex-auto border overflow-y-auto '>
                     <div className='h-full '>
                         <div className='w-full flex justify-end space-x-2 px-[30px] py-[15px]'>
                             <RiAccountCircleLine className='text-2xl text-gray-600' />

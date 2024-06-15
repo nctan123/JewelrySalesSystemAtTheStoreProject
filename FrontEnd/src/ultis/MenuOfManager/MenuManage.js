@@ -21,7 +21,7 @@ export const sidebarMenuManager = [
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-                path: 'productManager/Diamond',
+                path: 'productManager/diamond',
                 text: 'Diamond',
                 icons: <GiDiamondRing size={24} color="white" />,
             },
@@ -81,22 +81,22 @@ export const sidebarMenuManager = [
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-                path: 'Manage/productmanager',
+                path: 'Manage/productadmin',
                 text: 'Product',
                 iconAdmin: <GiStonePile size={24} color="white" />
             },
             {
-                path: 'Manage/customermanager',
+                path: 'Manage/customeradmin',
                 text: 'Customer',
                 iconAdmin: <GrUserManager size={24} color="white" />
             },
             {
-                path: 'Manage/pointmanager',
+                path: 'Manage/point',
                 text: 'Point of customer',
                 iconAdmin: <GiGoldNuggets size={24} color="white" />
             },
             {
-                path: 'Manage/staffmanager',
+                path: 'Manage/staff',
                 text: 'Staff',
                 iconAdmin: <MdOutlineManageAccounts size={24} color="white" />
             }
@@ -107,6 +107,20 @@ export const sidebarMenuManager = [
         path: 'Promotionmanager',
         text: 'Promotion',
         iconAdmin: <CiGift size={24} color="white" />,
+        iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
+        iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
+        subMenu: [
+            {
+                path: 'Promotionmanager/promotionlist',
+                text: 'Promotion list',
+                iconAdmin: <LiaGiftsSolid size={24} color="white" />
+            },
+            {
+                path: 'Promotionmanager/promotionrequest',
+                text: 'History Request',
+                iconAdmin: <VscGitPullRequestGoToChanges size={24} color="white" />
+            }
+        ],
     },
     {
         path: 'ReturnPolicy',
@@ -118,9 +132,5 @@ export const sidebarMenuManager = [
         text: 'Void bill',
         iconAdmin: <TbDeviceIpadCancel size={24} color="white" />
     },
-    {
-        path: '/login',
-        text: 'Log out',
-        iconAdmin: <BiLogOut size={24} color="white" />
-    },
+
 ]

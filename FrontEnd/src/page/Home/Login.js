@@ -38,6 +38,8 @@ export default function LoginToStore() {
       if (user && user.token) {
         localStorage.setItem('token', user.token);
         localStorage.setItem('role', user.role);
+        localStorage.setItem('staffId', user.staffId);
+        localStorage.setItem('name', user.name);
         console.log('>>> check local', localStorage.getItem('token'))
         // localStorage.setItem('Role', user.role);
         // Determine user role and redirect or show appropriate UI

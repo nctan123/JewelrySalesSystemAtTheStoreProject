@@ -29,10 +29,22 @@ import Point from './page/Admin/Manage/Point';
 import Manager from './page/Manager/Manager';
 
 import ProductManager from './page/Manager/Product/ProductManager';
-
-import SecurityRoute from './page/Home/SecurityRoute';
-
-
+import DiamondManager from './page/Manager/Product/DiamondManager';
+import JewelryManager from './page/Manager/Product/JewelryManager';
+import RetailGoldManager from './page/Manager/Product/RetailGoldManager';
+import WholesaleGoldManager from './page/Manager/Product/WholesaleGoldManager';
+import ReportMana from './page/Manager/Report/ReportMana';
+import EmployeeMana from './page/Manager/Report/EmployeeMana';
+import InvoiceMana from './page/Manager/Report/InvoiceMana';
+import ProductSoldMana from './page/Manager/Product/ProductManager';
+import CustomerMana from './page/Manager/Manage/CustomerMana';
+import ManageMana from './page/Manager/Manage/ManageMana';
+import PointMana from './page/Manager/Manage/PointMana';
+import ProductMana from './page/Manager/Manage/ProductMana';
+import StaffMana from './page/Manager/Manage/StaffMana';
+import PromotionListMana from './page/Manager/Promotion/PromotionListMana';
+import PromotionRequestMana from './page/Manager/Promotion/PromotionRequestMana';
+import PromotionManager from './page/Manager/Promotion/PromotionManager'
 function App() {
   // test redux có hoạt động không
   // const {test,homeData} = useSelector(state => state.app)
@@ -49,7 +61,6 @@ function App() {
           <Route path={path.LOGIN} element={<Login />} />
           {/* admin */}
           <Route path={path.ADMIN} element={<Admin />} >
-            <Route path={path.LOGIN} element={<Login />} />
             <Route path={path.ADMIN} element={<Dashboard />} />
             <Route path={path.DASHBOARD} element={<Dashboard />} />
 
@@ -78,11 +89,27 @@ function App() {
           </Route >
           {/* manager */}
           <Route path={path.MANAGER} element={<Manager />}>
-            <Route path={path.MANAGER} element={<ProductManager />} />
             <Route path={path.PRODUCTMANAGER} element={<ProductManager />} >
-              <Route path={path.DIAMOND} element={<Diamond />} />
-              <Route path={path.RETAILGOLD} element={<RetailGold />} />
-              <Route path={path.WHOLESALEGOLD} element={<WholesaleGold />} />
+              <Route path={path.DIAMONDMANAGER} element={<DiamondManager />} />
+              <Route path={path.JEWELRY} element={<JewelryManager />} />
+              <Route path={path.RETAILGOLDMANAGER} element={<RetailGoldManager />} />
+              <Route path={path.WHOLESALEGOLD} element={<WholesaleGoldManager />} />
+            </Route>
+            <Route path={path.DASHBOARD} element={<Dashboard />} />
+            <Route path={path.REPORT} element={<ReportMana />} >
+              <Route path={path.INVOICE} element={<InvoiceMana />} />
+              <Route path={path.PRODUCSOLD} element={<ProductSoldMana />} />
+              <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
+            </Route>
+            <Route path={path.MANAGE} element={<ManageMana />} >
+              <Route path={path.PRODUCTADMIN} element={<ProductMana />} />
+              <Route path={path.CUSTOMERADMIN} element={<CustomerMana />} />
+              <Route path={path.STAFF} element={<StaffMana />} />
+              <Route path={path.POINT} element={<PointMana />} />
+            </Route>
+            <Route path={path.PROMOTIONMANAGER} element={<PromotionManager />} >
+              <Route path={path.PROMOTIONLIST} element={<PromotionListMana />} />
+              <Route path={path.PROMOTIONREQUEST} element={<PromotionRequestMana />} />
             </Route>
 
           </Route>
@@ -122,9 +149,7 @@ function App() {
 
       </div>
 
-      <ToastContainer
-
-      />
+      <ToastContainer />
     </>
   );
 }
