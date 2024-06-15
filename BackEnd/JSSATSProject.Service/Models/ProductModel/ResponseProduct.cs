@@ -21,6 +21,9 @@ namespace JSSATSProject.Service.Models.ProductModel
         public string? DiamondName { get; set; }
         public string? MaterialName { get; set; }
         public decimal? MaterialWeight { get; set; }
+        public int PromotionId { get; set; }
+        public decimal? DiscountRate { get; set; }
+
         [JsonIgnore]
         public ICollection<ProductDiamond>? ProductDiamonds { get; set; }
         [JsonIgnore]

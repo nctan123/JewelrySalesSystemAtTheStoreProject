@@ -15,6 +15,7 @@ namespace JSSATSProject.Service.Service.Service
         private readonly IDiamondPriceListService _diamondPriceListService;
         private readonly CacheManager<Product> _productCacheManager;
         private readonly CacheManager<MaterialPriceList> _materialPriceListCacheManager;
+        private readonly IPromotionService _promotionService;
 
         public ProductService(UnitOfWork unitOfWork, IMapper mapper, IDiamondPriceListService diamondPriceListService,
             CacheManager<Product> productCacheManager, CacheManager<MaterialPriceList> materialPriceListCacheManager)
@@ -54,6 +55,9 @@ namespace JSSATSProject.Service.Service.Service
             foreach (var responseProduct in response)
             {
                 responseProduct.ProductValue = await CalculateProductPrice(responseProduct);
+                var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+                responseProduct.PromotionId = promotion.Id;
+                responseProduct.DiscountRate = promotion.DiscountRate;
             }
 
             return new ResponseModel
