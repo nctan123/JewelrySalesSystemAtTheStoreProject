@@ -46,7 +46,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Customer, ResponseCustomer>()
                     .ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.Totalpoint : 0))
                     .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
-                    .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders))
+                    .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
                     .ForMember(dest => dest.Payments, opt => opt.MapFrom(src => src.Payments))
                     .ReverseMap();
 
@@ -56,6 +56,7 @@ namespace JSSATSProject.Service.AutoMapper
             //Diamond
             CreateMap<Diamond, RequestCreateDiamond>().ReverseMap();
             CreateMap<Diamond, RequestUpdateDiamond>().ReverseMap();
+            CreateMap<Diamond, RequestUpdateStatusDiamond>().ReverseMap();
             CreateMap<Diamond, ResponseDiamond>().ReverseMap();
 
             //DiamondPriceList
@@ -80,9 +81,9 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Material, ResponseMaterial>().ReverseMap();
 
             //Order
-            CreateMap<Order, RequestCreateOrder>().ReverseMap();
-            CreateMap<Order, RequestUpdateOrder>().ReverseMap();
-            CreateMap<Order, ResponseOrder>().ReverseMap();
+            CreateMap<SellOrder, RequestCreateSellOrder>().ReverseMap();
+            CreateMap<SellOrder, RequestUpdateSellOrder>().ReverseMap();
+            CreateMap<SellOrder, ResponseSellOrder>().ReverseMap();
 
             //PaymentMethod
             CreateMap<PaymentMethod, RequestCreatePaymentMethod>().ReverseMap();
@@ -141,8 +142,8 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Staff, RequestUpdateStaff>().ReverseMap();
             CreateMap<Staff, ResponseStaff>()
                  .ForMember(dest => dest.TotalRevennue, opt => opt.Ignore())
-                 .ForMember(dest => dest.TotalOrder, opt => opt.Ignore())
-                 .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders))
+                 .ForMember(dest => dest.TotalSellOrder, opt => opt.Ignore())
+                 .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
                  .ReverseMap();
 
 
@@ -155,9 +156,9 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<StallType, ResponseStallType>().ReverseMap();
 
             //OrderDetail
-            CreateMap<OrderDetail, RequestCreateOrderDetail>().ReverseMap();
-            CreateMap<OrderDetail, RequestUpdateOrderDetail>().ReverseMap();
-            CreateMap<OrderDetail, ResponseOrderDetail>().ReverseMap();
+            CreateMap<SellOrderDetail, RequestCreateSellOrderDetail>().ReverseMap();
+            CreateMap<SellOrderDetail, RequestUpdateSellOrderDetail>().ReverseMap();
+            CreateMap<SellOrderDetail, ResponseSellOrderDetail>().ReverseMap();
 
 
             //LoginType
@@ -171,7 +172,8 @@ namespace JSSATSProject.Service.AutoMapper
             //PromotionRequest
             CreateMap<PromotionRequest, ResponsePromotionRequest>()
                 .ForMember(dest => dest.ApprovedByNavigation, opt => opt.MapFrom(src => src.ApprovedByNavigation))
-                .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)) 
+                .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager))
+                .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
                 .ReverseMap();
 
             CreateMap<PromotionRequest, CreatePromotionRequest>().ReverseMap();

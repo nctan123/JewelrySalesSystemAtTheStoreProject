@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+
 namespace JSSATSProject.API
 {
     public class Program
@@ -21,6 +22,7 @@ namespace JSSATSProject.API
             var config = builder.Configuration;
             var services = builder.Services;
 
+            services.AddHttpContextAccessor();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -76,7 +78,7 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IGuaranteeService, GuaranteeService>();
             builder.Services.AddScoped<IMaterialPriceListService, MaterialPriceListService>();
             builder.Services.AddScoped<IMaterialService, MaterialService>();
-            builder.Services.AddScoped<IOrderService, OrderService>();
+            builder.Services.AddScoped<ISellOrderService, SellOrderService>();
             builder.Services.AddScoped<IPaymentMethodService, PaymentMethodService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
             builder.Services.AddScoped<IPointService, PointService>();
@@ -90,7 +92,8 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IStallTypeService, StallTypeService>();
             builder.Services.AddScoped<IPromotionRequestService, PromotionRequestService>();
             builder.Services.AddScoped<ISpecialDiscountRequestService, SpecialDiscountRequestService>();
-            builder.Services.AddScoped<IOrderDetailService, OrderDetailService>();
+            builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 
 

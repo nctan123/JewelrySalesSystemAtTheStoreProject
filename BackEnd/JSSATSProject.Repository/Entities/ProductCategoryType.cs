@@ -13,5 +13,9 @@ public partial class ProductCategoryType
 
     public string Status { get; set; }
 
+    public virtual ICollection<BuyOrderDetail> BuyOrderDetails { get; set; } = new List<BuyOrderDetail>();
+
     public virtual ICollection<ProductCategory> ProductCategories { get; set; } = new List<ProductCategory>();
+
+    public virtual ICollection<PurchasePriceRatio> PurchasePriceRatios { get; set; } = new List<PurchasePriceRatio>();
 }

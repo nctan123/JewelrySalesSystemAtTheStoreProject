@@ -29,7 +29,8 @@ namespace JSSATSProject.Service.Service.Service
             {
                 var categoryIds = requestPromotion.CategoriIds.ToList();
                 var categories = await _unitOfWork.ProductCategoryRepository
-                                                  .GetAsync(pc => categoryIds.Contains(pc.Id));
+                                                  .GetAsync(pc => categoryIds.Contains(pc.Id) && pc.Status == "active");
+
 
 
                 foreach (var category in categories)
@@ -54,7 +55,6 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetAllAsync()
         {
             var entities = await _unitOfWork.PromotionRepository.GetAsync(
-                pc => pc.Status.Equals("active"),
                 includeProperties: "Categories"
                 );
             var response = _mapper.Map<List<ResponsePromotion>>(entities);

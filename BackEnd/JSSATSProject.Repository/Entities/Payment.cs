@@ -21,7 +21,7 @@ public partial class Payment
 
     public virtual Customer Customer { get; set; }
 
-    public virtual Order Order { get; set; }
+    public virtual SellOrder Order { get; set; }
 
     public virtual ICollection<PaymentDetail> PaymentDetails { get; set; } = new List<PaymentDetail>();
 }

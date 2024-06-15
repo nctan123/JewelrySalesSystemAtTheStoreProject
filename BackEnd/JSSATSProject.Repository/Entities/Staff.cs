@@ -28,11 +28,13 @@ public partial class Staff
 
     public virtual Account Account { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
     [JsonIgnore]
     public virtual ICollection<PromotionRequest> PromotionRequestApprovedByNavigations { get; set; } = new List<PromotionRequest>();
     [JsonIgnore]
     public virtual ICollection<PromotionRequest> PromotionRequestManagers { get; set; } = new List<PromotionRequest>();
+
+    public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
     [JsonIgnore]
     public virtual ICollection<SpecialDiscountRequest> SpecialDiscountRequestApprovedByNavigations { get; set; } = new List<SpecialDiscountRequest>();
     [JsonIgnore]
