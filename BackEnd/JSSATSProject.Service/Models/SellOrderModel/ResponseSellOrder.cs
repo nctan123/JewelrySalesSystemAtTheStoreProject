@@ -4,7 +4,7 @@
 
 namespace JSSATSProject.Service.Models.OrderModel
 {
-    public class ResponseOrder
+    public class ResponseSellOrder
     {
         public int Id { get; set; }
 

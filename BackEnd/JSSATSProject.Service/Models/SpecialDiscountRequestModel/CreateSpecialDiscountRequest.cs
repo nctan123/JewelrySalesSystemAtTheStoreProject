@@ -9,8 +9,7 @@ namespace JSSATSProject.Service.Models.SpecialDiscountRequestModel
 {
     public class CreateSpecialDiscountRequest
     {
-        public int CustomerId { get; set; }
-
+        public string CustomerPhoneNumber { get; set; }
         public int StaffId { get; set; }
 
         public decimal DiscountRate { get; set; }

@@ -9,11 +9,11 @@ namespace JSSATSProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OrderDetailController : ControllerBase
+    public class SellOrderDetailController : ControllerBase
     {
-        private readonly IOrderDetailService _orderdetailService;
+        private readonly ISellOrderDetailService _orderdetailService;
 
-        public OrderDetailController(IOrderDetailService orderdetailService)
+        public SellOrderDetailController(ISellOrderDetailService orderdetailService)
         {
             _orderdetailService = orderdetailService;
         }

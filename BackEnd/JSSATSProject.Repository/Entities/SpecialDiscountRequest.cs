@@ -21,12 +21,15 @@ public partial class SpecialDiscountRequest
     public DateTime CreatedAt { get; set; }
 
     public int? ApprovedBy { get; set; }
-
+    [JsonIgnore]
     public virtual Staff ApprovedByNavigation { get; set; }
+    [JsonIgnore]
 
     public virtual Customer Customer { get; set; }
     [JsonIgnore]
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+
+    public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
+    [JsonIgnore]
 
     public virtual Staff Staff { get; set; }
 }

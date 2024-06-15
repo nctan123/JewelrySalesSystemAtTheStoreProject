@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -52,36 +51,5 @@ public partial class Diamond
 
     public virtual Symmetry Symmetry { get; set; }
 
-    [JsonIgnore]
     public virtual ICollection<ProductDiamond> ProductDiamonds { get; set; } = new List<ProductDiamond>();
-
-    public Diamond()
-    {
-    }
-
-    public Diamond(int id, string code, string name, int originId, int shapeId, int fluorescenceId, int colorId, int symmetryId, int polishId, int cutId, int clarityId, int caratId, string status, Carat carat, Clarity clarity, Color color, Cut cut, Fluorescence fluorescence, Origin origin, Polish polish, Shape shape, Symmetry symmetry, ICollection<Product> products)
-    {
-        Id = id;
-        Code = code;
-        Name = name;
-        OriginId = originId;
-        ShapeId = shapeId;
-        FluorescenceId = fluorescenceId;
-        ColorId = colorId;
-        SymmetryId = symmetryId;
-        PolishId = polishId;
-        CutId = cutId;
-        ClarityId = clarityId;
-        CaratId = caratId;
-        Status = status;
-        Carat = carat;
-        Clarity = clarity;
-        Color = color;
-        Cut = cut;
-        Fluorescence = fluorescence;
-        Origin = origin;
-        Polish = polish;
-        Shape = shape;
-        Symmetry = symmetry;
-    }
 }

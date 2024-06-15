@@ -1,4 +1,7 @@
-﻿using JSSATSProject.Service.Models.PromotionRequestModel;
+﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.Entities;
+using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
@@ -10,10 +13,12 @@ namespace JSSATSProject.API.Controllers
     [Route("api/[controller]")]
     public class SpecialDiscountRequestController : ControllerBase
     {
-        private ISpecialDiscountRequestService _specialdiscountrequestService;
-        public SpecialDiscountRequestController(ISpecialDiscountRequestService specialdiscountrequestService)
+        private readonly ISpecialDiscountRequestService _specialdiscountrequestService;
+        private readonly ISellOrderService _sellOrderService;
+        public SpecialDiscountRequestController(ISpecialDiscountRequestService specialdiscountrequestService, ISellOrderService sellOrderService)
         {
             _specialdiscountrequestService = specialdiscountrequestService;
+            _sellOrderService = sellOrderService;
         }
 
         [HttpGet]
@@ -37,15 +42,23 @@ namespace JSSATSProject.API.Controllers
         [Route("CreateSpecialDiscountRequest")]
         public async Task<IActionResult> CreateSpecialDiscountRequestAsync(CreateSpecialDiscountRequest specialdiscountRequest)
         {
-            var responseModel = await _specialdiscountrequestService.CreateSpecialDiscountRequestAsync(specialdiscountRequest);
+            var responseModel = await _specialdiscountrequestService.CreateAsync(specialdiscountRequest);
             return Ok(responseModel);
         }
 
         [HttpPut]
-        [Route("UpdateSpecialDiscountRequest")]
+        [Route("UpdateSpecialDiscountRequest/{id}")]
         public async Task<IActionResult> UpdateSpecialDiscountRequestAsync(int id, [FromBody] UpdateSpecialDiscountRequest specialdiscountRequest)
         {
-            var response = await _specialdiscountrequestService.UpdateSpecialDiscountRequestAsync(id, specialdiscountRequest);
+            var response = await _specialdiscountrequestService.UpdateAsync(id, specialdiscountRequest);
+            var targetEntity = await _specialdiscountrequestService.GetEntityByIdAsync(id);
+            var sellOrderId = targetEntity!.SellOrders.First().Id;
+            await _sellOrderService.UpdateOrderAsync(sellOrderId, new RequestUpdateSellOrder
+            {
+                SpecialDiscountRequest = targetEntity,
+                Status = OrderConstants.DraftStatus
+            });
+            
             return Ok(response);
         }
     }

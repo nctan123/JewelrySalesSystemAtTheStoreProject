@@ -5,6 +5,7 @@ using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Repository.CacheManagers;
+using JSSATSProject.Repository.ConstantsContainer;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -13,17 +14,13 @@ namespace JSSATSProject.Service.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IDiamondPriceListService _diamondPriceListService;
-        private readonly CacheManager<Product> _productCacheManager;
-        private readonly CacheManager<MaterialPriceList> _materialPriceListCacheManager;
 
-        public ProductService(UnitOfWork unitOfWork, IMapper mapper, IDiamondPriceListService diamondPriceListService,
-            CacheManager<Product> productCacheManager, CacheManager<MaterialPriceList> materialPriceListCacheManager)
+        public ProductService(UnitOfWork unitOfWork, IMapper mapper, IDiamondPriceListService diamondPriceListService
+        )
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _diamondPriceListService = diamondPriceListService;
-            _productCacheManager = productCacheManager;
-            _materialPriceListCacheManager = materialPriceListCacheManager;
         }
 
 
@@ -63,7 +60,7 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        private async Task<decimal> CalculateProductPrice(ResponseProduct responseProduct)
+        public async Task<decimal> CalculateProductPrice(ResponseProduct responseProduct)
         {
             decimal totalPrice = 0;
             decimal diamondPrice = 0;
@@ -74,39 +71,117 @@ namespace JSSATSProject.Service.Service.Service
             var productionCost = correspondingProduct.ProductionCost.GetValueOrDefault();
             var diamondsOfProduct = responseProduct.ProductDiamonds;
             var diamond = diamondsOfProduct?.FirstOrDefault()?.Diamond;
+            var timeStamp = DateTime.Now;
+            var closestDate = await _diamondPriceListService.GetClosestPriceEffectiveDate(timeStamp);
+            var totalFactors = diamond is null
+                ? 1
+                : (diamond.Fluorescence.PriceRate + diamond.Shape.PriceRate +
+                   diamond.Symmetry.PriceRate + diamond.Polish.PriceRate).GetValueOrDefault();
 
-            if (responseProduct.CategoryId == 7)
+            if (responseProduct.CategoryId == ProductConstants.DiamondsCategory)
             {
-                diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOrigin(diamond.CutId, diamond.ClarityId,
-                    diamond.ColorId, diamond.CaratId, diamond.OriginId);
+                diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
+                    diamond.ClarityId,
+                    diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, closestDate);
                 totalPrice = priceRate * diamondPrice;
             }
-            else 
-            // if (responseProduct.CategoryId is 1 or 2 or 3 or 4 or 5 or 6)
+            else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
+                     or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
+                     or ProductConstants.RingCategory or ProductConstants.RetailGoldCategory
+                     or ProductConstants.WholesaleGoldCategory
+                    )
             {
                 //not all product has diamond (retail gold, wholesale gold,...)
                 if (diamond is not null)
-                    diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOrigin(diamond.CutId,
-                        diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId);
+                    diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
+                        diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors,
+                        closestDate);
 
                 //except diamond category, all the rest product categories has material 
                 var productMaterial = responseProduct.ProductMaterials!.First();
-                var today = DateTime.Today;
-                var materialPriceKey = productMaterial.Material.Id + today.ToString("yyyyMMdd");
-                if (!_materialPriceListCacheManager.TryGetValue(materialPriceKey, out var closestPriceList))
-                {
-                    closestPriceList = productMaterial.Material.MaterialPriceLists
-                        .OrderBy(m => Math.Abs((m.EffectiveDate - today).TotalDays))
-                        .First();
-                    _materialPriceListCacheManager.SetValue(materialPriceKey, closestPriceList);
-                }
+                var closestPriceList = productMaterial.Material.MaterialPriceLists
+                    .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
+                    .First();
 
                 var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
-                totalPrice = priceRate * (diamondPrice + materialPrice + gemCost + materialCost + productionCost);
+                totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
+                if (correspondingProduct.CategoryId != ProductConstants.RetailGoldCategory &&
+                    correspondingProduct.CategoryId != ProductConstants.WholesaleGoldCategory)
+                {
+                    totalPrice *= priceRate;
+                }
             }
-
             return totalPrice;
         }
+
+        //additional quantity var for Wholesale gold
+        public async Task<decimal> CalculateProductPrice(Product correspondingProduct, int quantity)
+        {
+            decimal totalPrice = 0;
+            decimal diamondPrice = 0;
+            var priceRate = correspondingProduct.PriceRate;
+            var gemCost = correspondingProduct.GemCost.GetValueOrDefault();
+            var materialCost = correspondingProduct.MaterialCost.GetValueOrDefault();
+            var productionCost = correspondingProduct.ProductionCost.GetValueOrDefault();
+            var diamondsOfProduct = correspondingProduct.ProductDiamonds;
+            var diamond = diamondsOfProduct?.FirstOrDefault()?.Diamond;
+            var timeStamp = DateTime.Now;
+            var closestDate = await _diamondPriceListService.GetClosestPriceEffectiveDate(timeStamp);
+            var totalFactors = diamond is null
+                ? 1
+                : (diamond.Fluorescence.PriceRate + diamond.Shape.PriceRate +
+                   diamond.Symmetry.PriceRate + diamond.Polish.PriceRate).GetValueOrDefault();
+
+            if (correspondingProduct.CategoryId == ProductConstants.DiamondsCategory)
+            {
+                diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
+                    diamond.ClarityId,
+                    diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, closestDate);
+                totalPrice = priceRate * diamondPrice;
+            }
+            else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
+                     or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
+                     or ProductConstants.RingCategory or ProductConstants.RetailGoldCategory
+                    )
+            {
+                //not all product has diamond (retail gold, wholesale gold,...)
+                if (diamond is not null)
+                    diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
+                        diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors,
+                        closestDate);
+
+                //except diamond category, all the rest product categories has material 
+                var productMaterial = correspondingProduct.ProductMaterials!.First();
+                var closestPriceList = productMaterial.Material.MaterialPriceLists
+                    .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
+                    .First();
+
+                var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
+                totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
+
+                //just apply price rate for diamonds and jewelry
+                if (correspondingProduct.CategoryId != ProductConstants.RetailGoldCategory &&
+                    correspondingProduct.CategoryId != ProductConstants.WholesaleGoldCategory)
+                    totalPrice *= priceRate;
+            }
+            else if (correspondingProduct.CategoryId is ProductConstants.WholesaleGoldCategory)
+            {
+                var productMaterial = correspondingProduct.ProductMaterials!.First();
+                var closestPriceList = productMaterial.Material.MaterialPriceLists
+                    .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
+                    .First();
+
+                var materialPrice = quantity * productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
+                totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
+
+                //just apply price rate for diamonds and jewelry
+                if (correspondingProduct.CategoryId != ProductConstants.RetailGoldCategory &&
+                    correspondingProduct.CategoryId != ProductConstants.WholesaleGoldCategory)
+                    totalPrice *= priceRate;
+            }
+            return totalPrice;
+        }
+
 
         public async Task<ResponseModel> GetByCodeAsync(string code)
         {
@@ -132,6 +207,27 @@ namespace JSSATSProject.Service.Service.Service
                 Data = response,
                 MessageError = "",
             };
+        }
+
+        public async Task<Product?> GetEntityByCodeAsync(string code)
+        {
+            var response = await _unitOfWork.ProductRepository.GetAsync(
+                c => c.Code.Equals(code),
+                includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
+                                   "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
+                                   "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
+                                   "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
+                                   "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
+                                   "ProductMaterials,ProductMaterials.Material"
+            );
+
+            var enumerable = response.ToList();
+            if (!enumerable.Any())
+            {
+                return null;
+            }
+
+            return enumerable.First();
         }
 
         public async Task<ResponseModel> GetByIdAsync(int id)
@@ -228,6 +324,7 @@ namespace JSSATSProject.Service.Service.Service
                         //check if product quantity in inventory is greater than quantity in the order
                         return p.ProductMaterials.First().Weight >= productCodes[p.Code];
                     }
+
                     return productCodes[p.Code] == 1;
                 })
                 .ToDictionary(p => p.Code, p => productCodes[p.Code]);
@@ -235,14 +332,15 @@ namespace JSSATSProject.Service.Service.Service
             //check if the count of valid products matches the count of provided product codes
             return validProductsDictionary.Count == productCodes.Count;
         }
-        public async Task<ResponseModel> UpdateStatusProductAsync(int productId, RequestUpdateStatusProduct requestProduct)
+
+        public async Task<ResponseModel> UpdateStatusProductAsync(int productId,
+            RequestUpdateStatusProduct requestProduct)
         {
             try
             {
                 var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
                 if (product != null)
                 {
-
                     _mapper.Map(requestProduct, product);
 
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
@@ -271,6 +369,4 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
     }
-
-
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
+using JSSATSProject.Repository.Enums;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
@@ -12,19 +13,27 @@ namespace JSSATSProject.Service.Service.Service
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICustomerService _customerService;
 
-        public SpecialDiscountRequestService(UnitOfWork unitOfWork, IMapper mapper)
+        public SpecialDiscountRequestService(UnitOfWork unitOfWork, IMapper mapper, ICustomerService customerService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _customerService = customerService;
         }
 
-        public async Task<ResponseModel> CreateSpecialDiscountRequestAsync(CreateSpecialDiscountRequest specialdiscountRequest)
+        public async Task<SpecialDiscountRequest?> GetEntityByIdAsync(int id)
+        {
+            return await _unitOfWork.SpecialDiscountRequestRepository.GetByIdAsync(id);
+        }
+
+        public async Task<ResponseModel> CreateAsync(CreateSpecialDiscountRequest specialdiscountRequest)
         {
             var entity = _mapper.Map<SpecialDiscountRequest>(specialdiscountRequest);
             entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
-            entity.Customer = await _unitOfWork.CustomerRepository.GetByIDAsync(specialdiscountRequest.CustomerId);
-
+            entity.Customer = (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber.ToString())).Data!;
+            entity.Status = SpecialDiscountRequestStatus.Pending.ToString();
+            
             await _unitOfWork.SpecialDiscountRequestRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
 
@@ -51,7 +60,7 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByCustomerIdAsync(int customerId)
         {
             var entities = await _unitOfWork.SpecialDiscountRequestRepository.GetAsync(
-                s => s.CustomerId == customerId && s.Orders == null,
+                s => s.CustomerId == customerId && s.SellOrders == null,
                 includeProperties: "ApprovedByNavigation,Customer,Staff"
             );
 
@@ -65,7 +74,7 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-        public async Task<ResponseModel> UpdateSpecialDiscountRequestAsync(int specialdiscountId, UpdateSpecialDiscountRequest specialdiscountRequest)
+        public async Task<ResponseModel> UpdateAsync(int specialdiscountId, UpdateSpecialDiscountRequest specialdiscountRequest)
         {
             try
             {

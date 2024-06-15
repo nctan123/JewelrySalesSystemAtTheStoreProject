@@ -6,7 +6,7 @@ using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
-public partial class OrderDetail
+public partial class SellOrderDetail
 {
     public int Id { get; set; }
 
@@ -14,21 +14,19 @@ public partial class OrderDetail
 
     public int ProductId { get; set; }
 
-    public string Size { get; set; }
-
     public decimal UnitPrice { get; set; }
 
     public int Quantity { get; set; }
 
-    public decimal SizePrice { get; set; }
-
     public string Status { get; set; }
 
     public int? PromotionId { get; set; }
- 
-    public virtual Order Order { get; set; }
+    [JsonIgnore]
+    public virtual SellOrder Order { get; set; }
+    [JsonIgnore]
 
     public virtual Product Product { get; set; }
+    [JsonIgnore]
 
     public virtual Promotion Promotion { get; set; }
 }

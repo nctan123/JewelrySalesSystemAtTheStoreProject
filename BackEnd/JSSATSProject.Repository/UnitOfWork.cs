@@ -18,7 +18,7 @@ namespace JSSATSProject.Repository
         private GuaranteeRepository _guarantee;
         private MaterialPriceListRepository _materialpricelist;
         private MaterialRepository _material;
-        private OrderRepository _order;
+        private SellOrderRepository _sellOrder;
         private PaymentRepository _payment;
         private PaymentMethodRepository _paymentmethod;
         private PointRepository _point;
@@ -40,9 +40,10 @@ namespace JSSATSProject.Repository
         private SymmetryRepository _symmetry;
         private RoleRepository _role;
         private ProductMaterialRepository _productmaterial;
-        private OrderDetailRepository _orderdetail;
+        private SellOrderDetailRepository _orderdetail;
         private PromotionRequestRepository _promotionrequest;
         private SpecialDiscountRequestRepository _specialdiscountrequest;
+        private PurchasePriceRatioRepository _purchasePriceRatioRepository;
         
 
         public UnitOfWork(DBContext context)
@@ -50,13 +51,26 @@ namespace JSSATSProject.Repository
             _context = context;
         }
 
-        public OrderDetailRepository OrderDetailRepository
+        public PurchasePriceRatioRepository PurchasePriceRatioRepository
+        {
+            get
+            {
+                if (_purchasePriceRatioRepository == null)
+                {
+                    _purchasePriceRatioRepository = new PurchasePriceRatioRepository(_context);
+                }
+                return _purchasePriceRatioRepository;
+            }
+
+        }
+        
+        public SellOrderDetailRepository SellOrderDetailRepository
         {
             get
             {
                 if (_orderdetail == null)
                 {
-                    _orderdetail = new OrderDetailRepository(_context);
+                    _orderdetail = new SellOrderDetailRepository(_context);
                 }
                 return _orderdetail;
             }
@@ -172,15 +186,15 @@ namespace JSSATSProject.Repository
             }
         }
 
-        public OrderRepository OrderRepository
+        public SellOrderRepository SellOrderRepository
         {
             get
             {
-                if (_order == null)
+                if (_sellOrder == null)
                 {
-                    _order = new OrderRepository(_context);
+                    _sellOrder = new SellOrderRepository(_context);
                 }
-                return _order;
+                return _sellOrder;
             }
         }
 
