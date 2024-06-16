@@ -100,11 +100,16 @@ namespace JSSATSProject.Service.Service.Service
         {
             try
             {
-                var orderdetail = await _unitOfWork.SellOrderDetailRepository.GetByIDAsync(orderdetailId);
+                var orderdetail = await _unitOfWork.SellOrderDetailRepository.GetEntityByIdAsync(orderdetailId);
                 if (orderdetail != null)
                 {
                     _mapper.Map(newOrderDetails, orderdetail);
                     newOrderDetails.Status = newStatus;
+                    if (newStatus == SellOrderDetailsConstants.CanceledStatus)
+                    {
+                        orderdetail.Product.Status = ProductConstants.ActiveStatus;
+                        await _unitOfWork.ProductRepository.UpdateAsync(orderdetail.Product);
+                    }
                     await _unitOfWork.SellOrderDetailRepository.UpdateAsync(orderdetail);
 
                     return new ResponseModel
@@ -168,6 +173,7 @@ namespace JSSATSProject.Service.Service.Service
             foreach (var item in productCodesAndQuantity)
             {
                 var product = await _productService.GetEntityByCodeAsync(item.Key);
+                product.Status = "inactive";
                 productCodesAndPromotionIds.TryGetValue(item.Key, out string? promotionId);
                 var sellOrderDetails = new SellOrderDetail()
                 {

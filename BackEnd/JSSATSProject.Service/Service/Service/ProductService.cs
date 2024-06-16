@@ -301,7 +301,6 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
-
         public async Task<bool> AreValidProducts(Dictionary<string, int> productCodes)
         {
             if (!productCodes.Any())
