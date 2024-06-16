@@ -92,8 +92,7 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IStallTypeService, StallTypeService>();
             builder.Services.AddScoped<IPromotionRequestService, PromotionRequestService>();
             builder.Services.AddScoped<ISpecialDiscountRequestService, SpecialDiscountRequestService>();
-
-            builder.Services.AddScoped<IVnPayService, VnPayService>();
+            //builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
             services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
 

@@ -8,7 +8,6 @@ namespace JSSATSProject.Service.Service.IService
     public interface IProductService
     {
         public Task<ResponseModel> GetAllAsync();
-        public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> GetByNameAsync(string name);
         public Task<ResponseModel> GetByCodeAsync(string code);
         public Task<Product> GetEntityByCodeAsync(string code);

@@ -54,17 +54,10 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
         {
-            var entities = await _unitOfWork.CustomerRepository.GetAsync(
-                includeProperties: "Point,SellOrders,Payments",
-                pageIndex: pageIndex,
-                pageSize: pageSize
-                );
             var entities =
                 await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");
-
             var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
-            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -134,10 +127,8 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByPhoneAsync(string phoneNumber)
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
-                 c => c.Phone.Equals(phonenumber),
+                 c => c.Phone.Equals(phoneNumber),
                  includeProperties: "Point,SellOrders,Payments");
-                c => c.Phone.Equals(phoneNumber),
-                includeProperties: "Point,SellOrders,Payments");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,

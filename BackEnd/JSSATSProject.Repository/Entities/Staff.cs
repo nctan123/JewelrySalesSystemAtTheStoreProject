@@ -31,7 +31,7 @@ public partial class Staff
     public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
     [JsonIgnore]
     public virtual ICollection<PromotionRequest> PromotionRequestApprovedByNavigations { get; set; } = new List<PromotionRequest>();
-
+    [JsonIgnore]
     public virtual ICollection<PromotionRequest> PromotionRequestManagers { get; set; } = new List<PromotionRequest>();
 
     public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();

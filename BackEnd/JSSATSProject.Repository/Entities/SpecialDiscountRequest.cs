@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -23,17 +24,10 @@ public partial class SpecialDiscountRequest
     [JsonIgnore]
     public virtual Staff ApprovedByNavigation { get; set; }
     [JsonIgnore]
-
     public virtual Customer Customer { get; set; }
-<<<<<<< HEAD
 
-    public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
-=======
     [JsonIgnore]
-
     public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
-    [JsonIgnore]
->>>>>>> BE_NhatAnh
 
     public virtual Staff Staff { get; set; }
 }

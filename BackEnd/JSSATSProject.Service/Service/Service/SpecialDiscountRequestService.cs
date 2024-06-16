@@ -15,7 +15,6 @@ namespace JSSATSProject.Service.Service.Service
         private readonly IMapper _mapper;
         private readonly ICustomerService _customerService;
 
-        public SpecialDiscountRequestService(UnitOfWork unitOfWork, IMapper mapper)
         public SpecialDiscountRequestService(UnitOfWork unitOfWork, IMapper mapper, ICustomerService customerService)
         {
             _unitOfWork = unitOfWork;
@@ -32,8 +31,6 @@ namespace JSSATSProject.Service.Service.Service
         {
             var entity = _mapper.Map<SpecialDiscountRequest>(specialdiscountRequest);
             entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
-            entity.Customer = await _unitOfWork.CustomerRepository.GetByIDAsync(specialdiscountRequest.CustomerId);
-
             entity.Customer = (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber.ToString())).Data!;
             entity.Status = SpecialDiscountRequestStatus.Pending.ToString();
             

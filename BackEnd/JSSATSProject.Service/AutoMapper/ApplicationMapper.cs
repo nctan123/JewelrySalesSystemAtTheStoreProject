@@ -23,7 +23,7 @@ using JSSATSProject.Service.Models.DiamondPriceListModel;
 using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
-using Microsoft.AspNetCore.Http.Features.Authentication;
+
 
 
 
