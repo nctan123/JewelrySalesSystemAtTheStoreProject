@@ -21,9 +21,9 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll(int pageIndex, int pageSize)
+        public async Task<IActionResult> GetAll()
         {
-            var responseModel = await _customerService.GetAllAsync(pageSize,pageSize);
+            var responseModel = await _customerService.GetAllAsync();
             return Ok(responseModel);
         }
 

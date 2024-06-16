@@ -52,7 +52,7 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-        public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
+        public async Task<ResponseModel> GetAllAsync()
         {
             var entities =
                 await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");

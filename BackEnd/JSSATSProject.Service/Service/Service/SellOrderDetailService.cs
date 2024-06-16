@@ -5,6 +5,7 @@ using JSSATSProject.Service.Service.IService;
 using AutoMapper;
 
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Repository.ConstantsContainer;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -64,8 +65,9 @@ namespace JSSATSProject.Service.Service.Service
         {
             var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
                 filter: od => od.Order.CreateDate >= startDate
-                              && od.Order.CreateDate <= endDate,
-                includeProperties: "Product");
+                              && od.Order.CreateDate <= endDate
+                              && od.Status.Equals(SellOrderDetailsConstants.Delivered),
+                includeProperties: "Product,Product.Category");
 
 
             var productsSoldPerCategory = orderDetails

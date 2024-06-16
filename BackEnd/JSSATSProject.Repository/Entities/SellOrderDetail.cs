@@ -23,7 +23,6 @@ public partial class SellOrderDetail
     public int? PromotionId { get; set; }
     [JsonIgnore]
     public virtual SellOrder Order { get; set; }
-    [JsonIgnore]
 
     public virtual Product Product { get; set; }
     [JsonIgnore]
