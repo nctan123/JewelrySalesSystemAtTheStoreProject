@@ -33,7 +33,7 @@ namespace JSSATSProject.Service.Service.Service
             entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
             entity.Customer = (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber.ToString())).Data!;
             entity.Status = SpecialDiscountRequestStatus.Pending.ToString();
-            
+
             await _unitOfWork.SpecialDiscountRequestRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
 

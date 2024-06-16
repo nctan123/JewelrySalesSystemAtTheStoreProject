@@ -39,7 +39,7 @@ namespace JSSATSProject.Service.Service.Service
             var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice);
             sellOrder.TotalAmount = totalAmount;
             if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.ProcessingStatus;
-            
+
             await _unitOfWork.SellOrderRepository.InsertAsync(sellOrder);
             await _unitOfWork.SaveAsync();
 
@@ -52,7 +52,7 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetAllAsync()
         {
-            var entities = await _unitOfWork.SellOrderRepository.GetAsync();
+            var entities = await _unitOfWork.SellOrderRepository.GetAsync(includeProperties: "SellOrderDetails");
             var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
             return new ResponseModel

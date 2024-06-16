@@ -26,15 +26,20 @@ namespace JSSATSProject.Service.Service.Service
 
 
         public async Task<ResponseModel> UpdateStatusAsync(int orderdetailId, string newStatus,
-            RequestUpdateSellOrderDetailsStatus newOrderDetails)
+           RequestUpdateSellOrderDetailsStatus newOrderDetails)
         {
             try
             {
-                var orderdetail = await _unitOfWork.SellOrderDetailRepository.GetByIDAsync(orderdetailId);
+                var orderdetail = await _unitOfWork.SellOrderDetailRepository.GetEntityByIdAsync(orderdetailId);
                 if (orderdetail != null)
                 {
                     _mapper.Map(newOrderDetails, orderdetail);
                     newOrderDetails.Status = newStatus;
+                    if (newStatus == SellOrderDetailsConstants.CanceledStatus)
+                    {
+                        orderdetail.Product.Status = ProductConstants.ActiveStatus;
+                        await _unitOfWork.ProductRepository.UpdateAsync(orderdetail.Product);
+                    }
                     await _unitOfWork.SellOrderDetailRepository.UpdateAsync(orderdetail);
 
                     return new ResponseModel
