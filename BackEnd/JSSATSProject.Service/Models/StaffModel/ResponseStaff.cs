@@ -25,7 +25,6 @@ namespace JSSATSProject.Service.Models.StaffModel
 
         public decimal TotalRevennue { get; set; }
         public int TotalOrder { get; set; }
-        public int TotalSellOrder { get; set; }
         public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
         public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
     }

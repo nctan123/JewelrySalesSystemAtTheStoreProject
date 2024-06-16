@@ -46,7 +46,6 @@ const ProductAdmin = () => {
             // Update state with filtered Products
             setListProduct(filteredProducts);
         }
-        setSearchQuery('')
     };
 
     const indexOfLastProduct = currentPage * ProductsPerPage;

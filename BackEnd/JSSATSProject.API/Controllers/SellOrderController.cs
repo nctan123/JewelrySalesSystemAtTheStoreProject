@@ -113,6 +113,12 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-       
+        [HttpGet]
+        [Route("CountOrderByOrderType")]
+        public async Task<IActionResult> CountOrderByOrderTypeAsync(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _sellOrderService.CountOrderByDateTimeAsync(startDate, endDate);
+            return Ok(responseModel);
+        }
     }
 }
