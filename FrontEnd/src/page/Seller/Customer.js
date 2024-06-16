@@ -81,8 +81,8 @@ const Customer = () => {
           </a>
         </button>
 
-        <div className='h-[80vh] overflow-y-auto'>
-        <div className="w-[800px] overflow-hidden">
+        <div className='h-[80vh] flex justify-center'>
+        <div className="w-[800px] overflow-hidden overflow-y-auto">
           <table className="font-inter w-full table-auto border-separate border-spacing-y-1 overflow-y-scroll text-left md:overflow-auto">
           <thead className=" w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white">
           <tr className="">

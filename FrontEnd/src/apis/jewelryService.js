@@ -24,6 +24,9 @@ const fetchAllReGold = () => {
 const fetchAllDiamond = () => {
     return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
 }
+const fetchAllDiamondTest = () => {
+    return axios.get("https://jssatsproject.azurewebsites.net/api/Diamond/GetByCode?code=DIA001");
+}
 const fetchAllPromotion = () => {
     return axios.get("https://jssatsproject.azurewebsites.net/api/Promotion/GetAll");
 }
@@ -33,4 +36,4 @@ const fetchAllInvoice = () => {
 const fetchAllCustomer = () => {
     return axios.get("https://jssatsproject.azurewebsites.net/api/customer/getAll");
 }
-export {fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond};
+export {fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond};

@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react'
-import { fetchAllRing } from '../../apis/jewelryService'
+import { fetchAllRing, fetchAllDiamondTest } from '../../apis/jewelryService'
 import clsx from 'clsx'
 import style from "../../style/cardForList.module.css"
 import ring from '../../assets/img/seller/ring.png'
 import { useDispatch } from 'react-redux'
 import { addProduct } from '../../store/slice/cardSilec'
-
-
+import Popup from 'reactjs-popup';
 
 const Ring = () => {
   const dispatch = useDispatch()
   const [listRing, setListRing] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  
 
   useEffect(() => {
     getRing();
+    getAllDiamondTest()
   }, []);
 
   const getRing = async () => {
@@ -23,7 +22,7 @@ const Ring = () => {
     console.log(res)
     if (res && res.data && res.data.data) {
       setListRing(res.data.data);
-       
+
     }
   };
 
@@ -44,7 +43,18 @@ const Ring = () => {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
- 
+
+  const [selectedDiamond, setSelectedDiamond] = useState(null);
+  const getAllDiamondTest = async () => {
+    let res = await fetchAllDiamondTest();
+    console.log(res)
+    if (res && res.data && res.data.data) {
+      setSelectedDiamond(res.data.data);
+
+    }
+  };
+
+
   return (<>
 
 
@@ -84,9 +94,9 @@ const Ring = () => {
           {filteredRing && filteredRing.length > 0 &&
             filteredRing.filter(item => item.categoryId === 1 && item.status === "active").map((item, index) => {
               return (
-                  <div key={`ring-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
+                <div key={`ring-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
                   <div className=' bg-[#fff] rounded-md shadow-md'>
-                  <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={ring} />
+                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={ring} />
                   </div>
                   <div class="max-w-sm h-auto">
 
@@ -94,29 +104,96 @@ const Ring = () => {
                       <h2 class="text-black text-sm font-normal tracking-widest">{item.name}</h2>
                     </div>
                     <div className='absolute bottom-[50px] right-0 w-full'>
-                    <p class="text-sm text-[#de993f] flex justify-center">Code: {item.code}</p>
-                    <div class=" flex gap-3 items-center justify-center">
-                      <p class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</p>
-                      <p class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</p>
-                    </div>
+                      <p class="text-sm text-[#de993f] flex justify-center">Code: {item.code}</p>
+                      <div class=" flex gap-3 items-center justify-center">
+                        <p class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</p>
+                        <p class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</p>
+                      </div>
                     </div>
                     <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
-                      <button class="px-2 bg-blue-600 p-1 rounded-md text-white font-semibold shadow-xl shadow-blue-500/50 hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>
+                      <Popup trigger={<button onClick='' class="px-2 bg-blue-600 p-1 rounded-md text-white font-semibold shadow-xl shadow-blue-500/50 hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>} position="right center">
+                        {close => (
+                          <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+                            <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[40%] shadow-[#b6b0b0] shadow-md'>
+                              <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
+                                <h3 className="text-md font-semibold text-gray-900">
+                                  {item.name}
+                                </h3>
+                                <a className='cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
+                              </div>
+
+
+                              <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                                    <tr className='hidden'>
+                                      <th scope="col" class="px-6 py-2">
+                                        Information
+                                      </th>
+                                      <th scope="col" class="px-6 py-2">
+                                        Details
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                      <td scope="row" class=" px-6 py-2 font-medium whitespace-nowrap dark:text-white">
+                                        Material Name
+                                      </td>
+                                      <td class="px-6 py-2">
+                                        {item.materialName}
+                                      </td>
+                                    </tr>
+                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                      <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
+                                        Material Weight
+                                      </td>
+                                      <td class="px-6 py-2">
+                                        {item.materialWeight}
+                                      </td>
+                                    </tr>
+                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                      <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
+                                        DiamondCode
+                                      </td>
+                                      <td class="px-6 py-2 flex items-center gap-4">
+                                        {item.diamondCode}
+                                  
+                                          
+                                      </td>
+                                    </tr>
+
+                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
+                                      <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
+                                        Diamond Name
+                                      </td>
+                                      <td class="px-6 py-2">
+                                        {item.diamondName}
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </Popup>
+
                       <button onClick={() => dispatch(addProduct(item))} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
                     </div>
                   </div>
-                </div>  
+                </div>
+
               )
             })}
-
-        
-
         </div>
+
       </div>
-      
+
+
     </div>
-    
-   </>
+
+  </>
   )
 }
 
