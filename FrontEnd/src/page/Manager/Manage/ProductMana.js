@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react'
 import { fetchAllRing } from '../../../apis/jewelryService'
 import clsx from 'clsx'
 import { IoIosSearch } from "react-icons/io";
 import logo from '../../../assets/img/gnxmxmy001727-nhan-vang-18k-dinh-da-cz-pnj-1.png'
 
-const ProductAdmin = () => {
+const ProductMana = () => {
     const [originalListProduct, setOriginalListProduct] = useState([]);
     const [listProduct, setListProduct] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -46,7 +45,6 @@ const ProductAdmin = () => {
             // Update state with filtered Products
             setListProduct(filteredProducts);
         }
-        setSearchQuery('')
     };
 
     const indexOfLastProduct = currentPage * ProductsPerPage;
@@ -132,5 +130,4 @@ const ProductAdmin = () => {
     )
 }
 
-export default ProductAdmin
-
+export default ProductMana

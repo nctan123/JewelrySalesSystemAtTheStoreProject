@@ -83,6 +83,9 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Material, ResponseMaterial>().ReverseMap();
 
             //Order
+            CreateMap<SellOrder, RequestCreateSellOrder>().ReverseMap();
+            CreateMap<SellOrder, RequestUpdateSellOrder>().ReverseMap();
+            CreateMap<SellOrder, ResponseSellOrder>().ReverseMap();
             CreateMap<SellOrder, RequestCreateSellOrder>()
                 .ForMember(dest => dest.SpecialDiscountRequestStatus, opt => opt.MapFrom(src => src.Status))
                 .ReverseMap()
@@ -158,6 +161,11 @@ namespace JSSATSProject.Service.AutoMapper
                  // .ForMember(dest => dest.TotalOrder, opt => opt.Ignore())
                  // .ForMember(dest => dest.Orders, opt => opt.MapFrom(src => src.Orders))
                  // .ReverseMap();
+            CreateMap<Staff, ResponseStaff>()
+                 .ForMember(dest => dest.TotalRevennue, opt => opt.Ignore())
+                 .ForMember(dest => dest.TotalSellOrder, opt => opt.Ignore())
+                 .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
+                 .ReverseMap();
 
 
             //Stall

@@ -25,13 +25,6 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            var responseModel = await _productService.GetByIdAsync(id);
-            return Ok(responseModel);
-        }
 
         [HttpGet]
         [Route("GetByName")]

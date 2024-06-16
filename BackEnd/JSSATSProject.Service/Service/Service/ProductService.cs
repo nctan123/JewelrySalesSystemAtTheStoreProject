@@ -14,6 +14,9 @@ namespace JSSATSProject.Service.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IDiamondPriceListService _diamondPriceListService;
+        private readonly CacheManager<Product> _productCacheManager;
+        private readonly CacheManager<MaterialPriceList> _materialPriceListCacheManager;
+        private readonly IPromotionService _promotionService;
 
         public ProductService(UnitOfWork unitOfWork, IMapper mapper, IDiamondPriceListService diamondPriceListService
         )
@@ -185,21 +188,22 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByCodeAsync(string code)
         {
-            var response = await _unitOfWork.ProductRepository.GetAsync(
+            var entities = await _unitOfWork.ProductRepository.GetAsync(
                 c => c.Code.Equals(code),
-                null,
-                includeProperties: "",
-                pageIndex: null,
-                pageSize: null
+                includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
+                                   "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
+                                   "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
+                                   "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
+                                   "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
+                                   "ProductMaterials,ProductMaterials.Material"
             );
-
-            if (!response.Any())
+            var response = _mapper.Map<List<ResponseProduct>>(entities);
+            foreach (var responseProduct in response)
             {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = $"Customer with name '{code}' not found.",
-                };
+                responseProduct.ProductValue = await CalculateProductPrice(responseProduct);
+                var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+                responseProduct.PromotionId = promotion.Id;
+                responseProduct.DiscountRate = promotion.DiscountRate;
             }
 
             return new ResponseModel
@@ -230,16 +234,6 @@ namespace JSSATSProject.Service.Service.Service
             return enumerable.First();
         }
 
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.ProductRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponseProduct>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
 
         public async Task<ResponseModel> GetByNameAsync(string name)
         {

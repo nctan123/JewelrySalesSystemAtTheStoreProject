@@ -84,6 +84,7 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 // Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
@@ -113,6 +114,7 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 // Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
@@ -142,6 +144,7 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 // Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
