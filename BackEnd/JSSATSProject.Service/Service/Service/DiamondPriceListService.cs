@@ -99,17 +99,23 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public async Task<decimal> FindPriceBy4CAndOrigin(int cutId, int clarityId, int colorId, int caratId, int originId)
+        public async Task<decimal> FindPriceBy4CAndOriginAndFactors(int cutId, int clarityId, int colorId, int caratId, int originId, decimal totalFactor, DateTime closestDate)
         {
-            var key = (cutId, clarityId, colorId, caratId, originId);
+            var key = (cutId, clarityId, colorId, caratId, originId, closestDate);
             if (_diamondPriceCacheManager.TryGetValue(key, out var cachedPrice))
             {
                 return cachedPrice;
             }
 
-            var price = await _unitOfWork.DiamondPriceListRepository.FindPriceBy4CAndOrigin(cutId, clarityId, colorId, caratId, originId);
+            var price = await _unitOfWork.DiamondPriceListRepository.FindPriceBy4CAndOrigin(cutId, 
+                clarityId, colorId, caratId, originId, closestDate) * totalFactor;
             _diamondPriceCacheManager.SetValue(key, price);
             return price;
+        }
+
+        public async Task<DateTime> GetClosestPriceEffectiveDate(DateTime timeStamp)
+        {
+            return await _unitOfWork.DiamondPriceListRepository.GetClosestPriceEffectiveDate(timeStamp);
         }
     }
 }

@@ -25,10 +25,9 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> CreateCustomerAsync(RequestCreateCustomer requestCustomer)
         {
-       
             var entity = _mapper.Map<Customer>(requestCustomer);
 
-          
+
             var point = new Point
             {
                 AvailablePoint = 0,
@@ -41,7 +40,7 @@ namespace JSSATSProject.Service.Service.Service
             entity.PointId = point.Id;
             entity.Point = point;
 
-            
+
             await _unitOfWork.CustomerRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
 
@@ -60,6 +59,8 @@ namespace JSSATSProject.Service.Service.Service
                 pageIndex: pageIndex,
                 pageSize: pageSize
                 );
+            var entities =
+                await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");
 
             var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
@@ -130,11 +131,13 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetByPhoneAsync(string phonenumber)
+        public async Task<ResponseModel> GetByPhoneAsync(string phoneNumber)
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
                  c => c.Phone.Equals(phonenumber),
                  includeProperties: "Point,SellOrders,Payments");
+                c => c.Phone.Equals(phoneNumber),
+                includeProperties: "Point,SellOrders,Payments");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,
@@ -158,6 +161,21 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = "",
             };
         }
+
+        public async Task<ResponseModel> GetEntityByPhoneAsync(string phoneNumber)
+        {
+            var entity = await _unitOfWork.CustomerRepository.GetAsync(
+                    c => c.Phone.Equals(phoneNumber),
+                    includeProperties: "Point,SellOrders,Payments,SpecialDiscountRequests");
+
+            // Return the mapped response
+            return new ResponseModel
+            {
+                Data = entity.FirstOrDefault(),
+                MessageError = "",
+            };
+        }
+
         public async Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer)
         {
             try
@@ -196,21 +214,17 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> CountNewCustomer(DateTime startDate, DateTime endDate)
         {
-            
-                var customers = await _unitOfWork.CustomerRepository.GetAsync(
-                     filter: c => c.CreateDate >= startDate && c.CreateDate <= endDate
-                );
+            var customers = await _unitOfWork.CustomerRepository.GetAsync(
+                filter: c => c.CreateDate >= startDate && c.CreateDate <= endDate
+            );
 
-                var count = customers.Count();
+            var count = customers.Count();
 
-                return new ResponseModel
-                {
-                
-                    MessageError = "",
-                    Data = count
-                };
+            return new ResponseModel
+            {
+                MessageError = "",
+                Data = count
+            };
         }
-           
-
     }
 }

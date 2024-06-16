@@ -45,12 +45,27 @@ namespace JSSATSProject.Repository
         private SpecialDiscountRequestRepository _specialdiscountrequest;
         private PaymentDetailRepository _paymentdetailrepository;
 
+        private SellOrderDetailRepository _orderdetail;
+        private PromotionRequestRepository _promotionrequest;
+        private PurchasePriceRatioRepository _purchasePriceRatioRepository;
 
         public UnitOfWork(DBContext context)
         {
             _context = context;
         }
 
+        public PurchasePriceRatioRepository PurchasePriceRatioRepository
+        {
+            get
+            {
+                if (_purchasePriceRatioRepository == null)
+                {
+                    _purchasePriceRatioRepository = new PurchasePriceRatioRepository(_context);
+                }
+                return _purchasePriceRatioRepository;
+            }
+
+        }
         public SellOrderDetailRepository SellOrderDetailRepository
         {
             get
@@ -182,6 +197,11 @@ namespace JSSATSProject.Repository
                     _sellorder = new SellOrderRepository(_context);
                 }
                 return _sellorder;
+                if (_sellOrder == null)
+                {
+                    _sellOrder = new SellOrderRepository(_context);
+                }
+                return _sellOrder;
             }
         }
 

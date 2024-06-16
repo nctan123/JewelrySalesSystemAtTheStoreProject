@@ -94,13 +94,13 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<ISpecialDiscountRequestService, SpecialDiscountRequestService>();
 
             builder.Services.AddScoped<IVnPayService, VnPayService>();
+            builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
+            services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
 
 
 
             //CacheManager
             services.AddSingleton(typeof(CacheManager<>)); // Register generic CacheManager
-            services.AddSingleton<CacheManager<Product>>(); // Register cache for products
-            services.AddSingleton<CacheManager<MaterialPriceList>>(); // Register cache for material price lists
             services.AddSingleton<DiamondPriceCacheManager>(); // Register cache for diamond prices
             services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
             services.AddScoped<IProductService, ProductService>();

@@ -1037,6 +1037,7 @@ public partial class DBContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasDefaultValue("awating")
+                .HasDefaultValue("awaiting")
                 .HasColumnName("status");
             entity.Property(e => e.UnitPrice)
                 .HasColumnType("decimal(15, 2)")
