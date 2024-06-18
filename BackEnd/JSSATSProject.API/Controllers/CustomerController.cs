@@ -70,5 +70,13 @@ namespace JSSATSProject.API.Controllers
             var response = await _customerService.UpdateCustomerAsync(Id, requestCustomer);
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("CountNewCustomer")]
+        public async Task<IActionResult> CountNewCustomer(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _customerService.CountNewCustomer(startDate,endDate);
+            return Ok(responseModel);
+        }
     }
 }

@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -27,24 +28,15 @@ public partial class Staff
 
     public virtual Account Account { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
-    public Staff()
-    {
-        
-    }
+    public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
+    [JsonIgnore]
+    public virtual ICollection<PromotionRequest> PromotionRequestApprovedByNavigations { get; set; } = new List<PromotionRequest>();
+    [JsonIgnore]
+    public virtual ICollection<PromotionRequest> PromotionRequestManagers { get; set; } = new List<PromotionRequest>();
 
-    public Staff(int id, int accountId, string firstname, string lastname, string phone, string email, string address, string gender, string status, Account account, ICollection<Order> orders)
-    {
-        Id = id;
-        AccountId = accountId;
-        Firstname = firstname;
-        Lastname = lastname;
-        Phone = phone;
-        Email = email;
-        Address = address;
-        Gender = gender;
-        Status = status;
-        Account = account;
-        Orders =  orders;
-    }
+    public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
+    [JsonIgnore]
+    public virtual ICollection<SpecialDiscountRequest> SpecialDiscountRequestApprovedByNavigations { get; set; } = new List<SpecialDiscountRequest>();
+
+    public virtual ICollection<SpecialDiscountRequest> SpecialDiscountRequestStaffs { get; set; } = new List<SpecialDiscountRequest>();
 }

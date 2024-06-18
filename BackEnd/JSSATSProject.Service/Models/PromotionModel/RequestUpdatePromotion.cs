@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace JSSATSProject.Service.Models.PromotionModel
 {
     public class RequestUpdatePromotion
-    {
-        public string? Status { get; set; }
+    { 
+       public string? Status { get; set; }
     }
 }

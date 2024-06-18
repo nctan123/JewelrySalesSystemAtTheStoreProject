@@ -1,7 +1,5 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
-using JSSATSProject.Service.Models.ProductModel;
+﻿using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,6 +7,7 @@ namespace JSSATSProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
@@ -26,13 +25,6 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            var responseModel = await _productService.GetByIdAsync(id);
-            return Ok(responseModel);
-        }
 
         [HttpGet]
         [Route("GetByName")]

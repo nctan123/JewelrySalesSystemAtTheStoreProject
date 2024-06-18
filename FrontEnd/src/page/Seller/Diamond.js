@@ -36,6 +36,7 @@ const Diamond = () => {
   };
   return (
     <>
+<<<<<<< HEAD
        <div className='h-[70px] pl-[30px] mt-5 mb-2 w-full'>
       <form className="max-w-md mx-auto">
         <div className="relative">
@@ -166,6 +167,21 @@ const Diamond = () => {
 
         </div>
       </div>
+=======
+       <div className='grid grid-cols-5 gap-1 w-full ml-3 mt-1'>
+      {listDiamond && listDiamond.length > 0 &&
+        listDiamond.filter(item => item.categoryId === 7 && item.status === "active").map((item, index) => {
+          return (
+            <div key={`ring-${index}`} className={clsx(style.card)} onClick={() => dispatch(addProduct(item))} >
+                <img className=' mt-0 w-[100%] h-[79%] rounded-xl object-cover bg-[#ffffff1f]' src={diamond} />
+                <div className=' flex justify-center text-[0.7em] mt-[5px] font-normal'>{item.name}</div>
+                <div className=' flex justify-center text-[0.8em] mt-[5px] font-normal'>ID: {item.code}</div>
+                <div className=' flex justify-center text-[#d48c20]'>{formatPrice(item.productValue)}đ</div>
+            </div>
+          )
+        })}
+         
+>>>>>>> develop
     </div>
     </>
   )

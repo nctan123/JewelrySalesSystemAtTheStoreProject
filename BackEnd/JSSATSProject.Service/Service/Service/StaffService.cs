@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
@@ -46,20 +47,27 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllByDateAsync(DateTime startDate, DateTime endDate)
+        public async Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime startDate, DateTime endDate)
         {
-            var entities = await _unitOfWork.StaffRepository.GetAsync(includeProperties: "Orders");
-            var response = _mapper.Map<List<ResponseStaff>>(entities);
+            //var entity = await _unitOfWork.StaffRepository.GetAsync(filter: e => e.Id == id, includeProperties: "Orders");
+            var staffEntity = await _unitOfWork.StaffRepository.GetByIDAsync(id);
 
-            
-            foreach (var staff in response)
+            if (staffEntity == null)
             {
-                staff.TotalRevennue = entities
-                    .Where(entity => entity.Id == staff.Id) 
-                    .SelectMany(entity => entity.Orders)
-                    .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate)
-                    .Sum(order => order.TotalAmount);
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found",
+                };
             }
+
+            var response = _mapper.Map<ResponseStaff>(staffEntity);
+
+            var staffOrders = staffEntity.SellOrders
+                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+            //them buy order vao
+            response.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
+            response.TotalSellOrder = staffOrders.Count();
 
             return new ResponseModel
             {
@@ -116,5 +124,60 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
+        public async Task<ResponseModel> GetTop6ByDateAsync(DateTime startDate, DateTime endDate)
+        {
+            // Fetch orders within the specified date range
+            var orders = await _unitOfWork.SellOrderRepository.GetAsync(
+                filter: o => o.CreateDate >= startDate && o.CreateDate <= endDate);
+
+            // Group orders by StaffId and calculate total revenue for each group
+            var groupedOrders = orders
+                .GroupBy(o => o.StaffId)
+                .Select(group => new
+                {
+                    StaffId = group.Key,
+                    TotalRevenue = group.Sum(o => o.TotalAmount)
+                })
+                .OrderByDescending(g => g.TotalRevenue)
+                .ToList();
+
+            // Get the top 5 staff members by revenue
+            var top5 = groupedOrders.Take(5).ToList();
+            var otherRevenue = groupedOrders.Skip(5).Sum(g => g.TotalRevenue);
+
+            // Initialize result list
+            var result = new List<Dictionary<string, object>>();
+
+            // Add top 5 staff members to result
+            foreach (var staff in top5)
+            {
+                var staffDetails = await _unitOfWork.StaffRepository.GetByIDAsync(staff.StaffId);
+                result.Add(new Dictionary<string, object>
+        {
+            { "StaffId", staff.StaffId },
+            { "Firstname", staffDetails.Firstname },
+            { "Lastname", staffDetails.Lastname },
+            { "TotalRevenue", staff.TotalRevenue }
+        });
+            }
+
+            // Add other revenue to result
+            result.Add(new Dictionary<string, object>
+    {
+        { "StaffId", 0 },
+        { "Firstname", "Other" },
+        { "Lastname", "" },
+        { "TotalRevenue", otherRevenue }
+    });
+
+            // Return the response model with the result data
+            return new ResponseModel
+            {
+                Data = result
+            };
+        }
+
+
     }
 }

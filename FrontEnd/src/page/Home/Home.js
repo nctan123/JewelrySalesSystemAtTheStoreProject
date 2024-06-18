@@ -8,6 +8,7 @@ export default function Home() {
     const navigate = useNavigate();
 
     const handleLoginClick = () => {
+        localStorage.clear();
         navigate('/login');
     };
     return (

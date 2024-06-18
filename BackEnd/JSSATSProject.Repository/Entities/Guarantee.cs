@@ -18,19 +18,4 @@ public partial class Guarantee
     public DateTime ExpiredDate { get; set; }
 
     public virtual Product Product { get; set; }
-
-    public Guarantee()
-    {
-        
-    }
-
-    public Guarantee(int id, int productId, string description, DateTime effectiveDate, DateTime expiredDate, Product product)
-    {
-        Id = id;
-        ProductId = productId;
-        Description = description;
-        EffectiveDate = effectiveDate;
-        ExpiredDate = expiredDate;
-        Product = product;
-    }
 }

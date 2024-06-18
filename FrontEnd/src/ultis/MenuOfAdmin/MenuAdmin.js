@@ -48,7 +48,7 @@ export const sidebarMenuAdmin = [
 
     },
     {
-        path: 'Manage/productadmin',
+        path: 'Manage',
         text: 'Manage',
         iconAdmin: <MdManageAccounts size={24} color="white" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="white" />,
@@ -101,14 +101,10 @@ export const sidebarMenuAdmin = [
         text: 'Return policy',
         iconAdmin: <MdOutlineAssignmentReturned size={24} color="white" />
     },
-    {
-        path: 'VoidBill',
-        text: 'Void bill',
-        iconAdmin: <TbDeviceIpadCancel size={24} color="white" />
-    },
-    {
-        path: '/login',
-        text: 'Log out',
-        iconAdmin: <BiLogOut size={24} color="white" />
-    },
+
+    // {
+    //     path: '/login',
+    //     text: 'Log out',
+    //     iconAdmin: <BiLogOut size={24} color="white" />
+    // },
 ]

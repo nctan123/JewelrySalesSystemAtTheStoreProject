@@ -2,6 +2,7 @@
 using JSSATSProject.Service.Models;
 using System.Threading.Tasks;
 using JSSATSProject.Service.Models.PromotionModel;
+using JSSATSProject.Repository.Entities;
 
 namespace JSSATSProject.Service.Service.IService
 {
@@ -11,5 +12,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> CreatePromotionAsync(RequestCreatePromotion requestPromotion);
         public Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion);
+       
     }
 }

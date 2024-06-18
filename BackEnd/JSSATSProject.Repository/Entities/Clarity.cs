@@ -8,11 +8,10 @@ namespace JSSATSProject.Repository.Entities;
 
 public partial class Clarity
 {
-    [JsonIgnore]
     public int Id { get; set; }
-    [JsonIgnore]
+
     public string Level { get; set; }
-    [JsonIgnore]
+
     public string Description { get; set; }
     [JsonIgnore]
     public virtual ICollection<DiamondPriceList> DiamondPriceLists { get; set; } = new List<DiamondPriceList>();

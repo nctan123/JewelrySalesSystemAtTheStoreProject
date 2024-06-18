@@ -1,7 +1,6 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
-using JSSATSProject.Service.Models.PromotionModel;
+﻿using JSSATSProject.Service.Models.PromotionModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -9,6 +8,7 @@ namespace JSSATSProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[Authorize]
     public class PromotionController : ControllerBase
     {
         private readonly IPromotionService _promotionService;
@@ -49,5 +49,7 @@ namespace JSSATSProject.API.Controllers
             var response = await _promotionService.UpdatePromotionAsync(Id, requestPromotion);
             return Ok(response);
         }
+
+        
     }
 }

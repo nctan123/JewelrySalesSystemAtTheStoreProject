@@ -15,6 +15,6 @@ namespace JSSATSProject.Service.Models.CustomerModel
         public string? Gender { get; set; }
 
         public string? Address { get; set; }
-   
+
     }
 }

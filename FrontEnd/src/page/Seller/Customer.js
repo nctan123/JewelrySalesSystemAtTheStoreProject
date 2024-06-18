@@ -55,6 +55,7 @@ const Customer = () => {
 
   return (
     <>
+<<<<<<< HEAD
       
 
         <div className='h-[70px] px-[30px] mt-5 mb-2 w-full'>
@@ -90,6 +91,11 @@ const Customer = () => {
           </form>
           
         <button type="button" className="m-0 mb-2 flex justify-center items-center bg-[#00AC7C] text-white gap-1 cursor-pointer tracking-widest rounded-md hover:bg-[#00ac7b85] duration-300 hover:gap-2 hover:translate-x-3">
+=======
+      <div>
+
+        <button type="button" className="m-0 flex justify-center items-center bg-[#00AC7C] text-white gap-1 cursor-pointer tracking-widest rounded-md hover:bg-[#00ac7b85] duration-300 hover:gap-2 hover:translate-x-3">
+>>>>>>> develop
           <a href='#popup1' id='openPopUp' className='p-0 flex gap-1 items-center'>
             Add
             <svg class="w-5 h-5" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >

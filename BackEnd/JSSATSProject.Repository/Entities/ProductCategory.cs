@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -14,25 +15,12 @@ public partial class ProductCategory
     public int TypeId { get; set; }
 
     public string Status { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
     public virtual ProductCategoryType Type { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
-
-    public ProductCategory()
-    {
-        
-    }
-    public ProductCategory(int id, string name, int typeId, string status, ICollection<Product> products, ProductCategoryType type, ICollection<Promotion> promotions)
-    {
-        Id = id;
-        Name = name;
-        TypeId = typeId;
-        Status = status;
-        Products = products;
-        Type = type;
-        Promotions = promotions;
-    }
+    [JsonIgnore]
+    public virtual ICollection<PromotionRequest> Requests { get; set; } = new List<PromotionRequest>();
 }

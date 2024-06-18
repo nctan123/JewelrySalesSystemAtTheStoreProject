@@ -2,9 +2,13 @@ import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'; //mang action đến redux, sử dụng useSeletor để lấy giá trị
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+<<<<<<< HEAD
 import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Return, Exchange, Buy ,Warranty} from './page/Seller';
+=======
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Return, Exchange, Buy, Warranty } from './page/Seller';
+>>>>>>> develop
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
@@ -28,7 +32,23 @@ import VoidBill from './page/Admin/VoidBill'
 import Point from './page/Admin/Manage/Point';
 import Manager from './page/Manager/Manager';
 
-
+import ProductManager from './page/Manager/Product/ProductManager';
+import DiamondManager from './page/Manager/Product/DiamondManager';
+import JewelryManager from './page/Manager/Product/JewelryManager';
+import RetailGoldManager from './page/Manager/Product/RetailGoldManager';
+import WholesaleGoldManager from './page/Manager/Product/WholesaleGoldManager';
+import ReportMana from './page/Manager/Report/ReportMana';
+import EmployeeMana from './page/Manager/Report/EmployeeMana';
+import InvoiceMana from './page/Manager/Report/InvoiceMana';
+import ProductSoldMana from './page/Manager/Report/ProductSoldMana';
+import CustomerMana from './page/Manager/Manage/CustomerMana';
+import ManageMana from './page/Manager/Manage/ManageMana';
+import PointMana from './page/Manager/Manage/PointMana';
+import ProductMana from './page/Manager/Manage/ProductMana';
+import StaffMana from './page/Manager/Manage/StaffMana';
+import PromotionListMana from './page/Manager/Promotion/PromotionListMana';
+import PromotionRequestMana from './page/Manager/Promotion/PromotionRequestMana';
+import PromotionManager from './page/Manager/Promotion/PromotionManager'
 function App() {
   // test redux có hoạt động không
   // const {test,homeData} = useSelector(state => state.app)
@@ -36,13 +56,15 @@ function App() {
 
   return (
     <>
+
       <div className=''>
+
         <Routes>
           {/* home */}
           <Route path={path.HOME} element={<Home />} />
           <Route path={path.LOGIN} element={<Login />} />
           {/* admin */}
-          <Route path={path.ADMIN} element={<Admin />} exact >
+          <Route path={path.ADMIN} element={<Admin />} >
             <Route path={path.ADMIN} element={<Dashboard />} />
             <Route path={path.DASHBOARD} element={<Dashboard />} />
 
@@ -53,8 +75,8 @@ function App() {
             </Route>
 
             <Route path={path.MANAGE} element={<Manage />} >
-              <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
               <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
+              <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
               <Route path={path.STAFF} element={<Staff />} />
               <Route path={path.POINT} element={<Point />} />
             </Route>
@@ -71,6 +93,29 @@ function App() {
           </Route >
           {/* manager */}
           <Route path={path.MANAGER} element={<Manager />}>
+            <Route path={path.PRODUCTMANAGER} element={<ProductManager />} >
+              <Route path={path.DIAMONDMANAGER} element={<DiamondManager />} />
+              <Route path={path.JEWELRY} element={<JewelryManager />} />
+              <Route path={path.RETAILGOLDMANAGER} element={<RetailGoldManager />} />
+              <Route path={path.WHOLESALEGOLD} element={<WholesaleGoldManager />} />
+            </Route>
+            <Route path={path.DASHBOARD} element={<Dashboard />} />
+            <Route path={path.REPORT} element={<ReportMana />} >
+              <Route path={path.INVOICE} element={<InvoiceMana />} />
+              <Route path={path.PRODUCSOLD} element={<ProductSoldMana />} />
+              <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
+            </Route>
+            <Route path={path.MANAGE} element={<ManageMana />} >
+              <Route path={path.PRODUCTMANA} element={<ProductMana />} />
+              <Route path={path.CUSTOMERMANA} element={<CustomerMana />} />
+              <Route path={path.STAFF} element={<StaffMana />} />
+              <Route path={path.POINT} element={<PointMana />} />
+            </Route>
+            <Route path={path.PROMOTIONMANAGER} element={<PromotionManager />} >
+              <Route path={path.PROMOTIONLIST} element={<PromotionListMana />} />
+              <Route path={path.PROMOTIONREQUEST} element={<PromotionRequestMana />} />
+            </Route>
+
           </Route>
           {/* Seller */}
           <Route path={path.PUBLIC} element={<Public />}>
@@ -90,7 +135,11 @@ function App() {
               <Route path={path.RETURN} element={<Return />} />
               <Route path={path.EXCHANGE} element={<Exchange />} />
               <Route path={path.BUY} element={<Buy />} />
+<<<<<<< HEAD
               <Route path={path.WARRANTY} element={<Warranty/>}/>
+=======
+              <Route path={path.WARRANTY} element={<Warranty />} />
+>>>>>>> develop
             </Route>
           </Route>
           {/* Cashier */}
@@ -108,9 +157,13 @@ function App() {
 
       </div>
 
+<<<<<<< HEAD
       <ToastContainer
 
       />
+=======
+      <ToastContainer />
+>>>>>>> develop
     </>
   );
 }

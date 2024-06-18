@@ -7,6 +7,7 @@ using JSSATSProject.Service.Service.IService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace JSSATSProject.Service.Service.Service
@@ -25,8 +26,24 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> CreateCustomerAsync(RequestCreateCustomer requestCustomer)
         {
             var entity = _mapper.Map<Customer>(requestCustomer);
+
+
+            var point = new Point
+            {
+                AvailablePoint = 0,
+                Totalpoint = 0
+            };
+
+            await _unitOfWork.PointRepository.InsertAsync(point);
+            await _unitOfWork.SaveAsync();
+
+            entity.PointId = point.Id;
+            entity.Point = point;
+
+
             await _unitOfWork.CustomerRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
+
             return new ResponseModel
             {
                 Data = entity,
@@ -34,27 +51,13 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
+
         public async Task<ResponseModel> GetAllAsync()
         {
-        
-            var entities = await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,Orders,Payments");
-            var response = entities.Select(entity => new ResponseCustomer
-            {
-                Id = entity.Id,
-                PointId = entity.PointId,
-                Firstname = entity.Firstname,
-                Lastname = entity.Lastname,
-                Phone = entity.Phone,
-                Email = entity.Email,
-                Gender = entity.Gender,
-                Address = entity.Address,
-                Orders = entity.Orders, 
-                Payments = entity.Payments,
-                TotalPoint = entity.Point?.Totalpoint?? 0,
-                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
-            }).ToList();
+            var entities =
+                await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");
+            var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
-            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -67,7 +70,7 @@ namespace JSSATSProject.Service.Service.Service
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Id.Equals(id),
-                includeProperties: "Point,Orders,Payments");
+                includeProperties: "Point,SellOrders,Payments");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,
@@ -78,7 +81,7 @@ namespace JSSATSProject.Service.Service.Service
                 Email = entity.Email,
                 Gender = entity.Gender,
                 Address = entity.Address,
-                Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
@@ -96,7 +99,7 @@ namespace JSSATSProject.Service.Service.Service
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Firstname.Equals(name),
-                includeProperties: "Point,Orders,Payments");
+                includeProperties: "Point,SellOrders,Payments");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,
@@ -107,7 +110,7 @@ namespace JSSATSProject.Service.Service.Service
                 Email = entity.Email,
                 Gender = entity.Gender,
                 Address = entity.Address,
-                Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
@@ -121,11 +124,11 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetByPhoneAsync(string phonenumber)
+        public async Task<ResponseModel> GetByPhoneAsync(string phoneNumber)
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
-                 c => c.Phone.Equals(phonenumber),
-                 includeProperties: "Point,Orders,Payments");
+                 c => c.Phone.Equals(phoneNumber),
+                 includeProperties: "Point,SellOrders,Payments");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,
@@ -136,7 +139,7 @@ namespace JSSATSProject.Service.Service.Service
                 Email = entity.Email,
                 Gender = entity.Gender,
                 Address = entity.Address,
-                Orders = entity.Orders,
+                SellOrders = entity.SellOrders,
                 Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
@@ -149,7 +152,22 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = "",
             };
         }
-            public async Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer)
+
+        public async Task<ResponseModel> GetEntityByPhoneAsync(string phoneNumber)
+        {
+            var entity = await _unitOfWork.CustomerRepository.GetAsync(
+                    c => c.Phone.Equals(phoneNumber),
+                    includeProperties: "Point,SellOrders,Payments,SpecialDiscountRequests");
+
+            // Return the mapped response
+            return new ResponseModel
+            {
+                Data = entity.FirstOrDefault(),
+                MessageError = "",
+            };
+        }
+
+        public async Task<ResponseModel> UpdateCustomerAsync(int customerId, RequestUpdateCustomer requestCustomer)
         {
             try
             {
@@ -183,6 +201,21 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public async Task<ResponseModel> CountNewCustomer(DateTime startDate, DateTime endDate)
+        {
+            var customers = await _unitOfWork.CustomerRepository.GetAsync(
+                filter: c => c.CreateDate >= startDate && c.CreateDate <= endDate
+            );
+
+            var count = customers.Count();
+
+            return new ResponseModel
+            {
+                MessageError = "",
+                Data = count
+            };
         }
     }
 }

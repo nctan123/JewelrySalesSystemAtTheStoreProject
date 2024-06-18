@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 // import  addProduct, deleteProduct  from '../../../'
+<<<<<<< HEAD
 import { deleteProduct, deleteCustomer, deleteProductAll, deletePromotion } from '../store/slice/cardSilec'
+=======
+import { deleteProduct, deleteCustomer, deleteProductAll } from '../store/slice/cardSilec'
+>>>>>>> develop
 import { MdDeleteOutline } from "react-icons/md";
 import { VscGitStashApply } from "react-icons/vsc";
 import { Link } from 'react-router-dom';
 import styles from '../style/cardForList.module.css'
 import clsx from 'clsx'
+<<<<<<< HEAD
 import { toast } from 'react-toastify';
 import axios from 'axios';
+=======
+
+>>>>>>> develop
 const SidebarRight = () => {
   const dispatch = useDispatch()
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
@@ -164,6 +172,7 @@ const SidebarRight = () => {
           <span className='w-full flex justify-center font-serif'>Jewelry Store</span>
         </div>
         <div className='flex items-center px-[15px] text-[#000]'>
+<<<<<<< HEAD
           <p className='w-[260px] font-light '>Customer Phone:</p>
           {CusPoint && CusPoint[0] && CusPoint[0].phone && (
             <>
@@ -171,6 +180,12 @@ const SidebarRight = () => {
                 {CusPoint[0].phone}
                 <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e' /></span></span>
             </>
+=======
+          <p className='w-[260px] font-light '>Customer Name:</p>
+          {CusPoint && CusPoint[0] && (
+            <span className='w-full flex items-center justify-between font-serif' >{CusPoint[0].firstname}  {CusPoint[0].lastname} <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e' /></span></span>
+
+>>>>>>> develop
           )}
 
         </div>
@@ -182,6 +197,7 @@ const SidebarRight = () => {
         <div id='screenSeller' className=' h-[45%] overflow-y-auto mb-2'>
           {CartProduct && CartProduct.map((item, index) => {
             return (
+<<<<<<< HEAD
               <div key={`ring-${index}`} className='grid grid-cols-6 '>
                 <div className='col-start-1 col-span-4 flex px-[10px] text-sm'>{item.name}</div>
                 <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px]'>{formatPrice(item.productValue * item.quantity)}</div>
@@ -189,6 +205,12 @@ const SidebarRight = () => {
                 {!item.startDate && (
                   <div className='col-start-1 col-span-6 flex px-[14px] text-xs text-red-600 mt-[-6px]'>x{item.quantity}</div>
                 )}
+=======
+              <div key={`ring-${index}`} className='grid grid-cols-6'  >
+                <div className='col-start-1 col-span-4 flex px-[10px] py-2 text-sm' >{item.name}</div>
+                <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px] py-2'>{formatPrice(item.productValue)}</div>
+                <span onClick={() => dispatch(deleteProduct(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md  '><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
+>>>>>>> develop
               </div>
             )
           })}
@@ -217,6 +239,7 @@ const SidebarRight = () => {
         <div className='px-[15px] grid grid-cols-2 grid-rows-2'>
           <div className='row-start-1 font-thin'>Total:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(total.toFixed())}</div>
+<<<<<<< HEAD
           <div className='row-start-2 font-thin'>Discount:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(discount)}</div>
         </div>
@@ -246,6 +269,15 @@ const SidebarRight = () => {
             </div>
         )}
         <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 mt-2 '>
+=======
+          <div className='row-start-2 font-thin'>Tax:</div>
+          <div className='col-start-2 flex justify-end'>{formatPrice(tax)}</div>
+          <div className='row-start-3 font-thin'>Point: {formatPrice(1000000)}</div>
+          <div className='col-start-2 flex justify-end text-red-500'>          <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="number" name="point" id="inputPoint" placeholder="Use Point" />
+          </div>
+        </div>
+        <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 '>
+>>>>>>> develop
           <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(totalInvoice)}<span>.đ</span></div>
           {/* <div className='col-start-2 flex justify-end items-center mr-[15px]'>
             <a type='submit' href='/' className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Cancel</a>
@@ -255,10 +287,14 @@ const SidebarRight = () => {
               dispatch(deleteCustomer());
               dispatch(deleteProductAll());
             }} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md bg-[#fef7f7] py-1 hover:bg-[#ffffff]'><MdDeleteOutline size='20px' color='#ef4e4e' /></span>
+<<<<<<< HEAD
             <button type='submit' 
             onClick={() => {handSubmitOrder(); 
                   dispatch(deleteCustomer());
               dispatch(deleteProductAll());}} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</button>
+=======
+            <Link type='submit' to='/public' className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</Link>
+>>>>>>> develop
           </div>
         </div>
       </div>
@@ -299,9 +335,12 @@ const SidebarRight = () => {
                     <th scope="col" class="px-6 py-3">
                       Action
                     </th>
+<<<<<<< HEAD
                     <th scope="col" class="px-6 py-3">
                       Special Discount
                     </th>
+=======
+>>>>>>> develop
                   </tr>
                 </thead>
                 <tbody>
@@ -319,6 +358,7 @@ const SidebarRight = () => {
                       <button className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
                       <button className='m-0 p-3 bg-red-500'><MdDeleteOutline /></button>
                     </td>
+<<<<<<< HEAD
                     <td class="px-14 py-4 ">
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
@@ -335,6 +375,8 @@ const SidebarRight = () => {
                         ></div>
                       </label>
                     </td>
+=======
+>>>>>>> develop
                   </tr>
                 </tbody>
               </table>

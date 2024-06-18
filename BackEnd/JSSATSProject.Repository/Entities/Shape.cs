@@ -8,12 +8,13 @@ namespace JSSATSProject.Repository.Entities;
 
 public partial class Shape
 {
-    [JsonIgnore]
     public int Id { get; set; }
-    [JsonIgnore]
+
     public string Name { get; set; }
-    [JsonIgnore]
+
     public string Description { get; set; }
+    [JsonIgnore]
+    public decimal? PriceRate { get; set; }
     [JsonIgnore]
     public virtual ICollection<Diamond> Diamonds { get; set; } = new List<Diamond>();
 }

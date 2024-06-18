@@ -12,7 +12,7 @@ namespace JSSATSProject.Service.Models.ReturnBuyBackPolicyModel
 
         public string Description { get; set; } = null!;
 
-        public DateOnly EffectiveDate { get; set; }
+        public DateTime EffectiveDate { get; set; }
 
         public string? Status { get; set; }
     }
