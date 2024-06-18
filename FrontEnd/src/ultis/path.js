@@ -19,12 +19,14 @@ const path = {
     SEARCHINVOICE: 'searchinvoice',
     PROMOTION: 'promotion',
     RETURN_EX: 'returnExchange',
-    RETURN: 'return',
-    EXCHANGE: 'exchange',
-    BUY: 'buy',
+
+    RETURN:'return',
+    EXCHANGE:'exchange',
+    BUY:'buy',
     WARRANTY: 'warranty',
-    // Cashier
+// Cashier
     CS_PUBLIC: 'cs_public',
+
     CS_ORDER: 'cs_order',
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',

@@ -68,8 +68,14 @@ export const sidebarMenu = [
     },
     {
         path: 'returnExchange',
-        text: 'Return/Exchange',
-        icons: <TbArrowsExchange2 size={24} color="white" />,
+        text:'Return/Exchange',
+        icons: <TbArrowsExchange2 size={24} color="white"/>,
+      
+    },
+    {
+        path: '/login',
+        text:'Log out',
+        icons: <TbLogout2 size={24} color="white"/>
 
     },
     // {
