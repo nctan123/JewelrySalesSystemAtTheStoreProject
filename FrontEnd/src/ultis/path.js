@@ -24,7 +24,7 @@ const path = {
     BUY:'buy',
     WARRANTY: 'warranty',
 // Cashier
-    CS_PUBLIC: 'cs_public',
+    CS_PUBLIC: '/',
     CS_ORDER: 'cs_order',
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',

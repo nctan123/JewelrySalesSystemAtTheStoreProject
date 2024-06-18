@@ -26,7 +26,7 @@ const Necklace = () => {
   };
 
   function formatPrice(price) {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
   
   function formatName(name) {
@@ -84,17 +84,17 @@ const Necklace = () => {
                   </div>
                   <div class="max-w-sm h-auto">
 
-                    <div class="absolute top-[20px] left-4 w-[180px] flex justify-center items-center sm:justify-between">
-                      <h2 class="text-black text-sm font-normal tracking-widest">{item.name}</h2>
+                  <div class="absolute top-[25px] left-6 w-fit flex justify-center items-center sm:justify-between">
+                      <h2 class="text-black text-sm tracking-widest">{item.name}</h2>
                     </div>
-                    <div className='absolute bottom-[50px] right-0 w-full'>
+                    <div className='absolute bottom-[40px] right-0 w-full'>
                       <p class="text-sm text-[#de993f] flex justify-center">Code: {item.code}</p>
-                      <div class=" flex gap-3 items-center justify-center">
-                        <p class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</p>
-                        <p class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</p>
+                      <div class="flex flex-col gap-0 items-center justify-center">
+                        <div class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</div>
+                        <div class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</div>
                       </div>
                     </div>
-                    <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
+                    <div class="absolute bottom-[-15px] right-0 w-full flex justify-around items-center">
                     <Popup trigger={<button onClick='' class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>} position="right center">
                     {close => (
                           <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
