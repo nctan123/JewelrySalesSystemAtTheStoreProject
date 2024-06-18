@@ -65,7 +65,7 @@ namespace JSSATSProject.Service.Service.Service
 
             var staffOrders = staffEntity.SellOrders
                 .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
-
+            //them buy order vao
             response.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
             response.TotalSellOrder = staffOrders.Count();
 

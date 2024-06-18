@@ -15,7 +15,7 @@ public partial class ProductCategory
     public int TypeId { get; set; }
 
     public string Status { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
     public virtual ProductCategoryType Type { get; set; }

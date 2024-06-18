@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
+using JSSATSProject.Repository.Enums;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
@@ -12,18 +13,26 @@ namespace JSSATSProject.Service.Service.Service
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ICustomerService _customerService;
 
-        public SpecialDiscountRequestService(UnitOfWork unitOfWork, IMapper mapper)
+        public SpecialDiscountRequestService(UnitOfWork unitOfWork, IMapper mapper, ICustomerService customerService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _customerService = customerService;
+        }
+
+        public async Task<SpecialDiscountRequest?> GetEntityByIdAsync(int id)
+        {
+            return await _unitOfWork.SpecialDiscountRequestRepository.GetByIdAsync(id);
         }
 
         public async Task<ResponseModel> CreateAsync(CreateSpecialDiscountRequest specialdiscountRequest)
         {
             var entity = _mapper.Map<SpecialDiscountRequest>(specialdiscountRequest);
             entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
-            entity.Customer = await _unitOfWork.CustomerRepository.GetByIDAsync(specialdiscountRequest.CustomerId);
+            entity.Customer = (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber.ToString())).Data!;
+            entity.Status = SpecialDiscountRequestStatus.Pending.ToString();
 
             await _unitOfWork.SpecialDiscountRequestRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
