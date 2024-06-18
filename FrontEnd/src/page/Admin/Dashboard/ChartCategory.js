@@ -51,3 +51,45 @@ export default class PieChartCategory extends PureComponent {
         );
     }
 }
+// import React, { useState } from 'react';
+// import ReactApexChart from 'react-apexcharts';
+
+// const PieChartCategory = () => {
+//     const [state, setState] = useState({
+//         series: [44, 41, 17, 15],
+//         options: {
+//             chart: {
+//                 type: 'donut',
+//             },
+//             responsive: [
+//                 {
+//                     breakpoint: 48,
+//                     options: {
+//                         chart: {
+//                             width: 20, // Reduce the width of the chart
+//                         },
+//                         legend: {
+//                             position: 'bottom',
+//                         },
+//                     },
+//                 },
+//             ],
+//         },
+//     });
+
+//     return (
+//         <div className="w-full md:w-1/2 lg:w-1/3"> {/* Wrap the chart in a responsive container */}
+//             <div id="chart" className="p-8"> {/* Add padding around the chart */}
+//                 <ReactApexChart
+//                     options={state.options}
+//                     series={state.series}
+//                     type="text"
+//                     className="w-full h-auto"
+//                 />
+//             </div>
+//             <div id="html-dist"></div>
+//         </div>
+//     );
+// };
+
+// export default PieChartCategory;

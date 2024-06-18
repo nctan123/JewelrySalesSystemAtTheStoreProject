@@ -20,10 +20,7 @@ const SildebarManager = () => {
         });
     };
     const handleLogOut = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        localStorage.removeItem("staffId");
-        localStorage.removeItem("name");
+        localStorage.clear();
         toast.success('Log out success!!!')
     }
     // className='mt-[20px] w-[60px] object-contain'

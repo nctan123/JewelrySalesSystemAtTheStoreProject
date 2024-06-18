@@ -36,7 +36,7 @@ import WholesaleGoldManager from './page/Manager/Product/WholesaleGoldManager';
 import ReportMana from './page/Manager/Report/ReportMana';
 import EmployeeMana from './page/Manager/Report/EmployeeMana';
 import InvoiceMana from './page/Manager/Report/InvoiceMana';
-import ProductSoldMana from './page/Manager/Product/ProductManager';
+import ProductSoldMana from './page/Manager/Report/ProductSoldMana';
 import CustomerMana from './page/Manager/Manage/CustomerMana';
 import ManageMana from './page/Manager/Manage/ManageMana';
 import PointMana from './page/Manager/Manage/PointMana';
@@ -102,8 +102,8 @@ function App() {
               <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
             </Route>
             <Route path={path.MANAGE} element={<ManageMana />} >
-              <Route path={path.PRODUCTADMIN} element={<ProductMana />} />
-              <Route path={path.CUSTOMERADMIN} element={<CustomerMana />} />
+              <Route path={path.PRODUCTMANA} element={<ProductMana />} />
+              <Route path={path.CUSTOMERMANA} element={<CustomerMana />} />
               <Route path={path.STAFF} element={<StaffMana />} />
               <Route path={path.POINT} element={<PointMana />} />
             </Route>

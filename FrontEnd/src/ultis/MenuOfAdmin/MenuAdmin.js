@@ -101,11 +101,7 @@ export const sidebarMenuAdmin = [
         text: 'Return policy',
         iconAdmin: <MdOutlineAssignmentReturned size={24} color="white" />
     },
-    {
-        path: 'VoidBill',
-        text: 'Void bill',
-        iconAdmin: <TbDeviceIpadCancel size={24} color="white" />
-    },
+
     // {
     //     path: '/login',
     //     text: 'Log out',

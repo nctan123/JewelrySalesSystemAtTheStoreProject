@@ -8,9 +8,7 @@ export default function Home() {
     const navigate = useNavigate();
 
     const handleLoginClick = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("role");
-        localStorage.removeItem("Authorization");
+        localStorage.clear();
         navigate('/login');
     };
     return (
