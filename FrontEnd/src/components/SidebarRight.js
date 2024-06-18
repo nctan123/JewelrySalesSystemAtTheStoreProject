@@ -8,18 +8,26 @@ import { Link } from 'react-router-dom';
 import styles from '../style/cardForList.module.css'
 import clsx from 'clsx'
 import { toast } from 'react-toastify';
-
+import axios from 'axios';
 const SidebarRight = () => {
   const dispatch = useDispatch()
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date().toISOString());
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(new Date());
+      setCurrentTime(new Date().toISOString())
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
+
+
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentTime(new Date().toISOString());
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const CartProduct = useSelector(state => state.cart.CartArr);
   const CusPoint = useSelector(state => state.cart.CusPoint);
@@ -29,6 +37,9 @@ const SidebarRight = () => {
   const [discount, setDiscount] = useState(0)
 
   useEffect(() => {
+    if (CusPoint && CusPoint[0] && CusPoint[0].phone) {
+      setcustomerPhoneNumber(CusPoint[0].phone);
+    }
     const calculateTotal = () => {
       let totalValue = 0;
       CartProduct.forEach((product) => {
@@ -45,7 +56,7 @@ const SidebarRight = () => {
       setDiscount(totalDiscount);
     };
     calculateDiscount();
-  }, [CartProduct]);
+  }, [CartProduct][CusPoint]);
 
 
   const totalInvoice = total - discount
@@ -64,27 +75,115 @@ const SidebarRight = () => {
       toastSpectial();
     }
   };
+  const [customerPhoneNumber, setcustomerPhoneNumber] = useState('')
+  const [staffId, setstaffId] = useState(null)
+  const [createDate,setcreateDate] = useState(new Date().toISOString());
+  useEffect(() => {
+    const interval1 = setInterval(() => {
+      setcreateDate(new Date().toISOString())
+    }, 1000);
+    return () => clearInterval(interval1);
+  }, []);
+  const [description, setdescription] = useState('')
+  const [productCodesAndQuantity, setproductCodesAndQuantity] = useState(null)
+  const [productCodesAndPromotionIds, setproductCodesAndPromotionIds] = useState(null)
+
+  const [specialDiscountRequestId, setspecialDiscountRequestId] = useState(null)
+  const [isSpecialDiscountRequested, setisSpecialDiscountRequested] = useState(false)
+
+  const [discountRejectedReason, setdiscountRejectedReason] = useState(null)
+  const [specialDiscountRequestStatus, setspecialDiscountRequestStatus] = useState(null)
+  const [specialDiscountRate, setspecialDiscountRate] = useState(null)
+  const [point, setpoint] = useState("")
+
+  useEffect(() => {
+    const codesAndQuantity = CartProduct.reduce((acc,product) => {
+      acc[product.code] = product.quantity;
+      return acc;
+    }, {});
+    // const productcodesAndPromotion = CartProduct.reduce((pr,product) => {
+    //   pr[product.code] = product.promotionId;
+    //   return pr;
+    // }, {});
+    // setproductCodesAndPromotionIds('');
+    setproductCodesAndQuantity(codesAndQuantity);
+  }, [CartProduct]);
+  const handSubmitOrder = async () => {
+    let data = {
+      customerPhoneNumber: customerPhoneNumber,
+      staffId: 4,
+      createDate: createDate,
+      description: description,
+      discountPoint:0,
+
+      productCodesAndQuantity: productCodesAndQuantity,
+      productCodesAndPromotionIds: productCodesAndPromotionIds,
+
+      isSpecialDiscountRequested: isSpecialDiscountRequested,
+      specialDiscountRate: specialDiscountRate,
+      specialDiscountRequestId: specialDiscountRequestId,
+      discountRejectedReason: discountRejectedReason,
+      specialDiscountRequestStatus: specialDiscountRequestStatus,
+    }
+    // console.log(data)
+    // console.log(JSON.stringify(data, null, 2))
+   
+    // const Data = new FormData();
+    // Data.append('customerPhoneNumber', customerPhoneNumber);
+    // Data.append('staffId', 4);
+    // Data.append('createDate', createDate);
+    // Data.append('description', description);
+    // Data.append('discountPoint', 0);
+    // Data.append('productCodesAndQuantity', productCodesAndQuantity);
+    // Data.append('productCodesAndPromotionIds', productCodesAndPromotionIds);
+    // Data.append('isSpecialDiscountRequested', isSpecialDiscountRequested);
+    // Data.append('specialDiscountRate', specialDiscountRate);
+    // Data.append('specialDiscountRequestId', specialDiscountRequestId);
+    // Data.append('discountRejectedReason', discountRejectedReason);
+    // Data.append('specialDiscountRequestStatus', specialDiscountRequestStatus);
+   let res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder',data);
+   console.log(res)
+  }
+
+  const [pointRate, setPointRate] = useState(0);
+  const [isInvalid, setIsInvalid] = useState(false);
+  const handleRateChange = (event) => {
+    const value = parseFloat(event.target.value);
+    if (value < 0 || value > 1) {
+      setIsInvalid(true);
+    } else {
+      setIsInvalid(false);
+      setPointRate(value);
+      setspecialDiscountRate(value);
+      setisSpecialDiscountRequested(true);
+    }
+  };
+
+
   return (<>
 
 
     <div className='flex justify-center '>
       <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[34em] bg-[#f3f1ed] mt-[20px]'>
-        <div className='flex justify-between'>
-          <select className="ml-[15px] relative text-black bg-transparent outline-none border border-white text-sm font-semibold rounded-md block w-[50%] p-1">
+        <div className='flex justify-end'>
+          {/* <select className="ml-[15px] relative text-black bg-transparent outline-none border border-white text-sm font-semibold rounded-md block w-[50%] p-1">
             <option>Sell</option>
             <option>Buy</option>
-          </select>
-          <div className='flex justify-end px-[15px] text-black font-thin'>{currentTime.toLocaleString()}</div>
+          </select> */}
+          <div className='flex justify-end px-[15px] text-black font-thin'>{currentTime}</div>
         </div>
         <div className='flex justify-start px-[15px] text-black'>
           <p className='font-light'>Address:</p>
           <span className='w-full flex justify-center font-serif'>Jewelry Store</span>
         </div>
         <div className='flex items-center px-[15px] text-[#000]'>
-          <p className='w-[260px] font-light '>Customer Name:</p>
-          {CusPoint && CusPoint[0] && (
-            <span className='w-full flex items-center justify-between font-serif' >{CusPoint[0].firstname}  {CusPoint[0].lastname} <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e' /></span></span>
-
+          <p className='w-[260px] font-light '>Customer Phone:</p>
+          {CusPoint && CusPoint[0] && CusPoint[0].phone && (
+            <>
+              <span id="phone" className='w-full flex items-center justify-between font-serif' >
+                {CusPoint[0].phone}
+                <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e' /></span></span>
+            </>
           )}
 
         </div>
@@ -126,7 +225,7 @@ const SidebarRight = () => {
           </div> */}
         <div className='border mx-[15px] border-x-0 border-b-0 border-t-black grid grid-cols-2 py-2'>
           <div className='font-bold'>PAYMENT</div>
-          <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="text" name="point" id="inputPoint" placeholder="Note" />
+          <input value={description} onChange={(even) => setdescription(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="text" name="point" id="" placeholder="Note" />
         </div>
         <div className='px-[15px] grid grid-cols-2 grid-rows-2'>
           <div className='row-start-1 font-thin'>Total:</div>
@@ -137,8 +236,27 @@ const SidebarRight = () => {
         {CusPoint && CusPoint[0] && (
           <div className='px-[15px] grid grid-cols-2 pb-2' >
             <div className='font-thin'>Point: {formatPrice(CusPoint[0].totalPoint)}</div>
-            <input className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="number" name="point" min="-9" max={CusPoint[0].totalPoint} id="inputPoint" placeholder="Use Point" />
-          </div>
+            <input value={point} onChange={(even) => setpoint(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold  pl-2" type="number" name="point" min="-9" max={CusPoint[0].totalPoint} id="inputPoint" placeholder="Use Point" />
+            <div className='font-thin'>Special Discount:</div>
+            <div className='flex items-center justify-center gap-2'>
+              <input
+                className={`w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold pl-2 ${isInvalid ? 'border-red-500' : ''
+                  }`}
+                type="number"
+                name="pointRate"
+                min="0"
+                max="1"
+                value={pointRate}
+                onChange={handleRateChange}
+                placeholder="Rate"
+              />
+              {isInvalid && (
+                <span className="text-red-500 mt-1">
+                  Invalid
+                </span>
+              )}
+            </div>          
+            </div>
         )}
         <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 mt-2 '>
           <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(totalInvoice)}<span>.đ</span></div>
@@ -150,7 +268,7 @@ const SidebarRight = () => {
               dispatch(deleteCustomer());
               dispatch(deleteProductAll());
             }} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md bg-[#fef7f7] py-1 hover:bg-[#ffffff]'><MdDeleteOutline size='20px' color='#ef4e4e' /></span>
-            <Link type='submit' to='/public' className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</Link>
+            <button type='submit' onClick={() => handSubmitOrder()} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</button>
           </div>
         </div>
       </div>
@@ -221,8 +339,8 @@ const SidebarRight = () => {
                         />
                         <div
                           className={`peer ring-0 bg-rose-400 rounded-full outline-none duration-300 after:duration-500 w-8 h-8 shadow-md ${isChecked
-                              ? 'bg-emerald-600 after:content-["✔️"]'
-                              : 'after:content-["✖️"]'
+                            ? 'bg-emerald-600 after:content-["✔️"]'
+                            : 'after:content-["✖️"]'
                             } after:rounded-full after:absolute after:outline-none after:h-6 after:w-6 after:bg-gray-50 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-75`}
                         ></div>
                       </label>

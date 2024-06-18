@@ -96,8 +96,8 @@ const Bangles = () => {
                       </div>
                     </div>
                     <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
-                      <Popup trigger={<button onClick='' class="px-2 bg-blue-600 p-1 rounded-md text-white font-semibold shadow-xl shadow-blue-500/50 hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>} position="right center">
-                        {close => (
+                    <Popup trigger={<button onClick='' class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>} position="right center">
+                    {close => (
                           <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
                             <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[40%] shadow-[#b6b0b0] shadow-md'>
                               <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
