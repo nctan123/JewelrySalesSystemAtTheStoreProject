@@ -66,7 +66,9 @@ const SidebarRight = () => {
   const toastSpectial = () => {
     toast.warning('Sent Special Discount')
   }
-
+  const toastSpectia2 = () => {
+    toast.warning('Wrong Value')
+  }
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxClick = () => {
@@ -115,10 +117,8 @@ const SidebarRight = () => {
       createDate: createDate,
       description: description,
       discountPoint:0,
-
       productCodesAndQuantity: productCodesAndQuantity,
       productCodesAndPromotionIds: productCodesAndPromotionIds,
-
       isSpecialDiscountRequested: isSpecialDiscountRequested,
       specialDiscountRate: specialDiscountRate,
       specialDiscountRequestId: specialDiscountRequestId,
@@ -127,20 +127,6 @@ const SidebarRight = () => {
     }
     // console.log(data)
     // console.log(JSON.stringify(data, null, 2))
-   
-    // const Data = new FormData();
-    // Data.append('customerPhoneNumber', customerPhoneNumber);
-    // Data.append('staffId', 4);
-    // Data.append('createDate', createDate);
-    // Data.append('description', description);
-    // Data.append('discountPoint', 0);
-    // Data.append('productCodesAndQuantity', productCodesAndQuantity);
-    // Data.append('productCodesAndPromotionIds', productCodesAndPromotionIds);
-    // Data.append('isSpecialDiscountRequested', isSpecialDiscountRequested);
-    // Data.append('specialDiscountRate', specialDiscountRate);
-    // Data.append('specialDiscountRequestId', specialDiscountRequestId);
-    // Data.append('discountRejectedReason', discountRejectedReason);
-    // Data.append('specialDiscountRequestStatus', specialDiscountRequestStatus);
    let res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder',data);
    console.log(res)
   }
@@ -151,6 +137,7 @@ const SidebarRight = () => {
     const value = parseFloat(event.target.value);
     if (value < 0 || value > 1) {
       setIsInvalid(true);
+      toastSpectia2()
     } else {
       setIsInvalid(false);
       setPointRate(value);
@@ -250,11 +237,11 @@ const SidebarRight = () => {
                 onChange={handleRateChange}
                 placeholder="Rate"
               />
-              {isInvalid && (
-                <span className="text-red-500 mt-1">
-                  Invalid
-                </span>
-              )}
+              {/* {isInvalid && (
+                // <span className="text-red-500 mt-1">
+                //   Invalid
+                // </span>
+              )} */}
             </div>          
             </div>
         )}
@@ -268,7 +255,10 @@ const SidebarRight = () => {
               dispatch(deleteCustomer());
               dispatch(deleteProductAll());
             }} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md bg-[#fef7f7] py-1 hover:bg-[#ffffff]'><MdDeleteOutline size='20px' color='#ef4e4e' /></span>
-            <button type='submit' onClick={() => handSubmitOrder()} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</button>
+            <button type='submit' 
+            onClick={() => {handSubmitOrder(); 
+                  dispatch(deleteCustomer());
+              dispatch(deleteProductAll());}} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</button>
           </div>
         </div>
       </div>

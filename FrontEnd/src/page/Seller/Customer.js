@@ -4,7 +4,7 @@ import styles from '../../style/cardForList.module.css'
 import clsx from 'clsx'
 import { useDispatch } from 'react-redux'
 import { addCustomer } from '../../store/slice/cardSilec'
-
+import axios from 'axios';
 
 const Customer = () => {
 
@@ -34,7 +34,24 @@ const Customer = () => {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
-
+  const [firstname, setfirstname] = useState()
+  const [lastname, setlastname] = useState()
+  const [phone, setphone] = useState()
+  const [email, setemail] = useState()
+  const [gender, setgender] = useState()
+  const [address, setaddress] = useState()
+  const handSubmitOrder = async () => {
+    let data = {
+      firstname: firstname,
+      lastname: lastname,
+      phone: phone,
+      email: email,
+      gender: gender,
+      address: address,
+    }
+    let res = await axios.post('https://jssatsproject.azurewebsites.net/api/customer/Createcustomer',data);
+    console.log(res)
+  }
 
   return (
     <>
@@ -139,34 +156,34 @@ const Customer = () => {
               <div className="grid gap-4 mb-4 grid-cols-2">
                 <div className="col-start-1">
                   <label for="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                  <input type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="John" required="" />
+                  <input value={firstname} onChange={(even) => setfirstname(even.target.value)} type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="John" required="" />
                 </div>
                 <div className="col-start-2">
                   <label for="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                  <input type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Wick" required="" />
+                  <input value={lastname} onChange={(even) => setlastname(even.target.value)} type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Wick" required="" />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <label for="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
-                  <input type="text" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="0101010101" required="" />
+                  <input value={phone} onChange={(even) => setphone(even.target.value)} type="text" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="0101010101" required="" />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <label for="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                  <input type="text" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="jewelryStore@gmail.com" required="" />
+                  <input value={email} onChange={(even) => setemail(even.target.value)} type="text" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="jewelryStore@gmail.com" required="" />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <label for="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
-                  <input type="text" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Jewelry Store" required="" />
+                  <input value={address} onChange={(even) => setaddress(even.target.value)} type="text" name="price" id="price" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="Jewelry Store" required="" />
                 </div>
                 <div className="col-span-2 sm:col-span-1">
                   <label for="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Gender</label>
-                  <select className='border border-gray-300 bg-gray-50 rounded-md w-full h-[41.6px] font-normal text-gray-400'>
-                    <option>Male</option>
-                    <option>Female</option>
+                  <select onChange={(even)=> setgender(even.target.value)} className='border border-gray-300 bg-gray-50 rounded-md w-full h-[41.6px] font-normal text-gray-400'>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
                   </select>
                 </div>
                 <input hidden className='border border-gray-300 bg-gray-50 rounded-md w-fit h-[41.6px] font-normal text-gray-400' value='0' />
               </div>
-              <button type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+              <button onClick={() => handSubmitOrder()} type="submit" className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg className="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                 Add new customer
               </button>

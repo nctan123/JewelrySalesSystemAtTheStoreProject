@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import styles from '../../style/cardForList.module.css'
 import clsx from 'clsx'
 import { BsCash } from "react-icons/bs";
-import { fetchAllListOrder } from '../../apis/jewelryService'
+import { fetchAllListOrder,fetchAllProduct } from '../../apis/jewelryService'
 import Popup from 'reactjs-popup';
 
 const Cs_OnProcess = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [listInvoice, setlistInvoice] = useState([]);
+  const [listInvoice, setlistInvoice] = useState([]); // list full invoice
+
   useEffect(() => {
     getInvoice();
   }, []);
@@ -18,6 +19,7 @@ const Cs_OnProcess = () => {
       setlistInvoice(res.data.data)
     }
   };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
@@ -75,7 +77,7 @@ const Cs_OnProcess = () => {
   return (<>
     <div>
       <div className='my-0 mx-auto'>
-        <div className='grid grid-cols-4 w-full mx-[5%]'>
+        <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[80vh]'>
           {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => {
             return (
               <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[28em] bg-[#e9ddc26d] mt-[20px]'>
@@ -85,12 +87,12 @@ const Cs_OnProcess = () => {
                 </div>
 
                 <div className='flex justify-start px-[15px] text-black'>
-                  <p className='font-light w-full'>Customer ID: </p>
-                  <span className='w-full flex justify-center font-serif'>{item.id}</span>
+                  <p className='font-light w-full'>Customer Name: </p>
+                  <span className='w-full flex justify-center font-serif'>{item.customer.firstname}</span>
                 </div>
                 <div className='flex  px-[15px] text-black'>
-                  <p className='w-[260px] font-light '>ID Staff:</p>
-                  <span className='w-full flex font-serif'>{item.staffId}</span>
+                  <p className='w-[260px] font-light '>Staff Name:</p>
+                  <span className='w-full flex font-serif'>{item.staff.firstname} {item.staff.lastname}</span>
                 </div>
                 <div className='grid grid-cols-3 border-x-0 border-t-0 border mx-[10px] border-b-black pb-[2px]'>
                   <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
@@ -129,7 +131,7 @@ const Cs_OnProcess = () => {
                                 <div className='row-start-1 col-start-1 h-[100px]'>
                                   <h5 className='font-bold '>Customer Info</h5>
                                   <div id='inforCustomer' className='text-[12px]'>
-                                    <p className='bg-gray-100 px-2 py-1 rounded-md mb-1'>Name: Nguyen Giang</p>
+                                    <p className='bg-gray-100 px-2 py-1 rounded-md mb-1'>Name: {item.customer.firstname} {item.customer.lastname}</p>
                                     <p className='bg-gray-100 px-2 py-1 rounded-md'>ID Invoice: {item.id}</p>
                                   </div>
                                 </div>

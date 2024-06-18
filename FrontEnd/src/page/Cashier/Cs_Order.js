@@ -17,13 +17,13 @@ const Cs_Order = () => {
   };
   return (
     <div className=''>
-      <div className='flex'>
+      <div className='flex w-[200px] mb-2'>
       {menuOrder.map((item) => (
         <NavLink
         to={item.path}
-        className={({ isActive }) =>`flex items-center p-0 text-white transition-colors ${isActive ? activeStyle: notActive}`}
+        className={({ isActive }) =>`flex items-center w-[100px] p-0 text-white transition-colors ${isActive ? activeStyle: notActive}`}
         >
-        <span className='w-[100px] flex justify-center py-2 rounded-md'>{item.text}</span>
+        <span className=' flex justify-center py-2 rounded-md'>{item.text}</span>
         </NavLink>
       ))}
       </div>

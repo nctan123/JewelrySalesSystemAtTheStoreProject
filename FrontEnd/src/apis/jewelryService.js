@@ -39,4 +39,7 @@ const fetchAllCustomer = () => {
 const fetchAllListOrder = () => {
     return axios.get("https://jssatsproject.azurewebsites.net/api/SellOrder/getall");
 }
-export {fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond,fetchAllListOrder};
+const fetchAllProduct = () => {
+    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+}
+export {fetchAllProduct,fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond,fetchAllListOrder};
