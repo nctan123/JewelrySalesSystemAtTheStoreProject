@@ -9,7 +9,7 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> CountProductsSoldByCategoryAsync(DateTime startDate, DateTime endDate);
 
         public Task<List<SellOrderDetail>> GetAllEntitiesFromSellOrderAsync(int sellOrderId,
-            Dictionary<string, int> productCodesAndQuantity, Dictionary<string, string> productCodesAndPromotionIds);
+            Dictionary<string, int> productCodesAndQuantity, Dictionary<string, int?>? productCodesAndPromotionIds);
 
         public Task UpdateAllOrderDetailsStatus(SellOrder order, string newStatus);
     }

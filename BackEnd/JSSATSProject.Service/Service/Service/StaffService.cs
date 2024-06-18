@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.StaffModel;
@@ -36,16 +37,53 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(DateTime startDate, DateTime endDate)
         {
-            var entities = await _unitOfWork.StaffRepository.GetAsync();
-            var response = _mapper.Map<List<ResponseStaff>>(entities);
-            return new ResponseModel
+            try
             {
-                Data = response,
-                MessageError = "",
-            };
+                // Fetch all staff entities including SellOrders
+                var entities = await _unitOfWork.StaffRepository.GetAsync(includeProperties: "SellOrders");
+
+                var responseList = new List<ResponseStaff>();
+
+                foreach (var entity in entities)
+                {
+                    var response = _mapper.Map<ResponseStaff>(entity);
+
+                    // Filter SellOrders by date range and status, including null checks
+                    var staffOrders = entity.SellOrders?
+                        .Where(order => order != null &&
+                                        order.CreateDate >= startDate &&
+                                        order.CreateDate <= endDate &&
+                                        !string.IsNullOrEmpty(order.Status) &&
+                                        order.Status.Equals(OrderConstants.CompletedStatus))
+                        .ToList() ?? new List<SellOrder>();
+
+                    // Calculate TotalRevenue and TotalSellOrder
+                    response.TotalRevenue = staffOrders.Sum(order => order.TotalAmount);
+                    response.TotalSellOrder = staffOrders.Count;
+
+                    responseList.Add(response);
+                }
+
+                return new ResponseModel
+                {
+                    Data = responseList,
+                    MessageError = "",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = ex.Message,
+                };
+            }
         }
+
+
+
 
         public async Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime startDate, DateTime endDate)
         {
@@ -63,10 +101,16 @@ namespace JSSATSProject.Service.Service.Service
 
             var response = _mapper.Map<ResponseStaff>(staffEntity);
 
-            var staffOrders = staffEntity.SellOrders
-                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate);
+            var staffOrders = response.SellOrders?
+                          .Where(order => order != null &&
+                                          order.CreateDate >= startDate &&
+                                          order.CreateDate <= endDate &&
+                                          !string.IsNullOrEmpty(order.Status) &&
+                                          order.Status.Equals(OrderConstants.CompletedStatus))
+                          .ToList() ?? new List<SellOrder>();
+
             //them buy order vao
-            response.TotalRevennue = staffOrders.Sum(order => order.TotalAmount);
+            response.TotalRevenue = staffOrders.Sum(order => order.TotalAmount);
             response.TotalSellOrder = staffOrders.Count();
 
             return new ResponseModel
@@ -129,7 +173,7 @@ namespace JSSATSProject.Service.Service.Service
         {
             // Fetch orders within the specified date range
             var orders = await _unitOfWork.SellOrderRepository.GetAsync(
-                filter: o => o.CreateDate >= startDate && o.CreateDate <= endDate);
+                filter: o => o.CreateDate >= startDate && o.CreateDate <= endDate && (o.Status.Equals(OrderConstants.CompletedStatus)));
 
             // Group orders by StaffId and calculate total revenue for each group
             var groupedOrders = orders

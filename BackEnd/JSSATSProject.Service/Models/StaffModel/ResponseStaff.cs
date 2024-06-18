@@ -23,7 +23,7 @@ namespace JSSATSProject.Service.Models.StaffModel
 
         public string? Status { get; set; }
 
-        public decimal TotalRevennue { get; set; }
+        public decimal TotalRevenue { get; set; }
         public int TotalSellOrder { get; set; }
         public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
         public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();

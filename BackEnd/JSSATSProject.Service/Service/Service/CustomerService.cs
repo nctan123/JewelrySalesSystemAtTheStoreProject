@@ -55,7 +55,10 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetAllAsync()
         {
             var entities =
-                await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");
+                await _unitOfWork.CustomerRepository.GetAsync(
+                     orderBy: query => query.OrderByDescending(c => c.CreateDate),
+                    includeProperties: "Point,SellOrders,Payments"
+                    );
             var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
             return new ResponseModel
