@@ -56,6 +56,7 @@ const DiamondManager = () => {
                 const allProducts = res.data.data;
                 const diamondProducts = allProducts.filter(product => product.category === 'Diamonds');
                 setListProduct(diamondProducts);
+                setOriginalListProduct(diamondProducts);
             }
         } catch (error) {
             console.error('Error fetching staffs:', error);
@@ -87,17 +88,15 @@ const DiamondManager = () => {
     };
 
     const handleSearch = () => {
-        if (searchQuery === '') {
-            // If search query is empty, reset to original list of Products
-            setListProduct(originalListProduct);
-        } else {
-            const filteredProducts = originalListProduct.filter((Product) =>
-                Product.code.toLowerCase().includes(searchQuery.toLowerCase())
-            );
+        let filteredProduct = originalListProduct;
 
-            // Update state with filtered Products
-            setListProduct(filteredProducts);
+        if (searchQuery) {
+            filteredProduct = filteredProduct.filter((product) =>
+                product.code.toLowerCase().includes(searchQuery.toLowerCase())
+            );
         }
+
+        setListProduct(filteredProduct);
         setSearchQuery('')
     };
 
@@ -199,27 +198,28 @@ const DiamondManager = () => {
                     className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto"
                     overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
                 >
-                    <h2 className="text-xl font-bold mb-4">Staff Details</h2>
-                    {selectedDiamond && (
-                        <div>
-                            <p><strong>ID:</strong> {selectedDiamond.id}</p>
-                            <p><strong>Code:</strong> {selectedDiamond.code}</p>
-                            <p><strong>Name:</strong> {selectedDiamond.name}</p>
-                            <p><strong>Origin:</strong> {selectedDiamond.originName}</p>
-                            <p><strong>Shape:</strong> {selectedDiamond.shapeName}</p>
-                            <p><strong>Fluorescence:</strong> {selectedDiamond.fluorescenceName}</p>
-                            <p><strong>Color:</strong> {selectedDiamond.colorName}</p>
-                            <p><strong>Symmetry:</strong> {selectedDiamond.symmetryName}</p>
-                            <p><strong>Polish:</strong> {selectedDiamond.polishName}</p>
-                            <p><strong>Cut:</strong> {selectedDiamond.cutName}</p>
-                            <p><strong>Clarity:</strong> {selectedDiamond.clarityName}</p>
-                            <p><strong>Carat:</strong> {selectedDiamond.caratWeight}</p>
-                            {/* Add more details as needed */}
-                            <div className='flex'>
-                                {/* <button onClick={closeModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded ml-14 my-1 " style={{ width: '5rem' }}>Edit</button> */}
-                                <button onClick={closeModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded " style={{ width: '5rem' }}>Close</button>
-                            </div>
 
+                    {selectedDiamond && (
+                        <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
+                            <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                                <h2 className="text-xl font-bold mb-4">{selectedDiamond.name}</h2>
+                                <p><strong>ID:</strong> {selectedDiamond.id}</p>
+                                <p><strong>Code:</strong> {selectedDiamond.code}</p>
+                                <p><strong>Origin:</strong> {selectedDiamond.originName}</p>
+                                <p><strong>Shape:</strong> {selectedDiamond.shapeName}</p>
+                                <p><strong>Fluorescence:</strong> {selectedDiamond.fluorescenceName}</p>
+                                <p><strong>Color:</strong> {selectedDiamond.colorName}</p>
+                                <p><strong>Symmetry:</strong> {selectedDiamond.symmetryName}</p>
+                                <p><strong>Polish:</strong> {selectedDiamond.polishName}</p>
+                                <p><strong>Cut:</strong> {selectedDiamond.cutName}</p>
+                                <p><strong>Clarity:</strong> {selectedDiamond.clarityName}</p>
+                                <p><strong>Carat:</strong> {selectedDiamond.caratWeight}</p>
+                                {/* Add more details as needed */}
+                                <div className='flex'>
+                                    {/* <button onClick={closeModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded ml-14 my-1 " style={{ width: '5rem' }}>Edit</button> */}
+                                    <button onClick={closeModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded " style={{ width: '5rem' }}>Close</button>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </Modal>

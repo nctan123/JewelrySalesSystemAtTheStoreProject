@@ -81,12 +81,12 @@ export const sidebarMenuManager = [
         iconAdmin3: <IoMdArrowDropup size={24} color="white" />,
         subMenu: [
             {
-                path: 'Manage/productadmin',
+                path: 'Manage/productMana',
                 text: 'Product',
                 iconAdmin: <GiStonePile size={24} color="white" />
             },
             {
-                path: 'Manage/customeradmin',
+                path: 'Manage/customerMana',
                 text: 'Customer',
                 iconAdmin: <GrUserManager size={24} color="white" />
             },
@@ -126,11 +126,6 @@ export const sidebarMenuManager = [
         path: 'ReturnPolicy',
         text: 'Return policy',
         iconAdmin: <MdOutlineAssignmentReturned size={24} color="white" />
-    },
-    {
-        path: 'VoidBill',
-        text: 'Void bill',
-        iconAdmin: <TbDeviceIpadCancel size={24} color="white" />
     },
 
 ]
