@@ -18,7 +18,6 @@ namespace JSSATSProject.Service.Models.PaymentModel
 
         public decimal Amount { get; set; }
 
-        public string Status { get; set; }
 
     }
 }
