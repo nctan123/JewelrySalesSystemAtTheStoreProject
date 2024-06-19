@@ -36,7 +36,7 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = ""
             };
         }
-
+        
         public async Task<ResponseModel> GetByOrderIdAsync(int id)
         {
             var entities = await _unitOfWork.SellOrderDetailRepository.GetAsync(
@@ -167,14 +167,15 @@ namespace JSSATSProject.Service.Service.Service
         }
 
         public async Task<List<SellOrderDetail>> GetAllEntitiesFromSellOrderAsync(int sellOrderId,
-            Dictionary<string, int> productCodesAndQuantity, Dictionary<string, string> productCodesAndPromotionIds)
+            Dictionary<string, int> productCodesAndQuantity, Dictionary<string, int?>? productCodesAndPromotionIds)
         {
             var result = new List<SellOrderDetail>();
             foreach (var item in productCodesAndQuantity)
             {
                 var product = await _productService.GetEntityByCodeAsync(item.Key);
-                product.Status = "inactive";
-                productCodesAndPromotionIds.TryGetValue(item.Key, out string? promotionId);
+                product.Status = ProductConstants.InactiveStatus;
+                int? promotionId = null;
+                productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
                 var sellOrderDetails = new SellOrderDetail()
                 {
                     ProductId = product.Id,

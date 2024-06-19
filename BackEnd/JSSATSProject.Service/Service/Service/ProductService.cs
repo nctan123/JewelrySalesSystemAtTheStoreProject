@@ -50,7 +50,8 @@ namespace JSSATSProject.Service.Service.Service
             var response = _mapper.Map<List<ResponseProduct>>(entities);
             foreach (var responseProduct in response)
             {
-                responseProduct.ProductValue = await CalculateProductPrice(responseProduct);
+                responseProduct.ProductValue =
+                    await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First());
             }
 
             return new ResponseModel
@@ -60,25 +61,24 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<decimal> CalculateProductPrice(ResponseProduct responseProduct)
+        public async Task<decimal> CalculateProductPrice(Product correspondingProduct)
         {
             decimal totalPrice = 0;
             decimal diamondPrice = 0;
-            var correspondingProduct = _mapper.Map<Product>(responseProduct);
             var priceRate = correspondingProduct.PriceRate;
             var gemCost = correspondingProduct.GemCost.GetValueOrDefault();
             var materialCost = correspondingProduct.MaterialCost.GetValueOrDefault();
             var productionCost = correspondingProduct.ProductionCost.GetValueOrDefault();
-            var diamondsOfProduct = responseProduct.ProductDiamonds;
+            var diamondsOfProduct = correspondingProduct.ProductDiamonds;
             var diamond = diamondsOfProduct?.FirstOrDefault()?.Diamond;
             var timeStamp = DateTime.Now;
             var closestDate = await _diamondPriceListService.GetClosestPriceEffectiveDate(timeStamp);
             var totalFactors = diamond is null
                 ? 1
-                : (diamond.Fluorescence.PriceRate + diamond.Shape.PriceRate +
-                   diamond.Symmetry.PriceRate + diamond.Polish.PriceRate).GetValueOrDefault();
+                : (diamond.Fluorescence.PriceRate * diamond.Shape.PriceRate *
+                   diamond.Symmetry.PriceRate * diamond.Polish.PriceRate).GetValueOrDefault();
 
-            if (responseProduct.CategoryId == ProductConstants.DiamondsCategory)
+            if (correspondingProduct.CategoryId == ProductConstants.DiamondsCategory)
             {
                 diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                     diamond.ClarityId,
@@ -98,7 +98,7 @@ namespace JSSATSProject.Service.Service.Service
                         closestDate);
 
                 //except diamond category, all the rest product categories has material 
-                var productMaterial = responseProduct.ProductMaterials!.First();
+                var productMaterial = correspondingProduct.ProductMaterials!.First();
                 var closestPriceList = productMaterial.Material.MaterialPriceLists
                     .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
                     .First();
@@ -111,7 +111,7 @@ namespace JSSATSProject.Service.Service.Service
                     totalPrice *= priceRate;
                 }
             }
-            return totalPrice;
+            return Math.Ceiling(totalPrice);
         }
 
         //additional quantity var for Wholesale gold
@@ -129,8 +129,8 @@ namespace JSSATSProject.Service.Service.Service
             var closestDate = await _diamondPriceListService.GetClosestPriceEffectiveDate(timeStamp);
             var totalFactors = diamond is null
                 ? 1
-                : (diamond.Fluorescence.PriceRate + diamond.Shape.PriceRate +
-                   diamond.Symmetry.PriceRate + diamond.Polish.PriceRate).GetValueOrDefault();
+                : (diamond.Fluorescence.PriceRate * diamond.Shape.PriceRate *
+                   diamond.Symmetry.PriceRate * diamond.Polish.PriceRate).GetValueOrDefault();
 
             if (correspondingProduct.CategoryId == ProductConstants.DiamondsCategory)
             {
@@ -173,13 +173,9 @@ namespace JSSATSProject.Service.Service.Service
 
                 var materialPrice = quantity * productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
                 totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
-
-                //just apply price rate for diamonds and jewelry
-                if (correspondingProduct.CategoryId != ProductConstants.RetailGoldCategory &&
-                    correspondingProduct.CategoryId != ProductConstants.WholesaleGoldCategory)
-                    totalPrice *= priceRate;
             }
-            return totalPrice;
+
+            return Math.Ceiling(totalPrice);
         }
 
 
@@ -301,6 +297,7 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
         public async Task<bool> AreValidProducts(Dictionary<string, int> productCodes)
         {
             if (!productCodes.Any())

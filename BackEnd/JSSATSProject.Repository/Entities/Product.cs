@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace JSSATSProject.Repository.Entities;
 
-public partial class Product : IEnumerable
+public partial class Product
 {
     public int Id { get; set; }
 
@@ -41,8 +41,5 @@ public partial class Product : IEnumerable
     public virtual Stall Stalls { get; set; }
 
     public virtual ICollection<ProductDiamond> ProductDiamonds { get; set; } = new List<ProductDiamond>();
-    public IEnumerator GetEnumerator()
-    {
-        throw new NotImplementedException();
-    }
+
 }

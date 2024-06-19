@@ -36,7 +36,9 @@ namespace JSSATSProject.Service.Service.Service
             //fetch order details
             sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
                 requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
-            var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice);
+            sellOrder.DiscountPoint = requestSellOrder.DiscountPoint; 
+            
+            var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice) - sellOrder.DiscountPoint;
             sellOrder.TotalAmount = totalAmount;
             if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.ProcessingStatus;
             

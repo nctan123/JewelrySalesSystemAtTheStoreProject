@@ -15,14 +15,16 @@ namespace JSSATSProject.API.Controllers
     {
         private readonly ISellOrderService _sellOrderService;
         private readonly ISpecialDiscountRequestService _specialDiscountRequestService;
+        private readonly IPointService _pointService ;
         private readonly IMapper _mapper;
 
         public SellOrderController(ISellOrderService sellOrderService,
-            ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper)
+            ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper, IPointService pointService)
         {
             _sellOrderService = sellOrderService;
             _specialDiscountRequestService = specialDiscountRequestService;
             _mapper = mapper;
+            _pointService = pointService;
         }
 
         [HttpGet]
@@ -81,7 +83,8 @@ namespace JSSATSProject.API.Controllers
             {
                 response = _mapper.Map<ResponseUpdateSellOrderWithSpecialPromotion>(currentOrder);
             }
-
+            //if no exception occurs
+            await _pointService.DecreaseCustomerAvailablePoint(customerPhoneNumber, requestSellOrder.DiscountPoint);
 
             return Ok(response);
         }

@@ -11,5 +11,8 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> CreatePointAsync(RequestCreatePoint requestPoint);
         public Task<ResponseModel> UpdatePointAsync(int pointId, RequestUpdatePoint requestPoint);
+        public Task<int> GetMaximumApplicablePointForOrder(string customerPhoneNumber, decimal totalOrderPrice);
+
+        public Task<ResponseModel> DecreaseCustomerAvailablePoint(string customerPhoneNumber, int pointValue);
     }
 }

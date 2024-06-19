@@ -889,7 +889,7 @@ public partial class DBContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValue("awating")
+                .HasDefaultValue("awaiting")
                 .HasColumnName("status");
 
             entity.HasOne(d => d.ApprovedByNavigation).WithMany(p => p.PromotionRequestApprovedByNavigations)
@@ -995,6 +995,7 @@ public partial class DBContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("create_date");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.DiscountPoint).HasColumnName("discount_point");
             entity.Property(e => e.Description)
                 .HasColumnType("text")
                 .HasColumnName("description");
@@ -1097,7 +1098,7 @@ public partial class DBContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValue("awating")
+                .HasDefaultValue("awaiting")
                 .HasColumnName("status");
 
             entity.HasOne(d => d.ApprovedByNavigation).WithMany(p => p.SpecialDiscountRequestApprovedByNavigations)
