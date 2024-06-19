@@ -27,21 +27,8 @@ namespace JSSATSProject.API.Controllers
             try
             {
                 var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
+                // Response.Redirect(url);
                 return Redirect(url);
-            }
-            catch (Exception ex)
-            {
-                // Log the exception here
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-            }
-        }
-        [HttpGet("PaymentCallback")]
-        public IActionResult PaymentCallback()
-        {
-            try
-            {
-                var response = _vnPayService.PaymentExecute(Request.Query);
-                return Ok(response);
             }
             catch (Exception ex)
             {

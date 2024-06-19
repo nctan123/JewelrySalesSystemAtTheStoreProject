@@ -47,6 +47,10 @@ namespace JSSATSProject.Service.Service.Service
                 pay.AddRequestData("vnp_OrderInfo", $"{model.OrderId} {model.Amount}");
                 pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
                 pay.AddRequestData("vnp_TxnRef", tick);
+                //
+                pay.AddRequestData("vnp_OrderType","Buy");
+                pay.AddRequestData("vnp_ExpireDate","20250101103111");
+                
 
                 var paymentUrl = pay.CreateRequestUrl(_configuration["Vnpay:BaseUrl"], _configuration["Vnpay:HashSecret"]);
 

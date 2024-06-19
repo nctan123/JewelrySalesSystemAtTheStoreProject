@@ -12,10 +12,12 @@ namespace JSSATSProject.API.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly IPaymentService _paymentService;
+        private readonly IVnPayService _vnPayService;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(IPaymentService paymentService, IVnPayService vnPayService)
         {
             _paymentService = paymentService;
+            _vnPayService = vnPayService;
         }
 
         [HttpGet]
@@ -48,6 +50,27 @@ namespace JSSATSProject.API.Controllers
         {
             var response = await _paymentService.UpdatePaymentAsync(id, requestPayment);
             return Ok(response);
+        }
+        
+        [HttpGet]
+        [Route("callback")]
+        public IActionResult PaymentCallback()
+        {
+            try
+            {
+                var response = _vnPayService.PaymentExecute(Request.Query);
+                //create payment details
+                if (Convert.ToInt32(response.TransactionId) == 0)
+                {
+                    return Problem();
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
+            }
         }
     }
 }
