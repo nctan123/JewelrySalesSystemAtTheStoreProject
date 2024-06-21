@@ -4,31 +4,49 @@ import { deleteProduct, deleteCustomer, deleteProductAll, deletePromotion } from
 import { MdDeleteOutline } from "react-icons/md";
 import { VscGitStashApply } from "react-icons/vsc";
 import Popup from 'reactjs-popup';
-
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const SidebarRight = () => {
-  const dispatch = useDispatch()
+
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date().toISOString())
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const CartProduct = useSelector(state => state.cart.CartArr);
-  const CusPoint = useSelector(state => state.cart.CusPoint);
-
+  const [customerPhoneNumber, setcustomerPhoneNumber] = useState('')
+  const [staffId, setstaffId] = useState(null)
+  const [createDate,setcreateDate] = useState(new Date().toISOString());
+  const [description, setdescription] = useState()
+  const [productCodesAndQuantity, setproductCodesAndQuantity] = useState(null)
+  const [productCodesAndPromotionIds, setproductCodesAndPromotionIds] = useState(null)
+  const [specialDiscountRequestId, setspecialDiscountRequestId] = useState(null)
+  const [isSpecialDiscountRequested, setisSpecialDiscountRequested] = useState(false)
+  const [discountRejectedReason, setdiscountRejectedReason] = useState(null)
+  const [specialDiscountRequestStatus, setspecialDiscountRequestStatus] = useState(null)
+  const [specialDiscountRate, setspecialDiscountRate] = useState(0)
+  const [point, setpoint] = useState("")
+  const [submitList,setsubmitList] = useState('')
+  //Lưu giá trị sản phẩm
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0)
+  //Lưu trạng thái gửi yêu cầu giảm giá của khách hàng
+  const [isChecked, setIsChecked] = useState(false);
+  const handleCheckboxClick = () => {
+    if (!isChecked) {
+      setIsChecked(true);
+      toast.warning('Sent Special Discount')
+    }
+  };
+  //Lấy danh sách được lưu trong redux và sử dùng đường dẫn đi đến store
+  const dispatch = useDispatch()
+  const CartProduct = useSelector(state => state.cart.CartArr);
+  const CusPoint = useSelector(state => state.cart.CusPoint);
+  //Set Time cho Order
+  useEffect(() => {
+    const interval1 = setInterval(() => {
+      setcreateDate(new Date().toISOString())
+    }, 1000);
+    return () => clearInterval(interval1);
+  }, []);
 
   useEffect(() => {
-    if (CusPoint && CusPoint[0] && CusPoint[0].phone) {
-      setcustomerPhoneNumber(CusPoint[0].phone);
-    }
     const calculateTotal = () => {
       let totalValue = 0;
       CartProduct.forEach((product) => {
@@ -37,6 +55,7 @@ const SidebarRight = () => {
       setTotal(totalValue);
     };
     calculateTotal();
+
     const calculateDiscount = () => {
       let totalDiscount = 0;
       CartProduct.forEach((product) => {
@@ -45,61 +64,37 @@ const SidebarRight = () => {
       setDiscount(totalDiscount);
     };
     calculateDiscount();
-  }, [CartProduct][CusPoint]);
 
+    }, [CartProduct]);
+    const totalInvoice = total - discount
 
-  const totalInvoice = total - discount
+  useEffect(() => {
+  if (CusPoint && CusPoint[0] && CusPoint[0].phone) {
+    setcustomerPhoneNumber(CusPoint[0].phone);
+  }
+  },[CusPoint]);
+
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  const toastSpectial = () => {
-    toast.warning('Sent Special Discount')
-  }
-  const [isChecked, setIsChecked] = useState(false);
 
-  const handleCheckboxClick = () => {
-    if (!isChecked) {
-      setIsChecked(true);
-      toastSpectial();
-    }
-  };
-  const [customerPhoneNumber, setcustomerPhoneNumber] = useState('')
-  const [staffId, setstaffId] = useState(null)
-  const [createDate,setcreateDate] = useState(new Date().toISOString());
-  useEffect(() => {
-    const interval1 = setInterval(() => {
-      setcreateDate(new Date().toISOString())
-    }, 1000);
-    return () => clearInterval(interval1);
-  }, []);
-  const [description, setdescription] = useState()
-  const [productCodesAndQuantity, setproductCodesAndQuantity] = useState(null)
-  const [productCodesAndPromotionIds, setproductCodesAndPromotionIds] = useState(null)
-  const [specialDiscountRequestId, setspecialDiscountRequestId] = useState(null)
-  const [isSpecialDiscountRequested, setisSpecialDiscountRequested] = useState(false)
-  const [discountRejectedReason, setdiscountRejectedReason] = useState(null)
-  const [specialDiscountRequestStatus, setspecialDiscountRequestStatus] = useState(null)
-  const [specialDiscountRate, setspecialDiscountRate] = useState(null)
-  const [point, setpoint] = useState("")
 
   useEffect(() => {
     const codesAndQuantity = CartProduct.reduce((acc,product) => {
       acc[product.code] = product.quantity;
       return acc;
     }, {});
-
     setproductCodesAndQuantity(codesAndQuantity);
   }, [CartProduct]);
+
   const handSubmitOrder = async () => {
-   
-    
     let data = {
       customerPhoneNumber: customerPhoneNumber,
       staffId: 4,
       createDate: createDate,
       description: description,
       discountPoint: 0,
-      productCodesAndQuantity: productCodesAndQuantity,
+      productCodesAndQuantity: productCodesAndQuantity, //useEffect
       productCodesAndPromotionIds: productCodesAndPromotionIds,
       isSpecialDiscountRequested: isSpecialDiscountRequested,
       specialDiscountRate: specialDiscountRate,
@@ -107,35 +102,38 @@ const SidebarRight = () => {
       discountRejectedReason: discountRejectedReason,
       specialDiscountRequestStatus: specialDiscountRequestStatus,
     }
-   
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder',data);
+      setsubmitList(res)
       toast.success('Successful');
       setdescription('');
       setspecialDiscountRate('');
       setpoint('');   
-      setPointRate('');
-      console.log(data)
+      // setPointRate('');
+      console.log(submitList)
     } catch (error) {
       toast.error('Fail');
       console.error('Error invoice :', error);
     }
   }
-
-  const [pointRate, setPointRate] = useState(0);
+  useEffect(() => {
+    // This will run every time ListInvoice changes
+    console.log(submitList);
+  }, [submitList]);
+  // const [pointRate, setPointRate] = useState(0);
   const [isInvalid, setIsInvalid] = useState(false);
-  const handleRateChange = (event) => {
-    const value = parseFloat(event.target.value);
-    if (value < 0 || value > 1) {
-      setIsInvalid(true);
-      toast.warning('Wrong Value')
-    } else {
-      setIsInvalid(false);
-      setPointRate(value);
-      setspecialDiscountRate(value);
-      setisSpecialDiscountRequested(true);
-    }
-  };
+  // const handleRateChange = (event) => {
+  //   const value = parseFloat(event.target.value);
+  //   if (value < 0 || value > 1) {
+  //     setIsInvalid(true);
+  //     toast.warning('Wrong Value')
+  //   } else {
+  //     setIsInvalid(false);
+  //     // setPointRate(value);
+  //     setspecialDiscountRate(value);
+  //     setisSpecialDiscountRequested(true);
+  //   }
+  // };
 
 
   return (<>
@@ -202,11 +200,10 @@ const SidebarRight = () => {
                 className={`w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold pl-2 ${isInvalid ? 'border-red-500' : ''
                   }`}
                 type="number"
-                name="pointRate"
                 min="0"
                 max="1"
-                value={pointRate}
-                onChange={handleRateChange}
+                value={specialDiscountRate}
+                onChange={(even) => setspecialDiscountRate(even.target.value)}
                 placeholder="Rate"
               />
             </div>          
@@ -296,7 +293,7 @@ const SidebarRight = () => {
                         />
                         <div
                           className={`peer ring-0 bg-rose-400 rounded-full outline-none duration-300 after:duration-500 w-8 h-8 shadow-md ${isChecked
-                            ? 'bg-emerald-600 after:content-["✔️"]'
+                            ? 'bg-emerald-700 after:content-["✔️"]'
                             : 'after:content-["✖️"]'
                             } after:rounded-full after:absolute after:outline-none after:h-6 after:w-6 after:bg-gray-50 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-75`}
                         ></div>
