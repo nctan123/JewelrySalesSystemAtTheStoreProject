@@ -21,7 +21,13 @@ const RetailGold = () => {
       setListReGold(res.data.data)
     }
   };
-
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(value);
+  };
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
@@ -83,14 +89,14 @@ const RetailGold = () => {
                 </div>
                 <div class="max-w-sm h-auto">
 
-                  <div class="absolute top-[20px] left-4 w-[180px] flex justify-center items-center sm:justify-between">
-                    <h2 class="text-black text-sm font-normal tracking-widest">{item.name}</h2>
+                <div class="absolute top-[10px] w-full left-0 p-1 sm:justify-between">
+                    <h2 class="text-black text-sm font-normal tracking-widest text-center">{item.name}</h2>
                   </div>
                   <div className='absolute bottom-[50px] right-0 w-full'>
                     <p class="text-sm text-[#de993f] flex justify-center">Code: {item.code}</p>
                     <div class=" flex gap-3 items-center justify-center">
-                      <p class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</p>
-                      <p class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</p>
+                      <p class="text-[#cc4040] font-bold text-sm">{formatCurrency(item.productValue - (item.productValue * item.discountRate))}</p>
+                      <p class="text-[#121212] font-semibold text-sm line-through">{formatCurrency(item.productValue)}</p>
                     </div>
                   </div>
                   <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">

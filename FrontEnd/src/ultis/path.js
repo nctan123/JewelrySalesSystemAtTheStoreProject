@@ -18,22 +18,13 @@ const path = {
     RETAILGOLD: 'retailgold',
     SEARCHINVOICE: 'searchinvoice',
     PROMOTION: 'promotion',
-    RETURN_EX: 'returnExchange',
-<<<<<<< HEAD
-    RETURN:'return',
-    EXCHANGE:'exchange',
+    RETURN_EX: 'purchase',
+
     BUY:'buy',
     WARRANTY: 'warranty',
 // Cashier
-    CS_PUBLIC: '/',
-=======
-    RETURN: 'return',
-    EXCHANGE: 'exchange',
-    BUY: 'buy',
-    WARRANTY: 'warranty',
-    // Cashier
     CS_PUBLIC: 'cs_public',
->>>>>>> develop
+
     CS_ORDER: 'cs_order',
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',

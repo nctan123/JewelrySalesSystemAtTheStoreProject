@@ -20,13 +20,10 @@ const Cs_Public = () => {
       </div>
 
       <div className='flex-auto border bg-[#ffffff25] '>
-<<<<<<< HEAD
+
       <div className='h-[70px] px-[30px] flex items-center mb-2'><Header/></div>
       <div className='h-[90%] flex justify-start'><Outlet/></div>
-=======
-        <div className='h-[70px] px-[30px] flex items-center mb-2'><Header /></div>
-        <div className='h-[90%] flex justify-start overflow-y-auto'><Outlet /></div>
->>>>>>> develop
+
       </div>
 
     </div>
