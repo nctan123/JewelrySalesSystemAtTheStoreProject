@@ -20,7 +20,7 @@ const SidebarRight = () => {
   const [isSpecialDiscountRequested, setisSpecialDiscountRequested] = useState(false)
   const [discountRejectedReason, setdiscountRejectedReason] = useState(null)
   const [specialDiscountRequestStatus, setspecialDiscountRequestStatus] = useState(null)
-  const [specialDiscountRate, setspecialDiscountRate] = useState(0)
+  const [specialDiscountRate, setspecialDiscountRate] = useState('0')
   const [point, setpoint] = useState("")
   const [submitList,setsubmitList] = useState('')
   //Lưu giá trị sản phẩm
@@ -107,7 +107,7 @@ const SidebarRight = () => {
       setsubmitList(res)
       toast.success('Successful');
       setdescription('');
-      setspecialDiscountRate('');
+      setspecialDiscountRate(0);
       setpoint('');   
       // setPointRate('');
       console.log(submitList)
