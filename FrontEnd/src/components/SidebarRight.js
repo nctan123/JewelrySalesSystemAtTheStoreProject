@@ -115,7 +115,7 @@ const SidebarRight = () => {
       setspecialDiscountRate('');
       setpoint('');   
       setPointRate('');
-      console.log(res)
+      console.log(data)
     } catch (error) {
       toast.error('Fail');
       console.error('Error invoice :', error);
