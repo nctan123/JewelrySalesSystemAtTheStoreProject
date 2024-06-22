@@ -2,14 +2,17 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
 public partial class BuyOrderDetail
 {
     public int Id { get; set; }
+    [JsonIgnore]
 
     public int BuyOrderId { get; set; }
+    [JsonIgnore]
 
     public int CategoryTypeId { get; set; }
 
@@ -18,16 +21,21 @@ public partial class BuyOrderDetail
     public int? MaterialId { get; set; }
 
     public decimal? MaterialWeight { get; set; }
+    [JsonIgnore]
 
     public int? PurchasePriceRatioId { get; set; }
 
     public decimal UnitPrice { get; set; }
 
+    [JsonIgnore]
     public virtual BuyOrder BuyOrder { get; set; }
+    [JsonIgnore]
 
     public virtual ProductCategoryType CategoryType { get; set; }
+    [JsonIgnore]
 
     public virtual Material Material { get; set; }
+    [JsonIgnore]
 
     public virtual PurchasePriceRatio PurchasePriceRatio { get; set; }
 }

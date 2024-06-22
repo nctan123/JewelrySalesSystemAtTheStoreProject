@@ -354,6 +354,10 @@ public partial class DBContext : DbContext
                 .HasDefaultValue("active")
                 .HasColumnName("status");
             entity.Property(e => e.SymmetryId).HasColumnName("symmetry_id");
+            entity.Property(e => e.DiamondGradingCode)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("diamond_grading_code");
 
             entity.HasOne(d => d.Carat).WithMany(p => p.Diamonds)
                 .HasForeignKey(d => d.CaratId)
