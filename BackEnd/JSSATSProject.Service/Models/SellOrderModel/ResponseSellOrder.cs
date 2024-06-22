@@ -26,6 +26,8 @@ namespace JSSATSProject.Service.Models.OrderModel
 
         public virtual Customer Customer { get; set; }
 
+        public string Code { get; set; }
+
         public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
         public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; } = new List<SellOrderDetail>();

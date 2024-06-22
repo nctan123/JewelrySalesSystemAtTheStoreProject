@@ -8,11 +8,11 @@ namespace JSSATSProject.API.Controllers
     [ApiController]
     public class SellOrderDetailController : ControllerBase
     {
-        private readonly ISellOrderDetailService _orderdetailService;
+        private readonly ISellOrderDetailService _sellorderdetailService;
 
         public SellOrderDetailController(ISellOrderDetailService orderdetailService)
         {
-            _orderdetailService = orderdetailService;
+            _sellorderdetailService = orderdetailService;
         }
 
 
@@ -20,8 +20,18 @@ namespace JSSATSProject.API.Controllers
         [Route("CountProductsSoldByCategory")]
         public async Task<IActionResult> CountProductsSoldByCategoryAsync(DateTime startDate, DateTime endDate)
         {
-            var responseModel = await _orderdetailService.CountProductsSoldByCategoryAsync(startDate,endDate);
+            var responseModel = await _sellorderdetailService.CountProductsSoldByCategoryAsync(startDate,endDate);
             return Ok(responseModel);
         }
+
+        [HttpGet]
+        [Route("GetTotalRevenueStall")]
+        public async Task<IActionResult> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _sellorderdetailService.GetTotalRevenueStallAsync(startDate, endDate);
+            return Ok(responseModel);
+        }
+
+
     }
 }

@@ -23,15 +23,12 @@ public class VnPayLibrary
             }
         }
 
-        var orderId = Convert.ToInt64(vnPay.GetResponseData("vnp_TxnRef"));
+        //var orderId = Convert.ToInt64(vnPay.GetResponseData("vnp_TxnRef"));
         var vnPayTranId = Convert.ToInt64(vnPay.GetResponseData("vnp_TransactionNo"));
         var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
-        var vnpSecureHash =
-            collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value; //hash của dữ liệu trả về
+        var vnpSecureHash = collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value;
         var orderInfo = vnPay.GetResponseData("vnp_OrderInfo");
-
-        var checkSignature =
-            vnPay.ValidateSignature(vnpSecureHash, hashSecret); //check Signature
+        var checkSignature = vnPay.ValidateSignature(vnpSecureHash, hashSecret);
 
         if (!checkSignature)
             return new ResponseVnPayment()
@@ -39,18 +36,24 @@ public class VnPayLibrary
                 Success = false
             };
 
+        // Assuming orderInfo is formatted as "OrderId Amount PaymentId"
+        var orderInfoParts = orderInfo.Split(' ');
+        var paymentId = orderInfoParts.Length > 2 ? orderInfoParts[2] : string.Empty;
+        var orderId = orderInfoParts.Length > 2 ? orderInfoParts[0] : string.Empty;
+
         return new ResponseVnPayment()
         {
             Success = true,
             PaymentMethod = "VnPay",
             OrderDescription = orderInfo,
-            OrderId = orderId.ToString(),
-            PaymentId = null,
+            OrderId = orderId,
+            PaymentId = paymentId,
             TransactionId = vnPayTranId.ToString(),
             Token = vnpSecureHash,
             VnPayResponseCode = vnpResponseCode
         };
     }
+
     public string GetIpAddress(HttpContext context)
     {
         var ipAddress = string.Empty;

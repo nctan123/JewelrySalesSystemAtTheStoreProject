@@ -21,6 +21,8 @@ public partial class SellOrderDetail
     public string Status { get; set; }
 
     public int? PromotionId { get; set; }
+    public virtual ICollection<Guarantee> Guarantees { get; set; } = new List<Guarantee>();
+
     [JsonIgnore]
     public virtual SellOrder Order { get; set; }
 

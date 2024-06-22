@@ -17,7 +17,7 @@ namespace JSSATSProject.API.Controllers
 
   
         [HttpPost("CreatePaymentUrl")]
-        public IActionResult CreatePaymentUrl([FromBody] RequestCreatePayment model)
+        public IActionResult CreatePaymentUrl([FromBody] RequestCreateVnPayment model)
         {
             if (model == null)
             {
@@ -27,9 +27,10 @@ namespace JSSATSProject.API.Controllers
             try
             {
                 var url = _vnPayService.CreatePaymentUrl(model, HttpContext);
-                // Response.Redirect(url);
-                return Redirect(url);
-            }
+                //Response.Redirect(url);
+                //return Redirect(url);
+                return Ok(url);
+             }
             catch (Exception ex)
             {
                 // Log the exception here

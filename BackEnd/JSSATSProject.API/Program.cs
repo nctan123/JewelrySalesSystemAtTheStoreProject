@@ -87,6 +87,7 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
             builder.Services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
+            builder.Services.AddScoped<IPaymentDetailService, PaymentDetailService>();
 
             // CacheManager
             services.AddSingleton(typeof(CacheManager<>));

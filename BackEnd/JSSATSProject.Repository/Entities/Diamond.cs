@@ -33,6 +33,8 @@ public partial class Diamond
 
     public string Status { get; set; }
 
+    public string DiamondGradingCode { get; set; }
+
     public virtual Carat Carat { get; set; }
 
     public virtual Clarity Clarity { get; set; }

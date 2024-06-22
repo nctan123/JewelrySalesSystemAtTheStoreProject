@@ -4,11 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -57,7 +53,7 @@ namespace JSSATSProject.Service.Service.Service
             var entities =
                 await _unitOfWork.CustomerRepository.GetAsync(
                      orderBy: query => query.OrderByDescending(c => c.CreateDate),
-                    includeProperties: "Point,SellOrders,Payments"
+                    includeProperties: "Point,SellOrders"
                     );
             var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
@@ -85,7 +81,6 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
-                Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
@@ -114,7 +109,6 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
-                Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
@@ -143,7 +137,6 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
-                Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();

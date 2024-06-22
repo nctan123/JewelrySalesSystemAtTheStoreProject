@@ -1,27 +1,33 @@
 ﻿using JSSATSProject.Repository.Entities;
 using JSSATSProject.Repository;
 using JSSATSProject.Service.Models;
-using JSSATSProject.Service.Models.PaymentModel;
+using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Service.IService;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
+using Azure;
+using JSSATSProject.Service.Models.PaymentModel;
 
 namespace JSSATSProject.Service.Service.Service
 {
-    public class PaymentService : IPaymentService
+    public class PaymentDetailService : IPaymentDetailService
     {
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public PaymentService(UnitOfWork unitOfWork, IMapper mapper)
+        public PaymentDetailService(UnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-
-        public async Task<ResponseModel> CreatePaymentAsync(RequestCreatePayment requestPayment)
+        public async Task<ResponseModel> CreatePaymentDetailAsync(RequestCreatePaymentDetail requestPaymentDetail)
         {
-            var entity = _mapper.Map<Payment>(requestPayment);
-            await _unitOfWork.PaymentRepository.InsertAsync(entity);
+            var entity = _mapper.Map<PaymentDetail>(requestPaymentDetail);
+            await _unitOfWork.PaymentDetailRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
             return new ResponseModel
             {
@@ -30,33 +36,25 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetByPaymentIdAsync(int id)
         {
-            var entities = await _unitOfWork.PaymentRepository.GetAsync();
-            var response = _mapper.Map<List<ResponsePayment>>(entities.ToList());
+            var entity = await _unitOfWork.PaymentDetailRepository.GetAsync(
+                    c => c.PaymentId == id);
+
             return new ResponseModel
             {
-                Data = response,
+                Data = entity,
                 MessageError = "",
             };
         }
 
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponsePayment>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
+      
 
-        public async Task<ResponseModel> UpdatePaymentAsync(int paymentId, RequestUpdatePayment requestPayment)
+        public async Task<ResponseModel> UpdateStatusPaymentDetailAsync(int paymentdetailId, RequestUpdatePaymentDetail requestPayment)
         {
             try
             {
-                var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(paymentId);
+                var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(paymentdetailId);
                 if (payment != null)
                 {
 
@@ -86,6 +84,16 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public async Task<ResponseModel> UpdateEntityPaymentDetailAsync(PaymentDetail paymentdetail, string status)
+        {
+            var response = await _unitOfWork.PaymentDetailRepository.UpdateEntityPaymentDetailAsync(paymentdetail, status);
+            return new ResponseModel
+            {
+                Data = response,
+                MessageError = ""
+            };
         }
     }
 }

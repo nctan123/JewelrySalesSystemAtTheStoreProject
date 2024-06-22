@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 namespace JSSATSProject.Repository.Entities;
 
-public partial class ReturnBuyBackPolicy
+public partial class CampaignPoint
 {
     public int Id { get; set; }
 
     public string Description { get; set; }
 
-    public DateTime EffectiveDate { get; set; }
+    public DateTime? StartDate { get; set; }
 
-    public string Status { get; set; }
+    public DateTime? EndDate { get; set; }
 
-    public virtual ICollection<PurchasePriceRatio> PurchasePriceRatios { get; set; } = new List<PurchasePriceRatio>();
+    public decimal? Rate { get; set; }
 }

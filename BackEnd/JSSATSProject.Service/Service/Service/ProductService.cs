@@ -48,7 +48,7 @@ namespace JSSATSProject.Service.Service.Service
                                    "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                    "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                    "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                                   "ProductMaterials,ProductMaterials.Material"
+                                   "ProductMaterials,ProductMaterials.Material," + "Stalls"
             );
             var response = _mapper.Map<List<ResponseProduct>>(entities);
             foreach (var responseProduct in response)
@@ -265,7 +265,7 @@ namespace JSSATSProject.Service.Service.Service
                 var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
                 if (product != null)
                 {
-                    product = _mapper.Map<Product>(requestProduct);
+                    _mapper.Map(requestProduct,product);
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
                     await _unitOfWork.SaveAsync();
 

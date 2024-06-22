@@ -30,5 +30,7 @@ namespace JSSATSProject.Service.Models.ProductModel
 
         public ICollection<ProductMaterial>? ProductMaterials { get; set; }
 
+        public virtual Stall Stalls { get; set; }
+
     }
 }

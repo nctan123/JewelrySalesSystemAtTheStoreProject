@@ -24,7 +24,6 @@ namespace JSSATSProject.Service.Models.CustomerModel
         public DateTime CreateDate { get; set; }
         public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
         public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
-        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     }
 }

@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -32,12 +33,11 @@ public partial class Product
     public virtual ProductCategory Category { get; set; }
 
     public virtual ICollection<Guarantee> Guarantees { get; set; } = new List<Guarantee>();
-
+    
     public virtual ICollection<ProductMaterial> ProductMaterials { get; set; } = new List<ProductMaterial>();
-
+    [JsonIgnore]
     public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; } = new List<SellOrderDetail>();
 
     public virtual Stall Stalls { get; set; }
-
     public virtual ICollection<ProductDiamond> ProductDiamonds { get; set; } = new List<ProductDiamond>();
 }

@@ -23,6 +23,7 @@ using JSSATSProject.Service.Models.DiamondPriceListModel;
 using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
+using JSSATSProject.Service.Models.PaymentDetailModel;
 
 
 
@@ -49,7 +50,6 @@ namespace JSSATSProject.Service.AutoMapper
                     .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
                     .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
                     .ForMember(dest => dest.BuyOrders, opt => opt.MapFrom(src => src.BuyOrders))
-                    .ForMember(dest => dest.Payments, opt => opt.MapFrom(src => src.Payments))
                     .ReverseMap();
 
 
@@ -107,6 +107,7 @@ namespace JSSATSProject.Service.AutoMapper
 
             //Payment
             CreateMap<Payment, RequestCreatePayment>().ReverseMap();
+            CreateMap<Payment, RequestUpdatePayment>().ReverseMap();
             CreateMap<Payment, ResponsePayment>().ReverseMap();
 
             //Point
@@ -122,8 +123,13 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<ProductCategoryType, ResponseProductCategoryType>().ReverseMap();
 
             //Product
-            CreateMap<Product, RequestCreateProduct>().ReverseMap();
-            CreateMap<Product, RequestUpdateProduct>().ReverseMap();
+            CreateMap<Product, RequestCreateProduct>()
+                .ReverseMap();
+            CreateMap<Product, RequestUpdateProduct>()
+                .ForMember(dest => dest.StallsId, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(dest => dest.StallsId, opt => opt.MapFrom(src => src.StallsId));
+            ;
             CreateMap<Product, ResponseProduct>()
                 .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.DiamondCode,
@@ -206,8 +212,12 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<SpecialDiscountRequest, UpdateSpecialDiscountRequest>().ReverseMap();
 
            
-
+            //SellOrder
             CreateMap<SellOrderDetail, RequestUpdateSellOrderDetailsStatus>().ReverseMap();
+
+            //PaymentDetail
+            CreateMap<PaymentDetail, RequestCreatePaymentDetail>().ReverseMap();
+            CreateMap<PaymentDetail, ResponsePaymentDetail>().ReverseMap();
         }
     }
 }

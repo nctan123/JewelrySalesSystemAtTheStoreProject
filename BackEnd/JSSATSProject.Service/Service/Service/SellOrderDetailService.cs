@@ -106,7 +106,7 @@ namespace JSSATSProject.Service.Service.Service
                 var product = await _productService.GetEntityByCodeAsync(item.Key);
                 product.Status = "inactive";
                 int? promotionId = null;
-                productCodesAndPromotionIds?.TryGetValue(item.Key, out  promotionId);
+                productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
                 var sellOrderDetails = new SellOrderDetail()
                 {
                     ProductId = product.Id,
@@ -132,6 +132,34 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-       
+        public async Task<ResponseModel> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate)
+        {
+            var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                filter: od => od.Order.CreateDate >= startDate
+                              && od.Order.CreateDate <= endDate
+                              && od.Status.Equals(SellOrderDetailsConstants.Delivered),
+                includeProperties: "Product,Product.Stalls");
+
+            var revenuePerStall = orderDetails
+                .GroupBy(od => od.Product.Stalls.Name)
+                .Select(group => new
+                {
+                    StallName = group.Key,
+                    TotalRevenue = group.Sum(od => od.Quantity * od.UnitPrice)
+                })
+                .ToList();
+
+            var result = revenuePerStall.Select(item => new Dictionary<string, object>
+    {
+        { "StallName", item.StallName },
+        { "TotalRevenue", item.TotalRevenue }
+    }).ToList();
+
+            return new ResponseModel
+            {
+                Data = result
+            };
+        }
+
     }
 }

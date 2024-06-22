@@ -21,6 +21,8 @@ public partial class BuyOrder
 
     public string Status { get; set; }
 
+    public string Code { get; set; }
+
     public virtual ICollection<BuyOrderDetail> BuyOrderDetails { get; set; } = new List<BuyOrderDetail>();
 
     public virtual Customer Customer { get; set; }
