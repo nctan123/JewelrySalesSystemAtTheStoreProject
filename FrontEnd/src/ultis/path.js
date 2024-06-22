@@ -18,9 +18,8 @@ const path = {
     RETAILGOLD: 'retailgold',
     SEARCHINVOICE: 'searchinvoice',
     PROMOTION: 'promotion',
-    RETURN_EX: 'returnExchange',
-    RETURN: 'return',
-    EXCHANGE: 'exchange',
+    RETURN_EX: 'purchase',
+
     BUY: 'buy',
     WARRANTY: 'warranty',
     // Cashier

@@ -140,6 +140,7 @@ const DiamondManager = () => {
                                     Img
                                 </th>
                                 <th className="whitespace-nowrap py-3 text-sm font-bold text-[#212B36] bg-[#f6f8fa]">Price</th>
+                                <th className="whitespace-nowrap py-3 text-sm font-bold text-[#212B36] bg-[#f6f8fa]">Stall</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-bold text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
                             </tr>
                         </thead>
@@ -153,6 +154,9 @@ const DiamondManager = () => {
                                     <td className="text-sm font-normal text-[#637381]">{item.name}</td>
                                     <td className="text-sm font-normal text-[#637381]"> <img src={logo} className="w-20 h-20" /> </td>
                                     <td className="text-sm font-normal text-[#637381]">{formatCurrency(item.productValue)}</td>
+                                    <td className="text-sm font-normal text-[#637381]">
+                                        {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}
+                                    </td>
                                     <button
                                         className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
                                         onClick={() => handleDetailClick(item.id)}

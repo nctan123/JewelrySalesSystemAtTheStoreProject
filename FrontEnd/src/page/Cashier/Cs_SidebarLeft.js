@@ -60,7 +60,7 @@ const Cs_SidebarLeft = () => {
               {item.icons}
               <span className="ml-4">{item.text}</span>
             </NavLink>
-            {item.text === 'Order' && isOrderSubmenuOpen && (
+            {/* {item.text === 'Order' && isOrderSubmenuOpen && (
               <div className="pl-8">
                 {item.subMenu.map((subItem) => (
                   <NavLink
@@ -75,7 +75,7 @@ const Cs_SidebarLeft = () => {
                   </NavLink>
                 ))}
               </div>
-            )}
+            )} */}
           </div>
         ))}
         <NavLink to='/login' onClick={handleLogOut} className="mt-auto items-center text-white">

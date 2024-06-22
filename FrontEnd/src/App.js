@@ -1,10 +1,9 @@
 import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux'; //mang action đến redux, sử dụng useSeletor để lấy giá trị
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Return, Exchange, Buy, Warranty } from './page/Seller';
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty } from './page/Seller';
+
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
@@ -45,6 +44,7 @@ import StaffMana from './page/Manager/Manage/StaffMana';
 import PromotionListMana from './page/Manager/Promotion/PromotionListMana';
 import PromotionRequestMana from './page/Manager/Promotion/PromotionRequestMana';
 import PromotionManager from './page/Manager/Promotion/PromotionManager'
+import ReturnPolicyView from './page/Manager/ReturnPolicy/ReturnPolicyView';
 function App() {
   // test redux có hoạt động không
   // const {test,homeData} = useSelector(state => state.app)
@@ -111,6 +111,7 @@ function App() {
               <Route path={path.PROMOTIONLIST} element={<PromotionListMana />} />
               <Route path={path.PROMOTIONREQUEST} element={<PromotionRequestMana />} />
             </Route>
+            <Route path={path.RETURNPOLICY} element={<ReturnPolicyView />} />
 
           </Route>
           {/* Seller */}
@@ -128,8 +129,6 @@ function App() {
             <Route path={path.SEARCHINVOICE} element={<SearchInvoice />} />
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
-              <Route path={path.RETURN} element={<Return />} />
-              <Route path={path.EXCHANGE} element={<Exchange />} />
               <Route path={path.BUY} element={<Buy />} />
               <Route path={path.WARRANTY} element={<Warranty />} />
             </Route>
