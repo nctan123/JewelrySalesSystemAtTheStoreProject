@@ -21,37 +21,23 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> CreatePromotionRequestAsync(CreatePromotionRequest promotionRequest)
         {
             var entity = _mapper.Map<PromotionRequest>(promotionRequest);
-
-            if (promotionRequest.CategoriIds.Any())
-            {
-                var categoryIds = promotionRequest.CategoriIds.ToList();
-                var categories = await _unitOfWork.ProductCategoryRepository
-                                                  .GetAsync(pc => categoryIds.Contains(pc.Id) && pc.Status == "active");
-
-
-
-                foreach (var category in categories)
-                {
-                    entity.Categories.Add(category);
-                }
-            }
+            entity.Manager = await _unitOfWork.StaffRepository.GetByIDAsync(promotionRequest.ManagerId);
 
             await _unitOfWork.PromotionRequestRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
 
-
             return new ResponseModel
             {
-                Data = entity,
-                MessageError = string.Empty,
+                 Data = entity, 
+                 MessageError = "" 
             };
-        }
+         }
            
 
         public async Task<ResponseModel> GetAllAsync()
         {
             var entities = await _unitOfWork.PromotionRequestRepository.GetAsync(
-                includeProperties: "ApprovedByNavigation, Manager,Categories"
+                includeProperties: "ApprovedByNavigation, Manager"
             );
             var response = _mapper.Map<List<ResponsePromotionRequest>>(entities);
             return new ResponseModel

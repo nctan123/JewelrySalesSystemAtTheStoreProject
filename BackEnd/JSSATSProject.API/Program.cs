@@ -92,6 +92,12 @@ namespace JSSATSProject.API
             // CacheManager
             services.AddSingleton(typeof(CacheManager<>));
             services.AddSingleton<DiamondPriceCacheManager>();
+            builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
+            services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
+            services.AddScoped<IBuyOrderService, BuyOrderService>();
+
+            services.AddSingleton(typeof(CacheManager<>)); // Register generic CacheManager
+            services.AddSingleton<DiamondPriceCacheManager>(); // Register cache for diamond prices
             services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
             services.AddScoped<IProductService, ProductService>();
 

@@ -29,7 +29,5 @@ namespace JSSATSProject.Service.Models.PromotionRequestModel
         public virtual Staff ApprovedByNavigation { get; set; }
 
         public virtual Staff Manager { get; set; }
-
-        public virtual ICollection<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
     }
 }

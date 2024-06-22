@@ -14,9 +14,6 @@ namespace JSSATSProject.Service.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IDiamondPriceListService _diamondPriceListService;
-        private readonly CacheManager<Product> _productCacheManager;
-        private readonly CacheManager<MaterialPriceList> _materialPriceListCacheManager;
-        private readonly IPromotionService _promotionService;
 
         public ProductService(UnitOfWork unitOfWork, IMapper mapper, IDiamondPriceListService diamondPriceListService
         )
@@ -231,6 +228,16 @@ namespace JSSATSProject.Service.Service.Service
             return enumerable.First();
         }
 
+        public async Task<ResponseModel> GetByIdAsync(int id)
+        {
+            var entity = await _unitOfWork.ProductRepository.GetByIDAsync(id);
+            var response = _mapper.Map<ResponseProduct>(entity);
+            return new ResponseModel
+            {
+                Data = response,
+                MessageError = "",
+            };
+        }
 
         public async Task<ResponseModel> GetByNameAsync(string name)
         {

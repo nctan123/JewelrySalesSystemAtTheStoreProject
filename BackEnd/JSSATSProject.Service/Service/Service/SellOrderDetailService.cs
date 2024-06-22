@@ -1,9 +1,10 @@
 ﻿using JSSATSProject.Repository.Entities;
 using JSSATSProject.Repository;
 using JSSATSProject.Service.Models;
+using JSSATSProject.Service.Models.OrderDetail;
 using JSSATSProject.Service.Service.IService;
 using AutoMapper;
-
+using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Repository.ConstantsContainer;
 
@@ -23,10 +24,81 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
+        public async Task<ResponseModel> CreateOrderDetailAsync(RequestCreateOrderDetail requestOrderDetail)
+        {
+            var entity = _mapper.Map<SellOrderDetail>(requestOrderDetail);
+            await _unitOfWork.SellOrderDetailRepository.InsertAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return new ResponseModel
+            {
+                Data = entity,
+                MessageError = ""
+            };
+        }
+        
+        public async Task<ResponseModel> GetByOrderIdAsync(int id)
+        {
+            var entities = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                c => c.OrderId.Equals(id)
+            );
+            var response = _mapper.Map<List<ResponseOrderDetail>>(entities);
 
 
         public async Task<ResponseModel> UpdateStatusAsync(int orderdetailId, string newStatus,
            RequestUpdateSellOrderDetailsStatus newOrderDetails)
+            foreach (var orderDetail in response)
+            {
+                if (orderDetail.Product != null)
+                {
+                    orderDetail.ProductName = orderDetail.Product.Name;
+                }
+            }
+
+            return new ResponseModel
+            {
+                Data = response
+            };
+        }
+
+        public async Task<ResponseModel> UpdateOrderDetailAsync(int orderdetailId,
+            RequestUpdateOrderDetail requestOrderDetail)
+        {
+            try
+            {
+                var orderdetail = await _unitOfWork.SellOrderDetailRepository.GetEntityByIdAsync(orderdetailId);
+                if (orderdetail != null)
+                {
+                    _mapper.Map(requestOrderDetail, orderdetail);
+
+                    await _unitOfWork.SellOrderDetailRepository.UpdateAsync(orderdetail);
+
+                    return new ResponseModel
+                    {
+                        Data = orderdetail,
+                        MessageError = "",
+                    };
+                }
+
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Not Found",
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log the exception and return an appropriate error response
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "An error occurred while updating the customer: " + ex.Message
+                };
+            }
+        }
+
+        public async Task<ResponseModel> UpdateStatusAsync(int orderdetailId, string newStatus,
+            RequestUpdateSellOrderDetailsStatus newOrderDetails)
         {
             try
             {

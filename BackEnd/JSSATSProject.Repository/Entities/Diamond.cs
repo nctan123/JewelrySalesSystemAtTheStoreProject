@@ -32,6 +32,8 @@ public partial class Diamond
     public int CaratId { get; set; }
 
     public string Status { get; set; }
+    
+    public string DiamondGradingCode { get; set; }
 
     public string DiamondGradingCode { get; set; }
 

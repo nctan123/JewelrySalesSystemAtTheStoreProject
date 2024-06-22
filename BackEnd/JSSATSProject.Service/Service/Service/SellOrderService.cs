@@ -7,6 +7,7 @@ using JSSATSProject.Service.Service.IService;
 using System.Linq.Expressions;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Enums;
+using JSSATSProject.Service.Models.ProductModel;
 
 
 namespace JSSATSProject.Service.Service.Service
@@ -25,6 +26,12 @@ namespace JSSATSProject.Service.Service.Service
             _mapper = mapper;
             _customerService = customerService;
             _sellOrderDetailService = sellOrderDetailService;
+        }
+
+        public async Task<SellOrder?> GetEntityByCodeAsync(string code)
+        {
+            var result = await _unitOfWork.SellOrderRepository.GetByCodeAsync(code);
+            return result;
         }
 
         public async Task<ResponseModel> CreateOrderAsync(RequestCreateSellOrder requestSellOrder)
@@ -164,35 +171,86 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
+        public List<ResponseProductForCheckOrder> GetProducts(SellOrder? sellOrder)
+        {
+            var products = new List<ResponseProductForCheckOrder>();
+            if (sellOrder?.SellOrderDetails is not null)
+            {
+                foreach (var orderDetail in sellOrder.SellOrderDetails)
+                {
+                    var product = orderDetail.Product;
+                    var responseProduct = new ResponseProductForCheckOrder()
+                    {
+                        Code = product.Code,
+                        Name = product.Name,
+                        Quantity = orderDetail.Quantity,
+                        PriceInOrder = orderDetail.UnitPrice,
+                        EstimateBuyPrice = orderDetail.UnitPrice * 0.7m,
+                        ReasonForEstimateBuyPrice = $"The percentage of buyback value is {0.7m}"
+                    };
+                    products.Add(responseProduct);
+                }
+            }
+            //add exception handling here
+            return products;
+        }
+
         public async Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
-            Expression<Func<SellOrder, bool>> filter = order =>
-                (order.CreateDate >= startDate) && (order.CreateDate <= endDate) && (order.Status.Equals(OrderConstants.CompletedStatus));
-
-            decimal sum = await _unitOfWork.SellOrderRepository.SumAsync(filter, order => order.TotalAmount);
-
-            return new ResponseModel
-            {
-                Data = sum,
-                MessageError = sum == 0 ? "Not Found" : null,
-            };
-           
+            // Expression<Func<Order, bool>> filter = order =>
+            //     (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
+            //
+            // decimal sum = await _unitOfWork.SellOrderRepository.SumAsync(filter, order => order.TotalAmount);
+            //
+            // return new ResponseModel
+            // {
+            //     Data = sum,
+            //     MessageError = sum == 0 ? "Not Found" : null,
+            // };
+            throw new NotImplementedException();
         }
 
         public async Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
-            Expression<Func<SellOrder, bool>> filter = order =>
-                (order.CreateDate >= startDate) && (order.CreateDate <= endDate) &&(order.Status.Equals(OrderConstants.CompletedStatus));
-
-            int count = await _unitOfWork.SellOrderRepository.CountAsync(filter);
-
-            return new ResponseModel
-            {
-                Data = count,
-                MessageError = count == 0 ? "Not Found" : null,
-            };
-            
+            // Expression<Func<Order, bool>> filter = order =>
+            //     (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
+            //
+            // int count = await _unitOfWork.SellOrderRepository.CountAsync(filter);
+            //
+            // return new ResponseModel
+            // {
+            //     Data = count,
+            //     MessageError = count == 0 ? "Not Found" : null,
+            // };
+            throw new NotImplementedException();
         }
 
+        public async Task<ResponseModel> CountOrderByOrderTypeAsync(int month)
+        {
+            //     var orders = await _unitOfWork.SellOrderRepository.GetAsync(
+            //         filter: o => o.CreateDate.Month == month,
+            //         includeProperties: "");
+            //
+            //     var ordersByType = orders
+            //         .GroupBy(o => o.Type)
+            //         .Select(group => new
+            //         {
+            //             Type = group.Key,
+            //             Quantity = group.Count()
+            //         })
+            //         .ToList();
+            //
+            //     var result = ordersByType.Select(item => new Dictionary<string, object>
+            // {
+            //     { "Type", item.Type },
+            //     { "Quantity", item.Quantity }
+            // }).ToList();
+            //
+            //     return new ResponseModel
+            //     {
+            //         Data = result
+            //     };
+            throw new NotImplementedException();
+        }
     }
 }

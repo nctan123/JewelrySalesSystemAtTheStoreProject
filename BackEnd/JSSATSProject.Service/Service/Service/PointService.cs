@@ -93,15 +93,22 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> BE_NhatAnh
         public async Task<int> GetMaximumApplicablePointForOrder(string customerPhoneNumber, decimal totalOrderPrice)
         {
             var pointObj = await _unitOfWork.PointRepository.GetByCustomerPhoneNumber(customerPhoneNumber);
             var availablePoint = pointObj!.AvailablePoint.GetValueOrDefault();
+<<<<<<< HEAD
             if(totalOrderPrice /1000 <= availablePoint) {
                 return (int)totalOrderPrice / 1000;
             }
             var result = totalOrderPrice - availablePoint * 1000 > 0 ? availablePoint : totalOrderPrice;
+=======
+            var result = totalOrderPrice - availablePoint*1000 > 0 ? availablePoint : totalOrderPrice;
             return Convert.ToInt32(result);
         }
 

@@ -15,6 +15,7 @@ namespace JSSATSProject.Service.Models.OrderModel
         public required string CustomerPhoneNumber { get; set; }
         public required int StaffId { get; set; }
         public DateTime CreateDate { get; set; }
+        public int DiscountPoint { get; set; }
 
         public int DiscountPoint { get; set; }
         public string? Description { get; set; }

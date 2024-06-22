@@ -8,7 +8,9 @@ namespace JSSATSProject.Repository.Entities;
 public partial class Guarantee
 {
     public int Id { get; set; }
-
+    
+    public string Code { get; set; }
+    
     public int ProductId { get; set; }
 
     public string Description { get; set; }

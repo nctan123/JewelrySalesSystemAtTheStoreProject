@@ -1,0 +1,76 @@
+.login-container {
+    display: flex;
+    flex-direction: column;
+    margin: 100px 500px;
+  }
+  
+  .login-container .title-login {
+    text-align: center;
+    font-size: 35px;
+    font-weight: 600;
+    padding-top: 30px;
+    color: red;
+  }
+  
+  .login-container .text {
+    font-weight: 600;
+    padding-bottom: 3px;
+    text-align: left;
+    font-size: 20px;
+    margin-left: 10px;
+  }
+  
+  .login-container input {
+    padding: 12px 17px;
+    outline: none;
+    background: #1618230f;
+    border: #1618230f;
+    margin-bottom: 7px;
+    border-radius: 3px;
+    width: 100%;
+  }
+  
+  .login-container input:hover {
+    background-color: #dedede;
+  }
+  
+  .login-container .input-2 {
+    position: relative;
+  }
+  
+  .login-container .input-2 span {
+    cursor: pointer;
+    position: absolute;
+    top: 17px;
+    right: 10px;
+  }
+  
+  .login-container button {
+    margin-top: 15px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+    background: #1618230f;
+/* có api rồi xóa */
+    background-color: red;
+    color: white;
+    /*  */
+  }
+  
+  .login-container button.active {
+    background-color: red;
+    color: white;
+  }
+  
+  .login-container button[disabled=disabled], .login-container button:disabled {
+    cursor: not-allowed;
+    
+  }
+  
+  .login-container .back {
+    text-align: center;
+    margin-top: 30px;
+    cursor: pointer;
+  }

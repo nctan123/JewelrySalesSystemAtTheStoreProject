@@ -5,13 +5,16 @@ using JSSATSProject.Repository.CustomLib;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 
 namespace JSSATSProject.Repository.Entities;
 
 public partial class SellOrder
 {
     public int Id { get; set; }
-
+    
+    public string Code { get; set; }
     public int CustomerId { get; set; }
 
     public int StaffId { get; set; }
@@ -36,7 +39,6 @@ public partial class SellOrder
     public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; } = new List<SellOrderDetail>();
 
     public virtual SpecialDiscountRequest SpecialDiscountRequest { get; set; }
-
     public virtual Staff Staff { get; set; }
 
     public SellOrder()

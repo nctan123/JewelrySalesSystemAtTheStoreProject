@@ -19,7 +19,6 @@ public partial class DBContext : DbContext
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
-
     public virtual DbSet<BuyOrder> BuyOrders { get; set; }
 
     public virtual DbSet<BuyOrderDetail> BuyOrderDetails { get; set; }
@@ -37,11 +36,9 @@ public partial class DBContext : DbContext
     public virtual DbSet<Cut> Cuts { get; set; }
 
     public virtual DbSet<Diamond> Diamonds { get; set; }
-
     public virtual DbSet<DiamondPriceList> DiamondPriceLists { get; set; }
 
     public virtual DbSet<Fluorescence> Fluorescences { get; set; }
-
     public virtual DbSet<Guarantee> Guarantees { get; set; }
 
     public virtual DbSet<Material> Materials { get; set; }
@@ -55,7 +52,6 @@ public partial class DBContext : DbContext
     public virtual DbSet<PaymentDetail> PaymentDetails { get; set; }
 
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
-
     public virtual DbSet<Point> Points { get; set; }
 
     public virtual DbSet<Polish> Polishes { get; set; }
@@ -79,13 +75,10 @@ public partial class DBContext : DbContext
     public virtual DbSet<ReturnBuyBackPolicy> ReturnBuyBackPolicies { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
-
     public virtual DbSet<SellOrder> SellOrders { get; set; }
-
     public virtual DbSet<SellOrderDetail> SellOrderDetails { get; set; }
 
     public virtual DbSet<Shape> Shapes { get; set; }
-
     public virtual DbSet<SpecialDiscountRequest> SpecialDiscountRequests { get; set; }
 
     public virtual DbSet<Staff> Staff { get; set; }
@@ -389,6 +382,10 @@ public partial class DBContext : DbContext
                 .HasDefaultValue("active")
                 .HasColumnName("status");
             entity.Property(e => e.SymmetryId).HasColumnName("symmetry_id");
+            entity.Property(e => e.DiamondGradingCode)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("diamond_grading_code");
 
             entity.HasOne(d => d.Carat).WithMany(p => p.Diamonds)
                 .HasForeignKey(d => d.CaratId)
@@ -508,6 +505,11 @@ public partial class DBContext : DbContext
             entity.ToTable("Guarantee");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+                .IsRequired()
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("code");
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasColumnType("text")
@@ -1033,9 +1035,15 @@ public partial class DBContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
+<<<<<<< HEAD
                .HasMaxLength(50)
                .IsUnicode(false)
                .HasColumnName("code");
+=======
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("code");
+>>>>>>> BE_NhatAnh
             entity.Property(e => e.CreateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("create_date");

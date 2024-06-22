@@ -55,8 +55,11 @@ namespace JSSATSProject.Service.Service.Service
                      orderBy: query => query.OrderByDescending(c => c.CreateDate),
                     includeProperties: "Point,SellOrders"
                     );
+                await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");
+
             var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
+            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -81,6 +84,8 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
+                // Orders = entity.Orders,
+                Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
@@ -109,6 +114,8 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
+                // Orders = entity.Orders,
+                Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
@@ -124,8 +131,8 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByPhoneAsync(string phoneNumber)
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
-                 c => c.Phone.Equals(phoneNumber),
-                 includeProperties: "Point,SellOrders,Payments");
+                c => c.Phone.Equals(phoneNumber),
+                includeProperties: "Point,SellOrders,Payments");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,
@@ -137,6 +144,8 @@ namespace JSSATSProject.Service.Service.Service
                 Gender = entity.Gender,
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
+                // Orders = entity.Orders,
+                Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
