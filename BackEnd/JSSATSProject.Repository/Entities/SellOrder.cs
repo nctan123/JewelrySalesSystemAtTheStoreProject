@@ -30,7 +30,6 @@ public partial class SellOrder
 
     public int? SpecialDiscountRequestId { get; set; }
 
-    public string Code { get; set; }
 
     public virtual Customer Customer { get; set; }
     [JsonIgnore]

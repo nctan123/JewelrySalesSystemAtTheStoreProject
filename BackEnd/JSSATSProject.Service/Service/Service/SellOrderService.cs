@@ -197,60 +197,34 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
-            // Expression<Func<Order, bool>> filter = order =>
-            //     (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
-            //
-            // decimal sum = await _unitOfWork.SellOrderRepository.SumAsync(filter, order => order.TotalAmount);
-            //
-            // return new ResponseModel
-            // {
-            //     Data = sum,
-            //     MessageError = sum == 0 ? "Not Found" : null,
-            // };
-            throw new NotImplementedException();
+            Expression<Func<SellOrder, bool>> filter = order =>
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
+
+            decimal sum = await _unitOfWork.SellOrderRepository.SumAsync(filter, order => order.TotalAmount);
+
+            return new ResponseModel
+            {
+                Data = sum,
+                MessageError = sum == 0 ? "Not Found" : null,
+            };
+           
         }
 
         public async Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
-            // Expression<Func<Order, bool>> filter = order =>
-            //     (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
-            //
-            // int count = await _unitOfWork.SellOrderRepository.CountAsync(filter);
-            //
-            // return new ResponseModel
-            // {
-            //     Data = count,
-            //     MessageError = count == 0 ? "Not Found" : null,
-            // };
-            throw new NotImplementedException();
+            Expression<Func<SellOrder, bool>> filter = order =>
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
+
+            int count = await _unitOfWork.SellOrderRepository.CountAsync(filter);
+
+            return new ResponseModel
+            {
+                Data = count,
+                MessageError = count == 0 ? "Not Found" : null,
+            };
+         
         }
 
-        public async Task<ResponseModel> CountOrderByOrderTypeAsync(int month)
-        {
-            //     var orders = await _unitOfWork.SellOrderRepository.GetAsync(
-            //         filter: o => o.CreateDate.Month == month,
-            //         includeProperties: "");
-            //
-            //     var ordersByType = orders
-            //         .GroupBy(o => o.Type)
-            //         .Select(group => new
-            //         {
-            //             Type = group.Key,
-            //             Quantity = group.Count()
-            //         })
-            //         .ToList();
-            //
-            //     var result = ordersByType.Select(item => new Dictionary<string, object>
-            // {
-            //     { "Type", item.Type },
-            //     { "Quantity", item.Quantity }
-            // }).ToList();
-            //
-            //     return new ResponseModel
-            //     {
-            //         Data = result
-            //     };
-            throw new NotImplementedException();
-        }
+       
     }
 }

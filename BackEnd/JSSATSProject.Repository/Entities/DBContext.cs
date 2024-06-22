@@ -89,9 +89,9 @@ public partial class DBContext : DbContext
 
     public virtual DbSet<Symmetry> Symmetries { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-R16679DK;Initial Catalog=testdata01;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
+//     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//         => optionsBuilder.UseSqlServer("Data Source=LAPTOP-R16679DK;Initial Catalog=testdata01;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -527,7 +527,7 @@ public partial class DBContext : DbContext
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Guarantee__produ__3587F3E0");
-            entity.HasOne(d => d.Sellorderdetail).WithMany(p => p.Guarantees)
+            entity.HasOne(d => d.SellOrderDetail).WithMany(p => p.Guarantees)
                .HasForeignKey(d => d.SellorderdetailId)
                .HasConstraintName("FK__Guarantee__sello__09746778");
         });
@@ -1035,15 +1035,9 @@ public partial class DBContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Code)
-<<<<<<< HEAD
                .HasMaxLength(50)
                .IsUnicode(false)
                .HasColumnName("code");
-=======
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("code");
->>>>>>> BE_NhatAnh
             entity.Property(e => e.CreateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("create_date");

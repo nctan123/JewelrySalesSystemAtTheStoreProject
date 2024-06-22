@@ -16,8 +16,6 @@ namespace JSSATSProject.Service.Models.OrderModel
         public required int StaffId { get; set; }
         public DateTime CreateDate { get; set; }
         public int DiscountPoint { get; set; }
-
-        public int DiscountPoint { get; set; }
         public string? Description { get; set; }
         public required Dictionary<string, int> ProductCodesAndQuantity { get; set; }
         public required Dictionary<string, int?>? ProductCodesAndPromotionIds { get; set; }

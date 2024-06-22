@@ -42,19 +42,7 @@ namespace JSSATSProject.Service.Service.Service
             var entities = await _unitOfWork.SellOrderDetailRepository.GetAsync(
                 c => c.OrderId.Equals(id)
             );
-            var response = _mapper.Map<List<ResponseOrderDetail>>(entities);
-
-
-        public async Task<ResponseModel> UpdateStatusAsync(int orderdetailId, string newStatus,
-           RequestUpdateSellOrderDetailsStatus newOrderDetails)
-            foreach (var orderDetail in response)
-            {
-                if (orderDetail.Product != null)
-                {
-                    orderDetail.ProductName = orderDetail.Product.Name;
-                }
-            }
-
+            var response = _mapper.Map<List<ResponseSellOrderDetails>>(entities);
             return new ResponseModel
             {
                 Data = response

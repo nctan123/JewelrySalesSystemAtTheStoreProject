@@ -85,7 +85,7 @@ namespace JSSATSProject.Service.Service.Service
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
                 // Orders = entity.Orders,
-                Payments = entity.Payments,
+                //Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
@@ -115,7 +115,7 @@ namespace JSSATSProject.Service.Service.Service
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
                 // Orders = entity.Orders,
-                Payments = entity.Payments,
+                //Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
@@ -145,7 +145,7 @@ namespace JSSATSProject.Service.Service.Service
                 Address = entity.Address,
                 SellOrders = entity.SellOrders,
                 // Orders = entity.Orders,
-                Payments = entity.Payments,
+                //Payments = entity.Payments,
                 TotalPoint = entity.Point?.Totalpoint ?? 0,
                 AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();

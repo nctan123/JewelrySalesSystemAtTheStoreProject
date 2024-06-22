@@ -88,16 +88,16 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
             builder.Services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
             builder.Services.AddScoped<IPaymentDetailService, PaymentDetailService>();
+            builder.Services.AddScoped<IBuyOrderService, BuyOrderService>();
+            builder.Services.AddScoped<IBuyOrderDetailService, BuyOrderDetailService>();
 
             // CacheManager
             services.AddSingleton(typeof(CacheManager<>));
             services.AddSingleton<DiamondPriceCacheManager>();
             builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
-            services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
-            services.AddScoped<IBuyOrderService, BuyOrderService>();
-
-            services.AddSingleton(typeof(CacheManager<>)); // Register generic CacheManager
-            services.AddSingleton<DiamondPriceCacheManager>(); // Register cache for diamond prices
+            builder.Services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
+            
+            
             services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
             services.AddScoped<IProductService, ProductService>();
 

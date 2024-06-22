@@ -23,5 +23,5 @@ public partial class Guarantee
 
     public virtual Product Product { get; set; }
 
-    public virtual SellOrderDetail Sellorderdetail { get; set; }
+    public virtual SellOrderDetail SellOrderDetail { get; set; }
 }

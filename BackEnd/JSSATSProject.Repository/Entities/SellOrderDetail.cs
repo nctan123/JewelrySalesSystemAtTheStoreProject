@@ -30,6 +30,5 @@ public partial class SellOrderDetail
     [JsonIgnore]
     public virtual Promotion Promotion { get; set; }
     
-    public virtual ICollection<Guarantee> Guarantees { get; set; } = new List<Guarantee>();
 
 }

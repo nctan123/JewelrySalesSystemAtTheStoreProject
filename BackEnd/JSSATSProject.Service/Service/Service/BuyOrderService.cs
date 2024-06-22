@@ -3,8 +3,6 @@ using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.BuyOrderModel;
-using JSSATSProject.Service.Models.OrderModel;
-using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
 
 namespace JSSATSProject.Service.Service.Service;

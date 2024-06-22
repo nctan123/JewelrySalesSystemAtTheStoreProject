@@ -21,23 +21,37 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> CreatePromotionRequestAsync(CreatePromotionRequest promotionRequest)
         {
             var entity = _mapper.Map<PromotionRequest>(promotionRequest);
-            entity.Manager = await _unitOfWork.StaffRepository.GetByIDAsync(promotionRequest.ManagerId);
+
+            if (promotionRequest.CategoriIds.Any())
+            {
+                var categoryIds = promotionRequest.CategoriIds.ToList();
+                var categories = await _unitOfWork.ProductCategoryRepository
+                                                  .GetAsync(pc => categoryIds.Contains(pc.Id) && pc.Status == "active");
+
+
+
+                foreach (var category in categories)
+                {
+                    entity.Categories.Add(category);
+                }
+            }
 
             await _unitOfWork.PromotionRequestRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();
 
+
             return new ResponseModel
             {
-                 Data = entity, 
-                 MessageError = "" 
+                Data = entity,
+                MessageError = string.Empty,
             };
-         }
-           
+        }
+
 
         public async Task<ResponseModel> GetAllAsync()
         {
             var entities = await _unitOfWork.PromotionRequestRepository.GetAsync(
-                includeProperties: "ApprovedByNavigation, Manager"
+                includeProperties: "ApprovedByNavigation, Manager,Categories"
             );
             var response = _mapper.Map<List<ResponsePromotionRequest>>(entities);
             return new ResponseModel
@@ -56,7 +70,7 @@ namespace JSSATSProject.Service.Service.Service
 
                 if (existingPromotionRequest != null)
                 {
-                    
+
                     _mapper.Map(promotionRequest, existingPromotionRequest);
 
                     if (promotionRequest.ApprovedBy != null)
