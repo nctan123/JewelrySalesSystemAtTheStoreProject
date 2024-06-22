@@ -2,12 +2,7 @@ import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-<<<<<<< HEAD
 import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty } from './page/Seller';
-=======
-
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Return, Exchange, Buy ,Warranty} from './page/Seller';
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
 
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
 import Login from './page/Home/Login';
@@ -135,9 +130,7 @@ function App() {
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
               <Route path={path.BUY} element={<Buy />} />
-
-              <Route path={path.WARRANTY} element={<Warranty/>}/>
-
+              <Route path={path.WARRANTY} element={<Warranty />} />
             </Route>
           </Route>
           {/* Cashier */}
@@ -155,11 +148,7 @@ function App() {
 
       </div>
 
-
-      <ToastContainer
-
-      />
-
+      <ToastContainer />
     </>
   );
 }

@@ -3,18 +3,13 @@ import { fetchAllDiamond } from '../../apis/jewelryService'
 import diamond from '../../assets/img/seller/diamond.webp'
 import {useDispatch } from 'react-redux'
 import { addProduct} from '../../store/slice/cardSilec'
-<<<<<<< HEAD
 import axios from 'axios'
 import Modal from 'react-modal';
 
-=======
-import Popup from 'reactjs-popup';
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
 const Diamond = () => {
   const dispatch = useDispatch()
   const [listDiamond, setListDiamond] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-<<<<<<< HEAD
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJewelry, setselectedJewelry] = useState(null);
@@ -62,8 +57,6 @@ const Diamond = () => {
   function capitalizeFirstLetter(string) {
     return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
-=======
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
 
   useEffect(() => {
     getDiamond();
@@ -131,7 +124,6 @@ const Diamond = () => {
                 </div>
                 <div class="max-w-sm h-auto">
 
-<<<<<<< HEAD
                 <div class="absolute top-[10px] w-full left-0 p-1 sm:justify-between">
                     <h2 class="text-black text-sm font-normal tracking-widest text-center">{item.name}</h2>
                   </div>
@@ -144,94 +136,12 @@ const Diamond = () => {
                   </div>
                     <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
                     <button onClick={() => handleDetailClick(item.code)} class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>
-=======
-                <div class="absolute top-[25px] left-6 w-fit flex justify-center items-center sm:justify-between">
-                      <h2 class="text-black text-sm tracking-widest">{item.name}</h2>
-                    </div>
-                    <div className='absolute bottom-[40px] right-0 w-full'>
-                      <p class="text-sm text-[#de993f] flex justify-center">Code: {item.code}</p>
-                      <div class="flex flex-col gap-0 items-center justify-center">
-                        <div class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</div>
-                        <div class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</div>
-                      </div>
-                    </div>
-                    <div class="absolute bottom-[-15px] right-0 w-full flex justify-around items-center">
-                  <Popup trigger={<button onClick='' class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>} position="right center">
-                  {close => (
-                        <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
-                          <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[40%] shadow-[#b6b0b0] shadow-md'>
-                            <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
-                              <h3 className="text-md font-semibold text-gray-900">
-                                {item.name}
-                              </h3>
-                              <a className='cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
-                            </div>
-
-
-                            <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                              <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                  <tr className='hidden'>
-                                    <th scope="col" class="px-6 py-2">
-                                      Information
-                                    </th>
-                                    <th scope="col" class="px-6 py-2">
-                                      Details
-                                    </th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <td scope="row" class=" px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                      Material Name
-                                    </td>
-                                    <td class="px-6 py-2">
-                                      {item.materialName}
-                                    </td>
-                                  </tr>
-                                  <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                      Material Weight
-                                    </td>
-                                    <td class="px-6 py-2">
-                                      {item.materialWeight}
-                                    </td>
-                                  </tr>
-                                  <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                      DiamondCode
-                                    </td>
-                                    <td class="px-6 py-2 flex items-center gap-4">
-                                      {item.diamondCode}
-                                
-                                        
-                                    </td>
-                                  </tr>
-
-                                  <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                    <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                      Diamond Name
-                                    </td>
-                                    <td class="px-6 py-2">
-                                      {item.diamondName}
-                                    </td>
-                                  </tr>
-                                </tbody>
-                              </table>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </Popup>
-
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
                     <button onClick={() => dispatch(addProduct(item))} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
                   </div>
                 </div>
               </div>
               )
             })}
-<<<<<<< HEAD
         </div>
         <Modal
           isOpen={isModalOpen}
@@ -362,12 +272,6 @@ const Diamond = () => {
           )}
         </Modal>
       </div>
-=======
-
-        </div>
-      </div>
-
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
     </div>
     </>
   )

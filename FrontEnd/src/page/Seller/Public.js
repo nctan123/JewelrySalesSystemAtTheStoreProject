@@ -23,16 +23,9 @@ const Public = () => {
       </div>
 
 
-<<<<<<< HEAD
       <div className='flex-auto border'>
         <div className='h-[95%] flex justify-center'><Outlet /></div>
       </div>
-=======
-<div className='flex-auto border '>
-          {/* <div className='h-[70px] px-[30px] flex items-center mb-2'><Header/></div> */}
-          <div className='h-[95%] flex justify-center'><Outlet/></div>
-        </div>
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
 
       <div className='w-[400px] flex-none bg-[#56565821]'>
         <SidebarRight></SidebarRight>

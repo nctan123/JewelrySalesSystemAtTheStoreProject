@@ -3,18 +3,13 @@ import { fetchAllNecklace } from '../../apis/jewelryService'
 import necklace from '../../assets/img/seller/necklace.png'
 import { useSelector, useDispatch } from 'react-redux'
 import { addProduct, deleteProduct } from '../../store/slice/cardSilec'
-<<<<<<< HEAD
 import axios from 'axios'
 import Modal from 'react-modal';
-=======
-import Popup from 'reactjs-popup';
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
 
 const Necklace = () => {
   const dispatch = useDispatch()
   const [listNecklace, setListNecklace] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-<<<<<<< HEAD
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedJewelry, setselectedJewelry] = useState(null);
@@ -63,8 +58,6 @@ const Necklace = () => {
     return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
 
-=======
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
 
   useEffect(() => {
     getNecklace();
@@ -84,7 +77,6 @@ const Necklace = () => {
     return name.replace(/\s*Necklace$/, "");
   }
   const filteredNecklace = listNecklace.filter((Necklace) =>
-<<<<<<< HEAD
   (Necklace.id.toString().includes(searchTerm) ||
     Necklace.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     Necklace.code.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -99,18 +91,6 @@ const Necklace = () => {
 
   return (<>
     <div className='h-[70px] pl-[30px] mt-5 mb-2 w-full'>
-=======
-    (Necklace.id.toString().includes(searchTerm) ||
-  Necklace.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  Necklace.code.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-  
-    const handleSearch = (event) => {
-      setSearchTerm(event.target.value);
-    };
-  return (<>
-     <div className='h-[70px] pl-[30px] mt-5 mb-2 w-full'>
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
       <form className="max-w-md mx-auto">
         <div className="relative">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -149,7 +129,6 @@ const Necklace = () => {
                 <div key={`necklace-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
                   <div className=' bg-[#fff] rounded-md shadow-md'>
                     <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={necklace} />
-<<<<<<< HEAD
                     </div>
                 <div class="max-w-sm h-auto">
 
@@ -165,97 +144,12 @@ const Necklace = () => {
                   </div>
                   <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
                       <button onClick={() => handleDetailClick(item.code)} class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>
-=======
-                  </div>
-                  <div class="max-w-sm h-auto">
-
-                  <div class="absolute top-[25px] left-6 w-fit flex justify-center items-center sm:justify-between">
-                      <h2 class="text-black text-sm tracking-widest">{item.name}</h2>
-                    </div>
-                    <div className='absolute bottom-[40px] right-0 w-full'>
-                      <p class="text-sm text-[#de993f] flex justify-center">Code: {item.code}</p>
-                      <div class="flex flex-col gap-0 items-center justify-center">
-                        <div class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</div>
-                        <div class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</div>
-                      </div>
-                    </div>
-                    <div class="absolute bottom-[-15px] right-0 w-full flex justify-around items-center">
-                    <Popup trigger={<button onClick='' class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>} position="right center">
-                    {close => (
-                          <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
-                            <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[40%] shadow-[#b6b0b0] shadow-md'>
-                              <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
-                                <h3 className="text-md font-semibold text-gray-900">
-                                  {item.name}
-                                </h3>
-                                <a className='cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
-                              </div>
-
-
-                              <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                  <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr className='hidden'>
-                                      <th scope="col" class="px-6 py-2">
-                                        Information
-                                      </th>
-                                      <th scope="col" class="px-6 py-2">
-                                        Details
-                                      </th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                      <td scope="row" class=" px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                        Material Name
-                                      </td>
-                                      <td class="px-6 py-2">
-                                        {item.materialName}
-                                      </td>
-                                    </tr>
-                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                      <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                        Material Weight
-                                      </td>
-                                      <td class="px-6 py-2">
-                                        {item.materialWeight}
-                                      </td>
-                                    </tr>
-                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                      <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                        DiamondCode
-                                      </td>
-                                      <td class="px-6 py-2 flex items-center gap-4">
-                                        {item.diamondCode}
-                                  
-                                          
-                                      </td>
-                                    </tr>
-
-                                    <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                                      <td scope="row" class="px-6 py-2 font-medium whitespace-nowrap dark:text-white">
-                                        Diamond Name
-                                      </td>
-                                      <td class="px-6 py-2">
-                                        {item.diamondName}
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </Popup>
-
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
                       <button onClick={() => dispatch(addProduct(item))} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
                     </div>
                   </div>
                 </div>
               )
             })}
-<<<<<<< HEAD
         </div>
         <Modal
           isOpen={isModalOpen}
@@ -401,10 +295,6 @@ const Necklace = () => {
           
           )}
         </Modal>
-=======
-
-        </div>
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
       </div>
     </div>
   </>)

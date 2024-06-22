@@ -86,7 +86,6 @@ const WholesaleGold = () => {
             </div>
             <div class="max-w-sm h-auto">
 
-<<<<<<< HEAD
             <div class="absolute top-[10px] w-full left-0 p-1 sm:justify-between">
                     <h2 class="text-black text-sm font-normal tracking-widest text-center">{item.name}</h2>
                   </div>
@@ -95,16 +94,6 @@ const WholesaleGold = () => {
                       <div class="flex flex-col gap-0 items-center justify-center">
                         <div class="text-[#cc4040] font-bold text-sm">{formatCurrency(item.productValue - (item.productValue * item.discountRate))}</div>
                         <div class="text-[#121212] font-semibold text-sm line-through">{formatCurrency(item.productValue)}</div>
-=======
-            <div class="absolute top-[25px] left-6 w-fit flex justify-center items-center sm:justify-between">
-                      <h2 class="text-black text-sm tracking-widest">{item.name}</h2>
-                    </div>
-                    <div className='absolute bottom-[40px] right-0 w-full'>
-                      <p class="text-sm text-[#de993f] flex justify-center">Code: {item.code}</p>
-                      <div class="flex flex-col gap-0 items-center justify-center">
-                        <div class="text-[#cc4040] font-bold text-sm">{formatPrice(item.productValue - (item.productValue * item.discountRate))}đ</div>
-                        <div class="text-[#121212] font-semibold text-sm line-through">{formatPrice(item.productValue)}đ</div>
->>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
                       </div>
                     </div>
                     <div class="absolute bottom-[-15px] right-0 w-full flex justify-around items-center">
