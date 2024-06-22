@@ -8,13 +8,9 @@ export default function Dashboard() {
 
         <>
             <div><Revenue /></div>
-            <div className="flex space-x-4">
-                <div className="flex-1">
-                    <TestChart />
-                </div>
-                <div className="flex-1">
-                    <PieChartCategory />
-                </div>
+
+            <div className="flex-1">
+                <TestChart />
             </div>
 
 

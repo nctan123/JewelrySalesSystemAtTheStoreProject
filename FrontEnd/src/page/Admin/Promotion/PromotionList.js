@@ -1,16 +1,19 @@
 
+
 import React, { useEffect, useState } from 'react';
 import { IoIosSearch } from "react-icons/io";
-import { format } from 'date-fns'; // Import format function from date-fns
+import { format } from 'date-fns';
 import axios from "axios";
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 
 const PromotionList = () => {
   const [originalListPromotion, setOriginalListPromotion] = useState([]);
   const [listPromotion, setListPromotion] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedPromotion, setSelectedPromotion] = useState(null); // State to hold selected promotion
+  const [selectedPromotion, setSelectedPromotion] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const promotionsPerPage = 10;
 
   useEffect(() => {
@@ -69,7 +72,30 @@ const PromotionList = () => {
   };
 
   const handleDetailClick = (promotion) => {
-    setSelectedPromotion(promotion); // Set selected promotion for detail view
+    setSelectedPromotion(promotion);
+  };
+
+
+  const handleSaveChanges = async () => {
+    try {
+      const res = await axios.put(
+        `https://jssatsproject.azurewebsites.net/api/promotion/Updatepromotion?id=${selectedPromotion.id}`,
+        selectedPromotion
+      );
+      if (res.status === 200) {
+        const updatedPromotions = originalListPromotion.map((promotion) =>
+          promotion.id === selectedPromotion.id ? selectedPromotion : promotion
+        );
+        setOriginalListPromotion(updatedPromotions);
+        setListPromotion(updatedPromotions);
+        setIsModalOpen(false);
+        setSelectedPromotion(null);
+        toast.success("Promotion updated successfully");
+      }
+    } catch (error) {
+      console.error('Failed to update promotion:', error);
+      toast.error("Failed to update promotion");
+    }
   };
 
   const indexOfLastPromotion = currentPage * promotionsPerPage;
@@ -99,11 +125,12 @@ const PromotionList = () => {
           <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
             <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
               <tr>
-                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Promotion ID</th>
-                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Full Name</th>
+                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">ID</th>
+                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Name</th>
                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Discount Rate</th>
                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">From</th>
                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">To</th>
+                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Status</th>
                 <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
               </tr>
             </thead>
@@ -115,6 +142,11 @@ const PromotionList = () => {
                   <td className="text-sm font-normal text-[#637381] text-center">{item.discountRate} </td>
                   <td className="text-sm font-normal text-[#637381]">{format(new Date(item.startDate), 'dd/MM/yyyy')}</td>
                   <td className="text-sm font-normal text-[#637381]">{format(new Date(item.endDate), 'dd/MM/yyyy')}</td>
+                  <td className="text-sm font-normal text-[#637381]">
+                    {item.status === 'active'
+                      ? (<span className="text-green-500">Active</span>)
+                      : <span className="text-red-500">Inactive</span>}
+                  </td>
                   <td className="text-sm font-normal text-[#637381]">
                     <button
                       className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
@@ -128,6 +160,7 @@ const PromotionList = () => {
               {placeholders.map((_, index) => (
                 <tr key={`placeholder-${index}`} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)]">
                   <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381] py-4">-</td>
+                  <td className="text-sm font-normal text-[#637381] py-4">-</td>
                   <td className="text-sm font-normal text-[#637381] py-4">-</td>
                   <td className="text-sm font-normal text-[#637381] py-4">-</td>
                   <td className="text-sm font-normal text-[#637381] py-4">-</td>
@@ -154,9 +187,7 @@ const PromotionList = () => {
           ))}
         </div>
       </div>
-
-      {/* Modal for Promotion Detail */}
-      {selectedPromotion && (
+      {selectedPromotion && !isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
           <div className="bg-white rounded-lg p-8 max-w-md w-full">
             <h2 className="text-xl font-bold mb-4">{selectedPromotion.name}</h2>
@@ -173,17 +204,32 @@ const PromotionList = () => {
                 ))}
               </ul>
             </div>
-            <button
-              className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onClick={() => setSelectedPromotion(null)}
+            <select
+              value={selectedPromotion.status}
+              onChange={(e) => setSelectedPromotion({ ...selectedPromotion, status: e.target.value })}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
             >
-              Close
-            </button>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+            <div className='flex'>
+              <button
+                className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md" onClick={() => handleSaveChanges()}
+              >
+                Save
+              </button>
+              <button
+                className="mr-2 ml-0 px-4 py-2 bg-gray-500 text-white rounded-md" onClick={() => setSelectedPromotion(null)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}
+
     </div>
   );
 };
 
 export default PromotionList;
-

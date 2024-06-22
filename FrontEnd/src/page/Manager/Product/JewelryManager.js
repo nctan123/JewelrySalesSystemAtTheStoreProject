@@ -160,6 +160,7 @@ const JewelryManager = () => {
                                     Img
                                 </th>
                                 <th className="whitespace-nowrap py-3 text-sm font-bold text-[#212B36] bg-[#f6f8fa]">Price</th>
+                                <th className="whitespace-nowrap py-3 text-sm font-bold text-[#212B36] bg-[#f6f8fa]">Stall</th>
                                 <th className="whitespace-nowrap py-3 text-sm font-bold text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
                             </tr>
                         </thead>
@@ -182,6 +183,9 @@ const JewelryManager = () => {
                                         }
                                     </td>
                                     <td className="text-sm font-normal text-[#637381]">{formatCurrency(item.productValue)}</td>
+                                    <td className="text-sm font-normal text-[#637381]">
+                                        {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}
+                                    </td>
                                     <button
                                         className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
                                         onClick={() => handleDetailClick(item.code)}
@@ -194,6 +198,7 @@ const JewelryManager = () => {
                             {placeholders.map((_, index) => (
                                 <tr key={`placeholder-${index}`} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)]">
                                     <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>

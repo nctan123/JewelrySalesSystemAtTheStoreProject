@@ -67,9 +67,15 @@ export const sidebarMenu = [
         icons: <CiGift size={24} color="white" />
     },
     {
-        path: 'returnExchange',
-        text: 'Return/Exchange',
-        icons: <TbArrowsExchange2 size={24} color="white" />,
+        path: 'purchase',
+        text:'Purchase',
+        icons: <TbArrowsExchange2 size={24} color="white"/>,
+      
+    },
+    {
+        path: '/login',
+        text:'Log out',
+        icons: <TbLogout2 size={24} color="white"/>
 
     },
     // {
