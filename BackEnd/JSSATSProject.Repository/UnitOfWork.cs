@@ -12,6 +12,7 @@ namespace JSSATSProject.Repository
     {
         private DBContext _context;
         private AccountRepository _account;
+        private BuyOrderRepository _buyOrder;
         private CustomerRepository _customer;
         private DiamondRepository _diamond;
         private DiamondPriceListRepository _diamondpricelist;
@@ -40,17 +41,16 @@ namespace JSSATSProject.Repository
         private SymmetryRepository _symmetry;
         private RoleRepository _role;
         private ProductMaterialRepository _productmaterial;
-        private SellOrderDetailRepository _orderdetail;
+        private SellOrderDetailRepository _sellorderdetail;
         private PromotionRequestRepository _promotionrequest;
         private SpecialDiscountRequestRepository _specialdiscountrequest;
         private PurchasePriceRatioRepository _purchasePriceRatioRepository;
-        
 
         public UnitOfWork(DBContext context)
         {
             _context = context;
         }
-
+        
         public PurchasePriceRatioRepository PurchasePriceRatioRepository
         {
             get
@@ -68,11 +68,24 @@ namespace JSSATSProject.Repository
         {
             get
             {
-                if (_orderdetail == null)
+                if (_sellorderdetail == null)
                 {
-                    _orderdetail = new SellOrderDetailRepository(_context);
+                    _sellorderdetail = new SellOrderDetailRepository(_context);
                 }
-                return _orderdetail;
+                return _sellorderdetail;
+            }
+
+        } 
+        
+        public BuyOrderRepository BuyOrderRepository
+        {
+            get
+            {
+                if (_buyOrder == null)
+                {
+                    _buyOrder = new BuyOrderRepository(_context);
+                }
+                return _buyOrder;
             }
 
         }

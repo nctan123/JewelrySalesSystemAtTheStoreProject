@@ -92,8 +92,7 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<ISpecialDiscountRequestService, SpecialDiscountRequestService>();
             builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
             services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
-
-
+            services.AddScoped<IBuyOrderService, BuyOrderService>();
 
             //CacheManager
             services.AddSingleton(typeof(CacheManager<>)); // Register generic CacheManager

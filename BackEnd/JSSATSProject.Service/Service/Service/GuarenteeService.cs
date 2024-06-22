@@ -3,6 +3,7 @@ using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.GuaranteeModel;
+using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
 
 namespace JSSATSProject.Service.Service.Service
@@ -97,6 +98,25 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public async Task<Guarantee?> GetEntityByCodeAsync(string guaranteeCode)
+        {
+            var entity = await _unitOfWork.GuaranteeRepository.GetEntityByCodeAsync(guaranteeCode);
+            return entity;
+        }
+
+        public ResponseProductForCheckOrder GetResponseProductForCheckOrder(Guarantee guarantee)
+        {
+            return new ResponseProductForCheckOrder()
+            {
+                Code = guarantee.Product.Code,
+                Name = guarantee.Product.Name,
+                Quantity = guarantee.SellOrderDetail.Quantity,
+                PriceInOrder = guarantee.SellOrderDetail.UnitPrice,
+                EstimateBuyPrice = 0.7m * guarantee.SellOrderDetail.UnitPrice,
+                ReasonForEstimateBuyPrice = $"The percentage of buyback value is {0.7m}"
+            };
         }
     }
 }

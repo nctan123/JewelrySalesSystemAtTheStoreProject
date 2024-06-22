@@ -7,4 +7,6 @@ public class OrderConstants
     public const string ProcessingStatus = "processing";
     public const string DraftStatus = "draft";
     public const string WaitingForDiscountResponseStatus = "waiting for discount response";
+    public const string SellOrderCodePrefix = "SELL_";
+    public const string BuyOrderCodePrefix = "BUY_";
 }

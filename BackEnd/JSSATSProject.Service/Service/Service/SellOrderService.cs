@@ -7,6 +7,7 @@ using JSSATSProject.Service.Service.IService;
 using System.Linq.Expressions;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Enums;
+using JSSATSProject.Service.Models.ProductModel;
 
 
 namespace JSSATSProject.Service.Service.Service
@@ -27,6 +28,12 @@ namespace JSSATSProject.Service.Service.Service
             _sellOrderDetailService = sellOrderDetailService;
         }
 
+        public async Task<SellOrder?> GetEntityByCodeAsync(string code)
+        {
+            var result = await _unitOfWork.SellOrderRepository.GetByCodeAsync(code);
+            return result;
+        }
+
         public async Task<ResponseModel> CreateOrderAsync(RequestCreateSellOrder requestSellOrder)
         {
             var customer =
@@ -36,12 +43,12 @@ namespace JSSATSProject.Service.Service.Service
             //fetch order details
             sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
                 requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
-            sellOrder.DiscountPoint = requestSellOrder.DiscountPoint; 
-            
+            sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
+
             var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice) - sellOrder.DiscountPoint;
             sellOrder.TotalAmount = totalAmount;
             if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.ProcessingStatus;
-            
+
             await _unitOfWork.SellOrderRepository.InsertAsync(sellOrder);
             await _unitOfWork.SaveAsync();
 
@@ -161,6 +168,30 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "An error occurred while updating the customer: " + ex.Message
                 };
             }
+        }
+
+        public List<ResponseProductForCheckOrder> GetProducts(SellOrder? sellOrder)
+        {
+            var products = new List<ResponseProductForCheckOrder>();
+            if (sellOrder?.SellOrderDetails is not null)
+            {
+                foreach (var orderDetail in sellOrder.SellOrderDetails)
+                {
+                    var product = orderDetail.Product;
+                    var responseProduct = new ResponseProductForCheckOrder()
+                    {
+                        Code = product.Code,
+                        Name = product.Name,
+                        Quantity = orderDetail.Quantity,
+                        PriceInOrder = orderDetail.UnitPrice,
+                        EstimateBuyPrice = orderDetail.UnitPrice * 0.7m,
+                        ReasonForEstimateBuyPrice = $"The percentage of buyback value is {0.7m}"
+                    };
+                    products.Add(responseProduct);
+                }
+            }
+            //add exception handling here
+            return products;
         }
 
         public async Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)

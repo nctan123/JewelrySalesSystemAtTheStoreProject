@@ -136,6 +136,11 @@ namespace JSSATSProject.Service.AutoMapper
                 .ForMember(dest => dest.ProductDiamonds, opt => opt.Ignore())
                 .ForMember(dest => dest.ProductMaterials, opt => opt.Ignore())
                 ;
+            CreateMap<Product, ResponseProductForCheckOrder>()
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src =>  src.Code))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>  src.Name))
+                .ReverseMap();
+
 
             //Promotion
             CreateMap<Promotion, RequestCreatePromotion>().ReverseMap();
@@ -191,7 +196,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<PromotionRequest, CreatePromotionRequest>().ReverseMap();
 
             CreateMap<PromotionRequest, UpdatePromotionRequest>().ReverseMap();
-             
+            
 
 
             //SpecialDiscountRequest
