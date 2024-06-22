@@ -157,7 +157,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Staff, RequestCreateStaff>().ReverseMap();
             CreateMap<Staff, RequestUpdateStaff>().ReverseMap();
             CreateMap<Staff, ResponseStaff>()
-                 .ForMember(dest => dest.TotalRevennue, opt => opt.Ignore())
+                 .ForMember(dest => dest.TotalRevenue, opt => opt.Ignore())
                  .ForMember(dest => dest.TotalSellOrder, opt => opt.Ignore())
                  .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
                  .ReverseMap();

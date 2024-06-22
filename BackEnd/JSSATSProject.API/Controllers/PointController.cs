@@ -50,5 +50,14 @@ namespace JSSATSProject.API.Controllers
             var response = await _pointService.UpdatePointAsync(pointId, requestPoint);
             return Ok(response);
         }
+
+        [HttpPost]
+        [Route("GetPointForOrder")]
+        public async Task<IActionResult> GetPointForOrder([FromBody] RequestGetPointForOrder requestGetPointForOrder)
+        {
+            var response = await _pointService.GetMaximumApplicablePointForOrder(
+                requestGetPointForOrder.CustomerPhoneNumber, requestGetPointForOrder.TotalOrderPrice);
+            return Ok(response);
+        }
     }
 }

@@ -717,7 +717,7 @@ public partial class DBContext : DbContext
                 .HasForeignKey(d => d.StallsId)
                 .HasConstraintName("FK__Product__stalls___3C34F16F");
 
-           
+
         });
 
         modelBuilder.Entity<ProductDiamond>(entity =>
@@ -890,7 +890,7 @@ public partial class DBContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValue("awating")
+                .HasDefaultValue("awaiting")
                 .HasColumnName("status");
 
             entity.HasOne(d => d.ApprovedByNavigation).WithMany(p => p.PromotionRequestApprovedByNavigations)
@@ -996,6 +996,7 @@ public partial class DBContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("create_date");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
+            entity.Property(e => e.DiscountPoint).HasColumnName("discount_point");
             entity.Property(e => e.Description)
                 .HasColumnType("text")
                 .HasColumnName("description");
@@ -1036,7 +1037,6 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValue("awating")
                 .HasDefaultValue("awaiting")
                 .HasColumnName("status");
             entity.Property(e => e.UnitPrice)
@@ -1099,7 +1099,7 @@ public partial class DBContext : DbContext
                 .IsRequired()
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasDefaultValue("awating")
+                .HasDefaultValue("awaiting")
                 .HasColumnName("status");
 
             entity.HasOne(d => d.ApprovedByNavigation).WithMany(p => p.SpecialDiscountRequestApprovedByNavigations)

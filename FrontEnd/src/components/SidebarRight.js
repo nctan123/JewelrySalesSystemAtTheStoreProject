@@ -1,9 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+<<<<<<< HEAD
 import { deleteProduct, deleteCustomer, deleteProductAll, deletePromotion } from '../store/slice/cardSilec'
 import { MdDeleteOutline } from "react-icons/md";
 import { VscGitStashApply } from "react-icons/vsc";
 import Popup from 'reactjs-popup';
+=======
+// import  addProduct, deleteProduct  from '../../../'
+
+import { deleteProduct, deleteCustomer, deleteProductAll, deletePromotion } from '../store/slice/cardSilec'
+
+import { MdDeleteOutline } from "react-icons/md";
+import { VscGitStashApply } from "react-icons/vsc";
+import { Link } from 'react-router-dom';
+import styles from '../style/cardForList.module.css'
+import clsx from 'clsx'
+import Popup from 'reactjs-popup';
+
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
@@ -36,6 +50,7 @@ const SidebarRight = () => {
   };
   //Lấy danh sách được lưu trong redux và sử dùng đường dẫn đi đến store
   const dispatch = useDispatch()
+<<<<<<< HEAD
   const CartProduct = useSelector(state => state.cart.CartArr);
   const CusPoint = useSelector(state => state.cart.CusPoint);
   //Set Time cho Order
@@ -45,8 +60,37 @@ const SidebarRight = () => {
     }, 1000);
     return () => clearInterval(interval1);
   }, []);
+=======
+  const [currentTime, setCurrentTime] = useState(new Date().toISOString());
 
   useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date().toISOString())
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+
+
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCurrentTime(new Date().toISOString());
+  //   }, 1000);
+  //   return () => clearInterval(interval);
+  // }, []);
+
+  const CartProduct = useSelector(state => state.cart.CartArr);
+  const CusPoint = useSelector(state => state.cart.CusPoint);
+  // const CartPromotion = useSelector(state => state.cart.CartPromotion);
+
+  const [total, setTotal] = useState(0);
+  const [discount, setDiscount] = useState(0)
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
+
+  useEffect(() => {
+    if (CusPoint && CusPoint[0] && CusPoint[0].phone) {
+      setcustomerPhoneNumber(CusPoint[0].phone);
+    }
     const calculateTotal = () => {
       let totalValue = 0;
       CartProduct.forEach((product) => {
@@ -55,7 +99,10 @@ const SidebarRight = () => {
       setTotal(totalValue);
     };
     calculateTotal();
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
     const calculateDiscount = () => {
       let totalDiscount = 0;
       CartProduct.forEach((product) => {
@@ -64,6 +111,7 @@ const SidebarRight = () => {
       setDiscount(totalDiscount);
     };
     calculateDiscount();
+<<<<<<< HEAD
 
     }, [CartProduct]);
     const totalInvoice = total - discount
@@ -74,9 +122,98 @@ const SidebarRight = () => {
   }
   },[CusPoint]);
 
+=======
+  }, [CartProduct][CusPoint]);
+
+
+  const totalInvoice = total - discount
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
+  const toastSpectial = () => {
+    toast.warning('Sent Special Discount')
+  }
+  const toastSpectia2 = () => {
+    toast.warning('Wrong Value')
+  }
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleCheckboxClick = () => {
+    if (!isChecked) {
+      setIsChecked(true);
+      toastSpectial();
+    }
+  };
+  const [customerPhoneNumber, setcustomerPhoneNumber] = useState('')
+  const [staffId, setstaffId] = useState(null)
+  const [createDate,setcreateDate] = useState(new Date().toISOString());
+  useEffect(() => {
+    const interval1 = setInterval(() => {
+      setcreateDate(new Date().toISOString())
+    }, 1000);
+    return () => clearInterval(interval1);
+  }, []);
+  const [description, setdescription] = useState('')
+  const [productCodesAndQuantity, setproductCodesAndQuantity] = useState(null)
+  const [productCodesAndPromotionIds, setproductCodesAndPromotionIds] = useState(null)
+
+  const [specialDiscountRequestId, setspecialDiscountRequestId] = useState(null)
+  const [isSpecialDiscountRequested, setisSpecialDiscountRequested] = useState(false)
+
+  const [discountRejectedReason, setdiscountRejectedReason] = useState(null)
+  const [specialDiscountRequestStatus, setspecialDiscountRequestStatus] = useState(null)
+  const [specialDiscountRate, setspecialDiscountRate] = useState(null)
+  const [point, setpoint] = useState("")
+
+  useEffect(() => {
+    const codesAndQuantity = CartProduct.reduce((acc,product) => {
+      acc[product.code] = product.quantity;
+      return acc;
+    }, {});
+    // const productcodesAndPromotion = CartProduct.reduce((pr,product) => {
+    //   pr[product.code] = product.promotionId;
+    //   return pr;
+    // }, {});
+    // setproductCodesAndPromotionIds('');
+    setproductCodesAndQuantity(codesAndQuantity);
+  }, [CartProduct]);
+  const handSubmitOrder = async () => {
+    let data = {
+      customerPhoneNumber: customerPhoneNumber,
+      staffId: 4,
+      createDate: createDate,
+      description: description,
+      discountPoint:0,
+      productCodesAndQuantity: productCodesAndQuantity,
+      productCodesAndPromotionIds: productCodesAndPromotionIds,
+      isSpecialDiscountRequested: isSpecialDiscountRequested,
+      specialDiscountRate: specialDiscountRate,
+      specialDiscountRequestId: specialDiscountRequestId,
+      discountRejectedReason: discountRejectedReason,
+      specialDiscountRequestStatus: specialDiscountRequestStatus,
+    }
+    // console.log(data)
+    // console.log(JSON.stringify(data, null, 2))
+   let res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder',data);
+   console.log(res)
+  }
+
+  const [pointRate, setPointRate] = useState(0);
+  const [isInvalid, setIsInvalid] = useState(false);
+  const handleRateChange = (event) => {
+    const value = parseFloat(event.target.value);
+    if (value < 0 || value > 1) {
+      setIsInvalid(true);
+      toastSpectia2()
+    } else {
+      setIsInvalid(false);
+      setPointRate(value);
+      setspecialDiscountRate(value);
+      setisSpecialDiscountRequested(true);
+    }
+  };
+
 
 
   useEffect(() => {
@@ -160,33 +297,75 @@ const SidebarRight = () => {
                 {CusPoint[0].phone}
                 <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e' /></span></span>
             </>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
           )}
         </div>
         <div className='grid grid-cols-3 border border-x-0 border-t-0 mx-[10px] border-b-black pb-[2px] mb-2'>
           <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
           <div className='col-start-3 ml-6 flex justify-start'>Price</div>
         </div>
+<<<<<<< HEAD
         <div id='screenSeller' className=' h-[45%] overflow-y-auto mb-2'>
           {CartProduct && CartProduct.map((item, index) => {
             return (
               <div className='grid grid-cols-6 '>
+=======
+
+        <div id='screenSeller' className=' h-[45%] overflow-y-auto mb-2'>
+          {CartProduct && CartProduct.map((item, index) => {
+            return (
+
+              <div key={`ring-${index}`} className='grid grid-cols-6 '>
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
                 <div className='col-start-1 col-span-4 flex px-[10px] text-sm'>{item.name}</div>
                 <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px]'>{formatPrice(item.productValue * item.quantity)}</div>
                 <span onClick={() => dispatch(deleteProduct(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md'><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
                 {!item.startDate && (
                   <div className='col-start-1 col-span-6 flex px-[14px] text-xs text-red-600 mt-[-6px]'>x{item.quantity}</div>
                 )}
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
               </div>
             )
           })}
         </div>
+
+        {/* <div className=' mx-[5px] py-2 mb-2 h-[10%] overflow-y-auto border border-red-500 rounded-md'>
+        
+          {CartPromotion && CartPromotion.map((item, index) => {
+             return (<>
+              <div className='grid grid-cols-6 overflow-y-auto'>
+                
+              <div className='col-start-1 col-span-4 flex px-[10px] text-sm'>{item.name}</div>      
+              <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px]'>{formatPrice(10)}</div>
+              <span onClick={() => dispatch(deletePromotion(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md'><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
+              
+              </div>
+            </>
+               )
+          })} 
+                 
+          </div> */}
         <div className='border mx-[15px] border-x-0 border-b-0 border-t-black grid grid-cols-2 py-2'>
           <div className='font-bold'>PAYMENT</div>
+<<<<<<< HEAD
           <input value={description} onChange={(even) => setdescription(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="text" placeholder="Note" />
+=======
+          <input value={description} onChange={(even) => setdescription(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="text" name="point" id="" placeholder="Note" />
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
         </div>
         <div className='px-[15px] grid grid-cols-2 grid-rows-2'>
           <div className='row-start-1 font-thin'>Total:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(total.toFixed())}</div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
           <div className='row-start-2 font-thin'>Discount:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(discount)}</div>
         </div>
@@ -200,12 +379,27 @@ const SidebarRight = () => {
                 className={`w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold pl-2 ${isInvalid ? 'border-red-500' : ''
                   }`}
                 type="number"
+<<<<<<< HEAD
                 min="0"
                 max="1"
                 value={specialDiscountRate}
                 onChange={(even) => setspecialDiscountRate(even.target.value)}
                 placeholder="Rate"
               />
+=======
+                name="pointRate"
+                min="0"
+                max="1"
+                value={pointRate}
+                onChange={handleRateChange}
+                placeholder="Rate"
+              />
+              {/* {isInvalid && (
+                // <span className="text-red-500 mt-1">
+                //   Invalid
+                // </span>
+              )} */}
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
             </div>          
             </div>
         )}
@@ -218,20 +412,36 @@ const SidebarRight = () => {
                           dispatch(deleteCustomer());
                           dispatch(deleteProductAll());
             }} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md bg-[#fef7f7] py-1 hover:bg-[#ffffff]'><MdDeleteOutline size='20px' color='#ef4e4e' /></span>
+<<<<<<< HEAD
             <button type='submit' 
             onClick={() => {handSubmitOrder(); 
                            dispatch(deleteCustomer());
                            dispatch(deleteProductAll());
                     }} 
             className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</button>
+=======
+
+            <button type='submit' 
+            onClick={() => {handSubmitOrder(); 
+                  dispatch(deleteCustomer());
+              dispatch(deleteProductAll());}} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Invoice</button>
+
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
           </div>
         </div>
       </div>
     </div>
     <div className=''>
       <button className="border border-[#ffffff] bg-[#3f6d67e3] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Temporary</button>
+<<<<<<< HEAD
       <Popup trigger={ <button className="border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">        
           List Temporary
+=======
+      <Popup trigger={ <button className="border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
+        
+          List Temporary
+        
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
       </button>} position="right center">
       {close => (
         <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
@@ -293,7 +503,11 @@ const SidebarRight = () => {
                         />
                         <div
                           className={`peer ring-0 bg-rose-400 rounded-full outline-none duration-300 after:duration-500 w-8 h-8 shadow-md ${isChecked
+<<<<<<< HEAD
                             ? 'bg-emerald-700 after:content-["✔️"]'
+=======
+                            ? 'bg-emerald-600 after:content-["✔️"]'
+>>>>>>> 6dee9477cb5a18a863bd101bd073392daaa70deb
                             : 'after:content-["✖️"]'
                             } after:rounded-full after:absolute after:outline-none after:h-6 after:w-6 after:bg-gray-50 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-75`}
                         ></div>

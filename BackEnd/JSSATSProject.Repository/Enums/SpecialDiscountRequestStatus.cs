@@ -4,8 +4,8 @@ using System.Runtime.Serialization;
 
 public enum SpecialDiscountRequestStatus
 {
-    [EnumMember(Value = "pending")]
-    Pending,
+    [EnumMember(Value = "awaiting")]
+    Awaiting,
     
     [EnumMember(Value = "approved")]
     Approved,

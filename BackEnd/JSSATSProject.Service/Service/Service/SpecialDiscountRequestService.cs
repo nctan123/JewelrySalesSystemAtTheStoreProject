@@ -32,7 +32,7 @@ namespace JSSATSProject.Service.Service.Service
             var entity = _mapper.Map<SpecialDiscountRequest>(specialdiscountRequest);
             entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
             entity.Customer = (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber.ToString())).Data!;
-            entity.Status = SpecialDiscountRequestStatus.Pending.ToString();
+            entity.Status = SpecialDiscountRequestStatus.Awaiting.ToString();
 
             await _unitOfWork.SpecialDiscountRequestRepository.InsertAsync(entity);
             await _unitOfWork.SaveAsync();

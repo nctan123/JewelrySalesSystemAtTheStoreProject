@@ -36,7 +36,8 @@ namespace JSSATSProject.Service.Service.Service
             //fetch order details
             sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
                 requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
-            var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice);
+            sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
+            var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice) - sellOrder.DiscountPoint;
             sellOrder.TotalAmount = totalAmount;
             if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.ProcessingStatus;
 
@@ -52,7 +53,7 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetAllAsync()
         {
-            var entities = await _unitOfWork.SellOrderRepository.GetAsync(includeProperties: "SellOrderDetails");
+            var entities = await _unitOfWork.SellOrderRepository.GetAsync(includeProperties: "SellOrderDetails,Staff,Customer,Payments");
             var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
             return new ResponseModel
@@ -64,8 +65,10 @@ namespace JSSATSProject.Service.Service.Service
 
         public async Task<ResponseModel> GetByIdAsync(int id)
         {
-            var entity = await _unitOfWork.SellOrderRepository.GetEntityByIdAsync(id);
-            var response = _mapper.Map<ResponseSellOrder>(entity);
+            var entities = await _unitOfWork.SellOrderRepository.GetAsync(
+                so => so.Id == id,
+                includeProperties: "SellOrderDetails,Staff,Customer,Payments");
+            var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
             return new ResponseModel
             {

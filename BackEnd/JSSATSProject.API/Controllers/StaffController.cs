@@ -18,9 +18,9 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(DateTime startDate, DateTime endDate)
         {
-            var responseModel = await _staffService.GetAllAsync();
+            var responseModel = await _staffService.GetAllAsync(startDate, endDate);
             return Ok(responseModel);
         }
 
