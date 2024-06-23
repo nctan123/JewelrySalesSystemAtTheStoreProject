@@ -24,14 +24,12 @@ const path = {
     WARRANTY: 'warranty',
 // Cashier
     CS_PUBLIC: 'cs_public',
-
     CS_ORDER: 'cs_order',
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
-    // ADMIN
+// ADMIN
     DASHBOARD: 'Dashboard',
-
     MANAGE: 'Manage',
     CUSTOMERADMIN: 'customeradmin',
     PRODUCTADMIN: 'productadmin',

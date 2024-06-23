@@ -27,6 +27,7 @@ const Buy = () => {
     console.log(ListInvoice);
   }, [ListInvoice]);
   return (
+    <div className='w-full mt-20'>
     <div className='  w-full h-fit flex justify-evenly'>
       <div class="max-w-[400px] w-full rounded-3xl flex flex-col p-6 bg-[#fefffe] bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-100 text-gray-100 drop-shadow-lg">
         <div class="flex flex-col gap-4">
@@ -89,7 +90,7 @@ const Buy = () => {
           <div class="w-12/12 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
             <input placeholder="Purchase Price" class="text-black w-9/12 h-14 px-4 bg-transparent focus:outline-none" />
             <div class="text-gray-600 cursor-pointer flex items-center w-3/12 px-4 bg-transparent appearance-none border-l-2 border-gray-500 h-5/6 focus:outline-none text-lg ">
-              <span className='hover:scale-75 duration-500'>Reason</span>
+              <span className='hover:scale-75 duration-500 '>Add</span>
             </div>
           </div>
         </div>
@@ -103,23 +104,43 @@ const Buy = () => {
       </div>
 
       <div class="max-w-[400px] w-full rounded-3xl flex flex-col gap-5 p-6 bg-[#fefffe] bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-100 text-gray-100 drop-shadow-lg">
-        <div className=' relative h-[70%] bg-[#bdb9b94b] rounded-2xl'>
+        <div className=' relative h-[50%] bg-[#bdb9b94b] rounded-2xl'>
           <span className='absolute top-[-13px] bg-white px-2 rounded-md shadow-[#b7aaaa] shadow-md left-5 text-black'>Information List</span>
           {ListInvoice && ListInvoice.length > 0 && ListInvoice.map((item, index) => {
             return (
-              <h1 className='text-black'>
+              
+               <div className='border-y border-gray-700 h-[90%] mx-auto w-[90%] mt-4 overflow-y-auto'>
+                <h1 className='text-black'>
                 {item.customerId}
-              </h1>
+                </h1>
+               </div>
             )
           })}
         </div>
 
-        <div className='relative h-[30%] bg-[#bdb9b94b] rounded-2xl'>
-          <span className='absolute top-[-13px] bg-white px-2 rounded-md shadow-[#b7aaaa] shadow-md left-5 text-black'>Client consultant</span>
+        <div className='relative h-[50%] bg-[#bdb9b94b] rounded-2xl'>
+          <span className='absolute top-[-13px] bg-white px-2 rounded-md shadow-[#b7aaaa] shadow-md left-5 text-black'>Purchased products</span>
+          <div className='border-y border-gray-700 h-[70%] mx-auto w-[90%] mt-4 overflow-y-auto'>
+         
+          </div>
+
+          <div className='flex justify-center'>
+                <button type="submit" class="p-0 px-3 py-1 my-0 mt-2 w-fit bg-gray-900 rounded-full bg-clip-padding backdrop-filter backdrop-blur-xl bg-opacity-10 border border-gray-100 hover:bg-green-600 transition-all duration-300 hover:scale-95 text-xl shadow-md" >
+                Payment
+                </button>
+          </div>
         </div>
       </div>
-
+      
     </div>
+    <div class="relative max-w-[96%] mt-4 mx-auto h-16 w-full rounded-2xl p-6 bg-[#fefffe] bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-100 text-gray-100 drop-shadow-lg">
+          <span className='absolute top-[-10px] bg-white border shadow px-2 rounded-md text-black'>Reason</span>
+          <div className=' h-fit text-red-500 text-center'>
+              Discount 70%
+          </div>
+    </div>
+    </div>
+    
   )
 }
 
