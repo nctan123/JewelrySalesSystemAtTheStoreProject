@@ -23,6 +23,7 @@ public class GuaranteeRepository : GenericRepository<Guarantee>
             .ThenInclude(sd => sd.Order)
             .ThenInclude(s => s.Customer)
             .Include(s => s.Product)
+            .ThenInclude(s => s.Category)
             .FirstOrDefaultAsync();
         return entity;
     }

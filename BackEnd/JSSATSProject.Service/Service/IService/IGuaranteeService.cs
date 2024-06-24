@@ -19,6 +19,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> CreateGuaranteeAsync(List<ResponseProductDetails> products);
         public Task<ResponseModel> UpdateGuaranteeAsync(int guaranteeId, RequestUpdateGuarantee requestGuarantee);
         public Task<Guarantee?> GetEntityByCodeAsync(string guaranteeCode);
-        public ResponseProductForCheckOrder GetResponseProductForCheckOrder(Guarantee guarantee);
+        public Task<ResponseProductForCheckOrder> GetResponseProductForCheckOrder(Guarantee guarantee);
     }
 }

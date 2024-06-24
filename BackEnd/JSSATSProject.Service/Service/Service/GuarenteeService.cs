@@ -98,20 +98,21 @@ namespace JSSATSProject.Service.Service.Service
             return entity;
         }
 
-        public ResponseProductForCheckOrder GetResponseProductForCheckOrder(Guarantee guarantee)
+        public async Task<ResponseProductForCheckOrder> GetResponseProductForCheckOrder(Guarantee guarantee)
         {
+            var rate = await _unitOfWork.PurchasePriceRatioRepository.GetRate(guarantee.Product.Category.TypeId);
             return new ResponseProductForCheckOrder()
             {
                 Code = guarantee.Product.Code,
                 Name = guarantee.Product.Name,
                 Quantity = guarantee.SellOrderDetail.Quantity,
                 PriceInOrder = guarantee.SellOrderDetail.UnitPrice,
-                EstimateBuyPrice = 0.7m * guarantee.SellOrderDetail.UnitPrice,
-                ReasonForEstimateBuyPrice = $"The percentage of buyback value is {0.7m}"
+                EstimateBuyPrice = rate * guarantee.SellOrderDetail.UnitPrice,
+                ReasonForEstimateBuyPrice = $"The percentage of buyback value is {rate}"
             };
         }
 
-       public async Task<ResponseModel> CreateGuaranteeAsync(List<ResponseProductDetails> products)
+        public async Task<ResponseModel> CreateGuaranteeAsync(List<ResponseProductDetails> products)
         {
             foreach (var product in products)
             {
