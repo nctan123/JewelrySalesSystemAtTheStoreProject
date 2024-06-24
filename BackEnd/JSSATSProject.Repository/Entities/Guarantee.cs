@@ -17,10 +17,11 @@ public partial class Guarantee
 
     public DateTime EffectiveDate { get; set; }
 
-    public DateTime ExpiredDate { get; set; }
-    
-    public int? SellOrderDetailId { get; set; }
-    public virtual Product Product { get; set; }
-    public virtual SellOrderDetail SellOrderDetail { get; set; }
+    public int? SellorderdetailId { get; set; }
 
+    public DateTime ExpiredDate { get; set; }
+
+    public virtual Product Product { get; set; }
+
+    public virtual SellOrderDetail SellOrderDetail { get; set; }
 }

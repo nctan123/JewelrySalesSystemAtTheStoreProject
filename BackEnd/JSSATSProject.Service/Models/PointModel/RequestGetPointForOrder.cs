@@ -1,7 +1,14 @@
-namespace JSSATSProject.Service.Models.PointModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-public class RequestGetPointForOrder
+namespace JSSATSProject.Service.Models.PointModel
 {
-    public required string CustomerPhoneNumber { get; set; }
-    public required decimal TotalOrderPrice { get; set; }
+    public class RequestGetPointForOrder
+    {
+        public required string CustomerPhoneNumber { get; set; }
+        public required decimal TotalOrderPrice { get; set; }
+    }
 }

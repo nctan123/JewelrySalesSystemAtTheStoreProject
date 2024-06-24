@@ -3,12 +3,6 @@ using JSSATSProject.Repository;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PaymentModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using JSSATSProject.Service.Models.CustomerModel;
 using AutoMapper;
 
 namespace JSSATSProject.Service.Service.Service

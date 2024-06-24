@@ -6,6 +6,7 @@ using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
@@ -47,7 +48,7 @@ namespace JSSATSProject.API.Controllers
                         title: "Order not found.",
                         detail: $"Cannot find data of order {orderCode}");
                 //map sp trong sellOrder details thanh response product dto
-                var products = _sellOrderService.GetProducts(sellOrder);
+                var products = await _sellOrderService.GetProducts(sellOrder);
                 return Ok(new ResponseCheckOrder()
                     {
                         code = orderCode,
@@ -65,24 +66,29 @@ namespace JSSATSProject.API.Controllers
                 detail: "The system can just buyback product from Sell Orders.");
         }
 
-        // [HttpPost]
-        // [Route("CreateOrder")]
-        // public async Task<IActionResult> CreateOrder([FromBody] RequestCreateBuyOrder requestCreateBuyOrder)
-        // {
-        //     //assume that all data are already valid
-        //     var customer = (Customer)(await _customerService.GetEntityByPhoneAsync(requestCreateBuyOrder.CustomerPhoneNumber)).Data!;
-        //
-        //     var buyOrder = new BuyOrder()
-        //     {
-        //         CustomerId = customer.Id,
-        //         StaffId = requestCreateBuyOrder.StaffId,
-        //         Status = "processing",
-        //         TotalAmount = _buyOrderService.GetTotalAmount(requestCreateBuyOrder.ProductCodesAndQuantity,
-        //             requestCreateBuyOrder.ProductCodesAndEstimatePrices),
-        //         CreateDate = requestCreateBuyOrder.CreateDate,
-        //         Description = requestCreateBuyOrder.Description,
-        //         BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder)
-        //     };
-        // }
+        [HttpPost]
+        [Route("CreateInCompanyOrder")]
+        public async Task<IActionResult> CreateInCompanyOrder([FromBody] RequestCreateBuyOrder requestCreateBuyOrder)
+        {
+            //assume that all data are already valid
+            var customer = (Customer)(await _customerService.GetEntityByPhoneAsync(requestCreateBuyOrder.CustomerPhoneNumber)).Data!;
+        
+            var buyOrder = new BuyOrder()
+            {
+                CustomerId = customer.Id,
+                StaffId = requestCreateBuyOrder.StaffId,
+                Status = "processing",
+                TotalAmount = _buyOrderService.GetTotalAmount(requestCreateBuyOrder.ProductCodesAndQuantity,
+                    requestCreateBuyOrder.ProductCodesAndEstimatePrices),
+                CreateDate = requestCreateBuyOrder.CreateDate,
+                Description = requestCreateBuyOrder.Description,
+                BuyOrderDetails = null,
+            };
+            //save buyOrder
+            await _buyOrderService.CreateAsync(buyOrder);
+            buyOrder.BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder, buyOrder.Id);
+            var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
+            return Ok(result);
+        }
     }
 }

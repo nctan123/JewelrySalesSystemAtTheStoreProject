@@ -18,6 +18,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> UpdateOrderAsync(int orderId, RequestUpdateSellOrder requestSellOrder);
         public Task<ResponseModel> UpdateStatusAsync(int orderId, UpdateSellOrderStatus requestSellOrder);
         public Task<ResponseModel> CountOrderByOrderTypeAsync(int month);
-        public List<ResponseProductForCheckOrder> GetProducts(SellOrder? sellOrder);
+        public Task<List<ResponseProductForCheckOrder>> GetProducts(SellOrder? sellOrder);
     }
 }

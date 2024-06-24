@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -16,7 +17,7 @@ public partial class Stall
     public string Description { get; set; }
 
     public string Status { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
     public virtual StallType Type { get; set; }

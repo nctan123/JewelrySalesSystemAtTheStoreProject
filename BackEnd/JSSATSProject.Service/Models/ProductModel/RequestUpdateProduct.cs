@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JSSATSProject.Repository.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,7 @@ namespace JSSATSProject.Service.Models.ProductModel
 {
     public class RequestUpdateProduct
     {
-        public decimal PriceRate { get; set; }
-
+        public int? StallsId { get; set; }
         public string? Status { get; set; }
     }
 }

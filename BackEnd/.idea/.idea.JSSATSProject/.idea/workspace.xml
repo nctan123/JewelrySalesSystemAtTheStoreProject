@@ -4,6 +4,16 @@
     <projectFile profileName="IIS Express">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
     <projectFile profileName="http">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
     <projectFile profileName="https">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/JSSATS - Web Deploy.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP1.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy1.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy2.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy3.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy4.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy1.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
@@ -87,7 +97,6 @@
   "keyToString": {
     ".NET Launch Settings Profile.JSSATSProject.API: https.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "BE__Tan",
     "ignore.virus.scanning.warn.message": "true",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -106,6 +115,46 @@
   }
 }]]></component>
   <component name="RunManager" selected=".NET Launch Settings Profile.JSSATSProject.API: https">
+    <configuration name="JSSATSProject.API: JSSATS - Web Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="JSSATS - Web Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/JSSATS - Web Deploy.pubxml" user_name="$JSSATS" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - FTP" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - FTP.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP.pubxml" user_name="jssatsproject\$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - FTP1" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - FTP1.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP1.pubxml" user_name="jssatsproject\$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy1" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy1.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy1.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy2" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy2.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy2.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy3" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy3.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy3.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy4" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy4.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy4.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Zip Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Zip Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Zip Deploy1" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Zip Deploy1.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy1.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
     <configuration name="JSSATSProject.API: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/JSSATSProject.API/JSSATSProject.API.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
@@ -176,6 +225,11 @@
       <workItem from="1718093152589" duration="1507000" />
       <workItem from="1718098074193" duration="63000" />
       <workItem from="1718098172667" duration="6000" />
+      <workItem from="1719079536901" duration="888000" />
+      <workItem from="1719080485233" duration="428000" />
+      <workItem from="1719125930249" duration="1294000" />
+      <workItem from="1719198364965" duration="4495000" />
+      <workItem from="1719226237243" duration="8254000" />
     </task>
     <servers />
   </component>
@@ -201,8 +255,104 @@
           <properties documentPath="C:\Users\nhata\Downloads\BackEnd (1)\JSSATSProject.API\Controllers\OrderController.cs" containingFunctionPresentation="Method 'CreateAsync'" />
           <option name="timeStamp" value="8" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.Service/Service/Service/BuyOrderService.cs</url>
+          <line>153</line>
+          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.Service\Service\Service\BuyOrderService.cs" containingFunctionPresentation="Method 'CreateOrderDetails'">
+            <startOffsets>
+              <option value="5470" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5484" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/BuyOrderController.cs</url>
+          <line>90</line>
+          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.API\Controllers\BuyOrderController.cs" containingFunctionPresentation="Method 'CreateInCompanyOrder'">
+            <startOffsets>
+              <option value="4009" />
+            </startOffsets>
+            <endOffsets>
+              <option value="4027" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/BuyOrderController.cs</url>
+          <line>89</line>
+          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.API\Controllers\BuyOrderController.cs" containingFunctionPresentation="Method 'CreateInCompanyOrder'">
+            <startOffsets>
+              <option value="3918" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3996" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/BuyOrderController.cs</url>
+          <line>50</line>
+          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.API\Controllers\BuyOrderController.cs" containingFunctionPresentation="Method 'CheckAsync'">
+            <startOffsets>
+              <option value="1949" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2011" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="16" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.Service/Service/Service/SellOrderService.cs</url>
+          <line>181</line>
+          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.Service\Service\Service\SellOrderService.cs" containingFunctionPresentation="Method 'GetProducts'">
+            <startOffsets>
+              <option value="6965" />
+            </startOffsets>
+            <endOffsets>
+              <option value="7009" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.Service/Service/Service/ProductService.cs</url>
+          <line>115</line>
+          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.Service\Service\Service\ProductService.cs" containingFunctionPresentation="Method 'CalculateProductPrice'">
+            <startOffsets>
+              <option value="5853" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5885" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="23" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/JSSATSProject.Service/Service/Service/ProductService.cs</url>
+          <line>103</line>
+          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.Service\Service\Service\ProductService.cs" containingFunctionPresentation="Method 'CalculateProductPrice'">
+            <startOffsets>
+              <option value="5159" />
+            </startOffsets>
+            <endOffsets>
+              <option value="5345" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#JSSATSProject.Repository.Entities.BuyOrder" memberName="BuyOrderDetails" />
+      </pinned-members>
+    </pin-to-top-manager>
     <watches-manager>
       <configuration name="LaunchSettings">
         <watch expression="$exception.Source" />

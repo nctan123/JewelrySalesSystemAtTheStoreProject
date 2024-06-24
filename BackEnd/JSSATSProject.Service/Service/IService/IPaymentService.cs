@@ -2,6 +2,7 @@
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PaymentModel;
 using System.Threading.Tasks;
+using JSSATSProject.Repository.Entities;
 
 namespace JSSATSProject.Service.Service.IService
 {
@@ -11,5 +12,6 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> GetByIdAsync(int id);
         public Task<ResponseModel> CreatePaymentAsync(RequestCreatePayment requestPayment);
         public Task<ResponseModel> UpdatePaymentAsync(int paymentId, RequestUpdatePayment requestPayment);
+      
     }
 }

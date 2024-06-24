@@ -11,18 +11,18 @@ namespace JSSATSProject.API.Controllers
     [ApiController]
     public class SellOrderDetailController : ControllerBase
     {
-        private readonly ISellOrderDetailService _orderdetailService;
+        private readonly ISellOrderDetailService _sellorderdetailService;
 
         public SellOrderDetailController(ISellOrderDetailService orderdetailService)
         {
-            _orderdetailService = orderdetailService;
+            _sellorderdetailService = orderdetailService;
         }
 
         [HttpGet]
         [Route("GetByOrderId")]
         public async Task<IActionResult> GetByOrderIdAsync(int id)
         {
-            var responseModel = await _orderdetailService.GetByOrderIdAsync(id);
+            var responseModel = await _sellorderdetailService.GetByOrderIdAsync(id);
             return Ok(responseModel);
         }
 
@@ -30,7 +30,7 @@ namespace JSSATSProject.API.Controllers
         [Route("CreateOrderDetail")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreateOrderDetail requestOrderDetail)
         {
-            var responseModel = await _orderdetailService.CreateOrderDetailAsync(requestOrderDetail);
+            var responseModel = await _sellorderdetailService.CreateOrderDetailAsync(requestOrderDetail);
             return Ok(responseModel);
         }
 
@@ -38,7 +38,7 @@ namespace JSSATSProject.API.Controllers
         [Route("UpdateOrderDetail")]
         public async Task<IActionResult> UpdateOrderDetailAsync(int id, [FromBody] RequestUpdateOrderDetail requestOrderDetail)
         {
-            var response = await _orderdetailService.UpdateOrderDetailAsync(id, requestOrderDetail);
+            var response = await _sellorderdetailService.UpdateOrderDetailAsync(id, requestOrderDetail);
             return Ok(response);
         }
 
@@ -46,8 +46,18 @@ namespace JSSATSProject.API.Controllers
         [Route("CountProductsSoldByCategory")]
         public async Task<IActionResult> CountProductsSoldByCategoryAsync(DateTime startDate, DateTime endDate)
         {
-            var responseModel = await _orderdetailService.CountProductsSoldByCategoryAsync(startDate,endDate);
+            var responseModel = await _sellorderdetailService.CountProductsSoldByCategoryAsync(startDate,endDate);
             return Ok(responseModel);
         }
+
+        [HttpGet]
+        [Route("GetTotalRevenueStall")]
+        public async Task<IActionResult> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate)
+        {
+            var responseModel = await _sellorderdetailService.GetTotalRevenueStallAsync(startDate, endDate);
+            return Ok(responseModel);
+        }
+
+
     }
 }

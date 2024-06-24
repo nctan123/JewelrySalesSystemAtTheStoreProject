@@ -5,8 +5,8 @@ using JSSATSProject.Service.Models.OrderDetail;
 using JSSATSProject.Service.Service.IService;
 using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
-using JSSATSProject.Service.Models.NewFolder;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Repository.ConstantsContainer;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -42,17 +42,7 @@ namespace JSSATSProject.Service.Service.Service
             var entities = await _unitOfWork.SellOrderDetailRepository.GetAsync(
                 c => c.OrderId.Equals(id)
             );
-            var response = _mapper.Map<List<ResponseOrderDetail>>(entities);
-
-
-            foreach (var orderDetail in response)
-            {
-                if (orderDetail.Product != null)
-                {
-                    orderDetail.ProductName = orderDetail.Product.Name;
-                }
-            }
-
+            var response = _mapper.Map<List<ResponseSellOrderDetails>>(entities);
             return new ResponseModel
             {
                 Data = response
@@ -64,7 +54,7 @@ namespace JSSATSProject.Service.Service.Service
         {
             try
             {
-                var orderdetail = await _unitOfWork.SellOrderDetailRepository.GetByIDAsync(orderdetailId);
+                var orderdetail = await _unitOfWork.SellOrderDetailRepository.GetEntityByIdAsync(orderdetailId);
                 if (orderdetail != null)
                 {
                     _mapper.Map(requestOrderDetail, orderdetail);
@@ -140,8 +130,9 @@ namespace JSSATSProject.Service.Service.Service
         {
             var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
                 filter: od => od.Order.CreateDate >= startDate
-                              && od.Order.CreateDate <= endDate,
-                includeProperties: "Product");
+                              && od.Order.CreateDate <= endDate
+                              && od.Status.Equals(SellOrderDetailsConstants.Delivered),
+                includeProperties: "Product,Product.Category");
 
 
             var productsSoldPerCategory = orderDetails
@@ -167,13 +158,13 @@ namespace JSSATSProject.Service.Service.Service
         }
 
         public async Task<List<SellOrderDetail>> GetAllEntitiesFromSellOrderAsync(int sellOrderId,
-            Dictionary<string, int> productCodesAndQuantity, Dictionary<string, int?>? productCodesAndPromotionIds)
+          Dictionary<string, int> productCodesAndQuantity, Dictionary<string, int?>? productCodesAndPromotionIds)
         {
             var result = new List<SellOrderDetail>();
             foreach (var item in productCodesAndQuantity)
             {
                 var product = await _productService.GetEntityByCodeAsync(item.Key);
-                product.Status = ProductConstants.InactiveStatus;
+                product.Status = "inactive";
                 int? promotionId = null;
                 productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
                 var sellOrderDetails = new SellOrderDetail()
@@ -200,5 +191,35 @@ namespace JSSATSProject.Service.Service.Service
                 await UpdateStatusAsync(item.Id, newStatus, requestUpdateOrderDetailsStatus);
             }
         }
+
+        public async Task<ResponseModel> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate)
+        {
+            var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                filter: od => od.Order.CreateDate >= startDate
+                              && od.Order.CreateDate <= endDate
+                              && od.Status.Equals(SellOrderDetailsConstants.Delivered),
+                includeProperties: "Product,Product.Stalls");
+
+            var revenuePerStall = orderDetails
+                .GroupBy(od => od.Product.Stalls.Name)
+                .Select(group => new
+                {
+                    StallName = group.Key,
+                    TotalRevenue = group.Sum(od => od.Quantity * od.UnitPrice)
+                })
+                .ToList();
+
+            var result = revenuePerStall.Select(item => new Dictionary<string, object>
+    {
+        { "StallName", item.StallName },
+        { "TotalRevenue", item.TotalRevenue }
+    }).ToList();
+
+            return new ResponseModel
+            {
+                Data = result
+            };
+        }
+
     }
 }

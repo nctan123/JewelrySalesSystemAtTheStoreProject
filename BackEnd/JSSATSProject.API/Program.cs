@@ -7,7 +7,6 @@ using JSSATSProject.Service.AutoMapper;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -21,6 +20,7 @@ namespace JSSATSProject.API
             var config = builder.Configuration;
             var services = builder.Services;
 
+            services.AddHttpContextAccessor();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -32,13 +32,12 @@ namespace JSSATSProject.API
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = builder.Configuration["Jwt:Issuer"],
                     ValidAudience = builder.Configuration["Jwt:Audience"],
-                    IssuerSigningKey =
-                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
                 };
             });
             builder.Services.AddAuthorization();
 
-            // Cấu hình dịch vụ CORS
+            // Configure CORS
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(builder =>
@@ -49,9 +48,8 @@ namespace JSSATSProject.API
                 });
             });
 
-            // Add services to the container.
+            // Add services to the container
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -60,19 +58,16 @@ namespace JSSATSProject.API
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefautConnection"));
             });
 
-
             builder.Services.AddScoped<UnitOfWork>();
 
-            //AutoMapper
+            // AutoMapper
             builder.Services.AddAutoMapper(typeof(ApplicationMapper));
 
-
-            // Service
+            // Service registrations
             builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
             builder.Services.AddScoped<ICustomerService, CustomerService>();
             builder.Services.AddScoped<IAccountService, AccountService>();
             builder.Services.AddScoped<IDiamondService, DiamondService>();
-            //builder.Services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
             builder.Services.AddScoped<IGuaranteeService, GuaranteeService>();
             builder.Services.AddScoped<IMaterialPriceListService, MaterialPriceListService>();
             builder.Services.AddScoped<IMaterialService, MaterialService>();
@@ -82,7 +77,6 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IPointService, PointService>();
             builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
             builder.Services.AddScoped<IProductCategoryTypeService, ProductCategoryTypeService>();
-            //builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IPromotionService, PromotionService>();
             builder.Services.AddScoped<IReturnBuyBackPolicyService, ReturnBuyBackPolicyService>();
             builder.Services.AddScoped<IStaffService, StaffService>();
@@ -90,30 +84,39 @@ namespace JSSATSProject.API
             builder.Services.AddScoped<IStallTypeService, StallTypeService>();
             builder.Services.AddScoped<IPromotionRequestService, PromotionRequestService>();
             builder.Services.AddScoped<ISpecialDiscountRequestService, SpecialDiscountRequestService>();
+            builder.Services.AddScoped<IVnPayService, VnPayService>();
             builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
-            services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
-            services.AddScoped<IBuyOrderService, BuyOrderService>();
+            builder.Services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
+            builder.Services.AddScoped<IPaymentDetailService, PaymentDetailService>();
+            builder.Services.AddScoped<IBuyOrderService, BuyOrderService>();
+            builder.Services.AddScoped<IBuyOrderDetailService, BuyOrderDetailService>();
 
-            //CacheManager
-            services.AddSingleton(typeof(CacheManager<>)); // Register generic CacheManager
-            services.AddSingleton<DiamondPriceCacheManager>(); // Register cache for diamond prices
+            // CacheManager
+            services.AddSingleton(typeof(CacheManager<>));
+            services.AddSingleton<DiamondPriceCacheManager>();
+            builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
+            builder.Services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
+            
+            
             services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
             services.AddScoped<IProductService, ProductService>();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            // Áp dụng middleware CORS
-            app.UseCors();
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-            // CORS
+
+            // Apply CORS policy
+            app.UseCors();
+
             app.MapControllers();
 
             app.Run();

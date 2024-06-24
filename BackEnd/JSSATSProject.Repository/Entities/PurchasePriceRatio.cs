@@ -15,7 +15,11 @@ public partial class PurchasePriceRatio
 
     public decimal Percentage { get; set; }
 
+    public int ReturnbuybackpolicyId { get; set; }
+
     public virtual ICollection<BuyOrderDetail> BuyOrderDetails { get; set; } = new List<BuyOrderDetail>();
 
     public virtual ProductCategoryType CategoryType { get; set; }
+
+    public virtual ReturnBuyBackPolicy Returnbuybackpolicy { get; set; }
 }

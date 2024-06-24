@@ -14,6 +14,7 @@ namespace JSSATSProject.Repository
         private AccountRepository _account;
         private BuyOrderRepository _buyOrder;
         private CustomerRepository _customer;
+        private CampaignPointRepository _campaignpoint;
         private DiamondRepository _diamond;
         private DiamondPriceListRepository _diamondpricelist;
         private GuaranteeRepository _guarantee;
@@ -45,6 +46,7 @@ namespace JSSATSProject.Repository
         private PromotionRequestRepository _promotionrequest;
         private SpecialDiscountRequestRepository _specialdiscountrequest;
         private PurchasePriceRatioRepository _purchasePriceRatioRepository;
+        private PaymentDetailRepository _paymentdetail;
 
         public UnitOfWork(DBContext context)
         {
@@ -63,6 +65,19 @@ namespace JSSATSProject.Repository
             }
 
         }
+
+        public CampaignPointRepository CampaignPointRepository
+        {
+            get
+            {
+                if (_campaignpoint == null)
+                {
+                    _campaignpoint = new CampaignPointRepository(_context);
+                }
+                return _campaignpoint;
+            }
+
+        } 
         
         public SellOrderDetailRepository SellOrderDetailRepository
         {
@@ -73,6 +88,19 @@ namespace JSSATSProject.Repository
                     _sellorderdetail = new SellOrderDetailRepository(_context);
                 }
                 return _sellorderdetail;
+            }
+
+        } 
+        
+        public PaymentDetailRepository PaymentDetailRepository
+        {
+            get
+            {
+                if (_paymentdetail == null)
+                {
+                    _paymentdetail = new PaymentDetailRepository(_context);
+                }
+                return _paymentdetail;
             }
 
         } 

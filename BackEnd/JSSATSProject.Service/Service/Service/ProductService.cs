@@ -45,13 +45,15 @@ namespace JSSATSProject.Service.Service.Service
                                    "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                    "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                    "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                                   "ProductMaterials,ProductMaterials.Material"
+                                   "ProductMaterials,ProductMaterials.Material," + "Stalls"
             );
             var response = _mapper.Map<List<ResponseProduct>>(entities);
             foreach (var responseProduct in response)
             {
-                responseProduct.ProductValue =
-                    await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First());
+                responseProduct.ProductValue = await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First()!);
+                var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+                responseProduct.PromotionId = promotion.Id;
+                responseProduct.DiscountRate = promotion.DiscountRate;
             }
 
             return new ResponseModel
@@ -174,28 +176,28 @@ namespace JSSATSProject.Service.Service.Service
                 var materialPrice = quantity * productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
                 totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
             }
-
             return Math.Ceiling(totalPrice);
         }
 
 
         public async Task<ResponseModel> GetByCodeAsync(string code)
         {
-            var response = await _unitOfWork.ProductRepository.GetAsync(
+            var entities = await _unitOfWork.ProductRepository.GetAsync(
                 c => c.Code.Equals(code),
-                null,
-                includeProperties: "",
-                pageIndex: null,
-                pageSize: null
+                includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
+                                   "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
+                                   "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
+                                   "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
+                                   "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
+                                   "ProductMaterials,ProductMaterials.Material"
             );
-
-            if (!response.Any())
+            var response = _mapper.Map<List<ResponseProduct>>(entities);
+            foreach (var responseProduct in response)
             {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = $"Customer with name '{code}' not found.",
-                };
+                responseProduct.ProductValue = await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First()!);
+                var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+                responseProduct.PromotionId = promotion.Id;
+                responseProduct.DiscountRate = promotion.DiscountRate;
             }
 
             return new ResponseModel
@@ -214,7 +216,7 @@ namespace JSSATSProject.Service.Service.Service
                                    "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                    "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                    "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                                   "ProductMaterials,ProductMaterials.Material"
+                                   "ProductMaterials,ProductMaterials.Material,"  + "Category.Type"
             );
 
             var enumerable = response.ToList();
@@ -270,7 +272,7 @@ namespace JSSATSProject.Service.Service.Service
                 var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
                 if (product != null)
                 {
-                    product = _mapper.Map<Product>(requestProduct);
+                    _mapper.Map(requestProduct,product);
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
                     await _unitOfWork.SaveAsync();
 

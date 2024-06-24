@@ -14,4 +14,5 @@ public class PointRepository : GenericRepository<Point>
         var entity = await context.Points.Where(p => p.Customers.First().Phone == phoneNumber).FirstOrDefaultAsync();
         return entity;
     }
+
 }

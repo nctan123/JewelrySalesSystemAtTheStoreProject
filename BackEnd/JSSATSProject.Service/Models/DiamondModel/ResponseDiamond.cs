@@ -18,6 +18,8 @@ namespace JSSATSProject.Service.Models.DiamondModel
         public string CutName { get; set; }
         public string ClarityName { get; set; }
         public decimal CaratWeight { get; set; }
+
+        public string DiamondGradingCode { get; set; }
         public string Status { get; set; }
 
 

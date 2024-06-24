@@ -24,5 +24,7 @@ namespace JSSATSProject.Service.Service.IService
             Dictionary<string, int> productCodesAndQuantity, Dictionary<string, int?>? productCodesAndPromotionIds);
 
         public Task UpdateAllOrderDetailsStatus(SellOrder order, string newStatus);
+
+        public Task<ResponseModel> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate);
     }
 }

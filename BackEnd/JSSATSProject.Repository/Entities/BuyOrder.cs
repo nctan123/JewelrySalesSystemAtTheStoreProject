@@ -26,7 +26,6 @@ public partial class BuyOrder
     public string Description { get; set; }
 
     public string Status { get; set; }
-
     public virtual ICollection<BuyOrderDetail> BuyOrderDetails { get; set; } = new List<BuyOrderDetail>();
     
     [JsonIgnore]
