@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models.OrderDetail;
+using JSSATSProject.Service.Models.ProductModel;
 
 namespace JSSATSProject.Service.Service.IService
 {
@@ -26,5 +27,8 @@ namespace JSSATSProject.Service.Service.IService
         public Task UpdateAllOrderDetailsStatus(SellOrder order, string newStatus);
 
         public Task<ResponseModel> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate);
+
+        public Task<List<ResponseProductDetails>> GetProductFromSellOrderDetailAsync(int orderId);
+        
     }
 }

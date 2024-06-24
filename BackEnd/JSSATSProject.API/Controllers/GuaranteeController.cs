@@ -46,14 +46,6 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-        [HttpPost]
-        [Route("CreateGuarantee")]
-        public async Task<IActionResult> CreateAsync([FromBody] RequestCreateGuarantee requestGuarantee)
-        {
-            var responseModel = await _guaranteeService.CreateGuaranteeAsync(requestGuarantee);
-            return Ok(responseModel);
-        }
-
         [HttpPut]
         [Route("UpdateGuarantee")]
         public async Task<IActionResult> UpdateAsync(int guaranteeId, [FromBody] RequestUpdateGuarantee requestGuarantee)

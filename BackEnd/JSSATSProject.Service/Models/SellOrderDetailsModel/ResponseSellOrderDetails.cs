@@ -23,6 +23,8 @@ namespace JSSATSProject.Service.Models.SellOrderDetailsModel
 
         public int OrderId { get; set; }
 
+        public virtual Product Product { get; set; }
+
 
 
 

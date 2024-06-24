@@ -20,8 +20,6 @@ using JSSATSProject.Service.Models.StallModel;
 using JSSATSProject.Service.Models.StallTypeModel;
 using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.DiamondPriceListModel;
-using JSSATSProject.Service.Models.OrderDetail;
-using JSSATSProject.Service.Models.NewFolder;
 using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
@@ -49,8 +47,6 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Customer, ResponseCustomer>()
                     .ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.Totalpoint : 0))
                     .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
-                    .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
-                    .ForMember(dest => dest.BuyOrders, opt => opt.MapFrom(src => src.BuyOrders))
                     .ReverseMap();
 
 
@@ -185,13 +181,17 @@ namespace JSSATSProject.Service.AutoMapper
                 .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name))
                 .ForMember(dest => dest.Name,
                     opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
-                .ForMember(dest => dest.Token, opt => opt.Ignore());
+                .ForMember(dest => dest.StaffId, opt => opt.MapFrom(src => src.Staff.Id))
+                .ForMember(dest => dest.Token, opt => opt.Ignore())
+                .ReverseMap()
+                .ForMember(dest => dest.Role, opt => opt.Ignore());
 
             //PromotionRequest
             CreateMap<PromotionRequest, ResponsePromotionRequest>()
-                .ForMember(dest => dest.ApprovedByNavigation, opt => opt.MapFrom(src => src.ApprovedByNavigation))
-                .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager)) 
-                .ReverseMap();
+             .ForMember(dest => dest.ApprovedByNavigation, opt => opt.MapFrom(src => src.ApprovedByNavigation))
+             .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager))
+             .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
+             .ReverseMap();
 
             CreateMap<PromotionRequest, CreatePromotionRequest>().ReverseMap();
 

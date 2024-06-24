@@ -6,6 +6,7 @@ using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Repository.CacheManagers;
 using JSSATSProject.Repository.ConstantsContainer;
+using System.Linq.Expressions;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -52,8 +53,11 @@ namespace JSSATSProject.Service.Service.Service
             {
                 responseProduct.ProductValue = await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First()!);
                 var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
-                responseProduct.PromotionId = promotion.Id;
-                responseProduct.DiscountRate = promotion.DiscountRate;
+                if (promotion != null)
+                {
+                    responseProduct.PromotionId = promotion.Id;
+                    responseProduct.DiscountRate = promotion.DiscountRate;
+                }
             }
 
             return new ResponseModel
@@ -196,8 +200,11 @@ namespace JSSATSProject.Service.Service.Service
             {
                 responseProduct.ProductValue = await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First()!);
                 var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
-                responseProduct.PromotionId = promotion.Id;
-                responseProduct.DiscountRate = promotion.DiscountRate;
+                if (promotion != null)
+                {
+                    responseProduct.PromotionId = promotion.Id;
+                    responseProduct.DiscountRate = promotion.DiscountRate;
+                }
             }
 
             return new ResponseModel
@@ -269,10 +276,32 @@ namespace JSSATSProject.Service.Service.Service
         {
             try
             {
-                var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
+
+                var products = await _unitOfWork.ProductRepository.GetAsync(
+                    p => p.Id == productId, 
+                    includeProperties: "Stalls");
+                var product = products.FirstOrDefault();
+
                 if (product != null)
                 {
-                    _mapper.Map(requestProduct,product);
+                    if (requestProduct.StallsId.HasValue)
+                    {
+                        var newStall = await _unitOfWork.StallRepository.GetByIDAsync(requestProduct.StallsId.Value);
+                        if (newStall != null)
+                        {
+                            product.StallsId = requestProduct.StallsId.Value;
+                            product.Stalls = newStall; 
+                        }
+                        else
+                        {
+                            return new ResponseModel
+                            {
+                                Data = null,
+                                MessageError = "Stall not found",
+                            };
+                        }
+                    }
+
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
                     await _unitOfWork.SaveAsync();
 
@@ -286,16 +315,17 @@ namespace JSSATSProject.Service.Service.Service
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "Not Found",
+                    MessageError = "Product not found",
                 };
             }
             catch (Exception ex)
             {
                 // Log the exception and return an appropriate error response
+                // Logger.LogError(ex, "An error occurred while updating the product.");
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "An error occurred while updating the customer: " + ex.Message
+                    MessageError = "An error occurred while updating the product: " + ex.Message
                 };
             }
         }

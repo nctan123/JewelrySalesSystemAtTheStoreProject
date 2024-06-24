@@ -35,7 +35,7 @@ namespace JSSATSProject.API.Controllers
         //     
         // }
 
-        [HttpPost]
+        [HttpGet]
         [Route("CheckOrder")]
         public async Task<IActionResult> CheckAsync(string orderCode)
         {
@@ -65,24 +65,5 @@ namespace JSSATSProject.API.Controllers
                 detail: "The system can just buyback product from Sell Orders.");
         }
 
-        // [HttpPost]
-        // [Route("CreateOrder")]
-        // public async Task<IActionResult> CreateOrder([FromBody] RequestCreateBuyOrder requestCreateBuyOrder)
-        // {
-        //     //assume that all data are already valid
-        //     var customer = (Customer)(await _customerService.GetEntityByPhoneAsync(requestCreateBuyOrder.CustomerPhoneNumber)).Data!;
-        //
-        //     var buyOrder = new BuyOrder()
-        //     {
-        //         CustomerId = customer.Id,
-        //         StaffId = requestCreateBuyOrder.StaffId,
-        //         Status = "processing",
-        //         TotalAmount = _buyOrderService.GetTotalAmount(requestCreateBuyOrder.ProductCodesAndQuantity,
-        //             requestCreateBuyOrder.ProductCodesAndEstimatePrices),
-        //         CreateDate = requestCreateBuyOrder.CreateDate,
-        //         Description = requestCreateBuyOrder.Description,
-        //         BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder)
-        //     };
-        // }
     }
 }

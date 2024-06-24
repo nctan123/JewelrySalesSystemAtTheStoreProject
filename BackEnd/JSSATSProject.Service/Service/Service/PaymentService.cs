@@ -87,5 +87,10 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+        public async Task<int> GetOrderIdByPaymentIdAsync(int id)
+        {
+            var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+            return payment.OrderId;
+        }
     }
 }

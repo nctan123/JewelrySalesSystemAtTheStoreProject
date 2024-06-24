@@ -7,6 +7,7 @@ using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.ProductModel;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -40,9 +41,12 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> GetByOrderIdAsync(int id)
         {
             var entities = await _unitOfWork.SellOrderDetailRepository.GetAsync(
-                c => c.OrderId.Equals(id)
+                c => c.OrderId.Equals(id),
+                includeProperties: "Product"
             );
+            
             var response = _mapper.Map<List<ResponseSellOrderDetails>>(entities);
+            
             return new ResponseModel
             {
                 Data = response
@@ -219,6 +223,26 @@ namespace JSSATSProject.Service.Service.Service
             {
                 Data = result
             };
+        }
+
+        public async Task<List<ResponseProductDetails>> GetProductFromSellOrderDetailAsync(int orderId)
+        {
+
+            var sellOrderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                sod => sod.OrderId == orderId,
+                includeProperties: "Product"
+            );
+
+            var responseProducts = sellOrderDetails
+                .Select(sod => new ResponseProductDetails
+                {
+                    Id = sod.Product.Id,
+                    SellOrderDetailId = sod.Id,
+                    CategoryId = sod.Product.CategoryId
+                })
+                .ToList();
+
+            return responseProducts;
         }
 
     }

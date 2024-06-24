@@ -40,6 +40,7 @@ public class VnPayLibrary
         var orderInfoParts = orderInfo.Split(' ');
         var paymentId = orderInfoParts.Length > 2 ? orderInfoParts[2] : string.Empty;
         var orderId = orderInfoParts.Length > 2 ? orderInfoParts[0] : string.Empty;
+        var paymentmethodId = orderInfoParts.Length > 2 ? orderInfoParts[3] : string.Empty;
 
         return new ResponseVnPayment()
         {
@@ -50,7 +51,8 @@ public class VnPayLibrary
             PaymentId = paymentId,
             TransactionId = vnPayTranId.ToString(),
             Token = vnpSecureHash,
-            VnPayResponseCode = vnpResponseCode
+            VnPayResponseCode = vnpResponseCode,
+            PaymentMethodId = paymentmethodId
         };
     }
 

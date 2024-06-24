@@ -46,7 +46,7 @@ namespace JSSATSProject.Service.Service.Service
             sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
             var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice) - sellOrder.DiscountPoint;
             sellOrder.TotalAmount = totalAmount;
-            if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.ProcessingStatus;
+            if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
 
             await _unitOfWork.SellOrderRepository.InsertAsync(sellOrder);
             await _unitOfWork.SaveAsync();
@@ -198,7 +198,7 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
             Expression<Func<SellOrder, bool>> filter = order =>
-                (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate) && (order.Status.Equals(OrderConstants.CompletedStatus));
 
             decimal sum = await _unitOfWork.SellOrderRepository.SumAsync(filter, order => order.TotalAmount);
 
@@ -207,13 +207,13 @@ namespace JSSATSProject.Service.Service.Service
                 Data = sum,
                 MessageError = sum == 0 ? "Not Found" : null,
             };
-           
+
         }
 
         public async Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
         {
             Expression<Func<SellOrder, bool>> filter = order =>
-                (order.CreateDate >= startDate) && (order.CreateDate <= endDate);
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate) && (order.Status.Equals(OrderConstants.CompletedStatus));
 
             int count = await _unitOfWork.SellOrderRepository.CountAsync(filter);
 
@@ -222,9 +222,9 @@ namespace JSSATSProject.Service.Service.Service
                 Data = count,
                 MessageError = count == 0 ? "Not Found" : null,
             };
-         
+
         }
 
-       
+
     }
 }

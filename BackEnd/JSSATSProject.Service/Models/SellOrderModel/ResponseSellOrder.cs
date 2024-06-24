@@ -32,6 +32,7 @@ namespace JSSATSProject.Service.Models.OrderModel
 
         public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; } = new List<SellOrderDetail>();
 
+
         public virtual SpecialDiscountRequest SpecialDiscountRequest { get; set; }
 
         public virtual Staff Staff { get; set; }
