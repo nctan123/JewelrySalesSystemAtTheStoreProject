@@ -27,7 +27,7 @@ public partial class Customer
     public DateTime CreateDate { get; set; }
 
     public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
-
+    [JsonIgnore]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Point Point { get; set; }

@@ -46,7 +46,7 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = string.Empty,
             };
         }
-           
+
 
         public async Task<ResponseModel> GetAllAsync()
         {
@@ -70,7 +70,7 @@ namespace JSSATSProject.Service.Service.Service
 
                 if (existingPromotionRequest != null)
                 {
-                    
+
                     _mapper.Map(promotionRequest, existingPromotionRequest);
 
                     if (promotionRequest.ApprovedBy != null)

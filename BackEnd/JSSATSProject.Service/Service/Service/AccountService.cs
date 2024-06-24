@@ -27,7 +27,7 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = "",
             };
         }
-        
+
         public async Task<ResponseModel> GetAllAsync()
         {
             var entities = await _unitOfWork.AccountRepository.GetAsync();

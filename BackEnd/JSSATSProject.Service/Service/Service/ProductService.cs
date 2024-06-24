@@ -6,6 +6,7 @@ using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Repository.CacheManagers;
 using JSSATSProject.Repository.ConstantsContainer;
+using System.Linq.Expressions;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -14,9 +15,6 @@ namespace JSSATSProject.Service.Service.Service
         private readonly UnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IDiamondPriceListService _diamondPriceListService;
-        private readonly CacheManager<Product> _productCacheManager;
-        private readonly CacheManager<MaterialPriceList> _materialPriceListCacheManager;
-        private readonly IPromotionService _promotionService;
 
         public ProductService(UnitOfWork unitOfWork, IMapper mapper, IDiamondPriceListService diamondPriceListService
         )
@@ -48,15 +46,18 @@ namespace JSSATSProject.Service.Service.Service
                                    "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                    "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                    "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                                   "ProductMaterials,ProductMaterials.Material"
+                                   "ProductMaterials,ProductMaterials.Material," + "Stalls"
             );
             var response = _mapper.Map<List<ResponseProduct>>(entities);
             foreach (var responseProduct in response)
             {
                 responseProduct.ProductValue = await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First()!);
                 var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
-                responseProduct.PromotionId = promotion.Id;
-                responseProduct.DiscountRate = promotion.DiscountRate;
+                if (promotion != null)
+                {
+                    responseProduct.PromotionId = promotion.Id;
+                    responseProduct.DiscountRate = promotion.DiscountRate;
+                }
             }
 
             return new ResponseModel
@@ -199,8 +200,11 @@ namespace JSSATSProject.Service.Service.Service
             {
                 responseProduct.ProductValue = await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First()!);
                 var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
-                responseProduct.PromotionId = promotion.Id;
-                responseProduct.DiscountRate = promotion.DiscountRate;
+                if (promotion != null)
+                {
+                    responseProduct.PromotionId = promotion.Id;
+                    responseProduct.DiscountRate = promotion.DiscountRate;
+                }
             }
 
             return new ResponseModel
@@ -219,7 +223,7 @@ namespace JSSATSProject.Service.Service.Service
                                    "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                    "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                    "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                                   "ProductMaterials,ProductMaterials.Material"
+                                   "ProductMaterials,ProductMaterials.Material,"  + "Category.Type"
             );
 
             var enumerable = response.ToList();
@@ -231,6 +235,16 @@ namespace JSSATSProject.Service.Service.Service
             return enumerable.First();
         }
 
+        public async Task<ResponseModel> GetByIdAsync(int id)
+        {
+            var entity = await _unitOfWork.ProductRepository.GetByIDAsync(id);
+            var response = _mapper.Map<ResponseProduct>(entity);
+            return new ResponseModel
+            {
+                Data = response,
+                MessageError = "",
+            };
+        }
 
         public async Task<ResponseModel> GetByNameAsync(string name)
         {
@@ -262,10 +276,33 @@ namespace JSSATSProject.Service.Service.Service
         {
             try
             {
-                var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
+
+                var products = await _unitOfWork.ProductRepository.GetAsync(
+                    p => p.Id == productId, 
+                    includeProperties: "Stalls");
+                var product = products.FirstOrDefault();
+
                 if (product != null)
                 {
-                    product = _mapper.Map<Product>(requestProduct);
+                    if (requestProduct.StallsId.HasValue)
+                    {
+                        var newStall = await _unitOfWork.StallRepository.GetByIDAsync(requestProduct.StallsId.Value);
+                        if (newStall != null)
+                        {
+                            product.StallsId = requestProduct.StallsId.Value;
+                            product.Stalls = newStall; 
+                        }
+                        else
+                        {
+                            return new ResponseModel
+                            {
+                                Data = null,
+                                MessageError = "Stall not found",
+                            };
+                        }
+                    }
+
+                    _mapper.Map(requestProduct,product);
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
                     await _unitOfWork.SaveAsync();
 
@@ -279,16 +316,17 @@ namespace JSSATSProject.Service.Service.Service
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "Not Found",
+                    MessageError = "Product not found",
                 };
             }
             catch (Exception ex)
             {
                 // Log the exception and return an appropriate error response
+                // Logger.LogError(ex, "An error occurred while updating the product.");
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = "An error occurred while updating the customer: " + ex.Message
+                    MessageError = "An error occurred while updating the product: " + ex.Message
                 };
             }
         }

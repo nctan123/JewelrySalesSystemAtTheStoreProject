@@ -1,9 +1,12 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
+﻿using System.Net;
+using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using JSSATSProject.Repository.Entities;
+using JSSATSProject.Service.Models.ProductModel;
 
 namespace JSSATSProject.API.Controllers
 {
@@ -43,20 +46,36 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-        [HttpPost]
-        [Route("CreateGuarantee")]
-        public async Task<IActionResult> CreateAsync([FromBody] RequestCreateGuarantee requestGuarantee)
-        {
-            var responseModel = await _guaranteeService.CreateGuaranteeAsync(requestGuarantee);
-            return Ok(responseModel);
-        }
-
         [HttpPut]
         [Route("UpdateGuarantee")]
         public async Task<IActionResult> UpdateAsync(int guaranteeId, [FromBody] RequestUpdateGuarantee requestGuarantee)
         {
             var responseModel = await _guaranteeService.UpdateGuaranteeAsync(guaranteeId, requestGuarantee);
             return Ok(responseModel);
+        }
+
+        [HttpPost]
+        [Route("CheckGuarantee")]
+        public async Task<IActionResult> CheckAsync(string guaranteeCode)
+        {
+            var guarantee = await _guaranteeService.GetEntityByCodeAsync(guaranteeCode);
+            if (guarantee is null)
+                return Problem(statusCode: Convert.ToInt32(HttpStatusCode.BadRequest),
+                    title: "Guarantee not found.",
+                    detail: $"Cannot find data of order {guaranteeCode}");
+            //map sp trong sellOrder details thanh response product dto
+            ResponseProductForCheckOrder product =  await _guaranteeService.GetResponseProductForCheckOrder(guarantee);
+            return Ok(new ResponseCheckGuarantee()
+                {
+                    Code = guaranteeCode,
+                    CustomerName = string.Join(" ", guarantee.SellOrderDetail.Order.Customer.Firstname, guarantee.SellOrderDetail.Order.Customer.Lastname),
+                    CustomerPhoneNumber = guarantee.SellOrderDetail.Order.Customer.Phone,
+                    EffectiveDate = guarantee.EffectiveDate,
+                    ExpireDate = guarantee.ExpiredDate,
+                    Product = product
+                }
+            );
+            return Ok();
         }
     }
 }

@@ -14,4 +14,6 @@ public partial class ReturnBuyBackPolicy
     public DateTime EffectiveDate { get; set; }
 
     public string Status { get; set; }
+
+    public virtual ICollection<PurchasePriceRatio> PurchasePriceRatios { get; set; } = new List<PurchasePriceRatio>();
 }

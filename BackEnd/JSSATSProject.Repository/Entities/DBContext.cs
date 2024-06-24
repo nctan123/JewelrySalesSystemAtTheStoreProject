@@ -19,10 +19,11 @@ public partial class DBContext : DbContext
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
-
     public virtual DbSet<BuyOrder> BuyOrders { get; set; }
 
     public virtual DbSet<BuyOrderDetail> BuyOrderDetails { get; set; }
+
+    public virtual DbSet<CampaignPoint> CampaignPoints { get; set; }
 
     public virtual DbSet<Carat> Carats { get; set; }
 
@@ -35,11 +36,9 @@ public partial class DBContext : DbContext
     public virtual DbSet<Cut> Cuts { get; set; }
 
     public virtual DbSet<Diamond> Diamonds { get; set; }
-
     public virtual DbSet<DiamondPriceList> DiamondPriceLists { get; set; }
 
     public virtual DbSet<Fluorescence> Fluorescences { get; set; }
-
     public virtual DbSet<Guarantee> Guarantees { get; set; }
 
     public virtual DbSet<Material> Materials { get; set; }
@@ -53,7 +52,6 @@ public partial class DBContext : DbContext
     public virtual DbSet<PaymentDetail> PaymentDetails { get; set; }
 
     public virtual DbSet<PaymentMethod> PaymentMethods { get; set; }
-
     public virtual DbSet<Point> Points { get; set; }
 
     public virtual DbSet<Polish> Polishes { get; set; }
@@ -77,13 +75,10 @@ public partial class DBContext : DbContext
     public virtual DbSet<ReturnBuyBackPolicy> ReturnBuyBackPolicies { get; set; }
 
     public virtual DbSet<Role> Roles { get; set; }
-
     public virtual DbSet<SellOrder> SellOrders { get; set; }
-
     public virtual DbSet<SellOrderDetail> SellOrderDetails { get; set; }
 
     public virtual DbSet<Shape> Shapes { get; set; }
-
     public virtual DbSet<SpecialDiscountRequest> SpecialDiscountRequests { get; set; }
 
     public virtual DbSet<Staff> Staff { get; set; }
@@ -94,9 +89,9 @@ public partial class DBContext : DbContext
 
     public virtual DbSet<Symmetry> Symmetries { get; set; }
 
-//    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-//        => optionsBuilder.UseSqlServer("Data Source=LAPTOP-R16679DK;Initial Catalog=JSSATS;User ID=sa;Password=12345;Encrypt=False");
+//     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+// #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+//         => optionsBuilder.UseSqlServer("Data Source=LAPTOP-R16679DK;Initial Catalog=testdata01;Persist Security Info=True;User ID=sa;Password=12345;Encrypt=False");
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -140,6 +135,10 @@ public partial class DBContext : DbContext
             entity.ToTable("BuyOrder");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+               .HasMaxLength(50)
+               .IsUnicode(false)
+               .HasColumnName("code");
             entity.Property(e => e.CreateDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
@@ -207,6 +206,29 @@ public partial class DBContext : DbContext
             entity.HasOne(d => d.PurchasePriceRatio).WithMany(p => p.BuyOrderDetails)
                 .HasForeignKey(d => d.PurchasePriceRatioId)
                 .HasConstraintName("FK__BuyOrderD__purch__2645B050");
+        });
+
+        modelBuilder.Entity<CampaignPoint>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Campaign__3213E83F638193A6");
+
+            entity.ToTable("CampaignPoint");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Description)
+                .IsRequired()
+                .HasColumnType("text")
+                .HasColumnName("description");
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("end_date");
+            entity.Property(e => e.Rate)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnType("decimal(10, 2)")
+                .HasColumnName("rate");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("start_date");
         });
 
         modelBuilder.Entity<Carat>(entity =>
@@ -342,6 +364,10 @@ public partial class DBContext : DbContext
                 .HasColumnName("code");
             entity.Property(e => e.ColorId).HasColumnName("color_id");
             entity.Property(e => e.CutId).HasColumnName("cut_id");
+            entity.Property(e => e.DiamondGradingCode)
+               .HasMaxLength(50)
+               .IsUnicode(false)
+               .HasColumnName("diamond_grading_code");
             entity.Property(e => e.FluorescenceId).HasColumnName("fluorescence_id");
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -357,6 +383,10 @@ public partial class DBContext : DbContext
                 .HasDefaultValue("active")
                 .HasColumnName("status");
             entity.Property(e => e.SymmetryId).HasColumnName("symmetry_id");
+            entity.Property(e => e.DiamondGradingCode)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("diamond_grading_code");
 
             entity.HasOne(d => d.Carat).WithMany(p => p.Diamonds)
                 .HasForeignKey(d => d.CaratId)
@@ -476,6 +506,11 @@ public partial class DBContext : DbContext
             entity.ToTable("Guarantee");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+                .IsRequired()
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("code");
             entity.Property(e => e.Description)
                 .IsRequired()
                 .HasColumnType("text")
@@ -487,11 +522,15 @@ public partial class DBContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("expired_date");
             entity.Property(e => e.ProductId).HasColumnName("product_id");
+            entity.Property(e => e.SellorderdetailId).HasColumnName("sellorderdetail_id");
 
             entity.HasOne(d => d.Product).WithMany(p => p.Guarantees)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Guarantee__produ__3587F3E0");
+            entity.HasOne(d => d.SellOrderDetail).WithMany(p => p.Guarantees)
+               .HasForeignKey(d => d.SellorderdetailId)
+               .HasConstraintName("FK__Guarantee__sello__09746778");
         });
 
         modelBuilder.Entity<Material>(entity =>
@@ -930,6 +969,7 @@ public partial class DBContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoryTypeId).HasColumnName("category_type_id");
+            entity.Property(e => e.ReturnbuybackpolicyId).HasColumnName("returnbuybackpolicy_id");
             entity.Property(e => e.Percentage)
                 .HasColumnType("decimal(5, 2)")
                 .HasColumnName("percentage");
@@ -943,6 +983,10 @@ public partial class DBContext : DbContext
                 .HasForeignKey(d => d.CategoryTypeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__PurchaseP__categ__47A6A41B");
+            entity.HasOne(d => d.Returnbuybackpolicy).WithMany(p => p.PurchasePriceRatios)
+              .HasForeignKey(d => d.ReturnbuybackpolicyId)
+              .OnDelete(DeleteBehavior.ClientSetNull)
+              .HasConstraintName("FK_ReturnBuyBackPolicy");
         });
 
         modelBuilder.Entity<ReturnBuyBackPolicy>(entity =>
@@ -992,6 +1036,10 @@ public partial class DBContext : DbContext
             entity.ToTable("SellOrder");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Code)
+               .HasMaxLength(50)
+               .IsUnicode(false)
+               .HasColumnName("code");
             entity.Property(e => e.CreateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("create_date");

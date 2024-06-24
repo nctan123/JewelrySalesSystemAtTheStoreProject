@@ -20,11 +20,12 @@ namespace JSSATSProject.Service.Models.CustomerModel
         public string? Address { get; set; }
         public int AvaliablePoint { get; set; }
         public int TotalPoint { get; set; }
-        public virtual Point Point { get; set; }
+        //public virtual Point Point { get; set; }
         public DateTime CreateDate { get; set; }
+        //public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
+       // public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
         public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
         public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
-        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     }
 }

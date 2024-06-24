@@ -4,8 +4,6 @@ import { sidebarMenu } from '../ultis/menu'
 import { NavLink } from 'react-router-dom'
 import { hover } from '@testing-library/user-event/dist/hover'
 import { useState } from 'react'
-import { BiLogOut } from "react-icons/bi";// logout
-import { toast } from 'react-toastify'
 
 const notActive =
   'py-4 px-[25px] font-[300] font-sans italic flex gap-3 items-center text-white text-[14px]';
@@ -16,6 +14,7 @@ const notActiveJew =
   'py-2  font-[300] font-sans italic flex gap-3 items-center text-white text-[14px]';
 const activeStyleJew =
   'py-1 gap-4 w-[94%] rounded-xl font-thin font-serif italic flex  text-white text-[14px] bg-[#33333330] mt-[10px]';
+
 
 const Sidebar = () => {
   const [isOrderSubmenuOpen, setIsOrderSubmenuOpen] = useState(false);
@@ -31,19 +30,13 @@ const Sidebar = () => {
     // Xử lý sự kiện nhấp vào menu item ở đây
   };
 
-  const handleLogOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("role");
-
-    toast.success('Log out success!!!')
-  }
-
   return (
     <div className="container_sidebarleft flex flex-col">
       <div className="w-full mb-6 h-[70px] pt-[70px] pb-[80px] flex flex-col gap-2 font-serif text-white text-[25px] justify-center items-center">
         <img className="mt-[20px] w-[70px] object-contain" src={logo_v2_seller} alt="logo" />
         <span>Jewelry Store</span>
       </div>
+
 
       <div className="flex flex-col pb-16 ">
         {sidebarMenu.map((item) => (
@@ -52,17 +45,13 @@ const Sidebar = () => {
               to={item.path}
               end={item.end}
               className={({ isActive }) =>
-                `flex items-center p-4 text-white transition-colors ${isActive || (item.text === 'Jewelry' && isOrderSubmenuOpen)
-                  ? activeStyle
-                  : notActive
+                `flex items-center p-4 text-white transition-colors ${
+                  isActive || (item.text === 'Jewelry' && isOrderSubmenuOpen)
+                    ? activeStyle
+                    : notActive
                 }`
               }
-              onClick={
-                item.text === 'Jewelry'
-                  ? handleOrderSubmenuToggle
-                  : () => handleMenuItemClick(item)
-              }
-            >
+              onClick={item.text === 'Jewelry' ? handleOrderSubmenuToggle : () => handleMenuItemClick(item)}>
               {item.icons}
               <span className="ml-4">{item.text}</span>
             </NavLink>
@@ -73,7 +62,8 @@ const Sidebar = () => {
                     to={subItem.path}
                     key={subItem.path}
                     className={({ isActive }) =>
-                      `flex items-center p-4 text-black transition-colors ${isActive ? activeStyleJew : notActiveJew
+                      `flex items-center p-4 text-black transition-colors ${
+                        isActive ? activeStyleJew : notActiveJew
                       }`
                     }>
                     {subItem.icons}
@@ -82,9 +72,9 @@ const Sidebar = () => {
                 ))}
               </div>
             )}
+
           </div>
         ))}
-        <NavLink to='/login' onClick={() => handleLogOut()}><BiLogOut size={24} color="white" /> Logout</NavLink>
       </div>
     </div>
   );

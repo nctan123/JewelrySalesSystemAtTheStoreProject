@@ -10,24 +10,8 @@ namespace JSSATSProject.Service.Models.ProductModel
     {
         public int Id { get; set; }
 
-        public string CategoryName { get; set; }
+        public int SellOrderDetailId { get; set; }
 
-        public string StallName { get; set; }
-
-        public string? Code { get; set; }
-
-        public string Name { get; set; } = null!;
-
-        public decimal? MaterialCost { get; set; }
-
-        public decimal? ProductionCost { get; set; }
-
-        public decimal? GemCost { get; set; }
-
-        public string? Img { get; set; }
-
-        public decimal? Weight { get; set; }
-
-        public string? Status { get; set; }
+        public int CategoryId { get; set; }
     }
 }

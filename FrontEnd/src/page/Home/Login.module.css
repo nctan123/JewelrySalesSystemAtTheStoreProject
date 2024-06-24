@@ -53,7 +53,10 @@
     outline: none;
     border: none;
     background: #1618230f;
-color: black;
+/* có api rồi xóa */
+    background-color: red;
+    color: white;
+    /*  */
   }
   
   .login_container button.active {
