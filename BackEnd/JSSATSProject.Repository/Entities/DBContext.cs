@@ -224,6 +224,7 @@ public partial class DBContext : DbContext
                 .HasColumnName("end_date");
             entity.Property(e => e.Rate)
                 .HasColumnType("decimal(5, 2)")
+                .HasColumnType("decimal(10, 2)")
                 .HasColumnName("rate");
             entity.Property(e => e.StartDate)
                 .HasColumnType("datetime")
@@ -968,6 +969,7 @@ public partial class DBContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CategoryTypeId).HasColumnName("category_type_id");
+            entity.Property(e => e.ReturnbuybackpolicyId).HasColumnName("returnbuybackpolicy_id");
             entity.Property(e => e.Percentage)
                 .HasColumnType("decimal(5, 2)")
                 .HasColumnName("percentage");

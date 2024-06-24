@@ -18,14 +18,16 @@ namespace JSSATSProject.Service.Service.Service
         private readonly IMapper _mapper;
         private readonly ICustomerService _customerService;
         private readonly ISellOrderDetailService _sellOrderDetailService;
+        private readonly IProductService _productService;
 
         public SellOrderService(UnitOfWork unitOfWork, IMapper mapper, ICustomerService customerService,
-            ISellOrderDetailService sellOrderDetailService)
+            ISellOrderDetailService sellOrderDetailService, IProductService productService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _customerService = customerService;
             _sellOrderDetailService = sellOrderDetailService;
+            _productService = productService;
         }
 
         public async Task<SellOrder?> GetEntityByCodeAsync(string code)
@@ -39,12 +41,14 @@ namespace JSSATSProject.Service.Service.Service
             var customer =
                 (Customer)(await _customerService.GetEntityByPhoneAsync(requestSellOrder.CustomerPhoneNumber)).Data!;
             var sellOrder = _mapper.Map<SellOrder>(requestSellOrder);
+            var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
             sellOrder.Customer = customer;
             //fetch order details
             sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
                 requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
             sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
             var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice) - sellOrder.DiscountPoint;
+            var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) - sellOrder.DiscountPoint * pointRate;
             sellOrder.TotalAmount = totalAmount;
             if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
 
@@ -171,7 +175,7 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public List<ResponseProductForCheckOrder> GetProducts(SellOrder? sellOrder)
+        public async Task<List<ResponseProductForCheckOrder>> GetProducts(SellOrder? sellOrder)
         {
             var products = new List<ResponseProductForCheckOrder>();
             if (sellOrder?.SellOrderDetails is not null)
@@ -179,18 +183,37 @@ namespace JSSATSProject.Service.Service.Service
                 foreach (var orderDetail in sellOrder.SellOrderDetails)
                 {
                     var product = orderDetail.Product;
+                    var buybackRate = await _unitOfWork.PurchasePriceRatioRepository.GetRate(product.CategoryId);
+                    decimal buybackPrice = 0;
+                    string reason;
+                    //calculate by current gold price
+                    if (product.CategoryId.Equals(ProductConstants.RetailGoldCategory)
+                        || product.CategoryId.Equals(ProductConstants.WholesaleGoldCategory))
+                    {
+                        buybackPrice = await _productService.CalculateProductPrice(product, orderDetail.Quantity);
+                        reason = $"Current market price of gold is {buybackPrice}";
+                    }
+                    //calculate by old sell order price
+                    else
+                    {
+                        buybackPrice = orderDetail.UnitPrice * buybackRate;
+                        reason = $"The percentage of buyback value is {buybackRate}";
+                    }
+
+
                     var responseProduct = new ResponseProductForCheckOrder()
                     {
                         Code = product.Code,
                         Name = product.Name,
                         Quantity = orderDetail.Quantity,
                         PriceInOrder = orderDetail.UnitPrice,
-                        EstimateBuyPrice = orderDetail.UnitPrice * 0.7m,
-                        ReasonForEstimateBuyPrice = $"The percentage of buyback value is {0.7m}"
+                        EstimateBuyPrice = buybackPrice,
+                        ReasonForEstimateBuyPrice = reason
                     };
                     products.Add(responseProduct);
                 }
             }
+
             //add exception handling here
             return products;
         }

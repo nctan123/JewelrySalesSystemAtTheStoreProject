@@ -18,6 +18,29 @@ namespace JSSATSProject.API.Controllers
             _sellorderdetailService = orderdetailService;
         }
 
+        [HttpGet]
+        [Route("GetByOrderId")]
+        public async Task<IActionResult> GetByOrderIdAsync(int id)
+        {
+            var responseModel = await _sellorderdetailService.GetByOrderIdAsync(id);
+            return Ok(responseModel);
+        }
+
+        [HttpPost]
+        [Route("CreateOrderDetail")]
+        public async Task<IActionResult> CreateAsync([FromBody] RequestCreateOrderDetail requestOrderDetail)
+        {
+            var responseModel = await _sellorderdetailService.CreateOrderDetailAsync(requestOrderDetail);
+            return Ok(responseModel);
+        }
+
+        [HttpPut]
+        [Route("UpdateOrderDetail")]
+        public async Task<IActionResult> UpdateOrderDetailAsync(int id, [FromBody] RequestUpdateOrderDetail requestOrderDetail)
+        {
+            var response = await _sellorderdetailService.UpdateOrderDetailAsync(id, requestOrderDetail);
+            return Ok(response);
+        }
 
         [HttpGet]
         [Route("CountProductsSoldByCategory")]

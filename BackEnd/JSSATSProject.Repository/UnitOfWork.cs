@@ -14,6 +14,7 @@ namespace JSSATSProject.Repository
         private AccountRepository _account;
         private BuyOrderRepository _buyOrder;
         private CustomerRepository _customer;
+        private CampaignPointRepository _campaignpoint;
         private DiamondRepository _diamond;
         private DiamondPriceListRepository _diamondpricelist;
         private GuaranteeRepository _guarantee;
@@ -64,6 +65,19 @@ namespace JSSATSProject.Repository
             }
 
         }
+
+        public CampaignPointRepository CampaignPointRepository
+        {
+            get
+            {
+                if (_campaignpoint == null)
+                {
+                    _campaignpoint = new CampaignPointRepository(_context);
+                }
+                return _campaignpoint;
+            }
+
+        } 
         
         public SellOrderDetailRepository SellOrderDetailRepository
         {

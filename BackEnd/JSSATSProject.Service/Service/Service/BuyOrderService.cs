@@ -31,15 +31,52 @@ public class BuyOrderService : IBuyOrderService
     {
         throw new NotImplementedException();
     }
+    
 
-    public Task<ResponseModel> GetByProductIdAsync(int productId)
+    public async Task<ResponseModel> CreateAsync(BuyOrder entity)
     {
-        throw new NotImplementedException();
+        await _unitOfWork.BuyOrderRepository.InsertAsync(entity);
+        await _unitOfWork.SaveAsync();
+
+        return new ResponseModel
+        {
+            Data = entity,
+            MessageError = "",
+        };
     }
 
-    public Task<ResponseModel> CreateAsync(RequestCreateBuyOrder entity)
+    public async Task<ResponseModel> UpdateAsync(int buyOrderId, BuyOrder entity)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var buyOrder = await _unitOfWork.BuyOrderRepository.GetEntityAsync(buyOrderId);
+            if (buyOrder != null)
+            {
+                buyOrder = entity;
+                await _unitOfWork.BuyOrderRepository.UpdateAsync(buyOrder);
+
+                return new ResponseModel
+                {
+                    Data = buyOrder,
+                    MessageError = "",
+                };
+            }
+
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Not Found",
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
+        }
     }
 
     public async Task<BuyOrder?> GetEntityByCodeAsync(string code)
@@ -87,25 +124,33 @@ public class BuyOrderService : IBuyOrderService
         return totalAmount;
     }
 
-    public async Task<ICollection<BuyOrderDetail>> CreateOrderDetails(RequestCreateBuyOrder requestCreateBuyOrder)
+    public async Task<ICollection<BuyOrderDetail>> CreateOrderDetails(RequestCreateBuyOrder requestCreateBuyOrder, int buyOrderId)
     {
-        throw new NotImplementedException();
-        // var result = new List<BuyOrderDetail>();
-        // foreach (var product in requestCreateBuyOrder.ProductCodesAndQuantity)
-        // {
-        //     var productCode = product.Key;
-        //     var quantity = product.Value;
-        //     var estimatePrice =
-        //         requestCreateBuyOrder.ProductCodesAndEstimatePrices.TryGetValue(productCode, out decimal price);
-        //     var productObj = await _productService.GetEntityByCodeAsync(productCode);
-        //     var diamond = productObj.ProductDiamonds.First().Diamond;
-        //     var diamondCode = diamond.Code;
-        //     var diamondGradingCode = diamond.DiamondGradingCode;
-        //     
-        //     var orderDetail = new BuyOrderDetail()
-        //     {
-        //         DiamondGradingCode = 
-        //     }
-        // }
+        var result = new List<BuyOrderDetail>();
+        foreach (var product in requestCreateBuyOrder.ProductCodesAndQuantity)
+        {
+            var productCode = product.Key;
+            var quantity = product.Value;
+            requestCreateBuyOrder.ProductCodesAndEstimatePrices.TryGetValue(productCode, out decimal price);
+            var productObj = await _productService.GetEntityByCodeAsync(productCode);
+            var diamond = productObj.ProductDiamonds.First().Diamond;
+            var diamondGradingCode = diamond.DiamondGradingCode;
+            var purchasePriceRatioId = (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(productObj.Category.TypeId)).Id;
+            
+            //in-company buy orders
+            var orderDetail = new BuyOrderDetail()
+            {
+                BuyOrderId = buyOrderId,
+                CategoryTypeId = productObj.Category.TypeId,
+                DiamondGradingCode = diamondGradingCode,
+                PurchasePriceRatioId = purchasePriceRatioId,
+                MaterialId = productObj.ProductMaterials.First().Material.Id,
+                MaterialWeight = productObj.ProductMaterials.First().Weight,
+                UnitPrice = price,
+            };
+            result.Add(orderDetail);
+        }
+
+        return result;
     }
 }

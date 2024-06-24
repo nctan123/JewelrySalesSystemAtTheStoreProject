@@ -32,4 +32,12 @@ public partial class Guarantee
         var prefix = GuaranteeContants.GuaranteePrefix;
         Code = Code ?? prefix + CustomLibrary.RandomString(14 - prefix.Length);
     }
+=======
+
+    public DateTime ExpiredDate { get; set; }
+
+    public virtual Product Product { get; set; }
+
+    public virtual SellOrderDetail SellOrderDetail { get; set; }
+>>>>>>> BE_NhatAnh
 }

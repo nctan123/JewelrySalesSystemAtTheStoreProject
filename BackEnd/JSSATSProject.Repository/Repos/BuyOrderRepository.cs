@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Repository.Repos;
 
-public class BuyOrderRepository : GenericRepository<BuyOrderRepository>
+public class BuyOrderRepository : GenericRepository<BuyOrder>
 {
     public BuyOrderRepository(DBContext context) : base(context)
     {
@@ -17,5 +17,16 @@ public class BuyOrderRepository : GenericRepository<BuyOrderRepository>
             .Include(b => b.Customer)
             .Include(b => b.Staff)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<BuyOrder> GetEntityAsync(int id)
+    {
+        return await context.BuyOrders
+            .Where(b => b.Id == id)
+            .Include(b => b.Customer)
+            .Include(b => b.BuyOrderDetails)
+            .Include(b => b.Staff)
+            .FirstAsync();
+
     }
 }

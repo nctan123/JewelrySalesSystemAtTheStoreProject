@@ -47,6 +47,8 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Customer, ResponseCustomer>()
                     .ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.Totalpoint : 0))
                     .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
+                    .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
+                    .ForMember(dest => dest.BuyOrders, opt => opt.MapFrom(src => src.BuyOrders))
                     .ReverseMap();
 
 
