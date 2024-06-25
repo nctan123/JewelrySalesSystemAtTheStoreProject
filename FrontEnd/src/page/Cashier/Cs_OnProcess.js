@@ -472,9 +472,9 @@ const Cs_OnProcess = () => {
                                         <tr className="border-b bg-gray-50">
                                           <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
                                           <td className="whitespace-nowrap px-6 py-4">{p.id}</td>
-                                          <td className="whitespace-nowrap px-4 py-4 text-center">{p.quantity}</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-right">{p.unitPrice}</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-right">{p.quantity}*{p.unitPrice}</td>
+                                          <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity*p.unitPrice)}</td>
                                         </tr>)
                                         })}
                                     </tbody>
@@ -483,7 +483,7 @@ const Cs_OnProcess = () => {
                                 <div className='border border-black mt-2 p-4'>
                                   <div className='flex justify-between'>
                                     <h1 className='font-bold'>Total Value</h1>
-                                    <h1>...</h1>
+                                    <h1>{formatPrice(item.totalAmount)}</h1>
                                   </div>
                                 </div>
                                 <div className='h-40 flex justify-around items-center'>
