@@ -1,12 +1,12 @@
 export const menuOrder = [
     {
         path: 'cs_onprocess',
-        text: 'On Process',
+        text: 'Processing',
         // icons: <GiCrystalEarrings size={24} color="white" />,
     },
     {
         path: 'cs_complete',
-        text: 'Complete',
+        text: 'Waiting',
         // icons: <GiDiamondRing size={24} color="white" />,
     },
 ]

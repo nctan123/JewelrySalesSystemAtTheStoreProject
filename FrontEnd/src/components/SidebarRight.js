@@ -229,7 +229,10 @@ const SidebarRight = () => {
       </div>
     </div>
     <div className=''>
-      <button className="border border-[#ffffff] bg-[#3f6d67e3] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Temporary</button>
+      <button onClick={() => {handSubmitOrder(); 
+                           dispatch(deleteCustomer());
+                           dispatch(deleteProductAll());
+                    }}  className="border border-[#ffffff] bg-[#3f6d67e3] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Temporary</button>
       <Popup trigger={ <button className="border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">        
           List Temporary
       </button>} position="right center">

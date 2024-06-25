@@ -44,5 +44,8 @@ const fetchAllListOrder = () => {
 const fetchAllProduct = () => {
     return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
 }
-export {fetchAllProduct,fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond,fetchAllListOrder};
+const fetchPaymentMethod = () =>{
+    return axios.get("https://jssatsproject.azurewebsites.net/api/PaymentMethod/Getall");
+}
+export {fetchPaymentMethod,fetchAllProduct,fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond,fetchAllListOrder};
 

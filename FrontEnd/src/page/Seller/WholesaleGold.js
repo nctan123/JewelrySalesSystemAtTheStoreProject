@@ -78,7 +78,7 @@ const WholesaleGold = () => {
       <div className='h-[88vh] overflow-y-auto mt-3 flex justify-center'>
         <div className='grid grid-cols-4 mt-1 w-[850px]'>
       {filteredWhGold && filteredWhGold.length > 0 &&
-        filteredWhGold.filter(item => item.categoryId === 7).map((item, index) => {
+        filteredWhGold.filter(item => item.categoryId === 6).map((item, index) => {
           return (
             <div key={`whGold-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
             <div className=' bg-[#fff] rounded-md shadow-md'>
