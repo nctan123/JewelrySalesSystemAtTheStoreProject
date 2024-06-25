@@ -45,10 +45,10 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Customer, RequestCreateCustomer>().ReverseMap();
 
             CreateMap<Customer, ResponseCustomer>()
-                    .ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.Totalpoint : 0))
-                    .ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
-                    .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
-                    .ForMember(dest => dest.BuyOrders, opt => opt.MapFrom(src => src.BuyOrders))
+                    //.ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.Totalpoint : 0))
+                    //.ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
+                    //.ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
+                    //.ForMember(dest => dest.BuyOrders, opt => opt.MapFrom(src => src.BuyOrders))
                     .ReverseMap();
 
 
@@ -80,7 +80,7 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Material, RequestCreateMaterial>().ReverseMap();
             CreateMap<Material, ResponseMaterial>().ReverseMap();
 
-            //Order
+            //SellOrder
             CreateMap<SellOrder, RequestCreateSellOrder>()
                 .ForMember(dest => dest.SpecialDiscountRequestStatus, opt => opt.MapFrom(src => src.Status))
                 .ReverseMap()
@@ -92,7 +92,7 @@ namespace JSSATSProject.Service.AutoMapper
                 .ForMember(dest => dest.CustomerPhoneNumber, opt => opt.MapFrom(src => src.Customer.Phone))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.SpecialDiscountRate, opt => opt.MapFrom(src => src.SpecialDiscountRequest.DiscountRate))
-                .ForMember(dest => dest.ProductCodesAndQuantity, opt => opt.MapFrom(src => src.SellOrderDetails.ToDictionary(s => s.Product.Code, s=> s.Quantity)))
+                .ForMember(dest => dest.ProductCodesAndQuantity, opt => opt.MapFrom(src => src.SellOrderDetails.ToDictionary(s => s.Product.Code, s => s.Quantity)))
                 .ReverseMap();
             CreateMap<SellOrder, ResponseSellOrder>().ReverseMap();
 
@@ -120,13 +120,14 @@ namespace JSSATSProject.Service.AutoMapper
             //Product
             CreateMap<Product, RequestCreateProduct>()
                 .ReverseMap();
+
             CreateMap<Product, RequestUpdateProduct>()
                 .ForMember(dest => dest.StallsId, opt => opt.Ignore())
                 .ReverseMap()
                 .ForMember(dest => dest.StallsId, opt => opt.MapFrom(src => src.StallsId));
-            ;
+
             CreateMap<Product, ResponseProduct>()
-                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.Name))
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category.Name))
                 .ForMember(dest => dest.DiamondCode,
                     opt => opt.MapFrom(src => src.ProductDiamonds.FirstOrDefault()!.Diamond.Code))
                 .ForMember(dest => dest.DiamondName,
@@ -138,11 +139,11 @@ namespace JSSATSProject.Service.AutoMapper
                 .ReverseMap()
                 .ForMember(dest => dest.Category, opt => opt.Ignore())
                 .ForMember(dest => dest.ProductDiamonds, opt => opt.Ignore())
-                .ForMember(dest => dest.ProductMaterials, opt => opt.Ignore())
-                ;
+                .ForMember(dest => dest.ProductMaterials, opt => opt.Ignore());
+
             CreateMap<Product, ResponseProductForCheckOrder>()
-                .ForMember(dest => dest.Code, opt => opt.MapFrom(src =>  src.Code))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>  src.Name))
+                .ForMember(dest => dest.Code, opt => opt.MapFrom(src => src.Code))
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ReverseMap();
 
 
@@ -165,9 +166,8 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<Staff, ResponseStaff>()
                  .ForMember(dest => dest.TotalRevenue, opt => opt.Ignore())
                  .ForMember(dest => dest.TotalSellOrder, opt => opt.Ignore())
-                 .ForMember(dest => dest.SellOrders, opt => opt.MapFrom(src => src.SellOrders))
                  .ReverseMap();
-        
+
 
             //Stall
             CreateMap<Stall, RequestCreateStall>().ReverseMap();
@@ -190,15 +190,14 @@ namespace JSSATSProject.Service.AutoMapper
 
             //PromotionRequest
             CreateMap<PromotionRequest, ResponsePromotionRequest>()
-             .ForMember(dest => dest.ApprovedByNavigation, opt => opt.MapFrom(src => src.ApprovedByNavigation))
-             .ForMember(dest => dest.Manager, opt => opt.MapFrom(src => src.Manager))
-             .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
-             .ReverseMap();
+                    .ForMember(dest => dest.ManagerName, opt => opt.MapFrom(src => $"{src.Manager.Firstname} {src.Manager.Lastname}"))
+                    .ForMember(dest => dest.ApprovedName, opt => opt.MapFrom(src => $"{src.ApprovedByNavigation.Firstname} {src.ApprovedByNavigation.Lastname}"))
+                    .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories))
+                    .ReverseMap();
 
             CreateMap<PromotionRequest, CreatePromotionRequest>().ReverseMap();
-
             CreateMap<PromotionRequest, UpdatePromotionRequest>().ReverseMap();
-            
+
 
 
             //SpecialDiscountRequest

@@ -26,22 +26,6 @@ namespace JSSATSProject.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            var responseModel = await _productService.GetByIdAsync(id);
-            return Ok(responseModel);
-        }
-
-        [HttpGet]
-        [Route("GetByName")]
-        public async Task<IActionResult> GetByNameAsync(string name)
-        {
-            var responseModel = await _productService.GetByNameAsync(name);
-            return Ok(responseModel);
-        }
-
-        [HttpGet]
         [Route("GetByCode")]
         public async Task<IActionResult> GetByCodeAsync(string code)
         {
@@ -65,12 +49,28 @@ namespace JSSATSProject.API.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        [Route("UpdateStatusProduct")]
-        public async Task<IActionResult> UpdateStatusProductAsync(int id, [FromBody] RequestUpdateStatusProduct requestProduct)
+        [HttpGet("GetFilteredAndSortedProducts")]
+        public async Task<IActionResult> GetFilteredAndSortedProductsAsync([FromQuery] int categoryId,[FromQuery] int pageIndex = 1,[FromQuery] int pageSize = 10,[FromQuery] bool ascending = true)
         {
-            var response = await _productService.UpdateStatusProductAsync(id, requestProduct);
-            return Ok(response);
+            try
+            {
+                var responseModel = await _productService.GetFilteredAndSortedProductsAsync(categoryId, pageIndex, pageSize, ascending);
+                return Ok(responseModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
+        [HttpGet]
+        [Route("Search")]
+        public async Task<IActionResult> Search(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10)
+        {
+
+            var responseModel = await _productService.SearchProductsAsync(categoryId, searchTerm, pageIndex, pageSize);
+            return Ok(responseModel);
+
         }
     }
 }

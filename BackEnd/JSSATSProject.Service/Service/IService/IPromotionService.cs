@@ -7,10 +7,9 @@ namespace JSSATSProject.Service.Service.IService
 {
     public interface IPromotionService
     {
-        public Task<ResponseModel> GetAllAsync();
-        public Task<ResponseModel> GetByIdAsync(int id);
+        public Task<ResponseModel> GetAllAsync(int pageIndex , int pageSize , bool ascending);
         public Task<ResponseModel> CreatePromotionAsync(RequestCreatePromotion requestPromotion);
         public Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion);
-        public Task<ResponseModel> GetPromotionByProductCategoryAsync(int productcategoryId);
+        public Task<ResponseModel> SearchAsync(string searchTerm, int pageIndex, int pageSize);
     }
 }

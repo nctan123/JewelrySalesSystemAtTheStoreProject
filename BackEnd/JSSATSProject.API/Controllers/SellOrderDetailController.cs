@@ -1,4 +1,5 @@
-﻿using JSSATSProject.Service.Models.OrderDetail;
+﻿using JSSATSProject.Service.Models;
+using JSSATSProject.Service.Models.OrderDetail;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
@@ -52,10 +53,20 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetTotalRevenueStall")]
-        public async Task<IActionResult> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate, int pageIndex, bool ascending = false)
         {
-            var responseModel = await _sellorderdetailService.GetTotalRevenueStallAsync(startDate, endDate);
-            return Ok(responseModel);
+   
+                var responseModel = await _sellorderdetailService.GetTotalRevenueStallAsync(startDate, endDate, pageIndex, 10, ascending);
+                return Ok(responseModel);
+          
+        }
+
+        [HttpGet]
+        [Route("GetProductSold")]
+        public async Task<IActionResult> GetProductSoldAsync(bool ascending, int pageIndex)
+        {
+                var responseModel = await _sellorderdetailService.GetProductSoldAsync(ascending, pageIndex, 10);
+                return Ok(responseModel); 
         }
 
 

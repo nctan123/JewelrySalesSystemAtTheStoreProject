@@ -1,6 +1,8 @@
-﻿using JSSATSProject.Service.Models.DiamondModel;
+﻿using JSSATSProject.Service.Models;
+using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
@@ -18,12 +20,22 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(int pageIndex, bool ascending )
         {
-            var responseModel = await _promotionrequestService.GetAllAsync();
-            return Ok(responseModel);
+            try
+            {
+                var responseModel = await _promotionrequestService.GetAllAsync(pageIndex, 10, ascending);
+                return Ok(responseModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ResponseModel
+                {
+                    Data = null,
+                    MessageError = $"An error occurred: {ex.Message}"
+                });
+            }
         }
-
 
         [HttpPost]
         [Route("CreatePromotionRequest")]
@@ -39,6 +51,17 @@ namespace JSSATSProject.API.Controllers
         {
             var response = await _promotionrequestService.UpdatePromotionRequestAsync(id, promotionRequest);
             return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("Search")]
+        public async Task<IActionResult> SearchAsync(string description)
+        {
+            
+                var responseModel = await _promotionrequestService.SearchAsync(description);
+                return Ok(responseModel);
+            
+           
         }
     }
 }

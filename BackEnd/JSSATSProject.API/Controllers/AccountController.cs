@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace JSSATSProject.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AccountController : ControllerBase
@@ -19,10 +19,11 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(int pageIndex = 1, int pageSize = 10)
         {
-            var responseModel = await _accountService.GetAllAsync();
+            var responseModel = await _accountService.GetAllAsync(pageIndex, pageSize);
             return Ok(responseModel);
         }
+
     }
 }

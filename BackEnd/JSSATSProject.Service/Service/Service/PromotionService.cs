@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PromotionModel;
 using JSSATSProject.Service.Service.IService;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace JSSATSProject.Service.Service.Service
@@ -50,13 +51,27 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize, bool ascending)
         {
+            
+            Expression<Func<Promotion, bool>> filter = pc => pc.Status == "active" || pc.Status == "inactive";
+
+
+            Func<IQueryable<Promotion>, IOrderedQueryable<Promotion>> orderBy = q => q
+                .OrderByDescending(pc => pc.Status == "active")  
+                .ThenByDescending(pc => pc.EndDate);
+
+
             var entities = await _unitOfWork.PromotionRepository.GetAsync(
-                pc => pc.Status.Equals("active"),
-                includeProperties: "Categories"
-                );
+                filter: filter,
+                orderBy: ascending ?
+                    (q => q.OrderBy(pc => pc.StartDate).ThenBy(pc => pc.EndDate)) :
+                    (q => q.OrderByDescending(pc => pc.StartDate).ThenByDescending(pc => pc.EndDate)),
+                includeProperties: "Categories",
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            );
+
             var response = _mapper.Map<List<ResponsePromotion>>(entities);
             return new ResponseModel
             {
@@ -65,16 +80,6 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.PromotionRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponsePromotion>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
 
         public async Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion)
         {
@@ -113,32 +118,40 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public async Task<ResponseModel> GetPromotionByProductCategoryAsync(int productCategoryId)
+        public async Task<ResponseModel> SearchAsync(string searchTerm, int pageIndex, int pageSize)
         {
-            var promotions = await _unitOfWork.PromotionRepository.GetAsync(
-                filter: p => p.Categories.Any(c => c.Id == productCategoryId),
-                orderBy: q => q.OrderByDescending(p => p.DiscountRate),
-                includeProperties: "Categories"
-            );
+            try
+            {
+             
+                Expression<Func<Promotion, bool>> filter = p =>
+                    string.IsNullOrEmpty(searchTerm) ||
+                    p.Name.Contains(searchTerm) ||
+                    p.Categories.Any(c => c.Name.Contains(searchTerm));
 
-            var promotion = promotions.FirstOrDefault();
+                
+                var entities = await _unitOfWork.PromotionRepository.GetAsync(
+                    filter: filter,
+                    orderBy: null, 
+                    includeProperties: "Categories", 
+                    pageIndex: pageIndex,
+                    pageSize: pageSize
+                );
 
-            if (promotion == null)
+                var response = _mapper.Map<List<ResponsePromotion>>(entities);
+                return new ResponseModel
+                {
+                    Data = response,
+                    MessageError = "",
+                };
+            }
+            catch (Exception ex)
             {
                 return new ResponseModel
                 {
                     Data = null,
-                    MessageError = ""
+                    MessageError = ex.Message,
                 };
             }
-
-            var response = _mapper.Map<ResponsePromotion>(promotion);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = ""
-            };
         }
-
     }
 }

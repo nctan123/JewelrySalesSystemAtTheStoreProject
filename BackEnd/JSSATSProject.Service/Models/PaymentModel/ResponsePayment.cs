@@ -19,8 +19,6 @@ namespace JSSATSProject.Service.Models.PaymentModel
 
         public decimal Amount { get; set; }
 
-        public virtual ICollection<PaymentDetail> PaymentDetails { get; set; } = new List<PaymentDetail>();
-
         public string Status { get; set; }
 
     }

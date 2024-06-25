@@ -6,7 +6,7 @@ namespace JSSATSProject.Service.Models.ProductModel
     public class ResponseProduct
     {
         public int Id { get; set; }
-        public string? Category { get; set; }
+        public string? CategoryName { get; set; }
         public int CategoryId { get; set; }
 
         public string? Code { get; set; }
@@ -24,13 +24,15 @@ namespace JSSATSProject.Service.Models.ProductModel
         public int PromotionId { get; set; }
         public decimal? DiscountRate { get; set; }
 
-        [JsonIgnore]
-        public ICollection<ProductDiamond>? ProductDiamonds { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
+        //public ICollection<ProductDiamond>? ProductDiamonds { get; set; }
+        //[JsonIgnore]
 
-        public ICollection<ProductMaterial>? ProductMaterials { get; set; }
+        //public ICollection<ProductMaterial>? ProductMaterials { get; set; }
 
         public virtual Stall Stalls { get; set; }
 
     }
+
+
 }

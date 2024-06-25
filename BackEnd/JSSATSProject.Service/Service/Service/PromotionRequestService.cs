@@ -48,18 +48,36 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-        public async Task<ResponseModel> GetAllAsync()
+
+        public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize, bool ascending)
         {
-            var entities = await _unitOfWork.PromotionRequestRepository.GetAsync(
-                includeProperties: "ApprovedByNavigation, Manager,Categories"
-            );
-            var response = _mapper.Map<List<ResponsePromotionRequest>>(entities);
-            return new ResponseModel
+            try
             {
-                Data = response,
-                MessageError = "",
-            };
+                var entities = await _unitOfWork.PromotionRequestRepository.GetAsync(
+                    orderBy: q => ascending ? q.OrderBy(pr => pr.CreatedAt) : q.OrderByDescending(pr => pr.CreatedAt),
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                    includeProperties: "ApprovedByNavigation,Manager,Categories"
+                );
+
+                var response = _mapper.Map<List<ResponsePromotionRequest>>(entities);
+
+                return new ResponseModel
+                {
+                    Data = response,
+                    MessageError = "",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = ex.Message,
+                };
+            }
         }
+
 
         public async Task<ResponseModel> UpdatePromotionRequestAsync(int promotionrequestId, UpdatePromotionRequest promotionRequest)
         {
@@ -106,5 +124,30 @@ namespace JSSATSProject.Service.Service.Service
                 };
             }
         }
+
+        public async Task<ResponseModel> SearchAsync(string searchTerm)
+        {
+            try
+            {
+                var entities = await _unitOfWork.PromotionRequestRepository.GetAsync(
+                    filter: pr => string.IsNullOrEmpty(searchTerm) || pr.Description.Contains(searchTerm),
+                    orderBy: q => q.OrderByDescending(pr => pr.CreatedAt), 
+                    includeProperties: "ApprovedByNavigation,Manager,Categories"
+                );
+
+                var response = _mapper.Map<List<ResponsePromotionRequest>>(entities);
+
+                return new ResponseModel
+                {
+                    Data = response,
+                    MessageError = "",
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error in PromotionRequestService.SearchByDescriptionAsync: {ex.Message}", ex);
+            }
+        }
+
     }
 }

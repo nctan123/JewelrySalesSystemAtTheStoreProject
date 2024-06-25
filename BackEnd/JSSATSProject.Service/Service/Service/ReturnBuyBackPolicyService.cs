@@ -35,16 +35,36 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize, bool ascending)
         {
-            var entities = await _unitOfWork.ReturnBuyBackPolicyRepository.GetAsync();
-            var response = _mapper.Map<List<ResponseReturnBuyBackPolicy>>(entities);
-            return new ResponseModel
+            try
             {
-                Data = response,
-                MessageError = "",
-            };
+                var entities = await _unitOfWork.ReturnBuyBackPolicyRepository.GetAsync(
+                    orderBy: ascending
+                        ? q => q.OrderBy(p => p.EffectiveDate)
+                        : q => q.OrderByDescending(p => p.EffectiveDate),
+                    pageIndex: pageIndex,
+                    pageSize: pageSize
+                );
+
+                var response = _mapper.Map<List<ResponseReturnBuyBackPolicy>>(entities);
+
+                return new ResponseModel
+                {
+                    Data = response,
+                    MessageError = "",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = ex.Message,
+                };
+            }
         }
+
 
         public async Task<ResponseModel> GetByIdAsync(int id)
         {

@@ -10,7 +10,7 @@ namespace JSSATSProject.Service.Models.PromotionRequestModel
     public class ResponsePromotionRequest
     {
         public int RequestId { get; set; }
-        public int ManagerId { get; set; }
+        public string ManagerName { get; set; }
 
         public string Description { get; set; }
 
@@ -24,12 +24,7 @@ namespace JSSATSProject.Service.Models.PromotionRequestModel
 
         public DateTime CreatedAt { get; set; }
 
-        public int? ApprovedBy { get; set; }
-
-        public virtual Staff ApprovedByNavigation { get; set; }
-
-        public virtual Staff Manager { get; set; }
-
+        public string ApprovedName { get; set; }
         public virtual ICollection<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
     }
 }

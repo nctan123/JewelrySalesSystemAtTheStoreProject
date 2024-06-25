@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.AccountModel;
 using JSSATSProject.Service.Service.IService;
-using System.Threading.Tasks;
+
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -28,10 +29,20 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(int pageIndex = 1, int pageSize = 10)
         {
-            var entities = await _unitOfWork.AccountRepository.GetAsync();
+         
+            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q.OrderBy(e => e.RoleId);
+
+          
+            var entities = await _unitOfWork.AccountRepository.GetAsync(
+                orderBy: orderBy,
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            );
+
             var response = _mapper.Map<List<ResponseAccount>>(entities);
+
             return new ResponseModel
             {
                 Data = response,
@@ -39,16 +50,6 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> SignInAsync(RequestSignIn signInModel)
-        {
-            // Implement the sign-in logic here
-            throw new NotImplementedException();
-        }
 
-        public async Task<ResponseModel> SignUpAsync(RequestSignUp signUpModel)
-        {
-            // Implement the sign-up logic here
-            throw new NotImplementedException();
-        }
     }
 }

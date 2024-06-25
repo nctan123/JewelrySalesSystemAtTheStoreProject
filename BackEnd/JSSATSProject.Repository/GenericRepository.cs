@@ -15,7 +15,7 @@ namespace JSSATSProject.Repository
             this.dbSet = context.Set<TEntity>();
         }
 
-        // Updated Get method with pagination and async support
+       
         public virtual async Task<IEnumerable<TEntity>> GetAsync(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,

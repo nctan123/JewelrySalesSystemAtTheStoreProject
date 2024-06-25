@@ -67,6 +67,8 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
+
+
         public async Task<decimal> CalculateProductPrice(Product correspondingProduct)
         {
             decimal totalPrice = 0;
@@ -193,7 +195,7 @@ namespace JSSATSProject.Service.Service.Service
                                    "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                    "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                    "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                                   "ProductMaterials,ProductMaterials.Material"
+                                   "ProductMaterials,ProductMaterials.Material," + "Stalls"
             );
             var response = _mapper.Map<List<ResponseProduct>>(entities);
             foreach (var responseProduct in response)
@@ -223,7 +225,7 @@ namespace JSSATSProject.Service.Service.Service
                                    "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                    "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                    "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                                   "ProductMaterials,ProductMaterials.Material,"  + "Category.Type"
+                                   "ProductMaterials,ProductMaterials.Material," + "Category.Type"
             );
 
             var enumerable = response.ToList();
@@ -235,50 +237,14 @@ namespace JSSATSProject.Service.Service.Service
             return enumerable.First();
         }
 
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.ProductRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponseProduct>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
-        public async Task<ResponseModel> GetByNameAsync(string name)
-        {
-            var response = await _unitOfWork.ProductRepository.GetAsync(
-                c => c.Name.Equals(name),
-                null,
-                includeProperties: "",
-                pageIndex: null,
-                pageSize: null
-            );
-
-            if (!response.Any())
-            {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = $"Customer with name '{name}' not found.",
-                };
-            }
-
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
+        //Update Stall
         public async Task<ResponseModel> UpdateProductAsync(int productId, RequestUpdateProduct requestProduct)
         {
             try
             {
 
                 var products = await _unitOfWork.ProductRepository.GetAsync(
-                    p => p.Id == productId, 
+                    p => p.Id == productId,
                     includeProperties: "Stalls");
                 var product = products.FirstOrDefault();
 
@@ -290,7 +256,7 @@ namespace JSSATSProject.Service.Service.Service
                         if (newStall != null)
                         {
                             product.StallsId = requestProduct.StallsId.Value;
-                            product.Stalls = newStall; 
+                            product.Stalls = newStall;
                         }
                         else
                         {
@@ -302,7 +268,7 @@ namespace JSSATSProject.Service.Service.Service
                         }
                     }
 
-                    _mapper.Map(requestProduct,product);
+                    _mapper.Map(requestProduct, product);
                     await _unitOfWork.ProductRepository.UpdateAsync(product);
                     await _unitOfWork.SaveAsync();
 
@@ -362,40 +328,107 @@ namespace JSSATSProject.Service.Service.Service
             return validProductsDictionary.Count == productCodes.Count;
         }
 
-        public async Task<ResponseModel> UpdateStatusProductAsync(int productId,
-            RequestUpdateStatusProduct requestProduct)
+
+        public async Task<ResponseModel> GetFilteredAndSortedProductsAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true)
         {
-            try
+            Expression<Func<Product, bool>> filter = product =>
+                product.CategoryId == categoryId &&
+                product.Status == "active";
+
+            var entities = await _unitOfWork.ProductRepository.GetAsync(
+                filter: filter,
+                includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
+                                   "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
+                                   "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
+                                   "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
+                                   "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
+                                   "ProductMaterials,ProductMaterials.Material," + "Stalls",
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            );
+
+            var responseList = new List<ResponseProduct>();
+            foreach (var entity in entities)
             {
-                var product = await _unitOfWork.ProductRepository.GetByIDAsync(productId);
-                if (product != null)
+                var responseProduct = _mapper.Map<ResponseProduct>(entity);
+                responseProduct.ProductValue = await CalculateProductPrice(entity);
+                var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+                if (promotion != null)
                 {
-                    _mapper.Map(requestProduct, product);
-
-                    await _unitOfWork.ProductRepository.UpdateAsync(product);
-
-                    return new ResponseModel
-                    {
-                        Data = product,
-                        MessageError = "",
-                    };
+                    responseProduct.PromotionId = promotion.Id;
+                    responseProduct.DiscountRate = promotion.DiscountRate;
                 }
+                responseList.Add(responseProduct);
+            }
 
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = "Not Found",
-                };
-            }
-            catch (Exception ex)
+            
+            responseList = ascending
+                ? responseList.OrderBy(rp => rp.ProductValue).ThenBy(rp => rp.Name).ToList()
+                : responseList.OrderByDescending(rp => rp.ProductValue).ThenByDescending(rp => rp.Name).ToList();
+
+            return new ResponseModel
             {
-                // Log the exception and return an appropriate error response
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = "An error occurred while updating the customer: " + ex.Message
-                };
-            }
+                Data = responseList,
+                MessageError = "",
+            };
         }
+
+
+        public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10)
+        {
+            Expression<Func<Product, bool>> filter = p =>
+                p.CategoryId == categoryId &&
+                p.Status == "active";
+
+      
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                filter = p =>
+                p.CategoryId == categoryId &&
+                p.Status == "active" && (p.Code.Contains(searchTerm) ||
+                    p.Name.Contains(searchTerm));
+
+            }
+
+            var entities = await _unitOfWork.ProductRepository.GetAsync(
+                filter: filter,
+                includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
+                                   "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
+                                   "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
+                                   "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
+                                   "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
+                                   "ProductMaterials,ProductMaterials.Material,Stalls",
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            );
+
+            var responseList = new List<ResponseProduct>();
+            foreach (var entity in entities)
+            {
+                var responseProduct = _mapper.Map<ResponseProduct>(entity);
+                responseProduct.ProductValue = await CalculateProductPrice(entity);
+                var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+                if (promotion != null)
+                {
+                    responseProduct.PromotionId = promotion.Id;
+                    responseProduct.DiscountRate = promotion.DiscountRate;
+                }
+                responseList.Add(responseProduct);
+            }
+
+            // Sort the response list by ProductValue and Name
+            var sortedResponse = responseList
+                .OrderByDescending(rp => rp.ProductValue)
+                .ThenBy(rp => rp.Name)
+                .ToList();
+
+            return new ResponseModel
+            {
+                Data = sortedResponse,
+                MessageError = "",
+            };
+        }
+
+
     }
 }
