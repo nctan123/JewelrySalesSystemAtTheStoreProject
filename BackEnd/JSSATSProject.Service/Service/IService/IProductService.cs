@@ -16,7 +16,7 @@ namespace JSSATSProject.Service.Service.IService
         public Task<ResponseModel> UpdateProductAsync(int productId, RequestUpdateProduct requestProduct);
 
         /// Update
-        public Task<ResponseModel> GetFilteredAndSortedProductsAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true);
+        public Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true);
 
         public Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10);
     }

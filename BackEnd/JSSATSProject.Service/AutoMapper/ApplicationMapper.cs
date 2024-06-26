@@ -24,6 +24,7 @@ using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
+using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 
 
 
@@ -37,13 +38,13 @@ namespace JSSATSProject.Service.AutoMapper
         public ApplicationMapper()
         {
             //Account
-            CreateMap<Account, RequestSignUp>().ReverseMap();
-            CreateMap<Account, RequestSignIn>().ReverseMap();
-            CreateMap<Account, ResponseAccount>().ReverseMap();
+            CreateMap<Account, ResponseAccount>()
+                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.Firstname + " " + src.Staff.Lastname))
+                .ReverseMap();
+
 
             // Customer
             CreateMap<Customer, RequestCreateCustomer>().ReverseMap();
-
             CreateMap<Customer, ResponseCustomer>()
                     //.ForMember(dest => dest.TotalPoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.Totalpoint : 0))
                     //.ForMember(dest => dest.AvaliablePoint, opt => opt.MapFrom(src => src.Point != null ? src.Point.AvailablePoint : 0))
@@ -211,6 +212,9 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<SellOrderDetail, RequestUpdateSellOrderDetailsStatus>().ReverseMap();
             CreateMap<PaymentDetail, RequestCreatePaymentDetail>().ReverseMap();
             CreateMap<PaymentDetail, ResponsePaymentDetail>().ReverseMap();
+
+            //PurchasePriceRatioService
+            CreateMap<PurchasePriceRatio, RequestCreatePurchasePriceRatio>().ReverseMap();
         }
     }
 }

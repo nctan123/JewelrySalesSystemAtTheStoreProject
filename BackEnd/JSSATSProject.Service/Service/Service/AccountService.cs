@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.AccountModel;
 using JSSATSProject.Service.Service.IService;
+using System.Linq.Expressions;
 
 
 namespace JSSATSProject.Service.Service.Service
@@ -29,26 +30,45 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync(int pageIndex = 1, int pageSize = 10)
+        public async Task<ResponseModel> GetAllAsync(int pageIndex = 1, int pageSize = 10, int? roleId = null)
         {
-         
-            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q.OrderBy(e => e.RoleId);
-
-          
-            var entities = await _unitOfWork.AccountRepository.GetAsync(
-                orderBy: orderBy,
-                pageIndex: pageIndex,
-                pageSize: pageSize
-            );
-
-            var response = _mapper.Map<List<ResponseAccount>>(entities);
-
-            return new ResponseModel
+            try
             {
-                Data = response,
-                MessageError = "",
-            };
+                // Define filter condition based on roleId
+                Expression<Func<Account, bool>> filter = a => !roleId.HasValue || a.RoleId == roleId.Value;
+
+                // Define sorting logic (always ascending by StaffName)
+                Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q.OrderBy(e => e.Staff.Firstname);
+
+                // Fetch data with filtering and sorting
+                var entities = await _unitOfWork.AccountRepository.GetAsync(
+                    filter: filter,
+                    orderBy: orderBy,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                    includeProperties: "Staff"
+                );
+
+                // Map the entities to the response DTO
+                var response = _mapper.Map<List<ResponseAccount>>(entities);
+
+                // Return the response model
+                return new ResponseModel
+                {
+                    Data = response,
+                    MessageError = "",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = ex.Message,
+                };
+            }
         }
+
 
 
     }

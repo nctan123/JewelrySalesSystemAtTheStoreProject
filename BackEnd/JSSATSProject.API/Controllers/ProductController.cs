@@ -49,12 +49,12 @@ namespace JSSATSProject.API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("GetFilteredAndSortedProducts")]
-        public async Task<IActionResult> GetFilteredAndSortedProductsAsync([FromQuery] int categoryId,[FromQuery] int pageIndex = 1,[FromQuery] int pageSize = 10,[FromQuery] bool ascending = true)
+        [HttpGet("GetAll01")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] int categoryId,[FromQuery] int pageIndex = 1,[FromQuery] int pageSize = 10,[FromQuery] bool ascending = true)
         {
             try
             {
-                var responseModel = await _productService.GetFilteredAndSortedProductsAsync(categoryId, pageIndex, pageSize, ascending);
+                var responseModel = await _productService.GetAllAsync(categoryId, pageIndex, pageSize, ascending);
                 return Ok(responseModel);
             }
             catch (Exception ex)

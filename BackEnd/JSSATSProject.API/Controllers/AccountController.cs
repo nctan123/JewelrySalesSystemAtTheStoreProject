@@ -19,11 +19,12 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync(int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> GetAllAsync(int pageIndex = 1, int pageSize = 10, int? roleId = null)
         {
-            var responseModel = await _accountService.GetAllAsync(pageIndex, pageSize);
+            var responseModel = await _accountService.GetAllAsync(pageIndex, pageSize, roleId);
             return Ok(responseModel);
         }
+
 
     }
 }

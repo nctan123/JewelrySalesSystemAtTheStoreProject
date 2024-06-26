@@ -17,6 +17,6 @@ namespace JSSATSProject.Service.Models.AccountModel
 
         public string Role { get; set; } = null!;
 
-        public virtual Staff? Staff { get; set; }
+        public string StaffName { get; set; }
     }
 }

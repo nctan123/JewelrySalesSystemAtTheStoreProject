@@ -329,7 +329,7 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-        public async Task<ResponseModel> GetFilteredAndSortedProductsAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true)
+        public async Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true)
         {
             Expression<Func<Product, bool>> filter = product =>
                 product.CategoryId == categoryId &&

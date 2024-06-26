@@ -23,13 +23,6 @@ namespace JSSATSProject.Service.Models.ProductModel
         public decimal? MaterialWeight { get; set; }
         public int PromotionId { get; set; }
         public decimal? DiscountRate { get; set; }
-
-        //[JsonIgnore]
-        //public ICollection<ProductDiamond>? ProductDiamonds { get; set; }
-        //[JsonIgnore]
-
-        //public ICollection<ProductMaterial>? ProductMaterials { get; set; }
-
         public virtual Stall Stalls { get; set; }
 
     }
