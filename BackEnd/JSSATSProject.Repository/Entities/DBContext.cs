@@ -223,6 +223,7 @@ public partial class DBContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("end_date");
             entity.Property(e => e.Rate)
+                .HasColumnType("decimal(5, 2)")
                 .HasColumnType("decimal(10, 2)")
                 .HasColumnName("rate");
             entity.Property(e => e.StartDate)

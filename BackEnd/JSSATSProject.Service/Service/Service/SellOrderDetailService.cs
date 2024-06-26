@@ -7,6 +7,7 @@ using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.ProductModel;
 
 namespace JSSATSProject.Service.Service.Service
 {
@@ -36,13 +37,16 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = ""
             };
         }
-        
+
         public async Task<ResponseModel> GetByOrderIdAsync(int id)
         {
             var entities = await _unitOfWork.SellOrderDetailRepository.GetAsync(
-                c => c.OrderId.Equals(id)
+                c => c.OrderId.Equals(id),
+                includeProperties: "Product"
             );
+
             var response = _mapper.Map<List<ResponseSellOrderDetails>>(entities);
+
             return new ResponseModel
             {
                 Data = response
@@ -192,34 +196,127 @@ namespace JSSATSProject.Service.Service.Service
             }
         }
 
-        public async Task<ResponseModel> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate)
+        public async Task<ResponseModel> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate, int pageIndex, int pageSize, bool ascending)
         {
-            var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
-                filter: od => od.Order.CreateDate >= startDate
-                              && od.Order.CreateDate <= endDate
-                              && od.Status.Equals(SellOrderDetailsConstants.Delivered),
-                includeProperties: "Product,Product.Stalls");
+            try
+            {
+                var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                    filter: od => od.Order.CreateDate >= startDate
+                                && od.Order.CreateDate <= endDate
+                                && od.Order.Status.Equals(OrderConstants.CompletedStatus)
+                                && od.Status.Equals(SellOrderDetailsConstants.Delivered),
+                    orderBy: orderBy =>
+                    {
+                        if (ascending)
+                        {
+                            return orderBy.OrderBy(od => od.Product.Stalls.Name);
+                        }
+                        else
+                        {
+                            return orderBy.OrderByDescending(od => od.Product.Stalls.Name);
+                        }
+                    },
+                    includeProperties: "Product,Product.Stalls",
+                    pageIndex: pageIndex,
+                    pageSize: pageSize
+                );
 
-            var revenuePerStall = orderDetails
-                .GroupBy(od => od.Product.Stalls.Name)
-                .Select(group => new
+                var revenuePerStall = orderDetails
+                    .GroupBy(od => od.Product.Stalls.Name)
+                    .Select(group => new
+                    {
+                        StallName = group.Key,
+                        TotalRevenue = group.Sum(od => od.Quantity * od.UnitPrice)
+                    })
+                    .ToList();
+
+                var result = revenuePerStall.Select(item => new Dictionary<string, object>
+            {
+                { "StallName", item.StallName },
+                { "TotalRevenue", item.TotalRevenue }
+            }).ToList();
+
+                return new ResponseModel
                 {
-                    StallName = group.Key,
-                    TotalRevenue = group.Sum(od => od.Quantity * od.UnitPrice)
+                    Data = result,
+                    MessageError = ""
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = ex.Message
+                };
+            }
+        }
+
+        public async Task<List<ResponseProductDetails>> GetProductFromSellOrderDetailAsync(int orderId)
+        {
+
+            var sellOrderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                sod => sod.OrderId == orderId,
+                includeProperties: "Product"
+            );
+
+            var responseProducts = sellOrderDetails
+                .Select(sod => new ResponseProductDetails
+                {
+                    Id = sod.Product.Id,
+                    SellOrderDetailId = sod.Id,
+                    CategoryId = sod.Product.CategoryId
                 })
                 .ToList();
 
-            var result = revenuePerStall.Select(item => new Dictionary<string, object>
-    {
-        { "StallName", item.StallName },
-        { "TotalRevenue", item.TotalRevenue }
-    }).ToList();
-
-            return new ResponseModel
-            {
-                Data = result
-            };
+            return responseProducts;
         }
+
+        public async Task<ResponseModel> GetProductSoldAsync(bool ascending, int pageIndex, int pageSize)
+        {
+            try
+            {
+                var sellOrderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                    filter: sod => sod.Status.Equals(SellOrderDetailsConstants.Delivered),
+                    includeProperties: "Product, Guarantees, Promotion, Order",
+                    orderBy: q => ascending
+                        ? q.OrderBy(e => e.Product.Name).ThenBy(e => e.UnitPrice)
+                        : q.OrderByDescending(e => e.Product.Name).ThenByDescending(e => e.UnitPrice),
+                    pageIndex: pageIndex,
+                    pageSize: pageSize
+                );
+
+                var responseProducts = new List<ResponseProductSold>();
+                foreach (var sellOrderDetail in sellOrderDetails)
+                {
+                    var responseProduct = new ResponseProductSold
+                    {
+                        SellOrderCode = sellOrderDetail.Order.Code,
+                        ProductName = sellOrderDetail.Product.Name, 
+                        UnitPrice = sellOrderDetail.UnitPrice,
+                        Quantity = sellOrderDetail.Quantity,
+                        PromotionRate = sellOrderDetail.Promotion?.DiscountRate ?? 0, 
+                        ///GuaranteeCode = sellOrderDetail.GuaranteeCode ?? "Unknown" 
+                    };
+
+                    responseProducts.Add(responseProduct);
+                }
+
+                var responseModel = new ResponseModel
+                {
+                    Data = responseProducts
+                };
+
+                return responseModel;
+            }
+            catch (Exception ex)
+            {
+                // Bắt ngoại lệ và ghi log
+                Console.WriteLine($"Lỗi trong GetProductSoldAsync: {ex.Message}");
+                throw; // Ném lại ngoại lệ để xử lý ở lớp gọi
+            }
+        }
+
 
     }
 }

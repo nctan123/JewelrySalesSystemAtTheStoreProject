@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace JSSATSProject.Service.Service.Service
@@ -37,34 +38,127 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync(DateTime startDate, DateTime endDate)
+        public async Task<ResponseModel> GetAllAsync(DateTime startDate, DateTime endDate, int pageIndex, int pageSize, string sortBy, bool ascending)
         {
             try
             {
-                // Fetch all staff entities including SellOrders
-                var entities = await _unitOfWork.StaffRepository.GetAsync(includeProperties: "SellOrders");
+                // Define filter based on startDate and endDate
+                Expression<Func<Staff, bool>> filter = staff =>
+                    staff.SellOrders.Any(order =>
+                        order.CreateDate >= startDate &&
+                        order.CreateDate <= endDate &&
+                        !string.IsNullOrEmpty(order.Status) &&
+                        order.Status.Equals(OrderConstants.CompletedStatus));
 
-                var responseList = new List<ResponseStaff>();
+                // Define orderBy based on sortBy and ascending parameters
+                Func<IQueryable<Staff>, IOrderedQueryable<Staff>> orderBy = null;
+                switch (sortBy?.ToLower())
+                {
+                    case "totalrevenue":
+                        orderBy = ascending
+                            ? (q => q.OrderBy(s => s.SellOrders.Sum(so => so.TotalAmount)))
+                            : (q => q.OrderByDescending(s => s.SellOrders.Sum(so => so.TotalAmount)));
+                        break;
+                    case "totalsellorder":
+                        orderBy = ascending
+                            ? (q => q.OrderBy(s => s.SellOrders.Count))
+                            : (q => q.OrderByDescending(s => s.SellOrders.Count));
+                        break;
+                    default:
+                        orderBy = ascending
+                            ? (q => q.OrderBy(s => s.Lastname).ThenBy(s => s.Firstname))
+                            : (q => q.OrderByDescending(s => s.Lastname).ThenByDescending(s => s.Firstname));
+                        break;
+                }
 
-                foreach (var entity in entities)
+                // Fetch staff entities with SellOrders included, apply filter, sorting, and pagination
+                var entities = await _unitOfWork.StaffRepository.GetAsync(
+                    filter: filter,
+                    orderBy: orderBy,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                    includeProperties: "SellOrders");
+
+                // Map entities to response model
+                var responseList = entities.Select(entity =>
+                {
+                    var response = _mapper.Map<ResponseStaff>(entity);
+
+                    var staffOrders = entity.SellOrders
+                        .Where(order =>
+                            order.CreateDate >= startDate &&
+                            order.CreateDate <= endDate &&
+                            !string.IsNullOrEmpty(order.Status) &&
+                            order.Status.Equals(OrderConstants.CompletedStatus))
+                        .ToList();
+
+                    response.TotalRevenue = staffOrders.Sum(order => order.TotalAmount);
+                    response.TotalSellOrder = staffOrders.Count;
+
+                    return response;
+                }).ToList();
+
+                return new ResponseModel
+                {
+                    Data = responseList,
+                    MessageError = "",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = ex.Message,
+                };
+            }
+        }
+
+        public async Task<ResponseModel> SearchAsync(string nameSearch, DateTime startDate, DateTime endDate, int pageIndex, int pageSize)
+        {
+            try
+            {
+                // Define filter based on name search
+                Expression<Func<Staff, bool>> filter = null;
+                if (!string.IsNullOrEmpty(nameSearch))
+                {
+                    filter = staff =>
+                        staff.Firstname.Contains(nameSearch) ||
+                        staff.Lastname.Contains(nameSearch);
+                }
+
+
+                Func<IQueryable<Staff>, IOrderedQueryable<Staff>> orderBy = (q => q.OrderByDescending(s => s.SellOrders.Count));
+                    
+
+           
+                var staffEntities = await _unitOfWork.StaffRepository.GetAsync(
+                    filter: filter,
+                    orderBy: orderBy,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                    includeProperties: "SellOrders");
+
+                // Map entities to response model
+                var responseList = staffEntities.Select(entity =>
                 {
                     var response = _mapper.Map<ResponseStaff>(entity);
 
                     // Filter SellOrders by date range and status, including null checks
-                    var staffOrders = entity.SellOrders?
-                        .Where(order => order != null &&
-                                        order.CreateDate >= startDate &&
-                                        order.CreateDate <= endDate &&
-                                        !string.IsNullOrEmpty(order.Status) &&
-                                        order.Status.Equals(OrderConstants.CompletedStatus))
-                        .ToList() ?? new List<SellOrder>();
+                    var staffOrders = entity.SellOrders
+                        .Where(order =>
+                            order.CreateDate >= startDate &&
+                            order.CreateDate <= endDate &&
+                            !string.IsNullOrEmpty(order.Status) &&
+                            order.Status.Equals(OrderConstants.CompletedStatus))
+                        .ToList();
 
                     // Calculate TotalRevenue and TotalSellOrder
                     response.TotalRevenue = staffOrders.Sum(order => order.TotalAmount);
                     response.TotalSellOrder = staffOrders.Count;
 
-                    responseList.Add(response);
-                }
+                    return response;
+                }).ToList();
 
                 return new ResponseModel
                 {
@@ -83,55 +177,6 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-
-
-        public async Task<ResponseModel> GetDetailsByDateAsync(int id, DateTime startDate, DateTime endDate)
-        {
-            //var entity = await _unitOfWork.StaffRepository.GetAsync(filter: e => e.Id == id, includeProperties: "Orders");
-            var staffEntity = await _unitOfWork.StaffRepository.GetByIDAsync(id);
-
-            if (staffEntity == null)
-            {
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = "Staff not found",
-                };
-            }
-
-            var response = _mapper.Map<ResponseStaff>(staffEntity);
-
-            var staffOrders = response.SellOrders?
-                          .Where(order => order != null &&
-                                          order.CreateDate >= startDate &&
-                                          order.CreateDate <= endDate &&
-                                          !string.IsNullOrEmpty(order.Status) &&
-                                          order.Status.Equals(OrderConstants.CompletedStatus))
-                          .ToList() ?? new List<SellOrder>();
-
-            //them buy order vao
-            response.TotalRevenue = staffOrders.Sum(order => order.TotalAmount);
-            response.TotalSellOrder = staffOrders.Count();
-
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
-
-
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.StaffRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponseStaff>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
 
         public async Task<ResponseModel> UpdateStaffAsync(int staffId, RequestUpdateStaff requestStaff)
         {

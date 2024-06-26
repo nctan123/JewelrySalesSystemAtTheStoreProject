@@ -22,5 +22,16 @@ namespace JSSATSProject.Repository.Repos
                     .FirstOrDefaultAsync()
                 ;
         }
+
+        public async Task<SpecialDiscountRequest?> GetByOrderCodeAsync(string orderCode)
+        {
+            var sellOrder = await context.SellOrders
+                .Include(s => s.SpecialDiscountRequest)
+                    .ThenInclude(s => s.ApprovedBy)
+                .Where(s => s.Code == orderCode)
+                .FirstOrDefaultAsync();
+
+            return sellOrder?.SpecialDiscountRequest;
+        }
     }
 }

@@ -4,6 +4,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Service.IService;
+using System.Linq.Expressions;
 
 
 namespace JSSATSProject.Service.Service.Service
@@ -48,14 +49,15 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
         {
-            var entities =
-                await _unitOfWork.CustomerRepository.GetAsync(
-                     orderBy: query => query.OrderByDescending(c => c.CreateDate),
-                    includeProperties: "Point,SellOrders"
-                    );
-                await _unitOfWork.CustomerRepository.GetAsync(includeProperties: "Point,SellOrders,Payments");
+            var entities = await _unitOfWork.CustomerRepository.GetAsync(
+                orderBy: query => query.OrderByDescending(c => c.CreateDate).ThenBy(c => c.Firstname),
+                includeProperties: "Point",
+                pageIndex: pageIndex,
+                pageSize: pageSize
+               
+            );
 
             var response = entities.Select(entity => _mapper.Map<ResponseCustomer>(entity)).ToList();
 
@@ -67,60 +69,23 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-
-        public async Task<ResponseModel> GetByIdAsync(int id)
+        public async Task<ResponseModel> SearchAsync(string searchTerm, int pageIndex = 1, int pageSize = 10)
         {
-            var entities = await _unitOfWork.CustomerRepository.GetAsync(
-                c => c.Id.Equals(id),
-                includeProperties: "Point,SellOrders,Payments");
-            var response = entities.Select(entity => new ResponseCustomer
-            {
-                Id = entity.Id,
-                PointId = entity.PointId,
-                Firstname = entity.Firstname,
-                Lastname = entity.Lastname,
-                Phone = entity.Phone,
-                Email = entity.Email,
-                Gender = entity.Gender,
-                Address = entity.Address,
-                SellOrders = entity.SellOrders,
-                // Orders = entity.Orders,
-                //Payments = entity.Payments,
-                TotalPoint = entity.Point?.Totalpoint ?? 0,
-                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
-            }).ToList();
+            Expression<Func<Customer, bool>> filter = customer =>
+                customer.Firstname.Contains(searchTerm) ||
+                customer.Lastname.Contains(searchTerm) ||
+                customer.Phone.Contains(searchTerm);
 
-            // Return the mapped response
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
+            var customers = await _unitOfWork.CustomerRepository.GetAsync(
+                filter: filter,
+                orderBy: query => query.OrderByDescending(c => c.CreateDate).ThenBy(c => c.Firstname),
+                includeProperties: "Point",
+                pageIndex: pageIndex,
+                pageSize: pageSize
+            );
 
-        public async Task<ResponseModel> GetByNameAsync(string name)
-        {
-            var entities = await _unitOfWork.CustomerRepository.GetAsync(
-                c => c.Firstname.Equals(name),
-                includeProperties: "Point,SellOrders,Payments");
-            var response = entities.Select(entity => new ResponseCustomer
-            {
-                Id = entity.Id,
-                PointId = entity.PointId,
-                Firstname = entity.Firstname,
-                Lastname = entity.Lastname,
-                Phone = entity.Phone,
-                Email = entity.Email,
-                Gender = entity.Gender,
-                Address = entity.Address,
-                SellOrders = entity.SellOrders,
-                // Orders = entity.Orders,
-                //Payments = entity.Payments,
-                TotalPoint = entity.Point?.Totalpoint ?? 0,
-                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
-            }).ToList();
+            var response = customers.Select(customer => _mapper.Map<ResponseCustomer>(customer)).ToList();
 
-            // Return the mapped response
             return new ResponseModel
             {
                 Data = response,
@@ -132,22 +97,16 @@ namespace JSSATSProject.Service.Service.Service
         {
             var entities = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
-                includeProperties: "Point,SellOrders,Payments");
+                includeProperties: "Point");
             var response = entities.Select(entity => new ResponseCustomer
             {
                 Id = entity.Id,
-                PointId = entity.PointId,
                 Firstname = entity.Firstname,
                 Lastname = entity.Lastname,
                 Phone = entity.Phone,
                 Email = entity.Email,
                 Gender = entity.Gender,
                 Address = entity.Address,
-                SellOrders = entity.SellOrders,
-                // Orders = entity.Orders,
-                //Payments = entity.Payments,
-                TotalPoint = entity.Point?.Totalpoint ?? 0,
-                AvaliablePoint = entity.Point?.AvailablePoint ?? 0
             }).ToList();
 
             // Return the mapped response

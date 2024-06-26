@@ -8,7 +8,7 @@ namespace JSSATSProject.Service.Models.PromotionModel
         public int Id { get; set; }
         public string Name { get; set; } = null!;
 
-        public int DiscountRate { get; set; }
+        public decimal DiscountRate { get; set; }
 
         public string? Description { get; set; }
 

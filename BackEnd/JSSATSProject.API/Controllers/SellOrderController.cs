@@ -29,9 +29,9 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(bool ascending, int pageIndex = 1, int pageSize = 10)
         {
-            var responseModel = await _sellOrderService.GetAllAsync();
+            var responseModel = await _sellOrderService.GetAllAsync(ascending, pageIndex = 1,  pageSize = 10);
             return Ok(responseModel);
         }
 
@@ -116,12 +116,6 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-        [HttpGet]
-        [Route("CountOrderByOrderType")]
-        public async Task<IActionResult> CountOrderByOrderTypeAsync(DateTime startDate, DateTime endDate)
-        {
-            var responseModel = await _sellOrderService.CountOrderByDateTimeAsync(startDate, endDate);
-            return Ok(responseModel);
-        }
+      
     }
 }

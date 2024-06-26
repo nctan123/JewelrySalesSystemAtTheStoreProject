@@ -36,7 +36,7 @@ namespace JSSATSProject.API.Controllers
         //     
         // }
 
-        [HttpPost]
+        [HttpGet]
         [Route("CheckOrder")]
         public async Task<IActionResult> CheckAsync(string orderCode)
         {

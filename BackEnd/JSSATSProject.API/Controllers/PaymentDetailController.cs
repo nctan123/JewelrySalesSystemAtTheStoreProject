@@ -1,8 +1,9 @@
 ﻿using Azure;
+using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
@@ -13,10 +14,22 @@ namespace JSSATSProject.API.Controllers
     {
         private readonly IPaymentDetailService _paymentDetailService;
         private readonly IPaymentService _paymentService;
-        public PaymentDetailController(IPaymentDetailService paymentDetailService,IPaymentService paymentService)
+        private readonly IVnPayService _vnPayService;
+        private readonly ISellOrderService _sellOrderService;
+        private readonly IGuaranteeService _guaranteeService;
+        private readonly ISellOrderDetailService _sellOrderDetailService;
+
+        public PaymentDetailController(IPaymentDetailService paymentDetailService, IPaymentService paymentService,
+               ISellOrderService sellOrderService, IVnPayService vnPayService,IGuaranteeService guaranteeService,
+               ISellOrderDetailService sellOrderDetailService
+               )
         {
             _paymentDetailService = paymentDetailService;
             _paymentService = paymentService;
+            _sellOrderService = sellOrderService;
+            _vnPayService = vnPayService;
+            _sellOrderDetailService = sellOrderDetailService;
+            _guaranteeService = guaranteeService;
         }
 
         [HttpGet]
@@ -31,9 +44,9 @@ namespace JSSATSProject.API.Controllers
         [Route("CreatePaymentDetail")]
         public async Task<IActionResult> CreateAsync([FromBody] RequestCreatePaymentDetail requestPaymentDetail)
         {
+
             // Cash
-            //Được tạo sau khi chọn phương thức Cash + ấn nút hoàn tất
-            //DF_Status_PaymentDetail == Completed
+            // Create Payment
             var responseModel = await _paymentDetailService.CreatePaymentDetailAsync(requestPaymentDetail);
 
             //Update Status Payment
@@ -43,7 +56,22 @@ namespace JSSATSProject.API.Controllers
             };
             await _paymentService.UpdatePaymentAsync(requestPaymentDetail.PaymentId, payment);
 
-            return Ok(responseModel);
+
+           // Update Status SellOrder
+            var updatesellsrderstatus = new UpdateSellOrderStatus
+            {
+                Status = OrderConstants.ProcessingStatus,
+                Description = ""
+            };
+            var orderId = await _paymentService.GetOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
+            await _sellOrderService.UpdateStatusAsync(orderId, updatesellsrderstatus);
+
+            //Create Guarantee
+            var products = await _sellOrderDetailService.GetProductFromSellOrderDetailAsync(orderId);
+            await _guaranteeService.CreateGuaranteeAsync(products);
+
+
+            return Ok();
         }
     }
 }

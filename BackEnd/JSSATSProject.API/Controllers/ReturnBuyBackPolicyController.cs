@@ -1,4 +1,5 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
+﻿using JSSATSProject.Service.Models;
+using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.ReturnBuyBackPolicyModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
@@ -20,18 +21,11 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
-        {
-            var responseModel = await _returnBuyBackPolicyService.GetAllAsync();
-            return Ok(responseModel);
-        }
-
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            var responseModel = await _returnBuyBackPolicyService.GetByIdAsync(id);
-            return Ok(responseModel);
+        public async Task<IActionResult> GetAllAsync(int pageIndex, bool ascending)
+        { 
+                var responseModel = await _returnBuyBackPolicyService.GetAllAsync(pageIndex,10,ascending);
+                return Ok(responseModel); 
+          
         }
 
         [HttpPost]

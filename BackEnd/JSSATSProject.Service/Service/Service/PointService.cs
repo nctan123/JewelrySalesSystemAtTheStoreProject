@@ -98,8 +98,6 @@ namespace JSSATSProject.Service.Service.Service
         {
             var pointObj = await _unitOfWork.PointRepository.GetByCustomerPhoneNumber(customerPhoneNumber);
             var availablePoint = pointObj!.AvailablePoint.GetValueOrDefault();
-            // var pointRate = 
-            
             if(totalOrderPrice /1000 <= availablePoint) {
                 return (int)totalOrderPrice / 1000;
             }
@@ -113,6 +111,23 @@ namespace JSSATSProject.Service.Service.Service
             if (pointObj != null)
             {
                 pointObj.AvailablePoint -= pointValue;
+                await _unitOfWork.PointRepository.UpdateAsync(pointObj);
+            }
+
+            return new ResponseModel()
+            {
+                Data = pointObj,
+                MessageError = ""
+            };
+        }
+        
+        public async Task<ResponseModel> AddCustomerPoint(string customerPhoneNumber, int pointValue)
+        {
+            var pointObj = await _unitOfWork.PointRepository.GetByCustomerPhoneNumber(customerPhoneNumber);
+            if (pointObj != null)
+            {
+                pointObj.AvailablePoint += pointValue;
+                pointObj.Totalpoint += pointValue;
                 await _unitOfWork.PointRepository.UpdateAsync(pointObj);
             }
 

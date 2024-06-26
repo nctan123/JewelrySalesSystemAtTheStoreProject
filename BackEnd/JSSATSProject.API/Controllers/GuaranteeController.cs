@@ -46,14 +46,6 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
-        [HttpPost]
-        [Route("CreateGuarantee")]
-        public async Task<IActionResult> CreateAsync([FromBody] RequestCreateGuarantee requestGuarantee)
-        {
-            var responseModel = await _guaranteeService.CreateGuaranteeAsync(requestGuarantee);
-            return Ok(responseModel);
-        }
-
         [HttpPut]
         [Route("UpdateGuarantee")]
         public async Task<IActionResult> UpdateAsync(int guaranteeId, [FromBody] RequestUpdateGuarantee requestGuarantee)
@@ -72,7 +64,7 @@ namespace JSSATSProject.API.Controllers
                     title: "Guarantee not found.",
                     detail: $"Cannot find data of order {guaranteeCode}");
             //map sp trong sellOrder details thanh response product dto
-            ResponseProductForCheckOrder product = _guaranteeService.GetResponseProductForCheckOrder(guarantee);
+            ResponseProductForCheckOrder product =  await _guaranteeService.GetResponseProductForCheckOrder(guarantee);
             return Ok(new ResponseCheckGuarantee()
                 {
                     Code = guaranteeCode,

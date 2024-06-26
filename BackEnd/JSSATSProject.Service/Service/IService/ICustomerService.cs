@@ -6,9 +6,8 @@ namespace JSSATSProject.Service.Service.IService
 {
     public interface ICustomerService
     {
-        public Task<ResponseModel> GetAllAsync();
-        public Task<ResponseModel> GetByIdAsync(int id);
-        public Task<ResponseModel> GetByNameAsync(string name);
+        public Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize);
+        public Task<ResponseModel> SearchAsync(string searchTerm, int pageIndex = 1, int pageSize = 10);
         public Task<ResponseModel> GetByPhoneAsync(string phoneNumber);
         public Task<ResponseModel> GetEntityByPhoneAsync(string phoneNumber);
         public Task<ResponseModel> CreateCustomerAsync(RequestCreateCustomer requestCustomer);

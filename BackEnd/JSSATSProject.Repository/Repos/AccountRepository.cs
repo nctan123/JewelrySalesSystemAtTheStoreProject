@@ -14,6 +14,7 @@ public class AccountRepository : GenericRepository<Account>
     {
         return await context.Accounts
             .Include(a => a.Role)
+            .Include(a => a.Staff)
             .FirstOrDefaultAsync(a => a.Username == username && a.Password == password);
     }
 }

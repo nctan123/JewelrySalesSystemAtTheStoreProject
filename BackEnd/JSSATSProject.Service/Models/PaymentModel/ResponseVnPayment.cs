@@ -17,8 +17,11 @@ namespace JSSATSProject.Service.Models.PaymentModel
         public string Token { get; set; }
         public string VnPayResponseCode { get; set; }
 
-        
-        public ResponseVnPayment(bool success, string paymentMethod, string orderDescription, string orderId, string paymentId, string transactionId, string token, string vnPayResponseCode)
+        public string PaymentMethodId { get; set; }
+
+
+
+        public ResponseVnPayment(bool success, string paymentMethod, string orderDescription, string orderId, string paymentId, string transactionId, string token, string vnPayResponseCode, string paymentMethodId)
         {
             Success = success;
             PaymentMethod = paymentMethod;
@@ -28,6 +31,7 @@ namespace JSSATSProject.Service.Models.PaymentModel
             TransactionId = transactionId;
             Token = token;
             VnPayResponseCode = vnPayResponseCode;
+            PaymentMethodId = paymentMethodId;
         }
 
         public ResponseVnPayment()

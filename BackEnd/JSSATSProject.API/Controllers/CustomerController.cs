@@ -21,25 +21,17 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageIndex = 1)
         {
-            var responseModel = await _customerService.GetAllAsync();
+            var responseModel = await _customerService.GetAllAsync(pageIndex, 10);
             return Ok(responseModel);
         }
 
         [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetById(int id)
+        [Route("Search")]
+        public async Task<IActionResult> Search(string searchTerm, int pageIndex = 1)
         {
-            var responseModel = await _customerService.GetByIdAsync(id);
-            return Ok(responseModel);
-        }
-
-        [HttpGet]
-        [Route("GetByName")]
-        public async Task<IActionResult> GetByName(string name)
-        {
-            var responseModel = await _customerService.GetByNameAsync(name);
+            var responseModel = await _customerService.SearchAsync(searchTerm, pageIndex,10);
             return Ok(responseModel);
         }
 
@@ -58,9 +50,6 @@ namespace JSSATSProject.API.Controllers
             var responseModel = await _customerService.CreateCustomerAsync(requestCustomer);
             var data = (Customer)responseModel.Data!;
             return CreatedAtAction("GetById", new {id = data.Id} ,responseModel);
-            
-            // var responseModel = await _customerService.CreateCustomerAsync(requestCustomer);
-            // return Ok(responseModel);
         }
 
         [HttpPut]

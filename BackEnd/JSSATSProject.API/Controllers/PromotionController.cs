@@ -8,7 +8,6 @@ namespace JSSATSProject.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
     public class PromotionController : ControllerBase
     {
         private readonly IPromotionService _promotionService;
@@ -18,21 +17,20 @@ namespace JSSATSProject.API.Controllers
             _promotionService = promotionService;
         }
 
-        [HttpGet]
-        [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] int pageIndex = 1, [FromQuery] bool ascending = true)
         {
-            var responseModel = await _promotionService.GetAllAsync();
-            return Ok(responseModel);
+            try
+            {
+                var responseModel = await _promotionService.GetAllAsync(pageIndex, 10, ascending);
+                return Ok(responseModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            var responseModel = await _promotionService.GetByIdAsync(id);
-            return Ok(responseModel);
-        }
 
         [HttpPost]
         [Route("CreatePromotion")]
@@ -49,5 +47,23 @@ namespace JSSATSProject.API.Controllers
             var response = await _promotionService.UpdatePromotionAsync(Id, requestPromotion);
             return Ok(response);
         }
+
+
+
+        [HttpGet]
+        [Route("SearchPromotion")]
+        public async Task<IActionResult> SearchPromotionsAsync([FromQuery] string searchTerm,[FromQuery] int pageIndex)
+        {
+            try
+            {
+                var responseModel = await _promotionService.SearchAsync(searchTerm, pageIndex, 10);
+                return Ok(responseModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
+        }
+
     }
 }

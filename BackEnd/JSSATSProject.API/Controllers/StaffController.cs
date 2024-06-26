@@ -15,31 +15,37 @@ namespace JSSATSProject.API.Controllers
         {
             _staffService = staffService;
         }
-
-        [HttpGet]
-        [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync(DateTime startDate, DateTime endDate)
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllAsync([FromQuery] DateTime startDate, [FromQuery] DateTime endDate, [FromQuery] int pageIndex, [FromQuery] string sortBy, [FromQuery] bool ascending = true)
         {
-            var responseModel = await _staffService.GetAllAsync(startDate, endDate);
-            return Ok(responseModel);
-        }
-
-        [HttpGet]
-        [Route("GetDetailsByDate/{id}")]
-        public async Task<IActionResult> GetDetailsByDateAsync([FromRoute] int id, [FromQuery] DateTime startdate, [FromQuery] DateTime enddate)
-        {
-            var responseModel = await _staffService.GetDetailsByDateAsync(id, startdate, enddate);
-            return Ok(responseModel);
+            try
+            {
+                var responseModel = await _staffService.GetAllAsync(startDate, endDate, pageIndex, 10 , sortBy, ascending);
+                return Ok(responseModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
 
 
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        [HttpGet("Search")]
+        public async Task<IActionResult> SearchAsync([FromQuery] string nameSearch,[FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,[FromQuery] int pageIndex)
         {
-            var responseModel = await _staffService.GetByIdAsync(id);
-            return Ok(responseModel);
+            try
+            {
+                var responseModel = await _staffService.SearchAsync(nameSearch, startDate, endDate, pageIndex, 10);
+                return Ok(responseModel);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"An error occurred: {ex.Message}");
+            }
         }
+
+
 
         [HttpPost]
         [Route("CreateStaff")]

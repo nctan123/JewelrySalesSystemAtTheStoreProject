@@ -10,17 +10,19 @@ namespace JSSATSProject.Service.Models.SellOrderDetailsModel
 {
     public class ResponseSellOrderDetails
     {
-       
-        public int ProductId { get; set; }
+        public int Id { get; set; }
 
-        public string Name { get; set; }
+        public int OrderId { get; set; }
+        public int ProductId { get; set; }
+        public required string ProductName { get; set; }
+        public required string ProductCode { get; set; }
 
         public decimal UnitPrice { get; set; }
 
         public int Quantity { get; set; }
 
-        public int? PromotionId { get; set; }
+        public required string Status { get; set; }
 
-        public int OrderId { get; set; }
+        public int? PromotionId { get; set; }
     }
 }

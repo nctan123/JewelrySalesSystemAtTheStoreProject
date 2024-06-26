@@ -3,11 +3,19 @@
   "WorkspaceRootPath": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.api\\controllers\\paymentdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\controllers\\paymentdetailcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.api\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{37DBB895-DE18-4645-8A7F-4FFE2A38CC9C}|JSSATSProject.API\\JSSATSProject.API.csproj|solutionrelative:jssatsproject.api\\controllers\\paymentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{15ABE9B5-F887-48D9-B9A0-A377B6276994}|JSSATSProject.Service\\JSSATSProject.Service.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.service\\service\\service\\paymentdetailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{15ABE9B5-F887-48D9-B9A0-A377B6276994}|JSSATSProject.Service\\JSSATSProject.Service.csproj|solutionrelative:jssatsproject.service\\service\\service\\paymentdetailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|d:\\jewelrysalessystematthestoreproject\\backend\\jssatsproject.repository\\entities\\guarantee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\jssatsproject.repository\\entities\\guarantee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1085B115-5EE1-4F08-9432-DCFAEEB20C14}|JSSATSProject.Repository\\JSSATSProject.Repository.csproj|solutionrelative:jssatsproject.repository\\entities\\guarantee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -83,19 +91,45 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "PaymentDetailController.cs",
+              "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\Controllers\\PaymentDetailController.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.API\\Controllers\\PaymentDetailController.cs",
+              "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\Controllers\\PaymentDetailController.cs",
+              "RelativeToolTip": "JSSATSProject.API\\Controllers\\PaymentDetailController.cs",
+              "ViewState": "AQIAAC8AAAAAAAAAAAAgwEYAAABDAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-26T02:53:46.759Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PaymentController.cs",
+              "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\Controllers\\PaymentController.cs",
+              "RelativeDocumentMoniker": "JSSATSProject.API\\Controllers\\PaymentController.cs",
+              "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.API\\Controllers\\PaymentController.cs",
+              "RelativeToolTip": "JSSATSProject.API\\Controllers\\PaymentController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-26T02:53:45.077Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "PaymentDetailService.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\Service\\Service\\PaymentDetailService.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Service\\Service\\Service\\PaymentDetailService.cs",
               "ToolTip": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\Service\\Service\\PaymentDetailService.cs",
               "RelativeToolTip": "JSSATSProject.Service\\Service\\Service\\PaymentDetailService.cs",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAABMAAAApAAAA",
+              "ViewState": "AQIAAEMAAAAAAAAAAAAkwBMAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-22T18:03:20.487Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "Guarantee.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\Guarantee.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\Guarantee.cs",
@@ -103,12 +137,11 @@
               "RelativeToolTip": "JSSATSProject.Repository\\Entities\\Guarantee.cs",
               "ViewState": "AQIAABAAAAAAAAAAAAAkwBkAAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-22T17:53:37.644Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-22T17:53:37.644Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "GuaranteeRepository.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Repos\\GuaranteeRepository.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Repository\\Repos\\GuaranteeRepository.cs",
@@ -120,7 +153,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "SellOrderDetail.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\SellOrderDetail.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\SellOrderDetail.cs",
@@ -132,7 +165,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "BuyOrder.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\BuyOrder.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\BuyOrder.cs",
@@ -144,7 +177,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "CustomerService.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\Service\\Service\\CustomerService.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Service\\Service\\Service\\CustomerService.cs",
@@ -156,7 +189,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "PointService.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\Service\\Service\\PointService.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Service\\Service\\Service\\PointService.cs",
@@ -168,7 +201,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "SellOrder.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\SellOrder.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\SellOrder.cs",
@@ -180,7 +213,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "Diamond.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\Diamond.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\Diamond.cs",
@@ -192,7 +225,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "DBContext.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Repository\\Entities\\DBContext.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Repository\\Entities\\DBContext.cs",
@@ -204,7 +237,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "ApplicationMapper.cs",
               "DocumentMoniker": "D:\\JewelrySalesSystemAtTheStoreProject\\BackEnd\\JSSATSProject.Service\\AutoMapper\\ApplicationMapper.cs",
               "RelativeDocumentMoniker": "JSSATSProject.Service\\AutoMapper\\ApplicationMapper.cs",

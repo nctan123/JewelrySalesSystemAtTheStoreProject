@@ -10,7 +10,7 @@ namespace JSSATSProject.Service.Models.PromotionModel
     {
         public string Name { get; set; } = null!;
 
-        public int DiscountRate { get; set; }
+        public decimal DiscountRate { get; set; }
 
         public string? Description { get; set; }
 
