@@ -26,9 +26,12 @@ const Cs_OnProcess = () => {
   const [isPaymentCompletedDefault, setIsPaymentCompletedDefault] = useState(true);
   const [paymentMethod, setpaymentMethod] = useState('')
   const [ChosePayMethod, setChosePayMethod] = useState('Cash');
-
+  const [ChosePayMethodID, setChosePayMethodID] = useState(3);
+  const [PaymentID, setPaymentID] = useState();
   const handleSelectChange = (event) => {
     setChosePayMethod(event.target.value);
+    setChosePayMethodID(event.target.key);
+    
   };
   const closeModal = () => {
     setIsModalOpen(false);
@@ -105,35 +108,69 @@ const Cs_OnProcess = () => {
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
-  const [orderId, setorderId] = useState('')
-  const [customerId, setcustomerId] = useState('')
-  const [createDate, setcreateDate] = useState(new Date().toISOString())
-  const [amount, setamount] = useState('')
 
-  const handleSelectInvoice = (item) => {
-    setorderId(item.id);
-    setcustomerId(item.customer.id);
-    setamount(item.totalAmount);
-  };
+  const [createDate, setcreateDate] = useState(new Date().toISOString())
 
   const handleSubmitOrder = async (item, event) => {
     event.preventDefault();
-    // Ensure state is updated before submission
-    handleSelectInvoice(item);
-    
-    let data = {
-      orderId: orderId,
-      customerId:customerId,
-      createDate: createDate,
-      amount:amount
-    };
 
+    let data = {
+      orderId: item.id,
+      customerId: item.customerId,
+      createDate: createDate,
+      amount:item.totalAmount
+    };
+   
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment', data);
+      const paymentID = res.data.data.id
+      console.log(res)
       toast.success('Successful');
       setIsPaymentCompleted(true);
       setIsPaymentCompletedDefault(false)
-      console.log(data);
+      setPaymentID(paymentID);
+    } catch (error) {
+      toast.error('Fail');
+      console.error('Error invoice:', error);
+    }
+  };
+  const [externalTransactionCode, setexternalTransactionCode] = useState('')
+  const handleCompleteCash = async (item,event) => {
+    event.preventDefault();
+    let data = {
+      paymentId: PaymentID,
+      paymentMethodId: ChosePayMethodID,
+      amount:item.totalAmount,
+      externalTransactionCode:externalTransactionCode ,
+      status: 'completed',
+    };
+  
+    try {
+      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data);
+
+      toast.success('Successful');
+ 
+    } catch (error) {
+      toast.error('Fail');
+      console.error('Error invoice:', error);
+    }
+  };
+  const handleCompleteVnPay = async (item,event) => {
+    event.preventDefault();
+    let data = {
+      paymentId: PaymentID,
+      orderId:item.id,
+      paymentMethodId: ChosePayMethodID,
+      customerId: item.customerId,
+      createDate:createDate,
+      amount:item.totalAmount,     
+    };
+    console.log(data)
+    try {
+      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/VnPay/createpaymentUrl', data);
+      console.log(res.data)
+      toast.success('Successful');
+ 
     } catch (error) {
       toast.error('Fail');
       console.error('Error invoice:', error);
@@ -205,9 +242,9 @@ const Cs_OnProcess = () => {
                                   <div className='row-start-1 col-start-2 h-[100px]'>
                                     <h5 className='font-bold'>Select a payment method</h5>
                                     <select  onChange={handleSelectChange} class="mt-[10px] w-[100%] px-2 bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150">
-                                    {paymentMethod && paymentMethod.length > 0 && paymentMethod.map((item,index)=> {
+                                    {paymentMethod && paymentMethod.length > 0 && paymentMethod.map((item)=> {
                                       return (
-                                          <option key={index} value={item.name} className='text-black text-center'>{item.name}</option>
+                                          <option key={item.id} value={item.name} className='text-black text-center'>{item.name}</option>
                                       )
                                     })}
                                     </select>
@@ -471,7 +508,7 @@ const Cs_OnProcess = () => {
                                         return(
                                         <tr className="border-b bg-gray-50">
                                           <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
-                                          <td className="whitespace-nowrap px-6 py-4">{p.id}</td>
+                                          <td className="whitespace-nowrap px-6 py-4">{p.productId}</td>
                                           <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
                                           <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
                                           <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity*p.unitPrice)}</td>
@@ -510,7 +547,7 @@ const Cs_OnProcess = () => {
                               </div>
                               <div className='flex justify-between px-4 py-2'>
                                 <button className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
-                                <button className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
+                                <button onClick={(event) => handleCompleteVnPay(item,event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
                               </div>
                             </div>
                           </div>

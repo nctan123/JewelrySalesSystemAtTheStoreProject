@@ -21,7 +21,7 @@ export const productSlice = createSlice({
             if (productIndex === -1) {
                 state.CartArr.push({ ...action.payload, quantity: 1 })
             } else {
-                if (action.payload.categoryId === 7) {
+                if (action.payload.categoryId === 6) {
                     state.CartArr[productIndex].quantity += 1;
                 }
             }
