@@ -8,6 +8,7 @@ using System.Linq.Expressions;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Enums;
 using JSSATSProject.Service.Models.ProductModel;
+using JSSATSProject.Service.Models.SellOrderDetailsModel;
 
 
 namespace JSSATSProject.Service.Service.Service
@@ -47,7 +48,8 @@ namespace JSSATSProject.Service.Service.Service
             sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
                 requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
             sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
-            var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) - sellOrder.DiscountPoint * pointRate;
+            var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) -
+                              sellOrder.DiscountPoint * pointRate;
             sellOrder.TotalAmount = totalAmount;
             if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
 
@@ -61,14 +63,30 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(bool ascending = true, int pageIndex = 1, int pageSize = 10)
         {
             var entities = await _unitOfWork.SellOrderRepository.GetAsync(includeProperties: "SellOrderDetails,Staff,Customer,Payments");
             var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
+            var entities =
+                await _unitOfWork.SellOrderRepository.GetAsync(
+                    includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product",
+                    orderBy: ascending
+                        ? q => q.OrderBy(p => p.CreateDate)
+                        : q => q.OrderByDescending(p => p.CreateDate),
+                    pageSize: pageSize,
+                    pageIndex: pageIndex);
+            var result = new List<ResponseSellOrder>();
+            foreach (var sellOrder in entities)
+            {
+                var responseSellOrder = _mapper.Map<ResponseSellOrder>(sellOrder);
+                responseSellOrder.SellOrderDetails =
+                    _mapper.Map<List<ResponseSellOrderDetails>>(sellOrder.SellOrderDetails);
+                result.Add(responseSellOrder);
+            }
             return new ResponseModel
             {
-                Data = response,
+                Data = result,
                 MessageError = ""
             };
         }
@@ -221,6 +239,8 @@ namespace JSSATSProject.Service.Service.Service
         {
             Expression<Func<SellOrder, bool>> filter = order =>
                 (order.CreateDate >= startDate) && (order.CreateDate <= endDate) && (order.Status.Equals(OrderConstants.CompletedStatus));
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate) &&
+                (order.Status.Equals(OrderConstants.CompletedStatus));
 
             decimal sum = await _unitOfWork.SellOrderRepository.SumAsync(filter, order => order.TotalAmount);
 
@@ -248,5 +268,16 @@ namespace JSSATSProject.Service.Service.Service
         }
 
 
+                (order.CreateDate >= startDate) && (order.CreateDate <= endDate) &&
+                (order.Status.Equals(OrderConstants.CompletedStatus));
+
+            int count = await _unitOfWork.SellOrderRepository.CountAsync(filter);
+
+            return new ResponseModel
+            {
+                Data = count,
+                MessageError = count == 0 ? "Not Found" : null,
+            };
+        }
     }
 }

@@ -29,6 +29,4 @@ public partial class SellOrderDetail
     public virtual Product Product { get; set; }
     [JsonIgnore]
     public virtual Promotion Promotion { get; set; }
-    
-
 }

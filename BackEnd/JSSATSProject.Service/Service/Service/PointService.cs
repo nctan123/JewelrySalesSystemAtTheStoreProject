@@ -120,5 +120,22 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = ""
             };
         }
+        
+        public async Task<ResponseModel> AddCustomerPoint(string customerPhoneNumber, int pointValue)
+        {
+            var pointObj = await _unitOfWork.PointRepository.GetByCustomerPhoneNumber(customerPhoneNumber);
+            if (pointObj != null)
+            {
+                pointObj.AvailablePoint += pointValue;
+                pointObj.Totalpoint += pointValue;
+                await _unitOfWork.PointRepository.UpdateAsync(pointObj);
+            }
+
+            return new ResponseModel()
+            {
+                Data = pointObj,
+                MessageError = ""
+            };
+        }
     }
 }

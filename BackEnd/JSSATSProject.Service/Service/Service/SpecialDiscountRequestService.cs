@@ -31,7 +31,9 @@ namespace JSSATSProject.Service.Service.Service
         {
             var entity = _mapper.Map<SpecialDiscountRequest>(specialdiscountRequest);
             entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
-            entity.Customer = (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber.ToString())).Data!;
+            entity.Customer =
+                (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber
+                    .ToString())).Data!;
             entity.Status = SpecialDiscountRequestStatus.Awaiting.ToString();
 
             await _unitOfWork.SpecialDiscountRequestRepository.InsertAsync(entity);
@@ -44,10 +46,15 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
-        public async Task<ResponseModel> GetAllAsync()
+        public async Task<ResponseModel> GetAllAsync(bool ascending = true, int pageIndex = 1, int pageSize = 10)
         {
             var entities = await _unitOfWork.SpecialDiscountRequestRepository.GetAsync(
-                includeProperties: "ApprovedByNavigation, Customer,Staff"
+                includeProperties: "ApprovedByNavigation,Customer,Staff",
+                orderBy: ascending
+                    ? q => q.OrderBy(p => p.CreatedAt)
+                    : q => q.OrderByDescending(p => p.CreatedAt),
+                pageSize: pageSize,
+                pageIndex: pageIndex
             );
             var response = _mapper.Map<List<ResponseSpecialDiscountRequest>>(entities);
             return new ResponseModel
@@ -73,22 +80,36 @@ namespace JSSATSProject.Service.Service.Service
             };
         }
 
+        public async Task<ResponseModel> GetAsync(string orderCode)
+        {
+            var result = await _unitOfWork.SpecialDiscountRequestRepository.GetByOrderCodeAsync(orderCode);
+            return new ResponseModel()
+            {
+                Data = result,
+                MessageError = result is null 
+                    ? $"The order {orderCode} doesn't apply any special discount." 
+                    : ""
+            };
+        }
 
-        public async Task<ResponseModel> UpdateAsync(int specialdiscountId, UpdateSpecialDiscountRequest specialdiscountRequest)
+
+        public async Task<ResponseModel> UpdateAsync(int specialdiscountId,
+            UpdateSpecialDiscountRequest specialdiscountRequest)
         {
             try
             {
                 // Fetch the promotion from the database
-                var existingSpecialDiscountRequest = await _unitOfWork.SpecialDiscountRequestRepository.GetByIDAsync(specialdiscountId);
+                var existingSpecialDiscountRequest =
+                    await _unitOfWork.SpecialDiscountRequestRepository.GetByIDAsync(specialdiscountId);
 
                 if (existingSpecialDiscountRequest != null)
                 {
-
                     _mapper.Map(specialdiscountRequest, existingSpecialDiscountRequest);
 
                     if (specialdiscountRequest.ApprovedBy != null)
                     {
-                        var staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.ApprovedBy.Value);
+                        var staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.ApprovedBy
+                            .Value);
                         existingSpecialDiscountRequest.ApprovedByNavigation = staff;
                     }
 

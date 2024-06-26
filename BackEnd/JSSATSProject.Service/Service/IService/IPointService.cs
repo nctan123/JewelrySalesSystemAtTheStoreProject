@@ -14,5 +14,7 @@ namespace JSSATSProject.Service.Service.IService
         public Task<int> GetMaximumApplicablePointForOrder(string customerPhoneNumber, decimal totalOrderPrice);
 
         public Task<ResponseModel> DecreaseCustomerAvailablePoint(string customerPhoneNumber, int pointValue);
+        public Task<ResponseModel> AddCustomerPoint(string customerPhoneNumber, int pointValue);
+
     }
 }

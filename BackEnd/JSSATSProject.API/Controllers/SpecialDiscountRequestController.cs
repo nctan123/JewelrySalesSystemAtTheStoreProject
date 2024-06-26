@@ -15,7 +15,9 @@ namespace JSSATSProject.API.Controllers
     {
         private readonly ISpecialDiscountRequestService _specialdiscountrequestService;
         private readonly ISellOrderService _sellOrderService;
-        public SpecialDiscountRequestController(ISpecialDiscountRequestService specialdiscountrequestService, ISellOrderService sellOrderService)
+
+        public SpecialDiscountRequestController(ISpecialDiscountRequestService specialdiscountrequestService,
+            ISellOrderService sellOrderService)
         {
             _specialdiscountrequestService = specialdiscountrequestService;
             _sellOrderService = sellOrderService;
@@ -23,12 +25,22 @@ namespace JSSATSProject.API.Controllers
 
         [HttpGet]
         [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<IActionResult> GetAllAsync(bool ascending = true, int pageIndex = 1, int pageSize = 10)
         {
-            var responseModel = await _specialdiscountrequestService.GetAllAsync();
+            var responseModel =
+                await _specialdiscountrequestService.GetAllAsync(ascending, pageIndex, pageSize);
             return Ok(responseModel);
         }
 
+        [HttpGet]
+        [Route("Search")]
+        public async Task<IActionResult> GetAsync(string orderCode)
+        {
+            var responseModel =
+                await _specialdiscountrequestService.GetAsync(orderCode);
+            return Ok(responseModel);
+        }
+        
         [HttpGet]
         [Route("GetByCustomerId")]
         public async Task<IActionResult> GetByCustomerIdAsync(int id)
@@ -40,7 +52,8 @@ namespace JSSATSProject.API.Controllers
 
         [HttpPost]
         [Route("CreateSpecialDiscountRequest")]
-        public async Task<IActionResult> CreateSpecialDiscountRequestAsync(CreateSpecialDiscountRequest specialdiscountRequest)
+        public async Task<IActionResult> CreateSpecialDiscountRequestAsync(
+            CreateSpecialDiscountRequest specialdiscountRequest)
         {
             var responseModel = await _specialdiscountrequestService.CreateAsync(specialdiscountRequest);
             return Ok(responseModel);
@@ -48,7 +61,8 @@ namespace JSSATSProject.API.Controllers
 
         [HttpPut]
         [Route("UpdateSpecialDiscountRequest/{id}")]
-        public async Task<IActionResult> UpdateSpecialDiscountRequestAsync(int id, [FromBody] UpdateSpecialDiscountRequest specialdiscountRequest)
+        public async Task<IActionResult> UpdateSpecialDiscountRequestAsync(int id,
+            [FromBody] UpdateSpecialDiscountRequest specialdiscountRequest)
         {
             var response = await _specialdiscountrequestService.UpdateAsync(id, specialdiscountRequest);
             var targetEntity = await _specialdiscountrequestService.GetEntityByIdAsync(id);
@@ -58,7 +72,7 @@ namespace JSSATSProject.API.Controllers
                 SpecialDiscountRequest = targetEntity,
                 Status = OrderConstants.DraftStatus
             });
-            
+
             return Ok(response);
         }
     }

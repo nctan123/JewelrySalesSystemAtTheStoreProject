@@ -8,7 +8,7 @@ namespace JSSATSProject.Service.Service.IService
 {
     public interface ISellOrderService
     {
-        public Task<ResponseModel> GetAllAsync();
+        public Task<ResponseModel> GetAllAsync(bool ascending, int pageIndex = 1, int pageSize = 10);
         public Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate);
         public Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate);
         public Task<ResponseModel> GetByIdAsync(int id);

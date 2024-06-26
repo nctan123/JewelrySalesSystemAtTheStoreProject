@@ -27,10 +27,6 @@ using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 
 
-
-
-
-
 namespace JSSATSProject.Service.AutoMapper
 {
     public class ApplicationMapper : Profile
@@ -89,13 +85,35 @@ namespace JSSATSProject.Service.AutoMapper
             CreateMap<SellOrder, RequestUpdateSellOrder>().ReverseMap();
             CreateMap<SellOrder, UpdateSellOrderStatus>().ReverseMap();
             CreateMap<SellOrder, ResponseUpdateSellOrderWithSpecialPromotion>()
-                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
+                .ForMember(dest => dest.CustomerName,
+                    opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
                 .ForMember(dest => dest.CustomerPhoneNumber, opt => opt.MapFrom(src => src.Customer.Phone))
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
                 .ForMember(dest => dest.SpecialDiscountRate, opt => opt.MapFrom(src => src.SpecialDiscountRequest.DiscountRate))
                 .ForMember(dest => dest.ProductCodesAndQuantity, opt => opt.MapFrom(src => src.SellOrderDetails.ToDictionary(s => s.Product.Code, s => s.Quantity)))
                 .ReverseMap();
             CreateMap<SellOrder, ResponseSellOrder>().ReverseMap();
+                .ForMember(dest => dest.SpecialDiscountRate,
+                    opt => opt.MapFrom(src => src.SpecialDiscountRequest.DiscountRate))
+                .ForMember(dest => dest.ProductCodesAndQuantity,
+                    opt => opt.MapFrom(src => src.SellOrderDetails.ToDictionary(s => s.Product.Code, s => s.Quantity)))
+                .ReverseMap();
+            CreateMap<SellOrder, ResponseSellOrder>()
+                .ForMember(dest => dest.SellOrderDetails, opt => opt.Ignore())
+                .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
+                .ForMember(dest => dest.CustomerPhoneNumber, opt => opt.MapFrom(src => src.Customer.Phone))
+                .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
+                
+                .ReverseMap();
+
+            CreateMap<SellOrderDetail, ResponseSellOrderDetails>()
+                .ForMember(dest => dest.ProductId,
+                    opt => opt.MapFrom(src => src.ProductId))
+                .ForMember(dest => dest.ProductName,
+                    opt => opt.MapFrom(src => src.Product.Name))
+                .ForMember(dest => dest.ProductCode,
+                    opt => opt.MapFrom(src => src.Product.Code))
+                .ReverseMap();
 
             //PaymentMethod
             CreateMap<PaymentMethod, RequestCreatePaymentMethod>().ReverseMap();
