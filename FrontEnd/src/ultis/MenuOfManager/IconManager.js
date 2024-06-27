@@ -23,7 +23,13 @@ import { GiGoldNuggets } from "react-icons/gi";//point
 import { GiReceiveMoney, GiEmeraldNecklace, GiCrystalEarrings, GiDiamondRing, GiNecklaceDisplay } from "react-icons/gi";
 import { AiOutlineGold } from "react-icons/ai";
 import { LiaMoneyBillWaveSolid, LiaCircleNotchSolid } from "react-icons/lia";
+import { GrDocumentStore } from "react-icons/gr";
+import { IoDiamondOutline } from "react-icons/io5";
+import { PiDiamondsFourLight } from "react-icons/pi";
 const IconManager = {
+    PiDiamondsFourLight,
+    IoDiamondOutline,
+    GrDocumentStore,
     FaChartSimple,
     TbReportSearch,
     MdManageAccounts,

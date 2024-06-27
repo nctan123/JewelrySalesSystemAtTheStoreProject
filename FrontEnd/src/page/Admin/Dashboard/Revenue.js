@@ -166,7 +166,7 @@ export default function Revenue() {
 
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-4 border border-gray-300 shadow-lg my-4 rounded-md">
             <div className="flex justify-end mb-4">
                 <button
                     type="button"
@@ -337,7 +337,7 @@ export default function Revenue() {
                     </div>
                     {thisWeekProduct && lastWeekProduct ?
                         (<div className={`flex-grow p-4 text-center rounded-xl ${calculatePercentageChange(thisWeekProduct.data.reduce((total, item) => total + item.Quantity, 0), lastWeekProduct.data.reduce((total, item) => total + item.Quantity, 0)) > 0 ? 'bg-green-500' : calculatePercentageChange(thisWeekProduct.data.reduce((total, item) => total + item.Quantity, 0), lastWeekProduct.data.reduce((total, item) => total + item.Quantity, 0)) < 0 ? 'bg-red-500' : 'bg-yellow-500'}`}>
-                            <h1 className="font-bold text-xl p-1">Number of Orders</h1>
+                            <h1 className="font-bold text-xl p-1">Number of Product Sold</h1>
                             <p className="text-2xl">{thisWeekProduct.data.reduce((total, item) => total + item.Quantity, 0)}</p>
                             <div className="flex justify-between text-sm mt-2 space-x-4">
                                 <div>

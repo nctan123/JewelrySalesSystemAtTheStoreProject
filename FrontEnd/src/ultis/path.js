@@ -2,7 +2,7 @@ const path = {
     HOME: '/',
     ADMIN: '/admin',
     LOGIN: '/login',
-
+    MANAGER: '/manager',
     // Seller
     PUBLIC: '/public',
     DIAMOND: '',
@@ -54,13 +54,14 @@ const path = {
 
 
     // manager
-    MANAGER: 'manager',
+
     PRODUCTMANAGER: 'productManager',
     DIAMONDMANAGER: 'diamond',
     RETAILGOLDMANAGER: 'rgold',
     PROMOTIONMANAGER: 'Promotionmanager',
     CUSTOMERMANA: 'customerMana',
     PRODUCTMANA: 'productMana',
+    STALL: 'Stall'
     // end manager
 
 

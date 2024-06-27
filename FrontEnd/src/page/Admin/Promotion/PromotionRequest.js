@@ -182,9 +182,9 @@ const PromotionRequest = () => {
     const placeholders = Array.from({ length: promotionsPerPage - currentPromotions.length });
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 className="text-2xl font-bold text-center mb-4">Promotion Request List</h1>
+                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline"> Promotion Request List</h1>
                 <div className="flex mb-4">
                     <div className="relative">
                         <input
@@ -198,46 +198,40 @@ const PromotionRequest = () => {
                     </div>
                 </div>
 
-                <div className="w-[1000px] overflow-hidden">
+                <div className="w-[1200px] overflow-hidden ">
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                        <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
-                            <tr>
-                                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">ID</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Name</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Description</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Discount Rate</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">From</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">To</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Status</th>
+                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
+                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
+                                <th className="py-3 pl-3 rounded-l-lg">ID</th>
+                                <th >Name</th>
+                                <th >Description</th>
+                                <th className=" text-center">Discount Rate</th>
+                                <th >From</th>
+                                <th >To</th>
+                                <th className="text-center rounded-r-lg">Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentPromotions.map((item, index) => (
-                                <tr key={index} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381] py-4">{item.requestId}</td>
-                                    <td className="text-sm font-normal text-[#637381] py-4">{getNamefromDescription(item.description)}</td>
-                                    <td className="text-sm font-normal text-[#637381] py-4">{getDescription(item.description)}</td>
-                                    <td className="text-sm font-normal text-[#637381] text-center py-4">{item.discountRate}</td>
-                                    <td className="text-sm font-normal text-[#637381] py-4">{format(new Date(item.startDate), 'dd/MM/yyyy')}</td>
-                                    <td className="text-sm font-normal text-[#637381] py-4">{format(new Date(item.endDate), 'dd/MM/yyyy')}</td>
-                                    <td className="text-sm font-normal text-[#637381] text-center">
+                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pl-3  py-4 text-black">{item.requestId}</td>
+                                    <td >{getNamefromDescription(item.description)}</td>
+                                    <td>{getDescription(item.description)}</td>
+                                    <td className="text-center ">{item.discountRate}</td>
+                                    <td >{format(new Date(item.startDate), 'dd/MM/yyyy')}</td>
+                                    <td >{format(new Date(item.endDate), 'dd/MM/yyyy')}</td>
+                                    <td className=" text-center">
                                         {item.status === 'approved'
                                             ? (<span className="text-green-500 ">Approved</span>)
                                             : item.status === 'rejected' ? (
                                                 <span className="text-red-500">Rejected</span>
                                             ) : (<button
-                                                className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
+                                                className="my-2 border border-white bg-blue-600 text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
                                                 onClick={() => openModal(item.requestId)} // Open modal with requestId on button click
                                             >
                                                 {item.status}
                                             </button>)
                                         }
-                                        {/* <button
-                                            className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
-                                            onClick={() => openModal(item.requestId)} // Open modal with requestId on button click
-                                        >
-                                            {item.status}
-                                        </button> */}
 
                                     </td>
                                 </tr>
