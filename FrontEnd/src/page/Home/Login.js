@@ -1,16 +1,12 @@
-
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
-
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
-
-
-import { loginApi } from '../../apis/jewelryService';
 import { toast } from 'react-toastify';
 import clsx from 'clsx';
 import style from './Login.module.css';
+import axios from 'axios';
 
 export default function LoginToStore() {
   const [username, setUsername] = useState('');
@@ -31,31 +27,10 @@ export default function LoginToStore() {
     }
     setLoadingApi(true);
     try {
-      const response = await fetch('https://jssats.azurewebsites.net/api/account/getall');
-      const data = await response.json();
-      console.log('>>> check res', data.data)
-      const user = data.data.find(user => user.username === username && user.password === password);
+      const data = await axios.post('https://jssatsproject.azurewebsites.net/api/login', {
+        username: username,
+        password: password,
 
-<<<<<<< HEAD
-      // Determine user role and redirect or show appropriate UI
-      switch (user.roleId) {
-        case 2:
-          navigate('/admin');
-          break;
-        case 1:
-          navigate('/public');
-          break;
-        case 4:
-          navigate('/manager');
-          break;
-        case 3:
-          navigate('/cs_public');
-          break;
-        // Add more cases for other roles if needed
-        default:
-          toast.error('Unknown user role');
-          break;
-=======
       });
       // console.log('>>> check res dta', data)
       const user = data.data;
@@ -86,8 +61,8 @@ export default function LoginToStore() {
             toast.error('Unknown user role');
             break;
         }
->>>>>>> FE_Tai
       }
+
     } catch (error) {
       toast.error('Invalid username or password');
     }
@@ -99,14 +74,13 @@ export default function LoginToStore() {
     <div className={clsx(style.login_container)}>
       {localStorage.clear()}
       <div className={clsx(style.title_login)}>Log in</div>
-
       <input
         type='text'
         placeholder='Username...'
         value={username}
         onChange={(event) => setUsername(event.target.value)}
       />
-      <div className='input-2'>
+      <div className={clsx(style.input_2)}>
         <input
           type={isShowPassword ? 'text' : 'password'}
           placeholder='Password...'
@@ -115,7 +89,7 @@ export default function LoginToStore() {
         />
         <span>
           <FontAwesomeIcon
-            icon={isShowPassword ? faEyeSlash : faEye}
+            icon={isShowPassword ? faEye : faEyeSlash}
             onClick={() => setIsShowPassword(!isShowPassword)}
           />
         </span>
@@ -136,18 +110,6 @@ export default function LoginToStore() {
       </button>
 
 
-<<<<<<< HEAD
-      <div className={clsx(style.back)} onClick={handleBackClick}>
-        <span>
-          <FontAwesomeIcon icon={faRotateLeft} /> Back
-        </span>
-
-      </div>
     </div>
   );
 }
-=======
-    </div>
-  );
-}
->>>>>>> FE_Tai

@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-
-import React, { useEffect, useState } from 'react'
-import { fetchAllCustomer } from '../../../apis/jewelryService'
-import clsx from 'clsx'
-import { IoIosSearch } from "react-icons/io";
-=======
 import React, { useEffect, useState } from 'react';
 import { fetchAllCustomer } from '../../../apis/jewelryService';
 import axios from 'axios';
@@ -12,13 +5,14 @@ import clsx from 'clsx';
 import { toast } from 'react-toastify';
 import { IoIosSearch } from 'react-icons/io';
 import { FiEdit3 } from "react-icons/fi";
->>>>>>> FE_Tai
 
 const Customer = () => {
     const [originalListCustomer, setOriginalListCustomer] = useState([]);
     const [listCustomer, setListCustomer] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const customersPerPage = 10;
 
     useEffect(() => {
@@ -45,20 +39,15 @@ const Customer = () => {
 
     const handleSearch = () => {
         if (searchQuery === '') {
-            // If search query is empty, reset to original list of customers
             setListCustomer(originalListCustomer);
         } else {
             const filteredCustomers = originalListCustomer.filter((customer) =>
                 customer.phone.toLowerCase().includes(searchQuery.toLowerCase())
             );
-
-            // Update state with filtered customers
             setListCustomer(filteredCustomers);
         }
     };
 
-<<<<<<< HEAD
-=======
     const handleEditClick = (customer) => {
         setSelectedCustomer(customer);
         setIsModalOpen(true);
@@ -89,7 +78,6 @@ const Customer = () => {
         }
     };
 
->>>>>>> FE_Tai
     const indexOfLastCustomer = currentPage * customersPerPage;
     const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
     const currentCustomers = listCustomer.slice(indexOfFirstCustomer, indexOfLastCustomer);
@@ -97,8 +85,6 @@ const Customer = () => {
     const totalPages = Math.ceil(listCustomer.length / customersPerPage);
     const placeholders = Array.from({ length: customersPerPage - currentCustomers.length });
 
-<<<<<<< HEAD
-=======
     const renderModal = () => {
         if (!isModalOpen || !selectedCustomer) return null;
         return (
@@ -181,7 +167,6 @@ const Customer = () => {
         );
     };
 
->>>>>>> FE_Tai
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
@@ -200,17 +185,6 @@ const Customer = () => {
                 </div>
                 <div className="w-[1200px] overflow-hidden ">
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-<<<<<<< HEAD
-                        <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
-                            <tr>
-                                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Customer ID</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Full Name</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">PhoneNumber</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Gender</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Total Point</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
-
-=======
                         <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
                             <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
                                 <th className="py-3 pl-3 rounded-l-lg">ID</th>
@@ -219,24 +193,10 @@ const Customer = () => {
                                 <th >Gender</th>
                                 <th >Total Point</th>
                                 <th className=" rounded-r-lg ">Action</th>
->>>>>>> FE_Tai
                             </tr>
                         </thead>
                         <tbody>
                             {currentCustomers.map((item, index) => (
-<<<<<<< HEAD
-                                <tr key={index} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">{item.id}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.firstname} {item.lastname}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.phone}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.gender}</td>
-                                    <td className="text-sm font-normal text-[#637381]">{item.totalPoint}</td>
-                                    <td className="text-sm font-normal text-[#637381]">
-                                        <button className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none">
-                                            Edit
-                                        </button>
-                                    </td>
-=======
                                 <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
                                     <td className="rounded-l-lg pl-3  py-4 text-black">{item.id}</td>
                                     <td >{item.firstname} {item.lastname}</td>
@@ -245,17 +205,16 @@ const Customer = () => {
                                     <td >{item.totalPoint}</td>
                                     <td className="text-2xl text-green-500 pl-4"><FiEdit3 onClick={() => handleEditClick(item)} /></td>
 
->>>>>>> FE_Tai
                                 </tr>
                             ))}
                             {placeholders.map((_, index) => (
                                 <tr key={`placeholder-${index}`} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)]">
-                                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
-                                    <td className="text-sm font-normal text-[#637381]">-</td>
+                                    <td className="rounded-l-lg pl-3 text-base  font-normal text-[#637381]">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
+                                    <td className="text-base  font-normal text-[#637381] py-4">-</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -277,8 +236,10 @@ const Customer = () => {
                     ))}
                 </div>
             </div>
+            {renderModal()}
         </div>
-    )
-}
+    );
+};
 
-export default Customer
+export default Customer;
+

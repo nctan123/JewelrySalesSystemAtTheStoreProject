@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-=======
 import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { IoIosSearch } from "react-icons/io";
@@ -144,13 +141,8 @@ const Staff = () => {
         setIsModalOpen(false);
         setSelectedStaff(null);
     };
->>>>>>> FE_Tai
 
-export default function Staff() {
     return (
-<<<<<<< HEAD
-        <div>Staff</div>
-=======
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
                 <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline">Staff management list</h1>
@@ -261,6 +253,7 @@ export default function Staff() {
                 </Modal>
             </div>
         </div>
->>>>>>> FE_Tai
     )
 }
+
+export default Staff;

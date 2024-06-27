@@ -3,7 +3,9 @@ import { NavLink } from 'react-router-dom'
 import { hover } from '@testing-library/user-event/dist/hover'
 import { useState } from 'react'
 import logo_v2_seller from '../../assets/logo_v2_seller.png'
-import {sidebarMenuCashier} from '../../ultis/MenuOfCashier/MenuCashier'
+import { sidebarMenuCashier } from '../../ultis/MenuOfCashier/MenuCashier'
+import { BiLogOut } from "react-icons/bi";// logout
+import { toast } from 'react-toastify'
 
 const notActive =
   'py-4 px-[25px] font-[300] font-sans italic flex gap-3 items-center text-white text-[14px]';
@@ -28,6 +30,12 @@ const Cs_SidebarLeft = () => {
     }
     // Xử lý sự kiện nhấp vào menu item ở đây
   };
+  const handleLogOut = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+
+    toast.success('Log out success!!!')
+  }
 
   return (
     <div className="container_sidebarleft flex flex-col">
@@ -43,10 +51,9 @@ const Cs_SidebarLeft = () => {
               to={item.path}
               end={item.end}
               className={({ isActive }) =>
-                `flex items-center p-4 text-white transition-colors ${
-                  isActive || (item.text === 'Order' && isOrderSubmenuOpen)
-                    ? activeStyle
-                    : notActive
+                `flex items-center p-4 text-white transition-colors ${isActive || (item.text === 'Order' && isOrderSubmenuOpen)
+                  ? activeStyle
+                  : notActive
                 }`
               }
               onClick={item.text === 'Order' ? handleOrderSubmenuToggle : () => handleMenuItemClick(item)}>
@@ -60,8 +67,7 @@ const Cs_SidebarLeft = () => {
                     to={subItem.path}
                     key={subItem.path}
                     className={({ isActive }) =>
-                      `flex items-center p-4 text-black transition-colors ${
-                        isActive ? activeStyleJew : notActiveJew
+                      `flex items-center p-4 text-black transition-colors ${isActive ? activeStyleJew : notActiveJew
                       }`
                     }>
                     {subItem.icons}
@@ -72,6 +78,9 @@ const Cs_SidebarLeft = () => {
             )} */}
           </div>
         ))}
+        <NavLink to='/login' onClick={handleLogOut} className="mt-auto items-center text-white">
+          <BiLogOut size={24} className="mr-2" /> Logout
+        </NavLink>
       </div>
     </div>
   );

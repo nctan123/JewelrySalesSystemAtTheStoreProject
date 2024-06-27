@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-=======
 import React, { useEffect } from 'react';
 import SildebarManager from '../../components/Manager/SildebarLeftManager';
 import { RiAccountCircleLine } from "react-icons/ri";
@@ -16,14 +13,8 @@ export default function Manager() {
             navigate('/login');
         }
     }, [navigate]);
->>>>>>> FE_Tai
 
-export default function Manager() {
     return (
-<<<<<<< HEAD
-        <div>Manager</div>
-    )
-=======
         <>
             <div className='w-full flex h-[100vh] bg-gray-100'>
                 <div className='w-[240px] h-[100vh] flex-none bg-white overflow-y-auto z-20 border border-gray-300'>
@@ -45,5 +36,4 @@ export default function Manager() {
             </div>
         </>
     );
->>>>>>> FE_Tai
 }
