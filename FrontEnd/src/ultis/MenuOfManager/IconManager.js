@@ -18,14 +18,17 @@ import { GrUserManager } from "react-icons/gr";//manage customer
 import { GiStonePile } from "react-icons/gi";//product
 import { LiaGiftsSolid } from "react-icons/lia";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";//request
-
 import { GiGoldNuggets } from "react-icons/gi";//point
-<<<<<<< HEAD
 
-=======
+import { GiReceiveMoney, GiEmeraldNecklace, GiCrystalEarrings, GiDiamondRing, GiNecklaceDisplay } from "react-icons/gi";
+import { AiOutlineGold } from "react-icons/ai";
+import { LiaMoneyBillWaveSolid, LiaCircleNotchSolid } from "react-icons/lia";
 import { GrDocumentStore } from "react-icons/gr";
->>>>>>> FE_Tai
-const iconAdmin = {
+import { IoDiamondOutline } from "react-icons/io5";
+import { PiDiamondsFourLight } from "react-icons/pi";
+const IconManager = {
+    PiDiamondsFourLight,
+    IoDiamondOutline,
     GrDocumentStore,
     FaChartSimple,
     TbReportSearch,
@@ -45,10 +48,11 @@ const iconAdmin = {
     MdOutlineManageAccounts,
     GiStonePile,
     LiaGiftsSolid,
-
     VscGitPullRequestGoToChanges,
-    GiGoldNuggets
+    GiGoldNuggets,
+    GiReceiveMoney, GiEmeraldNecklace, GiCrystalEarrings, GiDiamondRing, GiNecklaceDisplay, AiOutlineGold,
+    LiaMoneyBillWaveSolid, LiaCircleNotchSolid
 
 }
 
-export default iconAdmin
+export default IconManager

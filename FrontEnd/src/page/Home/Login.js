@@ -36,6 +36,7 @@ export default function LoginToStore() {
       console.log('>>> check res', data.data)
       const user = data.data.find(user => user.username === username && user.password === password);
 
+<<<<<<< HEAD
       // Determine user role and redirect or show appropriate UI
       switch (user.roleId) {
         case 2:
@@ -54,6 +55,38 @@ export default function LoginToStore() {
         default:
           toast.error('Unknown user role');
           break;
+=======
+      });
+      // console.log('>>> check res dta', data)
+      const user = data.data;
+      // console.log('>>> check user', user)
+      if (user && user.token) {
+        localStorage.setItem('token', user.token);
+        localStorage.setItem('role', user.role);
+        localStorage.setItem('staffId', user.staffId);
+        localStorage.setItem('name', user.name);
+        // console.log('>>> check local', localStorage.getItem('token'))
+        // localStorage.setItem('Role', user.role);
+        // Determine user role and redirect or show appropriate UI
+        switch (user.role) {
+          case 'admin':
+            navigate('/admin');
+            break;
+          case 'seller':
+            navigate('/public');
+            break;
+          case 'manager':
+            navigate('/manager');
+            break;
+          case 'cashier':
+            navigate('/cs_public');
+            break;
+          // Add more cases for other roles if needed
+          default:
+            toast.error('Unknown user role');
+            break;
+        }
+>>>>>>> FE_Tai
       }
     } catch (error) {
       toast.error('Invalid username or password');
@@ -64,6 +97,7 @@ export default function LoginToStore() {
   return (
 
     <div className={clsx(style.login_container)}>
+      {localStorage.clear()}
       <div className={clsx(style.title_login)}>Log in</div>
 
       <input
@@ -102,6 +136,7 @@ export default function LoginToStore() {
       </button>
 
 
+<<<<<<< HEAD
       <div className={clsx(style.back)} onClick={handleBackClick}>
         <span>
           <FontAwesomeIcon icon={faRotateLeft} /> Back
@@ -111,3 +146,8 @@ export default function LoginToStore() {
     </div>
   );
 }
+=======
+    </div>
+  );
+}
+>>>>>>> FE_Tai
