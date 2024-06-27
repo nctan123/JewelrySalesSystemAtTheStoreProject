@@ -61,14 +61,16 @@ const Ring = () => {
     return string.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   }
 
-
+  const [intervalId, setIntervalId] = useState(null);
   useEffect(() => {
     getRing();
+    const id = setInterval(getRing, 1000); // Load data every 5 seconds
+    setIntervalId(id);
+    return () => clearInterval(id); 
   }, []);
 
   const getRing = async () => {
     let res = await fetchAllRing();
-    console.log(res)
     if (res && res.data && res.data.data) {
       setListRing(res.data.data);
 
