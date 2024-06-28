@@ -53,7 +53,7 @@ const Ring = () => {
       if (!token) {
         throw new Error("No token found");
       }
-      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=1&searchTerm=${id}&pageIndex=1&pageSize=10`, {
+      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/getbycode?code=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
