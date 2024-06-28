@@ -24,7 +24,7 @@ const Public = () => {
 
 
       <div className='flex-auto border'>
-        <div className='h-[95%] flex justify-center'><Outlet /></div>
+        <div className='h-[95%] flex justify-center'><Outlet/></div>
       </div>
 
       <div className='w-[400px] flex-none bg-[#56565821]'>

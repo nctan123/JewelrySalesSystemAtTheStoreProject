@@ -4,45 +4,45 @@ import axios from "axios"
 const loginApi = (email, password) => {
     return axios.post("https://reqresproject.in/api/login", { email, password });
 }
-const fetchAllRing = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+const fetchAllCustomer = (page) => {
+    return axios.get(`https://jssatsproject.azurewebsites.net/api/Customer/GetAll?pageIndex=${page}`);
 }
-const fetchAllEarring = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+const fetchAllRing = (page) => {
+    return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall01?categoryID=1&pageIndex=${page}&pageSize=12&ascending=true`);
 }
-const fetchAllNecklace = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+const fetchAllEarring = (page) => {
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall01?categoryID=2&pageIndex=${page}&pageSize=12&ascending=true`);
 }
-const fetchAllBangles = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+const fetchAllBangles = (page) => {
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall01?categoryID=3&pageIndex=${page}&pageSize=12&ascending=true`);
 }
-const fetchAllWhGold = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+const fetchAllNecklace = (page) => {
+    return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall01?categoryID=4&pageIndex=${page}&pageSize=12&ascending=true`);
 }
-const fetchAllReGold = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+const fetchAllReGold = (page) => {
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall01?categoryID=5&pageIndex=${page}&pageSize=12&ascending=true`);
 }
-const fetchAllDiamond = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+const fetchAllWhGold = (page) => {
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall01?categoryID=6&pageIndex=${page}&pageSize=12&ascending=true`);
+}
+const fetchAllDiamond = (page) => {
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall01?categoryID=7&pageIndex=${page}&pageSize=12&ascending=true`);
 }
 const fetchAllDiamondTest = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/Diamond/GetByCode?code=DIA001");
+    // return axios.get("https://jssatsproject.azurewebsites.net/api/Diamond/GetByCode?code=DIA001");
 }
 const fetchAllPromotion = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/Promotion/GetAll");
+    // return axios.get("https://jssatsproject.azurewebsites.net/api/Promotion/GetAll");
 
 }
 const fetchAllInvoice = () => {
     return axios.get("https://reqres.in/api/users?page=1");
 }
-const fetchAllCustomer = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/customer/getAll");
-}
 const fetchAllListOrder = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/SellOrder/getall");
+    // return axios.get("https://jssatsproject.azurewebsites.net/api/SellOrder/getall");
 }
 const fetchAllProduct = () => {
-    return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
+    // return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
 }
 const fetchPaymentMethod = () =>{
     return axios.get("https://jssatsproject.azurewebsites.net/api/PaymentMethod/Getall");

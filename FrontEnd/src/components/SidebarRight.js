@@ -123,7 +123,7 @@ const SidebarRight = () => {
   }
   useEffect(() => {
     // This will run every time ListInvoice changes
-    console.log('===>', submitList);
+  
   }, [submitList]);
   // const [pointRate, setPointRate] = useState(0);
   const [isInvalid, setIsInvalid] = useState(false);
@@ -164,7 +164,49 @@ const SidebarRight = () => {
       setisSpecialDiscountRequested(false);
     }
   }, [specialDiscountRate]);
+  const [order, setOrder] = useState()
+  const handSubmitOrder = async () => {
+    let data = {
+      customerPhoneNumber: customerPhoneNumber,
+      staffId: 4,  // Replace with actual staffId if needed
+      createDate: createDate,
+      description: description,
+      discountPoint: 0,
+      productCodesAndQuantity: productCodesAndQuantity,
+      productCodesAndPromotionIds: productCodesAndPromotionIds,
+      isSpecialDiscountRequested: isSpecialDiscountRequested,
+      specialDiscountRate: specialDiscountRate,
+      specialDiscountRequestId: specialDiscountRequestId,
+      discountRejectedReason: discountRejectedReason,
+      specialDiscountRequestStatus: specialDiscountRequestStatus,
+    };
+  
+    try {
+      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder', data);
+      let createdOrderId = res.data.id;
+      console.log('res',res,'createdOrderId',createdOrderId)
+      
+      // Update status to 'waiting for payment'
+      let updateStatus = await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${createdOrderId}`, {
+        status: 'waiting for customer payment'
+      });
+  
+      if (updateStatus.status === 200) {
+        toast.success('Success');
+      } else {
+        toast.error('Failed');
+      }
 
+      setdescription('');
+      setspecialDiscountRate(0);
+      setpoint('');
+      dispatch(deleteCustomer());
+      dispatch(deleteProductAll());
+    } catch (error) {
+      toast.error('Fail');
+      console.error('Error updating order status:', error);
+    }
+  };
   return (<>
 
 
@@ -249,7 +291,7 @@ const SidebarRight = () => {
               }} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md bg-[#fef7f7] py-1 hover:bg-[#ffffff]'><MdDeleteOutline size='20px' color='#ef4e4e' /></span>
             <button type='submit'
               onClick={() => {
-                // handSubmitOrder();
+                handSubmitOrder();
                 dispatch(deleteCustomer());
                 dispatch(deleteProductAll());
               }}
