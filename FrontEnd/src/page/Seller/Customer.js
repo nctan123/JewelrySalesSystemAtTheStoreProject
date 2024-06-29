@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
@@ -7,7 +9,6 @@ import { toast } from 'react-toastify';
 import ReactPaginate from 'react-paginate';
 import { AiFillLeftCircle, AiFillRightCircle } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
-import '../../style/paginate.module.css';
 import { fetchAllCustomer } from '../../apis/jewelryService';
 
 const Customer = () => {
