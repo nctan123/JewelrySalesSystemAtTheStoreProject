@@ -227,8 +227,8 @@ const TestChart = () => {
     }, []);
 
     return (
-        <div className="flex justify-center items-center flex-col space-y-4 border border-gray-300 shadow-lg p-4 rounded-md">
-            <div className="flex items-center space-x-2 ml-auto">
+        <div className="flex justify-center items-center flex-col space-y-4 border border-gray-300 shadow-lg my-4  rounded-md">
+            <div className="flex items-center space-x-2 ml-auto pr-2">
                 <div className="flex flex-col space-y-2">
                     <select
                         value={selectedRange}
@@ -286,7 +286,7 @@ const TestChart = () => {
 
             </div> */}
 
-            <div className="w-full flex space-x-4">
+            <div className="w-full flex space-x-4 p-2">
                 <div className="w-2/3">
                     <div className="border border-gray-300 shadow-lg pb-20">
                         <ResponsiveContainer width="90%" height={400} className='mx-2 mt-10'>

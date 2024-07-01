@@ -7,14 +7,13 @@ export default function Dashboard() {
     return (
 
         <>
-            <div><Revenue /></div>
+            <div className=" bg-white"><Revenue /></div>
 
-            <div className="flex-1">
+            <div className=" bg-white">
                 <TestChart />
             </div>
 
-
-            <div><TooltipChart /></div>
+            <div className=" bg-white"><TooltipChart /></div>
         </>
     )
 }

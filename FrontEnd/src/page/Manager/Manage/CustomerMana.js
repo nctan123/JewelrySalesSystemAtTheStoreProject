@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { IoIosSearch } from 'react-icons/io';
 import { FiEdit3 } from "react-icons/fi";
 
-const Customer = () => {
+const CustomerMana = () => {
     const [originalListCustomer, setOriginalListCustomer] = useState([]);
     const [listCustomer, setListCustomer] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -241,5 +241,5 @@ const Customer = () => {
     );
 };
 
-export default Customer;
+export default CustomerMana;
 

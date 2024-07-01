@@ -23,7 +23,6 @@ import PromotionAdmin from './page/Admin/Promotion/PromotionAdmin';
 import PromotionList from './page/Admin/Promotion/PromotionList';
 import PromotionRequest from './page/Admin/Promotion/PromotionRequest';
 import ReturnPolicy from './page/Admin/ReturnPolicy';
-import VoidBill from './page/Admin/VoidBill'
 import Point from './page/Admin/Manage/Point';
 import Manager from './page/Manager/Manager';
 
@@ -45,6 +44,7 @@ import PromotionListMana from './page/Manager/Promotion/PromotionListMana';
 import PromotionRequestMana from './page/Manager/Promotion/PromotionRequestMana';
 import PromotionManager from './page/Manager/Promotion/PromotionManager'
 import ReturnPolicyView from './page/Manager/ReturnPolicy/ReturnPolicyView';
+import Stall from './page/Manager/Report/Stall';
 function App() {
   // test redux có hoạt động không
   // const {test,homeData} = useSelector(state => state.app)
@@ -57,62 +57,53 @@ function App() {
 
         <Routes>
           {/* home */}
-          <Route path={path.HOME} element={<Home />} />
+          <Route path={path.HOME} element={<Login />} />
           <Route path={path.LOGIN} element={<Login />} />
           {/* admin */}
           <Route path={path.ADMIN} element={<Admin />} >
             <Route path={path.ADMIN} element={<Dashboard />} />
             <Route path={path.DASHBOARD} element={<Dashboard />} />
 
-            <Route path={path.REPORT} element={<Report />} exact>
-              <Route path={path.INVOICE} element={<Invoice />} />
-              <Route path={path.PRODUCSOLD} element={<ProductSold />} />
-              <Route path={path.EMPLOYEE} element={<Employee />} />
-            </Route>
+            {/* <Route path={path.REPORT} element={<Report />} exact> </Route> */}
+            <Route path={path.INVOICE} element={<Invoice />} />
+            <Route path={path.PRODUCSOLD} element={<ProductSold />} />
+            <Route path={path.EMPLOYEE} element={<Employee />} />
+            <Route path={path.STALL} element={<Stall />} />
 
-            <Route path={path.MANAGE} element={<Manage />} >
-              <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
-              <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
-              <Route path={path.STAFF} element={<Staff />} />
-              <Route path={path.POINT} element={<Point />} />
-            </Route>
 
-            <Route path={path.PROMOTIONADMIN} element={<PromotionAdmin />} >
-              <Route path={path.PROMOTIONLIST} element={<PromotionList />} />
-              <Route path={path.PROMOTIONREQUEST} element={<PromotionRequest />} />
-            </Route>
+            {/* <Route path={path.MANAGE} element={<Manage />} ></Route> */}
+            <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
+            <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
+            <Route path={path.STAFF} element={<Staff />} />
+            <Route path={path.POINT} element={<Point />} />
+
+            <Route path={path.PROMOTIONLIST} element={<PromotionList />} />
+            <Route path={path.PROMOTIONREQUEST} element={<PromotionRequest />} />
+            {/* <Route path={path.PROMOTIONADMIN} element={<PromotionAdmin />} >
+            </Route> */}
 
             <Route path={path.RETURNPOLICY} element={<ReturnPolicy />} />
-
-            <Route path={path.VOIDBILL} element={<VoidBill />} />
-
           </Route >
           {/* manager */}
           <Route path={path.MANAGER} element={<Manager />}>
-            <Route path={path.PRODUCTMANAGER} element={<ProductManager />} >
-              <Route path={path.DIAMONDMANAGER} element={<DiamondManager />} />
-              <Route path={path.JEWELRY} element={<JewelryManager />} />
-              <Route path={path.RETAILGOLDMANAGER} element={<RetailGoldManager />} />
-              <Route path={path.WHOLESALEGOLD} element={<WholesaleGoldManager />} />
-            </Route>
+            {/* <Route path={path.PRODUCTMANAGER} element={<ProductManager />} ></Route> */}
+            <Route path={path.MANAGER} element={<Dashboard />} />
+            <Route path={path.DIAMONDMANAGER} element={<DiamondManager />} />
+            <Route path={path.JEWELRY} element={<JewelryManager />} />
+            <Route path={path.RETAILGOLDMANAGER} element={<RetailGoldManager />} />
+            <Route path={path.WHOLESALEGOLD} element={<WholesaleGoldManager />} />
             <Route path={path.DASHBOARD} element={<Dashboard />} />
-            <Route path={path.REPORT} element={<ReportMana />} >
-              <Route path={path.INVOICE} element={<InvoiceMana />} />
-              <Route path={path.PRODUCSOLD} element={<ProductSoldMana />} />
-              <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
-            </Route>
-            <Route path={path.MANAGE} element={<ManageMana />} >
-              <Route path={path.PRODUCTMANA} element={<ProductMana />} />
-              <Route path={path.CUSTOMERMANA} element={<CustomerMana />} />
-              <Route path={path.STAFF} element={<StaffMana />} />
-              <Route path={path.POINT} element={<PointMana />} />
-            </Route>
-            <Route path={path.PROMOTIONMANAGER} element={<PromotionManager />} >
-              <Route path={path.PROMOTIONLIST} element={<PromotionListMana />} />
-              <Route path={path.PROMOTIONREQUEST} element={<PromotionRequestMana />} />
-            </Route>
+            <Route path={path.INVOICE} element={<InvoiceMana />} />
+            <Route path={path.PRODUCSOLD} element={<ProductSoldMana />} />
+            <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
+            <Route path={path.STALL} element={<Stall />} />
+            {/* <Route path={path.PRODUCTMANA} element={<ProductMana />} /> */}
+            <Route path={path.CUSTOMERMANA} element={<CustomerMana />} />
+            <Route path={path.STAFF} element={<StaffMana />} />
+            {/* <Route path={path.POINT} element={<PointMana />} /> */}
+            <Route path={path.PROMOTIONLIST} element={<PromotionListMana />} />
+            <Route path={path.PROMOTIONREQUEST} element={<PromotionRequestMana />} />
             <Route path={path.RETURNPOLICY} element={<ReturnPolicyView />} />
-
           </Route>
           {/* Seller */}
           <Route path={path.PUBLIC} element={<Public />}>
@@ -141,13 +132,8 @@ function App() {
             </Route>
             <Route path={path.CS_REVENUE} element={<Cs_Revenue />} />
           </Route>
-
         </Routes>
-
-
-
       </div>
-
       <ToastContainer />
     </>
   );

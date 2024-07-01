@@ -140,7 +140,7 @@ const TooltipChart = () => {
     };
 
     return (
-        <div className='border border-gray-300 shadow-lg my-4 rounded-md'>
+        <div className='border border-gray-300 shadow-lg my-4 rounded-md '>
             <div class="flex justify-end ">
                 <strong className='m-3'>Select: </strong>
                 <input
