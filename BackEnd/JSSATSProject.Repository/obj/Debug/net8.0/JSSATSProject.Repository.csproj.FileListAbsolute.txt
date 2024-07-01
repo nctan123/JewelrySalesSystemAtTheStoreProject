@@ -43,3 +43,102 @@ C:\SWP\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Re
 C:\SWP\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
 C:\SWP\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
 C:\SWP\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.deps.json
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.runtimeconfig.json
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.dll
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.AssemblyReference.cache
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfoInputs.cache
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfo.cs
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.CoreCompileInputs.cache
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.sourcelink.json
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.dll
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Repository.dll
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
+D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.deps.json
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.runtimeconfig.json
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.AssemblyReference.cache
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfoInputs.cache
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfo.cs
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.CoreCompileInputs.cache
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Repository.dll
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
+C:\Users\nhata\Videos\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.deps.json
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.runtimeconfig.json
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.AssemblyReference.cache
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfoInputs.cache
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfo.cs
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.CoreCompileInputs.cache
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Repository.dll
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
+C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.deps.json
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.runtimeconfig.json
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.AssemblyReference.cache
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfoInputs.cache
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfo.cs
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.CoreCompileInputs.cache
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
+C:\Users\nhata\Pictures\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.deps.json
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.runtimeconfig.json
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfo.cs
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
+C:\Users\ADMIN\Downloads\BackEnd (1)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.deps.json
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.runtimeconfig.json
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.AssemblyReference.cache
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfoInputs.cache
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfo.cs
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.CoreCompileInputs.cache
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Repository.dll
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
+C:\Users\nhata\Pictures\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.deps.json
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.runtimeconfig.json
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\bin\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.AssemblyReference.cache
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfoInputs.cache
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.AssemblyInfo.cs
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.csproj.CoreCompileInputs.cache
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\refint\JSSATSProject.Repository.dll
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.pdb
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\JSSATSProject.Repository.genruntimeconfig.cache
+C:\Users\ADMIN\Downloads\BackEnd (28.6)\BackEnd\JSSATSProject.Repository\obj\Debug\net8.0\ref\JSSATSProject.Repository.dll

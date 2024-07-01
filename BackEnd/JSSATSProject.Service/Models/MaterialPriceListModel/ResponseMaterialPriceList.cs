@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace JSSATSProject.Service.Models.MaterialPriceListModel;
 
-namespace JSSATSProject.Service.Models.MaterialPriceListModel
+public class ResponseMaterialPriceList
 {
-    public class ResponseMaterialPriceList
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public int MaterialId { get; set; }
+    public int MaterialId { get; set; }
 
-        public decimal BuyPrice { get; set; }
+    public decimal BuyPrice { get; set; }
 
-        public decimal SellPrice { get; set; }
+    public decimal SellPrice { get; set; }
 
-        public DateTime EffectiveDate { get; set; }
-    }
+    public DateTime EffectiveDate { get; set; }
 }

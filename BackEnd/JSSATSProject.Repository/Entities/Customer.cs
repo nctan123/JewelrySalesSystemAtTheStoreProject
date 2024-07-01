@@ -2,7 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -24,43 +24,15 @@ public partial class Customer
 
     public string Address { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; }
+    public DateTime CreateDate { get; set; }
 
-    public virtual ICollection<Payment> Payments { get; set; }
+    public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
+    [JsonIgnore]
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
     public virtual Point Point { get; set; }
-
-    public Customer()
-    {
-
-    }
-
-    public Customer(int id, int? poinId, string firstname, string lastname, string phone, string email, string gender, string address)
-    {
-        Id = id;
-        PointId = poinId;
-        Firstname = firstname;
-        Lastname = lastname;
-        Phone = phone;
-        Email = email;
-        Gender = gender;
-        Address = address;
-    }
-
-    public Customer(int id, int? pointId, string firstname, string lastname, string phone, string email, string gender, string address, List<Order> orders, List<Payment> payments, Point point)
-    {
-        Id = id;
-        PointId = pointId;
-        Firstname = firstname;
-        Lastname = lastname;
-        Phone = phone;
-        Email = email;
-        Gender = gender;
-        Address = address;
-        Orders = orders;
-        Payments = payments;
-        Point = point;
-    }
+    [JsonIgnore]
+    public virtual ICollection<SellOrder> SellOrders { get; set; } = new List<SellOrder>();
+    [JsonIgnore]
+    public virtual ICollection<SpecialDiscountRequest> SpecialDiscountRequests { get; set; } = new List<SpecialDiscountRequest>();
 }
-
-

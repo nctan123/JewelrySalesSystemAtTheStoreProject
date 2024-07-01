@@ -18,19 +18,4 @@ public partial class MaterialPriceList
     public DateTime EffectiveDate { get; set; }
 
     public virtual Material Material { get; set; }
-
-    public MaterialPriceList()
-    {
-        
-    }
-
-    public MaterialPriceList(int id, int materialId, decimal buyPrice, decimal sellPrice, DateTime effectiveDate, Material material)
-    {
-        Id = id;
-        MaterialId = materialId;
-        BuyPrice = buyPrice;
-        SellPrice = sellPrice;
-        EffectiveDate = effectiveDate;
-        Material = material;
-    }
 }

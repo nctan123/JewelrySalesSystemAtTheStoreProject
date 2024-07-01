@@ -11,20 +11,9 @@ public partial class Material
 
     public string Name { get; set; }
 
+    public virtual ICollection<BuyOrderDetail> BuyOrderDetails { get; set; } = new List<BuyOrderDetail>();
+
     public virtual ICollection<MaterialPriceList> MaterialPriceLists { get; set; } = new List<MaterialPriceList>();
 
     public virtual ICollection<ProductMaterial> ProductMaterials { get; set; } = new List<ProductMaterial>();
-
-    public Material()
-    {
-        
-    }
-
-    public Material(int id, string name, ICollection<MaterialPriceList> materialPriceLists, ICollection<ProductMaterial> productMaterials)
-    {
-        Id = id;
-        Name = name;
-        MaterialPriceLists = materialPriceLists;
-        ProductMaterials = productMaterials;
-    }
 }

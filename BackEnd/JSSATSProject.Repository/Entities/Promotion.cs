@@ -11,7 +11,7 @@ public partial class Promotion
 
     public string Name { get; set; }
 
-    public int DiscountRate { get; set; }
+    public decimal? DiscountRate { get; set; }
 
     public string Description { get; set; }
 
@@ -21,22 +21,7 @@ public partial class Promotion
 
     public string Status { get; set; }
 
+    public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; } = new List<SellOrderDetail>();
+
     public virtual ICollection<ProductCategory> Categories { get; set; } = new List<ProductCategory>();
-
-    public Promotion()
-    {
-        
-    }
-
-    public Promotion(int id, string name, int discountRate, string description, DateTime startDate, DateTime endDate, string status, ICollection<ProductCategory> categories)
-    {
-        Id = id;
-        Name = name;
-        DiscountRate = discountRate;
-        Description = description;
-        StartDate = startDate;
-        EndDate = endDate;
-        Status = status;
-        Categories = categories;
-    }
 }

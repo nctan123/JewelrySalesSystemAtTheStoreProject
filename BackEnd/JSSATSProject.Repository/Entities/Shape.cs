@@ -13,5 +13,7 @@ public partial class Shape
 
     public string Description { get; set; }
 
+    public decimal? PriceRate { get; set; }
+
     public virtual ICollection<Diamond> Diamonds { get; set; } = new List<Diamond>();
 }

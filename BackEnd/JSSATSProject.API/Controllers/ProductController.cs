@@ -1,77 +1,65 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
-using JSSATSProject.Service.Models.ProductModel;
+﻿using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace JSSATSProject.API.Controllers
+namespace JSSATSProject.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+//[Authorize]
+public class ProductController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductController : ControllerBase
+    private readonly IProductService _productService;
+
+    public ProductController(IProductService productService)
     {
-        private readonly IProductService _productService;
+        _productService = productService;
+    }
 
-        public ProductController(IProductService productService)
-        {
-            _productService = productService;
-        }
+    [HttpGet]
+    [Route("GetByCode")]
+    public async Task<IActionResult> GetByCodeAsync(string code)
+    {
+        var responseModel = await _productService.GetByCodeAsync(code);
+        return Ok(responseModel);
+    }
 
-        [HttpGet]
-        [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
+    [HttpPost]
+    [Route("CreateProduct")]
+    public async Task<IActionResult> CreateAsync([FromBody] RequestCreateProduct requestProduct)
+    {
+        var responseModel = await _productService.CreateProductAsync(requestProduct);
+        return Ok(responseModel);
+    }
+
+    [HttpPut]
+    [Route("UpdateProduct")]
+    public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] RequestUpdateProduct requestProduct)
+    {
+        var response = await _productService.UpdateProductAsync(id, requestProduct);
+        return Ok(response);
+    }
+
+    [HttpGet("GetAll")]
+    public async Task<IActionResult> GetAllAsync([FromQuery] int categoryId, [FromQuery] int pageIndex = 1,
+        [FromQuery] int pageSize = 10, [FromQuery] bool ascending = true)
+    {
+        try
         {
-            var responseModel = await _productService.GetAllAsync();
+            var responseModel = await _productService.GetAllAsync(categoryId, pageIndex, pageSize, ascending);
             return Ok(responseModel);
         }
-
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        catch (Exception ex)
         {
-            var responseModel = await _productService.GetByIdAsync(id);
-            return Ok(responseModel);
+            return StatusCode(500, $"An error occurred: {ex.Message}");
         }
+    }
 
-        [HttpGet]
-        [Route("GetByName")]
-        public async Task<IActionResult> GetByNameAsync(string name)
-        {
-            var responseModel = await _productService.GetByNameAsync(name);
-            return Ok(responseModel);
-        }
-
-        [HttpGet]
-        [Route("GetByCode")]
-        public async Task<IActionResult> GetByCodeAsync(string code)
-        {
-            var responseModel = await _productService.GetByCodeAsync(code);
-            return Ok(responseModel);
-        }
-
-        [HttpPost]
-        [Route("CreateProduct")]
-        public async Task<IActionResult> CreateAsync([FromBody] RequestCreateProduct requestProduct)
-        {
-            var responseModel = await _productService.CreateProductAsync(requestProduct);
-            return Ok(responseModel);
-        }
-
-        [HttpPut]
-        [Route("UpdateProduct")]
-        public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] RequestUpdateProduct requestProduct)
-        {
-            var response = await _productService.UpdateProductAsync(id, requestProduct);
-            return Ok(response);
-        }
-
-        [HttpPut]
-        [Route("UpdateStatusProduct")]
-        public async Task<IActionResult> UpdateStatusProductAsync(int id, [FromBody] RequestUpdateStatusProduct requestProduct)
-        {
-            var response = await _productService.UpdateStatusProductAsync(id, requestProduct);
-            return Ok(response);
-        }
+    [HttpGet]
+    [Route("Search")]
+    public async Task<IActionResult> Search(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10)
+    {
+        var responseModel = await _productService.SearchProductsAsync(categoryId, searchTerm, pageIndex, pageSize);
+        return Ok(responseModel);
     }
 }

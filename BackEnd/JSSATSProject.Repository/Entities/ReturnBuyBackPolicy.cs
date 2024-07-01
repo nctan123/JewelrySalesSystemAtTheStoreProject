@@ -15,15 +15,5 @@ public partial class ReturnBuyBackPolicy
 
     public string Status { get; set; }
 
-    public ReturnBuyBackPolicy()
-    {
-        
-    }
-    public ReturnBuyBackPolicy(int id, string description, DateTime effectiveDate, string status)
-    {
-        Id = id;
-        Description = description;
-        EffectiveDate = effectiveDate;
-        Status = status;
-    }
+    public virtual ICollection<PurchasePriceRatio> PurchasePriceRatios { get; set; } = new List<PurchasePriceRatio>();
 }

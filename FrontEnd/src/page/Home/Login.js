@@ -1,106 +1,115 @@
-import React from 'react'
-import { useState } from 'react'
-import clsx from 'clsx'
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons'
+import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRotateLeft, faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-
 import { useNavigate } from 'react-router-dom';
-import style from './Login.module.css'
-import { loginApi } from '../../apis/jewelryService';
-import { toast } from 'react-toastify'
+import { toast } from 'react-toastify';
+import clsx from 'clsx';
+import style from './Login.module.css';
+import axios from 'axios';
 
 export default function LoginToStore() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [loadingApi, setLoadingApi] = useState(false);
 
   const navigate = useNavigate();
+
   const handleBackClick = () => {
     navigate('/');
-    // toast.success('Edit succeed');
   };
+
   const handleLogin = async () => {
-    if (!email || !password) {
-      toast.error('Email/Password is required!!!');
+    if (!username || !password) {
+      toast.error('Username/Password is required!!!');
       return;
     }
     setLoadingApi(true);
     try {
-      const res = await loginApi(email, password);
-      if (res && res.token) {
-        localStorage.setItem('token', res.token);
-        // Xử lý thành công, ví dụ: chuyển hướng tới trang khác
-        navigate('/Dashboard');
-      } else {
-        if (res && res.status === 400) {
-          toast.error(res.data.error);
-        } else {
-          toast.error('Login failed. Please try again.');
+      const data = await axios.post('https://jssatsproject.azurewebsites.net/api/login', {
+        username: username,
+        password: password,
+
+      });
+      // console.log('>>> check res dta', data)
+      const user = data.data;
+      // console.log('>>> check user', user)
+      if (user && user.token) {
+        localStorage.setItem('token', user.token);
+        localStorage.setItem('role', user.role);
+        localStorage.setItem('staffId', user.staffId);
+        localStorage.setItem('name', user.name);
+        // console.log('>>> check local', localStorage.getItem('token'))
+        // localStorage.setItem('Role', user.role);
+        // Determine user role and redirect or show appropriate UI
+        switch (user.role) {
+          case 'admin':
+            navigate('/admin');
+            break;
+          case 'seller':
+            navigate('/public');
+            break;
+          case 'manager':
+            navigate('/manager');
+            break;
+          case 'cashier':
+            navigate('/cs_public');
+            break;
+          // Add more cases for other roles if needed
+          default:
+            toast.error('Unknown user role');
+            break;
         }
       }
+
     } catch (error) {
-      console.error('Login error:', error);
-      toast.error('An error occurred during login. Please try again later.');
+      toast.error('Invalid username or password');
     }
     setLoadingApi(false);
-  }
-  const handleAdmin = () => {
-    navigate('/admin')
-  }
-  const handleSeller = () => {
-    navigate('/public')
-  }
+  };
+
   return (
-    <div className={clsx(style.login_container)} >
-      <div className='title_login' >Log in</div>
-      <div className='text'> Email or username</div>
+
+    <div className={clsx(style.login_container)}>
+      {localStorage.clear()}
+      <div className={clsx(style.title_login)}>Log in</div>
       <input
         type='text'
-        placeholder='Email or username...'
-        value={email}
-        onChange={(event) => setEmail(event.target.value)}
+        placeholder='Username...'
+        value={username}
+        onChange={(event) => setUsername(event.target.value)}
       />
       <div className={clsx(style.input_2)}>
         <input
-          type={isShowPassword === true ? 'text' : 'password'}
+          type={isShowPassword ? 'text' : 'password'}
           placeholder='Password...'
           value={password}
           onChange={(event) => setPassword(event.target.value)}
         />
-        <span> <FontAwesomeIcon icon={isShowPassword === false ? faEyeSlash : faEye} onClick={() => setIsShowPassword(!isShowPassword)} /></span>
+        <span>
+          <FontAwesomeIcon
+            icon={isShowPassword ? faEye : faEyeSlash}
+            onClick={() => setIsShowPassword(!isShowPassword)}
+          />
+        </span>
       </div>
 
       <button
-        className={email && password ? 'active' : ''}
-        disabled={email && password ? false : true}
+        className={username && password ? clsx(style.active) : ''}
+        disabled={!username || !password}
         onClick={() => handleLogin()}
       >
-        {loadingApi &&
+        {loadingApi && (
           <FontAwesomeIcon
             icon={faSpinner}
-            className="fa-spin-pulse fa-spin-reverse fa-1.5x me-2"
-          // style={{ fontSize: '1.5rem' }}
-          />}Login
-      </button>
-      {/* phân luồng tạm */}
-      <button
-        onClick={() => handleAdmin()}
-      >
-        Admin
-      </button>
-      <button onClick={() => handleSeller()} >
-        seller
+            className='fa-spin-pulse fa-spin-reverse fa-1.5x me-2'
+          />
+        )}
+        Login
       </button>
 
-
-
-      <div className={clsx(style.back)} onClick={handleBackClick}>
-        <span> <FontAwesomeIcon icon={faRotateLeft} />     Back</span>
-      </div>
 
     </div>
-  )
+  );
 }
