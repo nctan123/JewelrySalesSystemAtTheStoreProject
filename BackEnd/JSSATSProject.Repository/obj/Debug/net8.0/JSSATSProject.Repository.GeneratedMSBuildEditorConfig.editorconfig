@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = JSSATSProject.Repository
-build_property.ProjectDir = C:\Users\nhata\Music\BackEnd\JSSATSProject.Repository\
+build_property.ProjectDir = D:\JewelrySalesSystemAtTheStoreProject\BackEnd\JSSATSProject.Repository\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

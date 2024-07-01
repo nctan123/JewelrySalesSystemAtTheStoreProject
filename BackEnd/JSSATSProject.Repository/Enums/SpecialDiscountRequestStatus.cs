@@ -1,18 +1,14 @@
-namespace JSSATSProject.Repository.Enums;
-
 using System.Runtime.Serialization;
+
+namespace JSSATSProject.Repository.Enums;
 
 public enum SpecialDiscountRequestStatus
 {
-    [EnumMember(Value = "awaiting")]
-    Awaiting,
-    
-    [EnumMember(Value = "approved")]
-    Approved,
-    
-    [EnumMember(Value = "rejected")]
-    Rejected,
-    
-    [EnumMember(Value = "used")]
-    Used
+    [EnumMember(Value = "awaiting")] Awaiting,
+
+    [EnumMember(Value = "approved")] Approved,
+
+    [EnumMember(Value = "rejected")] Rejected,
+
+    [EnumMember(Value = "used")] Used
 }

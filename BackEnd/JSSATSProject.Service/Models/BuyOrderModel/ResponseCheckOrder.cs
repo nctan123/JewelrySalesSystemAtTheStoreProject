@@ -10,6 +10,5 @@ public class ResponseCheckOrder
     public DateTime CreateDate { get; set; }
     public required string CustomerPhoneNumber { get; set; }
     public required string CustomerName { get; set; }
-    
     public required List<ResponseProductForCheckOrder> Products { get; set; }
 }

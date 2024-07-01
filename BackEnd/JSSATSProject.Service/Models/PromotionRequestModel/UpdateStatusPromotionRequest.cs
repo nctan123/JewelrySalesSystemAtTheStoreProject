@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace JSSATSProject.Service.Models.PromotionRequestModel;
 
-namespace JSSATSProject.Service.Models.PromotionRequestModel
+public class UpdateStatusPromotionRequest
 {
-    internal class UpdateStatusPromotionRequest
-    {
-    }
 }

@@ -2,7 +2,7 @@ namespace JSSATSProject.Repository.CustomLib;
 
 public static class CustomLibrary
 {
-    private static Random random = new Random();
+    private static readonly Random random = new();
 
     public static string RandomString(int length)
     {

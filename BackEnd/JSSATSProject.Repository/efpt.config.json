@@ -1,178 +1,178 @@
 ﻿{
-   "CodeGenerationMode": 4,
-   "ContextClassName": "DBContext",
-   "ContextNamespace": null,
-   "FilterSchemas": false,
-   "IncludeConnectionString": true,
-   "ModelNamespace": null,
-   "OutputContextPath": null,
-   "OutputPath": "Entities",
-   "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": "JSSATSProject.Repository",
-   "Schemas": null,
-   "SelectedHandlebarsLanguage": 2,
-   "SelectedToBeGenerated": 0,
-   "T4TemplatePath": null,
-   "Tables": [
-      {
-         "Name": "[dbo].[Account]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Carat]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Clarity]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Color]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Customer]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Cut]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Diamond]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[DiamondPriceList]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Fluorescence]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Guarantee]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Material]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[MaterialPriceList]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Order]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[OrderDetails]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Origin]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Payment]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[PaymentDetails]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[PaymentMethod]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Point]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Polish]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Product]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[ProductCategory]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[ProductCategoryType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[ProductDiamond]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[ProductMaterial]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Promotion]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[PromotionCategory]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[ReturnBuyBackPolicy]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Role]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Shape]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Staff]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Stall]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[StallType]",
-         "ObjectType": 0
-      },
-      {
-         "Name": "[dbo].[Symmetry]",
-         "ObjectType": 0
-      }
-   ],
-   "UiHint": null,
-   "UncountableWords": null,
-   "UseAsyncStoredProcedureCalls": true,
-   "UseBoolPropertiesWithoutDefaultSql": false,
-   "UseDatabaseNames": false,
-   "UseDateOnlyTimeOnly": true,
-   "UseDbContextSplitting": false,
-   "UseDecimalDataAnnotationForSprocResult": true,
-   "UseFluentApiOnly": true,
-   "UseHandleBars": false,
-   "UseHierarchyId": false,
-   "UseInflector": true,
-   "UseLegacyPluralizer": false,
-   "UseManyToManyEntity": false,
-   "UseNoDefaultConstructor": false,
-   "UseNoNavigations": false,
-   "UseNoObjectFilter": false,
-   "UseNodaTime": false,
-   "UseNullableReferences": false,
-   "UsePrefixNavigationNaming": false,
-   "UseSchemaFolders": false,
-   "UseSchemaNamespaces": false,
-   "UseSpatial": false,
-   "UseT4": false
+  "CodeGenerationMode": 4,
+  "ContextClassName": "DBContext",
+  "ContextNamespace": null,
+  "FilterSchemas": false,
+  "IncludeConnectionString": true,
+  "ModelNamespace": null,
+  "OutputContextPath": null,
+  "OutputPath": "Entities",
+  "PreserveCasingWithRegex": true,
+  "ProjectRootNamespace": "JSSATSProject.Repository",
+  "Schemas": null,
+  "SelectedHandlebarsLanguage": 2,
+  "SelectedToBeGenerated": 0,
+  "T4TemplatePath": null,
+  "Tables": [
+    {
+      "Name": "[dbo].[Account]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Carat]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Clarity]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Color]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Customer]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Cut]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Diamond]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[DiamondPriceList]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Fluorescence]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Guarantee]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Material]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[MaterialPriceList]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Order]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[OrderDetails]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Origin]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Payment]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[PaymentDetails]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[PaymentMethod]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Point]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Polish]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Product]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[ProductCategory]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[ProductCategoryType]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[ProductDiamond]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[ProductMaterial]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Promotion]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[PromotionCategory]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[ReturnBuyBackPolicy]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Role]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Shape]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Staff]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Stall]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[StallType]",
+      "ObjectType": 0
+    },
+    {
+      "Name": "[dbo].[Symmetry]",
+      "ObjectType": 0
+    }
+  ],
+  "UiHint": null,
+  "UncountableWords": null,
+  "UseAsyncStoredProcedureCalls": true,
+  "UseBoolPropertiesWithoutDefaultSql": false,
+  "UseDatabaseNames": false,
+  "UseDateOnlyTimeOnly": true,
+  "UseDbContextSplitting": false,
+  "UseDecimalDataAnnotationForSprocResult": true,
+  "UseFluentApiOnly": true,
+  "UseHandleBars": false,
+  "UseHierarchyId": false,
+  "UseInflector": true,
+  "UseLegacyPluralizer": false,
+  "UseManyToManyEntity": false,
+  "UseNoDefaultConstructor": false,
+  "UseNoNavigations": false,
+  "UseNoObjectFilter": false,
+  "UseNodaTime": false,
+  "UseNullableReferences": false,
+  "UsePrefixNavigationNaming": false,
+  "UseSchemaFolders": false,
+  "UseSchemaNamespaces": false,
+  "UseSpatial": false,
+  "UseT4": false
 }

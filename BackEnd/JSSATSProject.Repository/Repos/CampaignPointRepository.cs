@@ -17,18 +17,16 @@ public class CampaignPointRepository : GenericRepository<CampaignPoint>
             .FirstOrDefaultAsync();
         return rate ?? 1;
     }
-    
+
     public async Task<decimal> GetOrderValueToPointConversionRate(DateTime timeStamp)
     {
         var rate = await context.CampaignPoints
-            .Where(c => c.Description.Equals("Order value to point") && c.StartDate >= timeStamp &&
-                        c.EndDate <= timeStamp)
+            .Where(c => EF.Functions.Like(c.Description, "Order value to point") && c.StartDate <= timeStamp &&
+                        (c.EndDate == null || c.EndDate >= timeStamp))
             .Select(c => c.Rate)
             .FirstOrDefaultAsync();
-        if (rate == null)
-        {
-            throw new InvalidOperationException("No valid rate found for the given timestamp.");
-        }
-        return rate.Value; //output: 0.05
+        var check = rate;
+        if (rate == null) throw new InvalidOperationException("No valid rate found for the given timestamp.");
+        return rate.Value;
     }
 }

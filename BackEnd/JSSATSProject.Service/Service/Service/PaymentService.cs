@@ -1,96 +1,95 @@
-﻿using JSSATSProject.Repository.Entities;
+﻿using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PaymentModel;
 using JSSATSProject.Service.Service.IService;
-using AutoMapper;
 
-namespace JSSATSProject.Service.Service.Service
+namespace JSSATSProject.Service.Service.Service;
+
+public class PaymentService : IPaymentService
 {
-    public class PaymentService : IPaymentService
+    private readonly IMapper _mapper;
+    private readonly UnitOfWork _unitOfWork;
+
+    public PaymentService(UnitOfWork unitOfWork, IMapper mapper)
     {
-        private readonly UnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-        public PaymentService(UnitOfWork unitOfWork, IMapper mapper)
+    public async Task<ResponseModel> CreatePaymentAsync(RequestCreatePayment requestPayment)
+    {
+        var entity = _mapper.Map<Payment>(requestPayment);
+        await _unitOfWork.PaymentRepository.InsertAsync(entity);
+        await _unitOfWork.SaveAsync();
+        return new ResponseModel
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+            Data = entity,
+            MessageError = ""
+        };
+    }
 
-        public async Task<ResponseModel> CreatePaymentAsync(RequestCreatePayment requestPayment)
+    public async Task<ResponseModel> GetAllAsync()
+    {
+        var entities = await _unitOfWork.PaymentRepository.GetAsync();
+        var response = _mapper.Map<List<ResponsePayment>>(entities.ToList());
+        return new ResponseModel
         {
-            var entity = _mapper.Map<Payment>(requestPayment);
-            await _unitOfWork.PaymentRepository.InsertAsync(entity);
-            await _unitOfWork.SaveAsync();
-            return new ResponseModel
+            Data = response,
+            MessageError = ""
+        };
+    }
+
+    public async Task<ResponseModel> GetByIdAsync(int id)
+    {
+        var entity = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+        var response = _mapper.Map<ResponsePayment>(entity);
+        return new ResponseModel
+        {
+            Data = response,
+            MessageError = ""
+        };
+    }
+
+    public async Task<ResponseModel> UpdatePaymentAsync(int paymentId, RequestUpdatePayment requestPayment)
+    {
+        try
+        {
+            var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(paymentId);
+            if (payment != null)
             {
-                Data = entity,
-                MessageError = "",
-            };
-        }
+                _mapper.Map(requestPayment, payment);
 
-        public async Task<ResponseModel> GetAllAsync()
-        {
-            var entities = await _unitOfWork.PaymentRepository.GetAsync();
-            var response = _mapper.Map<List<ResponsePayment>>(entities.ToList());
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponsePayment>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
-        public async Task<ResponseModel> UpdatePaymentAsync(int paymentId, RequestUpdatePayment requestPayment)
-        {
-            try
-            {
-                var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(paymentId);
-                if (payment != null)
-                {
-
-                    _mapper.Map(requestPayment, payment);
-
-                    await _unitOfWork.PaymentRepository.UpdateAsync(payment);
-
-                    return new ResponseModel
-                    {
-                        Data = payment,
-                        MessageError = "",
-                    };
-                }
+                await _unitOfWork.PaymentRepository.UpdateAsync(payment);
 
                 return new ResponseModel
                 {
-                    Data = null,
-                    MessageError = "Not Found",
+                    Data = payment,
+                    MessageError = ""
                 };
             }
-            catch (Exception ex)
+
+            return new ResponseModel
             {
-                // Log the exception and return an appropriate error response
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = "An error occurred while updating the customer: " + ex.Message
-                };
-            }
+                Data = null,
+                MessageError = "Not Found"
+            };
         }
-        public async Task<int> GetOrderIdByPaymentIdAsync(int id)
+        catch (Exception ex)
         {
-            var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-            return payment.OrderId;
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
         }
+    }
+
+    public async Task<int> GetOrderIdByPaymentIdAsync(int id)
+    {
+        var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+        return payment.OrderId;
     }
 }

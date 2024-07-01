@@ -9,7 +9,7 @@ public class ResponseProductForCheckOrder
 
     //quantity or weight if product is wholesale gold
     public decimal? Quantity { get; set; }
-    
+
     public decimal? EstimateBuyPrice { get; set; }
 
     public string? ReasonForEstimateBuyPrice { get; set; }

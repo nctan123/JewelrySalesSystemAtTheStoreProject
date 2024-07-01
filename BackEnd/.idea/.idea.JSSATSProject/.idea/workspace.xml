@@ -81,6 +81,7 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/efcore/f42a208554fed9bb37603c5ed4f02206b2b1b9fa/src/EFCore/DbSet.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/2d7eea252964e69be94cb9c847b371b23e4dd470/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/2d7eea252964e69be94cb9c847b371b23e4dd470/src/libraries/System.Private.CoreLib/src/System/Reflection/MethodBaseInvoker.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/2d7eea252964e69be94cb9c847b371b23e4dd470/src/libraries/System.Private.CoreLib/src/System/Runtime/ExceptionServices/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -94,27 +95,27 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.JSSATSProject.API: https.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "CodeLensConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.JSSATSProject.API: https.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CodeLensConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\DecompilerCache",
-      "C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\SourcesCache",
-      "C:\\Users\\nhata\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\DecompilerCache&quot;,
+      &quot;C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\SourcesCache&quot;,
+      &quot;C:\\Users\\nhata\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.JSSATSProject.API: https">
     <configuration name="JSSATSProject.API: JSSATS - Web Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="JSSATS - Web Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/JSSATS - Web Deploy.pubxml" user_name="$JSSATS" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
@@ -232,6 +233,9 @@
       <workItem from="1719198364965" duration="4495000" />
       <workItem from="1719226237243" duration="8254000" />
       <workItem from="1719405880382" duration="10076000" />
+      <workItem from="1719502118397" duration="7924000" />
+      <workItem from="1719554887003" duration="4244000" />
+      <workItem from="1719562307374" duration="4280000" />
     </task>
     <servers />
   </component>
@@ -256,97 +260,6 @@
           <line>39</line>
           <properties documentPath="C:\Users\nhata\Downloads\BackEnd (1)\JSSATSProject.API\Controllers\OrderController.cs" containingFunctionPresentation="Method 'CreateAsync'" />
           <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/JSSATSProject.Service/Service/Service/BuyOrderService.cs</url>
-          <line>153</line>
-          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.Service\Service\Service\BuyOrderService.cs" containingFunctionPresentation="Method 'CreateOrderDetails'">
-            <startOffsets>
-              <option value="5470" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5484" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/BuyOrderController.cs</url>
-          <line>90</line>
-          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.API\Controllers\BuyOrderController.cs" containingFunctionPresentation="Method 'CreateInCompanyOrder'">
-            <startOffsets>
-              <option value="4009" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4027" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/BuyOrderController.cs</url>
-          <line>89</line>
-          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.API\Controllers\BuyOrderController.cs" containingFunctionPresentation="Method 'CreateInCompanyOrder'">
-            <startOffsets>
-              <option value="3918" />
-            </startOffsets>
-            <endOffsets>
-              <option value="3996" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="15" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/BuyOrderController.cs</url>
-          <line>50</line>
-          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.API\Controllers\BuyOrderController.cs" containingFunctionPresentation="Method 'CheckAsync'">
-            <startOffsets>
-              <option value="1949" />
-            </startOffsets>
-            <endOffsets>
-              <option value="2011" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="16" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/JSSATSProject.Service/Service/Service/ProductService.cs</url>
-          <line>115</line>
-          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.Service\Service\Service\ProductService.cs" containingFunctionPresentation="Method 'CalculateProductPrice'">
-            <startOffsets>
-              <option value="5853" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5885" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/JSSATSProject.Service/Service/Service/ProductService.cs</url>
-          <line>103</line>
-          <properties documentPath="C:\Users\nhata\Videos\BackEnd\JSSATSProject.Service\Service\Service\ProductService.cs" containingFunctionPresentation="Method 'CalculateProductPrice'">
-            <startOffsets>
-              <option value="5159" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5345" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/JSSATSProject.API/Controllers/SellOrderController.cs</url>
-          <line>33</line>
-          <properties documentPath="C:\Users\nhata\Music\BackEnd\JSSATSProject.API\Controllers\SellOrderController.cs" containingFunctionPresentation="Method 'GetAllAsync'">
-            <startOffsets>
-              <option value="1319" />
-            </startOffsets>
-            <endOffsets>
-              <option value="1417" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="25" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

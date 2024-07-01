@@ -9,7 +9,8 @@ public class DiamondPriceListRepository : GenericRepository<DiamondPriceList>
     {
     }
 
-    public async Task<decimal> FindPriceBy4CAndOrigin(int cutId, int clarityId, int colorId, int caratId, int originId, DateTime closestDate)
+    public async Task<decimal> FindPriceBy4CAndOrigin(int cutId, int clarityId, int colorId, int caratId, int originId,
+        DateTime closestDate)
     {
         var matchesDiamondPriceObject = await context.DiamondPriceLists.Where(d => d.CutId == cutId
                 && d.CaratId == caratId

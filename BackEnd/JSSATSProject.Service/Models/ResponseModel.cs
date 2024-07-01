@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace JSSATSProject.Service.Models;
 
-namespace JSSATSProject.Service.Models
+public class ResponseModel
 {
-    public class ResponseModel
+    public int? TotalElements { get; set; }
+    public int? TotalPages { get; set; }
+    public string? MessageError { get; set; }
+    public object? Data { get; set; }
+
+    public int CalculateTotalPageCount(int pageSize)
     {
-        public string? MessageError { get; set; }
-        public object? Data { get; set; }
+        return (int)Math.Ceiling((decimal)TotalElements! / pageSize);
     }
 }

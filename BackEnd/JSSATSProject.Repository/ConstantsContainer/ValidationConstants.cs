@@ -8,5 +8,4 @@ public static class ValidationConstants
     public const string PurchaseOrder = "(?i)sell";
     public const string BuyOrder = "(?i)buy";
     public const string OrderTypeRegex = "^(?i)(sell|buy)$";
-    
 }

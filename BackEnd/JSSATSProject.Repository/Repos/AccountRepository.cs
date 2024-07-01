@@ -1,5 +1,4 @@
 ﻿using JSSATSProject.Repository.Entities;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Repository.Repos;

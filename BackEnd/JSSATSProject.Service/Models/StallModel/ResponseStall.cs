@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace JSSATSProject.Service.Models.StallModel;
 
-namespace JSSATSProject.Service.Models.StallModel
+public class ResponseStall
 {
-    public class ResponseStall
-    {
-        public int Id { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
-        public int TypeId { get; set; }
+    public int TypeId { get; set; }
 
-        public string? Description { get; set; }
+    public string? Description { get; set; }
 
-        public string? Status { get; set; }
-    }
+    public string? Status { get; set; }
 }
