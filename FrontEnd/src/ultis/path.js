@@ -28,6 +28,7 @@ const path = {
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
+    CS_WAITINGPAYMENT: 'cs_waitingPayment',
 // ADMIN
     DASHBOARD: 'Dashboard',
     MANAGE: 'Manage',

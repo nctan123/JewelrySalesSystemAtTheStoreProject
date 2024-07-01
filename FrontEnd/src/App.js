@@ -7,7 +7,7 @@ import './App.css';
 
 import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex,Buy ,Warranty} from './page/Seller';
 
-import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
+import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess, Cs_WaitingPayment } from './page/Cashier';
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
 import Home from './page/Home/Home';
@@ -137,6 +137,7 @@ function App() {
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
             <Route path={path.CS_ORDER} element={<Cs_Order />}>
+              <Route path={path.CS_WAITINGPAYMENT} element={<Cs_WaitingPayment />} />  
               <Route path={path.CS_ONPROCESS} element={<Cs_OnProcess />} />
               <Route path={path.CS_COMPLETE} element={<Cs_Complete />} />
             </Route>

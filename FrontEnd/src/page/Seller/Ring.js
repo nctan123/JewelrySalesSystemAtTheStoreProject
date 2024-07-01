@@ -109,7 +109,10 @@ const Ring = () => {
       toast.error('Failed to fetch customers');
     }
   };
-
+  const handleCheckItem = (item) => {
+    dispatch(addProduct(item))
+    console.log('===>item',item)
+  }
 
   return (<>
     <div className='h-[70px] mt-5 mb-2 w-full'>
@@ -166,7 +169,7 @@ const Ring = () => {
                     </div>
                     <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
                       <button onClick={() => handleDetailClick(item.code)} class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>
-                      <button onClick={() => dispatch(addProduct(item))} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
+                      <button onClick={() => handleCheckItem(item)} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
                     </div>
                   </div>
                 </div>

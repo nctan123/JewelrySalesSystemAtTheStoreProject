@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteProduct, deleteCustomer, deleteProductAll,addProductTem,deleteProductTem, addCustomerTem, deleteCustomerTem } from '../store/slice/cardSilec';
+import { deleteProduct, deleteCustomer, deleteProductAll,addCustomer, addProduct} from '../store/slice/cardSilec';
 import { MdDeleteOutline } from 'react-icons/md';
 import { VscGitStashApply } from 'react-icons/vsc';
 import Popup from 'reactjs-popup';
@@ -36,8 +36,7 @@ const SidebarRight = () => {
   const dispatch = useDispatch();
   const CartProduct = useSelector(state => state.cart.CartArr);
   const CusPoint = useSelector(state => state.cart.CusPoint);
-  const CusPointTem = useSelector(state => state.cart.CusPointTem);
-  const CartProductTem = useSelector(state => state.cart.CartArrTem);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -54,7 +53,7 @@ const SidebarRight = () => {
         totalValue += product.productValue * product.quantity;
         totalDiscount += product.productValue * product.quantity * product.discountRate;
       });
-      setTotal(totalValue);
+      setTotal(totalValue)
       setDiscount(totalDiscount);
     };
     calculateTotals();
@@ -65,8 +64,8 @@ const SidebarRight = () => {
     }, {});
     setProductCodesAndQuantity(codesAndQuantity);
 
-    if (CusPoint?.[0]?.phone) {
-      setCustomerPhoneNumber(CusPoint[0].phone);
+    if (CusPoint?.phone) {
+      setCustomerPhoneNumber(CusPoint.phone);
     }
   }, [CartProduct, CusPoint]);
 
@@ -175,18 +174,36 @@ const SidebarRight = () => {
       }
     }
   };
-
-  const handleRequestToScreen = async (event,products,phone) => {
-    event.preventDefault();
-    const res = await axios.get(
-      `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${phone}&pageIndex=1&pageSize=10`
-    );
-    console.log(res.data.data)
-    dispatch(addCustomerTem(res.data.data));
-    products.map((item) => {
-      dispatch(addProductTem(item));
-    });
+  const handlegetCodeEx = async (listsellorder) => {
+    for (const item of listsellorder) {
+      try {
+        const res = await axios.get(
+          `https://jssatsproject.azurewebsites.net/api/Product/GetByCode?code=${item.productCode}`
+        );
+        console.log('product export', res.data.data[0]);
+        dispatch(addProduct(res.data.data[0]))
+      } catch (error) {
+        console.error(`Error fetching product with code ${item.productCode}:`, error);
+      }
+    }
   };
+  
+  const handleRequestToScreen = async (event, phone, listsellorder) => {
+    event.preventDefault();
+    try {
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${phone}&pageIndex=1&pageSize=10`
+      );
+      console.log('customer export', res.data.data[0]);
+      console.log('list', listsellorder);
+      const item = res.data.data[0];
+      dispatch(addCustomer(item));
+      await handlegetCodeEx(listsellorder);
+    } catch (error) {
+      console.error('Error fetching customer or products:', error);
+    }
+  };
+  
   
   const handleShowListTemPo = () => {
     confirmAlert({
@@ -221,7 +238,6 @@ const SidebarRight = () => {
                           <th scope="col" class="px-6 py-3">
                             Action
                           </th>
-
                           <th scope="col" class="px-6 py-3">
                             Special Discount
                           </th>
@@ -245,7 +261,7 @@ const SidebarRight = () => {
                                 {formatPrice(item.totalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
-                                <button onClick={(event) => handleRequestToScreen(event,item.sellOrderDetails,item.customerPhoneNumber)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                                <button onClick={(event) => handleRequestToScreen(event,item.customerPhoneNumber,item.sellOrderDetails)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
                                 <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
                                   {close => (
                                   <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
@@ -360,18 +376,14 @@ const SidebarRight = () => {
         </div>
         <div className='flex items-center px-[15px] text-[#000]'>
           <p className='w-[260px] font-light '>Customer Phone:</p>
-          {CusPoint && CusPoint[0] && CusPoint[0].phone && (
+          {CusPoint && (
             <>
-              <span id="phone" className='w-full flex items-center justify-between' >
-                {CusPoint[0].phone}
-                <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e' /></span></span>
-            </>
-          )}
-           {CusPointTem && CusPointTem[0] && CusPointTem[0].phone &&(
-            <>
-              <span id="phone" className='w-full flex items-center justify-between' >
-                {CusPointTem[0].phone}
-                <span onClick={() => dispatch(deleteCustomerTem())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'><MdDeleteOutline size='17px' color='#ef4e4e' /></span></span>
+              <span id="phone" className='w-full flex items-center justify-between'>
+                {CusPoint.phone}
+                <span onClick={() => dispatch(deleteCustomer())} className='cursor-pointer rounded-md bg-[#fff] px-1 py-1'>
+                  <MdDeleteOutline size='17px' color='#ef4e4e' />
+                </span>
+              </span>
             </>
           )}
         </div>
@@ -392,18 +404,6 @@ const SidebarRight = () => {
               </div>
             )
           })}
-           {CartProductTem && CartProductTem.map((item, index) => {
-            return (
-              <div className='grid grid-cols-6 '>
-                <div className='col-start-1 col-span-4 flex px-[10px] text-sm'>{item.productName}</div>
-                <div className='col-start-5 flex ml-[65px] justify-end text-[#d48c20] px-[10px]'>{formatPrice(item.unitPrice * item.quantity)}</div>
-                <span onClick={() => dispatch(deleteProductTem(item))} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md'><MdDeleteOutline size='17px' color='#ef4e4e' /></span>
-                {!item.startDate && (
-                  <div className='col-start-1 col-span-6 flex px-[14px] text-xs text-red-600 mt-[-6px]'>x{item.quantity}</div>
-                )}
-              </div>
-            )
-          })}
         </div>
         <div className='border mx-[15px] border-x-0 border-b-0 border-t-black grid grid-cols-2 py-2'>
           <div className='font-bold'>PAYMENT</div>
@@ -415,10 +415,10 @@ const SidebarRight = () => {
           <div className='row-start-2 font-thin'>Discount:</div>
           <div className='col-start-2 flex justify-end'>{formatPrice(discount)}</div>
         </div>
-        {CusPoint && CusPoint[0] && (
+        {CusPoint && (
           <div className='px-[15px] grid grid-cols-2 pb-2' >
-            <div className='font-thin'>Point: {CusPoint[0].totalPoint}</div>
-            <input value={point} onChange={(even) => setpoint(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold  pl-2" type="number" name="point" min="-9" max={CusPoint[0].totalPoint} id="inputPoint" placeholder="Use Point" />
+            <div className='font-thin'>Point:{CusPoint.point.totalpoint} </div>
+            <input value={point} onChange={(even) => setpoint(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold  pl-2" type="number" name="point" min="-9"  id="inputPoint" placeholder="Use Point" />
             <div className='font-thin'>Special Discount:</div>
             <div className='flex items-center justify-center gap-2'>
               <input
@@ -433,7 +433,7 @@ const SidebarRight = () => {
             </div>
           </div>
         )}
-        <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 mt-2 '>
+        <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 '>
 
           <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(total)}<span>.đ</span></div>
           <div className='col-start-3 flex gap-2 justify-end items-center mr-[15px]'>

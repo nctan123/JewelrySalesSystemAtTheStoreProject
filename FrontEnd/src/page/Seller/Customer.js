@@ -119,7 +119,10 @@ const Customer = () => {
       }
     }
   };
-
+  const handleCheckItem = (item) => {
+    dispatch(addCustomer(item))
+    console.log('===>customer',item)
+  }
   return (
     <>
       <div className="h-[70px] mt-5 mb-2 w-full">
@@ -229,10 +232,10 @@ const Customer = () => {
                     <td className="text-sm font-normal text-[#637381]">{item.firstname}</td>
                     <td className="text-sm font-normal text-[#637381]">{item.lastname}</td>
                     <td className="text-sm font-normal text-[#637381]">{item.phone}</td>
-                    <td className="text-sm font-normal text-[#637381]">{item.totalPoint}</td>
+                    <td className="text-sm font-normal text-[#637381]">{item.point.totalpoint}</td>
                     <td className="text-sm font-normal text-[#637381]">
                       <button
-                        onClick={() => dispatch(addCustomer(item))}
+                        onClick={() => handleCheckItem(item)}
                         className="my-2 mx-0 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
                       >
                         Apply

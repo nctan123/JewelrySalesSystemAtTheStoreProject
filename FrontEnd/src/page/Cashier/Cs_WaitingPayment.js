@@ -21,7 +21,7 @@ const FormatDate = ({ isoString }) => {
     </div>
   );
 };
-const Cs_Process = () => {
+const Cs_WaitingPayment = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
   const [listInvoice, setlistInvoice] = useState([]); // list full invoice
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,7 +55,7 @@ const Cs_Process = () => {
 
   const getInvoice = async (page) => {
     try {
-        let res = await fetchStatusInvoice('processing',page);
+        let res = await fetchStatusInvoice('waiting for customer payment',page);
         if (res?.data?.data) {
           setlistInvoice(res.data.data);
           setTotalProduct(res.data.totalElements);
@@ -129,27 +129,51 @@ const Cs_Process = () => {
 
   const handleSubmitOrder = async (item, event) => {
     event.preventDefault();
-
     let data = {
       orderId: item.id,
       customerId: item.customerId,
-      createDate: createDate,
-      amount:item.totalAmount
+      createDate: currentTime,
+      amount: item.totalAmount,
     };
-   
+    console.log("Submitting order with data:", data);
+  
     try {
+      // Simulate a possible error for testing
+      if (!data.orderId || !data.customerId || !data.createDate || !data.amount) {
+        throw new Error("Missing required fields in order data");
+      }
+  
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment', data);
-      const paymentID = res.data.data.id
-      console.log(res)
+      console.log("Response from payment API:", res);
+  
+      const paymentID = res.data.data.id;
+      console.log("Payment ID received:", paymentID);
+  
       toast.success('Successful');
       setIsPaymentCompleted(true);
-      setIsPaymentCompletedDefault(false)
+      setIsPaymentCompletedDefault(false);
       setPaymentID(paymentID);
     } catch (error) {
       toast.error('Fail');
-      console.error('Error invoice:', error);
+      console.error('Error during payment process:', error);
+      
+      // Additional logging for detailed error information
+      if (error.response) {
+        // Server responded with a status other than 200 range
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+      } else if (error.request) {
+        // Request was made but no response was received
+        console.error("Error request data:", error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error("Error message:", error.message);
+      }
+      console.error("Error config:", error.config);
     }
   };
+  
   const [externalTransactionCode, setexternalTransactionCode] = useState('')
   const handleCompleteCash = async (item,event) => {
     event.preventDefault();
@@ -208,7 +232,7 @@ const Cs_Process = () => {
                   </div>
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
-                <input hidden className='bg-[#e9ddc200] text-center' value={item.id} readOnly/>
+                <input hidden className='bg-[#e9ddc200] text-center' value={item.customerId} readOnly/>
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
                   <p className='font-light w-full'>Customer Name: </p>
@@ -616,4 +640,4 @@ const Cs_Process = () => {
   </>)
 }
 
-export default Cs_Process
+export default Cs_WaitingPayment

@@ -44,14 +44,12 @@ const fetchAllPromotion = () => {
 const fetchAllInvoice = () => {
     return axios.get("https://reqres.in/api/users?page=1");
 }
-const fetchAllListOrder = () => {
-    // return axios.get("https://jssatsproject.azurewebsites.net/api/SellOrder/getall");
-}
+
 const fetchAllProduct = () => {
     // return axios.get("https://jssatsproject.azurewebsites.net/api/product/getall");
 }
 const fetchPaymentMethod = () =>{
     return axios.get("https://jssatsproject.azurewebsites.net/api/PaymentMethod/Getall");
 }
-export {fetchDoubleStatusInvoice,fetchStatusInvoice,fetchPaymentMethod,fetchAllProduct,fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond,fetchAllListOrder};
+export {fetchDoubleStatusInvoice,fetchStatusInvoice,fetchPaymentMethod,fetchAllProduct,fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond};
 
