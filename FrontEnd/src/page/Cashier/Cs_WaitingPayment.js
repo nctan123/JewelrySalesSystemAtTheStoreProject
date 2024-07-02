@@ -249,7 +249,7 @@ const Cs_WaitingPayment = () => {
                 <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
                   {item.sellOrderDetails.map((orderDetail, index) => (
                     <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                      <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
+                      <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productName}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
                       <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
                     </div>
                   ))}
