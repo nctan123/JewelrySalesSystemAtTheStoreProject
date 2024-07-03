@@ -12,4 +12,6 @@ public interface IPromotionService
     public Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion);
     public Task<ResponseModel> SearchAsync(string searchTerm, int pageIndex, int pageSize);
     public Task<int> CountAsync(Expression<Func<Promotion, bool>> filter = null);
+
+    public Task<ResponseModel> GetByIdAsync(int promotionId);
 }

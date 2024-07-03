@@ -47,4 +47,13 @@ public class PromotionRequestController : ControllerBase
         var responseModel = await _promotionrequestService.SearchAsync(description, pageIndex, pageSize);
         return Ok(responseModel);
     }
+
+    [HttpGet]
+    [Route("GetById")]
+    public async Task<IActionResult> GetAllByIdAsync(int id)
+    {
+        var responseModel = await _promotionrequestService.GetByIdAsync(id);
+        return Ok(responseModel);
+    }
+
 }

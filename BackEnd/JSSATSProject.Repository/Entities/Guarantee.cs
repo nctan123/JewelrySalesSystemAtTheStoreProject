@@ -24,16 +24,6 @@ public partial class Guarantee
     public DateTime ExpiredDate { get; set; }
 
     public virtual Product Product { get; set; }
-
-    public virtual SellOrderDetail SellOrderDetail { get; set; }
-
-    public Guarantee()
-    {
-        var prefix = GuaranteeContants.GuaranteePrefix;
-        Code = Code ?? prefix + CustomLibrary.RandomString(14 - prefix.Length);
-    }
-
-
     
-
+    public virtual SellOrderDetail SellOrderDetail { get; set; }
 }

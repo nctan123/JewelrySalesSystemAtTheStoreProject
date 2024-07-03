@@ -125,7 +125,7 @@ public class SellOrderController : ControllerBase
         bool ascending, int pageIndex, [FromQuery] int pageSize)
     {
         var responseModel =
-            await _sellOrderService.SearchByCriteriaAsync(statusList, customerPhone, ascending, pageIndex, pageSize);
+            await _sellOrderService.SearchByAsync(statusList, customerPhone, ascending, pageIndex, pageSize);
         return Ok(responseModel);
     }
 }

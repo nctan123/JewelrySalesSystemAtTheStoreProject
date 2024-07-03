@@ -6,7 +6,7 @@ public class ResponseSellOrder
 {
     public int Id { get; set; }
     public string Code { get; set; }
-    public string CustomerId { get; set; }
+    public int CustomerId { get; set; }
     public string CustomerName { get; set; }
     public string CustomerPhoneNumber { get; set; }
     public int StaffId { get; set; }

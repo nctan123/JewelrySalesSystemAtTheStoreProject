@@ -1,6 +1,6 @@
 ﻿namespace JSSATSProject.Repository.ConstantsContainer;
 
-public class GuaranteeContants
+public class GuaranteeConstants
 {
     public const int RING_MONTHS = 6; // productcategory = 1
     public const int EARRINGS_MONTHS = 12; // productcategory = 2
