@@ -188,6 +188,10 @@ public partial class DBContext : DbContext
             entity.Property(e => e.UnitPrice)
                 .HasColumnType("decimal(15, 2)")
                 .HasColumnName("unit_price");
+            entity.Property(e => e.ProductName)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnName("product_name");
 
             entity.HasOne(d => d.BuyOrder).WithMany(p => p.BuyOrderDetails)
                 .HasForeignKey(d => d.BuyOrderId)
@@ -1090,7 +1094,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.UnitPrice)
                 .HasColumnType("decimal(15, 2)")
                 .HasColumnName("unit_price");
-
+            
             entity.HasOne(d => d.Order).WithMany(p => p.SellOrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

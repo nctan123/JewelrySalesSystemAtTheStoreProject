@@ -9,7 +9,6 @@ namespace JSSATSProject.Repository.Entities;
 public partial class SellOrderDetail
 {
     public int Id { get; set; }
-
     public int OrderId { get; set; }
 
     public int ProductId { get; set; }
@@ -25,6 +24,7 @@ public partial class SellOrderDetail
 
     [JsonIgnore]
     public virtual SellOrder Order { get; set; }
+    [JsonIgnore]
 
     public virtual Product Product { get; set; }
     [JsonIgnore]

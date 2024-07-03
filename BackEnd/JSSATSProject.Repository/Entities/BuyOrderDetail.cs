@@ -9,6 +9,9 @@ namespace JSSATSProject.Repository.Entities;
 public partial class BuyOrderDetail
 {
     public int Id { get; set; }
+    
+    public string ProductName { get; set; }
+    
     [JsonIgnore]
 
     public int BuyOrderId { get; set; }
@@ -17,6 +20,7 @@ public partial class BuyOrderDetail
     public int CategoryTypeId { get; set; }
 
     public string DiamondGradingCode { get; set; }
+    [JsonIgnore]
 
     public int? MaterialId { get; set; }
 

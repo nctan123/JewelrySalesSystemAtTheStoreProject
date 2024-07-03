@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ley/1G6BAd3L9i88fuh5hYt6QtctuBmydYsSG55L5ESYK1KAjxI8lzN3MCtbRXtTGoRMT6Bv1wkJJsLt4qrHvw==",
+  "dgSpecHash": "naadwFCRQybf5tUqpL6sBb8NN2GtKwyS+wZKMaVl74WlIm0vzU3ttWongUDTm0Wks3hZt2wbX/OEWTJYGWpGlA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\nhata\\Music\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
+  "projectFilePath": "C:\\Users\\nhata\\Pictures\\BackEnd (03.07)\\BackEnd\\JSSATSProject.Service\\JSSATSProject.Service.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nhata\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\nhata\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

@@ -1,35 +1,32 @@
-﻿using JSSATSProject.Service.Models.CustomerModel;
-using JSSATSProject.Service.Service.IService;
+﻿using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
-namespace JSSATSProject.API.Controllers
+namespace JSSATSProject.API.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ProductCategoryTypeController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ProductCategoryTypeController : ControllerBase
+    private readonly IProductCategoryTypeService _productCategoryTypeService;
+
+    public ProductCategoryTypeController(IProductCategoryTypeService productCategoryTypeService)
     {
-        private readonly IProductCategoryTypeService _productCategoryTypeService;
+        _productCategoryTypeService = productCategoryTypeService;
+    }
 
-        public ProductCategoryTypeController(IProductCategoryTypeService productCategoryTypeService)
-        {
-            _productCategoryTypeService = productCategoryTypeService;
-        }
+    [HttpGet]
+    [Route("GetAll")]
+    public async Task<IActionResult> GetAllAsync()
+    {
+        var responseModel = await _productCategoryTypeService.GetAllAsync();
+        return Ok(responseModel);
+    }
 
-        [HttpGet]
-        [Route("GetAll")]
-        public async Task<IActionResult> GetAllAsync()
-        {
-            var responseModel = await _productCategoryTypeService.GetAllAsync();
-            return Ok(responseModel);
-        }
-
-        [HttpGet]
-        [Route("GetById")]
-        public async Task<IActionResult> GetByIdAsync(int id)
-        {
-            var responseModel = await _productCategoryTypeService.GetByIdAsync(id);
-            return Ok(responseModel);
-        }
+    [HttpGet]
+    [Route("GetById")]
+    public async Task<IActionResult> GetByIdAsync(int id)
+    {
+        var responseModel = await _productCategoryTypeService.GetByIdAsync(id);
+        return Ok(responseModel);
     }
 }

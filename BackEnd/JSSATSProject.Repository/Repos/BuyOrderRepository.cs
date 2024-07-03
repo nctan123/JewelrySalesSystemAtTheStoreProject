@@ -27,6 +27,5 @@ public class BuyOrderRepository : GenericRepository<BuyOrder>
             .Include(b => b.BuyOrderDetails)
             .Include(b => b.Staff)
             .FirstAsync();
-
     }
 }

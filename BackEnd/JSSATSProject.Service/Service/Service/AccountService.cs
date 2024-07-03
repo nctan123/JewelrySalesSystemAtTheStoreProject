@@ -1,55 +1,78 @@
-﻿using AutoMapper;
+﻿using System.Linq.Expressions;
+using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.AccountModel;
 using JSSATSProject.Service.Service.IService;
 
+namespace JSSATSProject.Service.Service.Service;
 
-namespace JSSATSProject.Service.Service.Service
+public class AccountService : IAccountService
 {
-    public class AccountService : IAccountService
+    private readonly IMapper _mapper;
+    private readonly UnitOfWork _unitOfWork;
+
+    public AccountService(UnitOfWork unitOfWork, IMapper mapper)
     {
-        private readonly UnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-        public AccountService(UnitOfWork unitOfWork, IMapper mapper)
+    public async Task<ResponseModel> GetByUsernameAndPassword(string username, string password)
+    {
+        var matchesAccount = await _unitOfWork.AccountRepository.GetByUsernameAndPassword(username, password);
+        return new ResponseModel
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+            Data = matchesAccount,
+            MessageError = ""
+        };
+    }
 
-        public async Task<ResponseModel> GetByUsernameAndPassword(string username, string password)
+    public async Task<ResponseModel> GetAllAsync(int pageIndex = 1, int pageSize = 10, int? roleId = null)
+    {
+        try
         {
-            var matchesAccount = await _unitOfWork.AccountRepository.GetByUsernameAndPassword(username, password);
-            return new ResponseModel
-            {
-                Data = matchesAccount,
-                MessageError = "",
-            };
-        }
+            // Define filter condition based on roleId
+            Expression<Func<Account, bool>> filter = a => !roleId.HasValue || a.RoleId == roleId.Value;
 
-        public async Task<ResponseModel> GetAllAsync(int pageIndex = 1, int pageSize = 10)
-        {
-         
-            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q.OrderBy(e => e.RoleId);
+            // Define sorting logic (always ascending by StaffName)
+            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q.OrderBy(e => e.Staff.Firstname);
 
-          
+            // Fetch data with filtering and sorting
             var entities = await _unitOfWork.AccountRepository.GetAsync(
-                orderBy: orderBy,
+                filter,
+                orderBy,
                 pageIndex: pageIndex,
-                pageSize: pageSize
+                pageSize: pageSize,
+                includeProperties: "Staff,Role"
             );
 
+            // Map the entities to the response DTO
             var response = _mapper.Map<List<ResponseAccount>>(entities);
 
-            return new ResponseModel
+            var result = new ResponseModel
             {
                 Data = response,
-                MessageError = "",
+                MessageError = ""
+            };
+            result.TotalElements = await CountAsync(a => a.RoleId == roleId);
+            result.TotalPages = result.CalculateTotalPageCount(pageSize);
+            // Return the response model
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = ex.Message
             };
         }
+    }
 
-
+    public async Task<int> CountAsync(Expression<Func<Account, bool>> filter = null)
+    {
+        return await _unitOfWork.AccountRepository.CountAsync(filter);
     }
 }

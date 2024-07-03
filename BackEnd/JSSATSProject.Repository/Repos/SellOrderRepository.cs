@@ -1,6 +1,6 @@
-﻿using JSSATSProject.Repository.Entities;
+﻿using System.Linq.Expressions;
+using JSSATSProject.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
 
 namespace JSSATSProject.Repository.Repos;
 
@@ -14,6 +14,8 @@ public class SellOrderRepository : GenericRepository<SellOrder>
     {
         return await context.SellOrders.Where(o => o.Id == id)
             .Include(o => o.SellOrderDetails)
+            .Include(o => o.Customer)
+            .Include(o => o.SpecialDiscountRequest)
             .FirstOrDefaultAsync();
     }
 
@@ -22,10 +24,7 @@ public class SellOrderRepository : GenericRepository<SellOrder>
     {
         IQueryable<SellOrder> query = dbSet;
 
-        if (filter != null)
-        {
-            query = query.Where(filter);
-        }
+        if (filter != null) query = query.Where(filter);
 
         return await query.SumAsync(selector);
     }
@@ -47,7 +46,7 @@ public class SellOrderRepository : GenericRepository<SellOrder>
             .Include(s => s.Customer)
             .Include(s => s.Staff)
             .Include(s => s.SpecialDiscountRequest)
-            .FirstOrDefaultAsync();   
+            .FirstOrDefaultAsync();
         return result;
     }
 }

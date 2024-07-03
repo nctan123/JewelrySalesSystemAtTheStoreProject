@@ -8,7 +8,7 @@ public class PromotionRepository : GenericRepository<Promotion>
     public PromotionRepository(DBContext context) : base(context)
     {
     }
-    
+
     public async Task<Promotion> GetPromotionByCategoryAsync(int productCategoryId)
     {
         var promotions = await context.Promotions

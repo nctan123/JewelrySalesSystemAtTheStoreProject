@@ -2,60 +2,53 @@
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
-using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.ProductCategoryModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace JSSATSProject.Service.Service.Service
+namespace JSSATSProject.Service.Service.Service;
+
+public class ProductCategoryService : IProductCategoryService
 {
-    public class ProductCategoryService : IProductCategoryService
+    private readonly IMapper _mapper;
+    private readonly UnitOfWork _unitOfWork;
+
+    public ProductCategoryService(UnitOfWork unitOfWork, IMapper mapper)
     {
-        private readonly UnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-        public ProductCategoryService(UnitOfWork unitOfWork, IMapper mapper)
+    public async Task<ResponseModel> CreateProductCategoryAsync(RequestCreateProductCategory requestProductCategory)
+    {
+        var entity = _mapper.Map<ProductCategory>(requestProductCategory);
+        await _unitOfWork.ProductCategoryRepository.InsertAsync(entity);
+        await _unitOfWork.SaveAsync();
+        return new ResponseModel
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+            Data = entity,
+            MessageError = ""
+        };
+    }
 
-        public async Task<ResponseModel> CreateProductCategoryAsync(RequestCreateProductCategory requestProductCategory)
+    public async Task<ResponseModel> GetAllAsync()
+    {
+        var entities = await _unitOfWork.ProductCategoryRepository.GetAsync();
+        var response = _mapper.Map<List<ResponseProductCategory>>(entities.ToList());
+        return new ResponseModel
         {
-            var entity = _mapper.Map<ProductCategory>(requestProductCategory);
-            await _unitOfWork.ProductCategoryRepository.InsertAsync(entity);
-            await _unitOfWork.SaveAsync();
-            return new ResponseModel
-            {
-                Data = entity,
-                MessageError = "",
-            };
-        }
+            Data = response,
+            MessageError = ""
+        };
+    }
 
-        public async Task<ResponseModel> GetAllAsync()
+    public async Task<ResponseModel> GetByIdAsync(int id)
+    {
+        var entity = await _unitOfWork.ProductCategoryRepository.GetByIDAsync(id);
+        var response = _mapper.Map<ResponseProductCategory>(entity);
+        return new ResponseModel
         {
-            var entities = await _unitOfWork.ProductCategoryRepository.GetAsync();
-            var response = _mapper.Map<List<ResponseProductCategory>>(entities.ToList());
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.ProductCategoryRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponseProductCategory>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
+            Data = response,
+            MessageError = ""
+        };
     }
 }

@@ -4111,11 +4111,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\nhata\\Music\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
+      "projectUniqueName": "C:\\Users\\nhata\\Pictures\\BackEnd (03.07)\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
       "projectName": "JSSATSProject.Repository",
-      "projectPath": "C:\\Users\\nhata\\Music\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
+      "projectPath": "C:\\Users\\nhata\\Pictures\\BackEnd (03.07)\\BackEnd\\JSSATSProject.Repository\\JSSATSProject.Repository.csproj",
       "packagesPath": "C:\\Users\\nhata\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\nhata\\Music\\BackEnd\\JSSATSProject.Repository\\obj\\",
+      "outputPath": "C:\\Users\\nhata\\Pictures\\BackEnd (03.07)\\BackEnd\\JSSATSProject.Repository\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\nhata\\AppData\\Roaming\\NuGet\\NuGet.Config",

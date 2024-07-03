@@ -16,14 +16,11 @@ public class PaymentDetailRepository : GenericRepository<PaymentDetail>
         var existingPaymentDetail = await context.PaymentDetails
             .FirstOrDefaultAsync(pd => pd.Id == paymentDetail.Id);
 
-        if (existingPaymentDetail == null)
-        {
-            return null; 
-        }
+        if (existingPaymentDetail == null) return null;
 
-       
+
         existingPaymentDetail.Status = status;
-         context.SaveChanges();
+        context.SaveChanges();
 
         return existingPaymentDetail;
     }

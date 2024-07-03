@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.CustomLib;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -30,14 +31,19 @@ public partial class SellOrder
 
     public int? SpecialDiscountRequestId { get; set; }
 
+    [JsonIgnore]
 
     public virtual Customer Customer { get; set; }
     [JsonIgnore]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    // [JsonIgnore]
 
     public virtual ICollection<SellOrderDetail> SellOrderDetails { get; set; } = new List<SellOrderDetail>();
+    [JsonIgnore]
 
     public virtual SpecialDiscountRequest SpecialDiscountRequest { get; set; }
+    [JsonIgnore]
+
     public virtual Staff Staff { get; set; }
 
     public SellOrder()

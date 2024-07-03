@@ -1,17 +1,14 @@
-﻿using JSSATSProject.Repository.Entities;
+﻿using AutoMapper;
 using JSSATSProject.Repository;
-using JSSATSProject.Service.Models.DiamondModel;
+using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Service.IService;
 
 public class DiamondService : IDiamondService
 {
-    private readonly UnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly UnitOfWork _unitOfWork;
 
     public DiamondService(UnitOfWork unitOfWork, IMapper mapper)
     {
@@ -27,13 +24,15 @@ public class DiamondService : IDiamondService
         return new ResponseModel
         {
             Data = entity,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
     public async Task<ResponseModel> GetAllAsync()
     {
-        var entities = await _unitOfWork.DiamondRepository.GetAsync(includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
+        var entities =
+            await _unitOfWork.DiamondRepository.GetAsync(
+                includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
 
         var response = entities.Select(diamond => new ResponseDiamond
         {
@@ -56,7 +55,7 @@ public class DiamondService : IDiamondService
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
@@ -87,13 +86,13 @@ public class DiamondService : IDiamondService
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
     public async Task<ResponseModel> GetByIdAsync(int id)
     {
-         var entities = await _unitOfWork.DiamondRepository.GetAsync(
+        var entities = await _unitOfWork.DiamondRepository.GetAsync(
             c => c.Id.Equals(id),
             includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
 
@@ -118,15 +117,15 @@ public class DiamondService : IDiamondService
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
     public async Task<ResponseModel> GetByNameAsync(string name)
     {
         var entities = await _unitOfWork.DiamondRepository.GetAsync(
-           c => c.Name.Equals(name),
-           includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
+            c => c.Name.Equals(name),
+            includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
 
         var response = entities.Select(diamond => new ResponseDiamond
         {
@@ -149,7 +148,7 @@ public class DiamondService : IDiamondService
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
@@ -160,7 +159,6 @@ public class DiamondService : IDiamondService
             var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
             if (diamond != null)
             {
-
                 _mapper.Map(requestDiamond, diamond);
 
                 await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
@@ -168,14 +166,14 @@ public class DiamondService : IDiamondService
                 return new ResponseModel
                 {
                     Data = diamond,
-                    MessageError = "",
+                    MessageError = ""
                 };
             }
 
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "Not Found",
+                MessageError = "Not Found"
             };
         }
         catch (Exception ex)
@@ -189,14 +187,13 @@ public class DiamondService : IDiamondService
         }
     }
 
-    public  async Task<ResponseModel> UpdateStatusDiamondAsync(int diamondId, RequestUpdateStatusDiamond requestDiamond)
+    public async Task<ResponseModel> UpdateStatusDiamondAsync(int diamondId, RequestUpdateStatusDiamond requestDiamond)
     {
         try
         {
             var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
             if (diamond != null)
             {
-
                 _mapper.Map(requestDiamond, diamond);
 
                 await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
@@ -204,14 +201,14 @@ public class DiamondService : IDiamondService
                 return new ResponseModel
                 {
                     Data = diamond,
-                    MessageError = "",
+                    MessageError = ""
                 };
             }
 
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "Not Found",
+                MessageError = "Not Found"
             };
         }
         catch (Exception ex)

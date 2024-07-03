@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace JSSATSProject.Service.Models.PaymentModel;
 
-namespace JSSATSProject.Service.Models.PaymentModel
+public class RequestCreateVnPayment
 {
-    public class RequestCreateVnPayment
-    {
-        public int PaymentId { get; set; }
-        public int OrderId { get; set; }
+    public int PaymentId { get; set; }
+    public int OrderId { get; set; }
 
-        public int PaymentMethodId { get; set; }
-        public int CustomerId { get; set; }
+    public int PaymentMethodId { get; set; }
+    public int CustomerId { get; set; }
 
-        public DateTime CreateDate { get; set; }
-        public decimal Amount { get; set; }
-    }
+    public DateTime CreateDate { get; set; }
+    public decimal Amount { get; set; }
 }

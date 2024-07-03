@@ -15,5 +15,4 @@ public class CustomerRepository : GenericRepository<Customer>
             .Include(a => a.Role)
             .FirstOrDefaultAsync(a => a.Username == username && a.Password == password);
     }
-    
 }
