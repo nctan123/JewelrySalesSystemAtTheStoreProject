@@ -2,12 +2,14 @@
 using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -57,6 +59,9 @@ public class SellOrderService : ISellOrderService
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
+
+        // CreateCode
+        sellOrder.Code = await GenerateUniqueCodeAsync();
 
         await _unitOfWork.SellOrderRepository.InsertAsync(sellOrder);
         await _unitOfWork.SaveAsync();
@@ -119,12 +124,22 @@ public class SellOrderService : ISellOrderService
     {
         var entities = await _unitOfWork.SellOrderRepository.GetAsync(
             so => so.Id == id,
-            includeProperties: "SellOrderDetails,Staff,Customer,Payments");
-        var response = _mapper.Map<List<ResponseSellOrder>>(entities);
+            includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest");
+       // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
+
+        // Map entities to response models
+        var responseSellOrders = new List<ResponseSellOrder>();
+        foreach (var sellOrder in entities)
+        {
+            var responseSellOrder = _mapper.Map<ResponseSellOrder>(sellOrder);
+            responseSellOrder.SellOrderDetails =
+                _mapper.Map<List<ResponseSellOrderDetails>>(sellOrder.SellOrderDetails);
+            responseSellOrders.Add(responseSellOrder);
+        }
 
         return new ResponseModel
         {
-            Data = response,
+            Data = responseSellOrders,
             MessageError = ""
         };
     }
@@ -285,7 +300,7 @@ public class SellOrderService : ISellOrderService
         };
     }
 
-    public async Task<ResponseModel> SearchByCriteriaAsync(List<string> statusList, string customerPhone,
+    public async Task<ResponseModel> SearchByAsync(List<string> statusList, string customerPhone,
         bool ascending = true, int pageIndex = 1, int pageSize = 10)
     {
         // Validate the input
@@ -324,5 +339,17 @@ public class SellOrderService : ISellOrderService
             Data = result,
             MessageError = ""
         };
+    }
+
+    private async Task<string> GenerateUniqueCodeAsync()
+    {
+        string newCode;
+        do
+        {
+            var prefix = OrderConstants.SellOrderCodePrefix;
+            newCode = prefix + CustomLibrary.RandomString(14 - prefix.Length);
+        }
+        while (await _unitOfWork.Context.SellOrders.AnyAsync(so => so.Code == newCode));
+        return newCode;
     }
 }

@@ -6,6 +6,7 @@ using JSSATSProject.Service.AutoMapper;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Build.Framework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -90,7 +91,15 @@ public class Program
         builder.Services.AddScoped<IPaymentDetailService, PaymentDetailService>();
         builder.Services.AddScoped<IBuyOrderService, BuyOrderService>();
         builder.Services.AddScoped<IBuyOrderDetailService, BuyOrderDetailService>();
-
+        builder.Services.AddScoped<I4CService, _4CService>();
+        builder.Services.AddScoped<IPolishService,PolishService>();
+        builder.Services.AddScoped<IFluorescenceService, FluorescenceService>();
+        builder.Services.AddScoped<IShapeService, ShapeService>();
+        builder.Services.AddScoped<IOriginService, OriginService>();
+        builder.Services.AddScoped<ISymmetryService, SymmetryService>();
+        builder.Services.AddScoped<IProductDiamondService, ProductDiamondService>();
+        builder.Services.AddScoped<IProductMaterialService, ProductMaterialService>();
+        
         // CacheManager
         services.AddSingleton(typeof(CacheManager<>));
         services.AddSingleton<DiamondPriceCacheManager>();

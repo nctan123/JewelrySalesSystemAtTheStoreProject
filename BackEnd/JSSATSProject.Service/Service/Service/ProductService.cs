@@ -2,10 +2,12 @@
 using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -27,6 +29,13 @@ public class ProductService : IProductService
     public async Task<ResponseModel> CreateProductAsync(RequestCreateProduct requestProduct)
     {
         var entity = _mapper.Map<Product>(requestProduct);
+
+        var productCategoryTypeId = await _unitOfWork.ProductCategoryRepository.GetTypeIdByCategoryIdAsync(requestProduct.CategoryId);
+
+        var newCode = await GenerateUniqueCodeAsync(productCategoryTypeId);
+
+        entity.Code = newCode;
+
         await _unitOfWork.ProductRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
         return new ResponseModel
@@ -35,39 +44,6 @@ public class ProductService : IProductService
             MessageError = ""
         };
     }
-
-
-    public async Task<ResponseModel> GetAllAsync()
-    {
-        var entities = await _unitOfWork.ProductRepository.GetAsync(
-            includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
-                               "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
-                               "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
-                               "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
-                               "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                               "ProductMaterials,ProductMaterials.Material," + "Stalls"
-        );
-        var response = _mapper.Map<List<ResponseProduct>>(entities);
-        foreach (var responseProduct in response)
-        {
-            responseProduct.ProductValue =
-                await CalculateProductPrice(entities.Where(e => e.Id == responseProduct.Id).First()!);
-            var promotion =
-                await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
-            if (promotion != null)
-            {
-                responseProduct.PromotionId = promotion.Id;
-                responseProduct.DiscountRate = promotion.DiscountRate;
-            }
-        }
-
-        return new ResponseModel
-        {
-            Data = response,
-            MessageError = ""
-        };
-    }
-
 
     public async Task<decimal> CalculateProductPrice(Product correspondingProduct)
     {
@@ -237,7 +213,7 @@ public class ProductService : IProductService
     }
 
     //Update Stall
-    public async Task<ResponseModel> UpdateProductAsync(int productId, RequestUpdateProduct requestProduct)
+    public async Task<ResponseModel> UpdateStallProductAsync(int productId, RequestUpdateProduct requestProduct)
     {
         try
         {
@@ -296,13 +272,20 @@ public class ProductService : IProductService
     }
 
 
-    public async Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10,
-        bool ascending = true)
+    public async Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
-        Expression<Func<Product, bool>> filter = product =>
-            product.CategoryId == categoryId &&
-            product.Status == "active";
+        Expression<Func<Product, bool>> filter;
 
+        if (includeNullStalls)
+        {
+            filter = product => product.CategoryId == categoryId;
+        }
+        else
+        {
+            filter = product => product.CategoryId == categoryId && product.Stalls != null;
+        }
+
+        // Retrieve all products matching the filter
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
             includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
@@ -310,9 +293,7 @@ public class ProductService : IProductService
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                               "ProductMaterials,ProductMaterials.Material," + "Stalls, Stalls.Type",
-            pageIndex: pageIndex,
-            pageSize: pageSize
+                               "ProductMaterials,ProductMaterials.Material,Stalls,Stalls.Type"
         );
 
         var responseList = new List<ResponseProduct>();
@@ -320,8 +301,7 @@ public class ProductService : IProductService
         {
             var responseProduct = _mapper.Map<ResponseProduct>(entity);
             responseProduct.ProductValue = await CalculateProductPrice(entity);
-            var promotion =
-                await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+            var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
             if (promotion is not null)
             {
                 responseProduct.PromotionId = promotion.Id;
@@ -331,35 +311,55 @@ public class ProductService : IProductService
             responseList.Add(responseProduct);
         }
 
+        // Always sort by Status descending first, then apply sorting based on the ascending parameter
+        responseList = responseList
+            .OrderByDescending(rp => rp.Status)
+            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.ProductValue) : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
+            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.Name) : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
+            .ToList();
 
-        responseList = ascending
-            ? responseList.OrderBy(rp => rp.ProductValue).ThenBy(rp => rp.Name).ToList()
-            : responseList.OrderByDescending(rp => rp.ProductValue).ThenByDescending(rp => rp.Name).ToList();
+        // Apply pagination
+        var paginatedResponseList = responseList
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
 
         var result = new ResponseModel
         {
-            Data = responseList,
+            Data = paginatedResponseList,
             MessageError = ""
         };
-        result.TotalElements = await CountAsync(filter);
+        result.TotalElements = responseList.Count;
         result.TotalPages = result.CalculateTotalPageCount(pageSize);
         return result;
     }
 
 
-    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1,
-        int pageSize = 10)
-    {
-        Expression<Func<Product, bool>> filter = p =>
-            p.CategoryId == categoryId &&
-            p.Status == "active";
 
+    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
+    {
+        Expression<Func<Product, bool>> filter;
+
+        if (includeNullStalls)
+        {
+            filter = p => p.CategoryId == categoryId;
+        }
+        else
+        {
+            filter = p => p.CategoryId == categoryId && p.Stalls != null;
+        }
 
         if (!string.IsNullOrEmpty(searchTerm))
-            filter = p =>
-                p.CategoryId == categoryId &&
-                p.Status == "active" && (p.Code.Contains(searchTerm) ||
-                                         p.Name.Contains(searchTerm));
+        {
+            if (includeNullStalls)
+            {
+                filter = p => p.CategoryId == categoryId && (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
+            }
+            else
+            {
+                filter = p => p.CategoryId == categoryId && p.Stalls != null && (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
+            }
+        }
 
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
@@ -378,8 +378,7 @@ public class ProductService : IProductService
         {
             var responseProduct = _mapper.Map<ResponseProduct>(entity);
             responseProduct.ProductValue = await CalculateProductPrice(entity);
-            var promotion =
-                await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+            var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
             if (promotion != null)
             {
                 responseProduct.PromotionId = promotion.Id;
@@ -389,10 +388,11 @@ public class ProductService : IProductService
             responseList.Add(responseProduct);
         }
 
-        // Sort the response list by ProductValue and Name
-        var sortedResponse = responseList
-            .OrderByDescending(rp => rp.ProductValue)
-            .ThenBy(rp => rp.Name)
+        // Sort the response list based on the ascending parameter
+        responseList = responseList
+            .OrderBy(rp => rp.Status)
+            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.ProductValue) : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
+            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.Name) : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
             .ToList();
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);
@@ -402,10 +402,12 @@ public class ProductService : IProductService
         {
             TotalPages = totalPages,
             TotalElements = totalCount,
-            Data = sortedResponse,
+            Data = responseList,
             MessageError = ""
         };
     }
+
+
 
     public async Task<int> CountAsync(Expression<Func<Product, bool>> filter = null)
     {
@@ -437,4 +439,32 @@ public class ProductService : IProductService
         //check if the count of valid products matches the count of provided product codes
         return validProductsDictionary.Count == productCodes.Count;
     }
+
+    public async Task<string> GenerateUniqueCodeAsync(int productcategorytypeId)
+    {
+        string prefix;
+        switch (productcategorytypeId)
+        {
+            case ProductConstants.JWECategoryTypeId:
+                prefix = ProductConstants.JWEPrefix;
+                break;
+            case ProductConstants.RGOCategoryTypeId:
+                prefix = ProductConstants.RGOPrefix;
+                break;
+            case ProductConstants.WSGCategoryTypeId:
+                prefix = ProductConstants.WSGPrefix;
+                break;
+            default:
+                prefix = ProductConstants.DIAPrefix; 
+                break;
+        }
+        string newCode;
+        do
+        {
+            newCode = prefix + CustomLibrary.RandomNumber(3);
+        }
+        while (await _unitOfWork.Context.Products.AnyAsync(so => so.Code == newCode));
+        return newCode;
+    }
+
 }

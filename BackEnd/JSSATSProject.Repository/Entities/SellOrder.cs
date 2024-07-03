@@ -42,36 +42,5 @@ public partial class SellOrder
 
     public SellOrder()
     {
-        //14 chars in total
-        var prefix = OrderConstants.SellOrderCodePrefix;
-        Code = Code ?? prefix + CustomLibrary.RandomString(14 - prefix.Length);
-    }
-
-    public SellOrder(
-            int id,
-            int customerId,
-            int staffId,
-            decimal totalAmount,
-            DateTime createDate,
-            string status,
-            string description,
-            int discountPoint = 0,
-            int? specialDiscountRequestId = null,
-            string code = null)
-    {
-        Id = id;
-        CustomerId = customerId;
-        StaffId = staffId;
-        TotalAmount = totalAmount;
-        CreateDate = createDate;
-        Status = status;
-        Description = description;
-        DiscountPoint = discountPoint;
-        SpecialDiscountRequestId = specialDiscountRequestId;
-        //14 chars in total
-        var prefix = OrderConstants.SellOrderCodePrefix;
-        Code = Code ?? prefix + CustomLibrary.RandomString(14 - prefix.Length);
-        Payments = new List<Payment>();
-        SellOrderDetails = new List<SellOrderDetail>();
     }
 }

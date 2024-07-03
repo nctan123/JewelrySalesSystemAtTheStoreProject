@@ -75,4 +75,57 @@ public class AccountService : IAccountService
     {
         return await _unitOfWork.AccountRepository.CountAsync(filter);
     }
+
+    public async Task<ResponseModel> SearchAsync( int pageIndex = 1,int pageSize = 10,int? roleId = null,string searchTerm = null)
+    {
+        try
+        {
+            // Define filter condition based on roleId and searchTerm
+            Expression<Func<Account, bool>> filter = a =>
+                (!roleId.HasValue || a.RoleId == roleId.Value) &&
+                (string.IsNullOrEmpty(searchTerm) || a.Staff.Firstname.Contains(searchTerm) || a.Staff.Lastname.Contains(searchTerm));
+
+            // Define sorting logic (always ascending by StaffName)
+            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q.OrderBy(e => e.Staff.Firstname);
+
+            // Fetch data with filtering and sorting
+            var entities = await _unitOfWork.AccountRepository.GetAsync(
+                filter,
+                orderBy,
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+                includeProperties: "Staff,Role"
+            );
+
+            // Map the entities to the response DTO
+            var response = _mapper.Map<List<ResponseAccount>>(entities);
+
+            var result = new ResponseModel
+            {
+                Data = response,
+                MessageError = ""
+            };
+
+            // Count the total elements based on the same filter
+            result.TotalElements = await CountAsync(a =>
+                (!roleId.HasValue || a.RoleId == roleId.Value) &&
+                (string.IsNullOrEmpty(searchTerm) || a.Staff.Firstname.Contains(searchTerm))
+            );
+
+            // Calculate the total number of pages
+            result.TotalPages = result.CalculateTotalPageCount(pageSize);
+
+            // Return the response model
+            return result;
+        }
+        catch (Exception ex)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = ex.Message
+            };
+        }
+    }
+
 }

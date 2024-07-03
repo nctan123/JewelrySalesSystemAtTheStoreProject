@@ -34,10 +34,4 @@ public partial class BuyOrder
     [JsonIgnore]
     public virtual Staff Staff { get; set; }
 
-    public BuyOrder()
-    {
-        //14 chars in total
-        var prefix = OrderConstants.BuyOrderCodePrefix;
-        Code = Code ?? prefix + CustomLibrary.RandomString(14 - prefix.Length);
-    }
 }

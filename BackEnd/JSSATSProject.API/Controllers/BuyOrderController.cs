@@ -54,10 +54,13 @@ public class BuyOrderController : ControllerBase
         if (orderCode.StartsWith(OrderConstants.SellOrderCodePrefix))
         {
             var sellOrder = await _sellOrderService.GetEntityByCodeAsync(orderCode);
-            if (sellOrder is null)
+            if (sellOrder is null || !sellOrder.Status.Equals(OrderConstants.CompletedStatus))
+            {
                 return Problem(statusCode: Convert.ToInt32(HttpStatusCode.BadRequest),
                     title: "Order not found.",
                     detail: $"Cannot find data of order {orderCode}");
+            }
+
             //map sp trong sellOrder details thanh response product dto
             var products = await _sellOrderService.GetProducts(sellOrder);
             return Ok(new ResponseCheckOrder

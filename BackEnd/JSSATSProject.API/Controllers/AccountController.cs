@@ -22,4 +22,13 @@ public class AccountController : ControllerBase
         var responseModel = await _accountService.GetAllAsync(pageIndex, pageSize, roleId);
         return Ok(responseModel);
     }
+
+    [HttpGet]
+    [Route("Search")]
+    public async Task<IActionResult> SeachAsync(int pageIndex = 1,int pageSize = 10, int? roleId = null,string searchTerm = null)
+    {
+        var responseModel = await _accountService.SearchAsync(pageIndex, pageSize, roleId, searchTerm);
+        return Ok(responseModel);
+    }
+
 }

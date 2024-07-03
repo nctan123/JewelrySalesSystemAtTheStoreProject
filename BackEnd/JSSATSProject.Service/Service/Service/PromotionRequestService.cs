@@ -144,4 +144,22 @@ public class PromotionRequestService : IPromotionRequestService
             MessageError = ""
         };
     }
+
+    public async Task<ResponseModel> GetByIdAsync(int id)
+    {
+        var entities = await _unitOfWork.PromotionRequestRepository.GetAsync(
+            filter: pr => pr.RequestId == id,
+            includeProperties: "ApprovedByNavigation,Manager,Categories"
+        );
+
+        var response = _mapper.Map<List<ResponsePromotionRequest>>(entities);
+
+
+        return new ResponseModel
+        {
+            Data = response
+        };
+    }
+
+
 }

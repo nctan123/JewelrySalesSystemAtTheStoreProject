@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -53,4 +54,6 @@ public partial class Diamond
     public virtual Symmetry Symmetry { get; set; }
 
     public virtual ICollection<ProductDiamond> ProductDiamonds { get; set; } = new List<ProductDiamond>();
+
+
 }

@@ -8,7 +8,8 @@ public class ProductDiamond
 
     public int DiamondId { get; set; }
 
-    [JsonIgnore] public virtual Product Product { get; set; }
+    [JsonIgnore] 
+    public virtual Product Product { get; set; }
 
     public virtual Diamond Diamond { get; set; }
 }

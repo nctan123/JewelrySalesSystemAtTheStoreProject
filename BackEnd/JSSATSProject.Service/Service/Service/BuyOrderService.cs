@@ -1,11 +1,15 @@
 using System.Linq.Expressions;
+using System.Text;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.BuyOrderDetailModel;
 using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -77,9 +81,9 @@ public class BuyOrderService : IBuyOrderService
         throw new NotImplementedException();
     }
 
-
     public async Task<ResponseModel> CreateAsync(BuyOrder entity)
     {
+        entity.Code = await GenerateUniqueCodeAsync();
         await _unitOfWork.BuyOrderRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
 
@@ -246,5 +250,17 @@ public class BuyOrderService : IBuyOrderService
     public async Task<BuyOrder?> GetEntityByCodeAsync(string code)
     {
         return await _unitOfWork.BuyOrderRepository.GetByCodeAsync(code);
+    }
+
+    private async Task<string> GenerateUniqueCodeAsync()
+    {
+        string newCode;
+        do
+        {
+            var prefix = OrderConstants.BuyOrderCodePrefix;
+            newCode = prefix + CustomLibrary.RandomString(14 - prefix.Length);
+        }
+        while (await _unitOfWork.Context.BuyOrders.AnyAsync(so => so.Code == newCode));
+        return newCode;
     }
 }

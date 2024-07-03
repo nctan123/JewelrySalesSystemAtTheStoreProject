@@ -42,6 +42,8 @@ public class UnitOfWork
     private StallRepository _stall;
     private StallTypeRepository _stalltype;
     private SymmetryRepository _symmetry;
+    private ShapeRepository _shape;
+    private ProductDiamondRespository _productDiamond;
 
     private bool disposed;
 
@@ -49,6 +51,8 @@ public class UnitOfWork
     {
         _context = context;
     }
+    // bổ sung mới Procedures
+    public DBContext Context => _context;
 
     public PurchasePriceRatioRepository PurchasePriceRatioRepository
     {
@@ -373,6 +377,26 @@ public class UnitOfWork
             if (_specialdiscountrequest == null)
                 _specialdiscountrequest = new SpecialDiscountRequestRepository(_context);
             return _specialdiscountrequest;
+        }
+    }
+
+    public ShapeRepository ShapeRepository
+    {
+        get
+        {
+            if (_shape == null)
+                _shape = new ShapeRepository(_context);
+            return _shape;
+        }
+    }
+
+    public ProductDiamondRespository ProductDiamondRespository
+    {
+        get
+        {
+            if (_productDiamond == null)
+                _productDiamond = new ProductDiamondRespository(_context);
+            return _productDiamond;
         }
     }
 

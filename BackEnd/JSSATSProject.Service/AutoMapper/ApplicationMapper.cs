@@ -1,31 +1,39 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository.Entities;
+using JSSATSProject.Service.Models._4CModel;
 using JSSATSProject.Service.Models.AccountModel;
 using JSSATSProject.Service.Models.BuyOrderDetailModel;
 using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Models.CustomerModel;
 using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Models.DiamondPriceListModel;
+using JSSATSProject.Service.Models.FluorescenceModel;
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Models.Material;
 using JSSATSProject.Service.Models.MaterialPriceListModel;
 using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.OriginModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentMethodModel;
 using JSSATSProject.Service.Models.PaymentModel;
 using JSSATSProject.Service.Models.PointModel;
+using JSSATSProject.Service.Models.PolishModel;
 using JSSATSProject.Service.Models.ProductCategoryModel;
 using JSSATSProject.Service.Models.ProductCategoryTypeModel;
+using JSSATSProject.Service.Models.ProductDiamondModel;
+using JSSATSProject.Service.Models.ProductMaterialModel;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Models.PromotionModel;
 using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 using JSSATSProject.Service.Models.ReturnBuyBackPolicyModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Service.Models.ShapeModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Models.StallModel;
 using JSSATSProject.Service.Models.StallTypeModel;
+using JSSATSProject.Service.Models.SymmetryModel;
 
 namespace JSSATSProject.Service.AutoMapper;
 
@@ -74,7 +82,9 @@ public class ApplicationMapper : Profile
         CreateMap<Customer, RequestUpdateCustomer>().ReverseMap();
 
         //Diamond
-        CreateMap<Diamond, RequestCreateDiamond>().ReverseMap();
+        CreateMap<RequestCreateDiamond, Diamond>()
+                   .ForMember(dest => dest.Code, opt => opt.Ignore());
+
         CreateMap<Diamond, RequestUpdateDiamond>().ReverseMap();
         CreateMap<Diamond, ResponseDiamond>().ReverseMap();
 
@@ -265,11 +275,29 @@ public class ApplicationMapper : Profile
         CreateMap<PaymentDetail, RequestCreatePaymentDetail>().ReverseMap();
         CreateMap<PaymentDetail, ResponsePaymentDetail>().ReverseMap();
 
-        //PurchasePriceRatioService
+        //PurchasePriceRatio
         CreateMap<PurchasePriceRatio, RequestCreatePurchasePriceRatio>().ReverseMap();
         CreateMap<PurchasePriceRatio, ResponsePurchasePriceRatio>()
             .ForMember(dest => dest.CategoryTypeName, opt => opt.MapFrom(src => src.CategoryType.Name))
             .ReverseMap();
+
+        //4C
+        CreateMap<Carat, ResponseCarat>().ReverseMap();
+        CreateMap<Cut, ResponseCut>().ReverseMap();
+        CreateMap<Color, ResponseColor>().ReverseMap();
+        CreateMap<Clarity, ResponseClarity>().ReverseMap();
+        //
+        CreateMap<Polish, ResponsePolish>().ReverseMap();
+        CreateMap<Symmetry, ResponseSymmetry>().ReverseMap();
+        CreateMap<Fluorescence, ResponseFluorescence>().ReverseMap();
+        CreateMap<Origin, ResponseOrigin>().ReverseMap();
+        CreateMap<Shape, ResponseShape>().ReverseMap();
+
+        //ProductDiamond
+        CreateMap<ProductDiamond, RequestCreateProductDiamond>().ReverseMap();
+
+        //ProductMaterial
+        CreateMap<ProductMaterial, RequestCreateProductMaterial>().ReverseMap();
 
     }
 }
