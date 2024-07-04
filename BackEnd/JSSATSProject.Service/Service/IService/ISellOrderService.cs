@@ -24,4 +24,10 @@ public interface ISellOrderService
 
     public Task<ResponseModel> SearchByAsync(List<string> statusList, string customerPhone,
         bool ascending = true, int pageIndex = 1, int pageSize = 10);
+
+    public Task RemoveAllSellOrderDetails(int id);
+
+    public Task<SellOrder> MapOrderAsync(RequestCreateSellOrder requestSellOrder);
+
+    public Task<ResponseModel> UpdateOrderAsync(int orderId, SellOrder targetOrder);
 }

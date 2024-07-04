@@ -22,4 +22,6 @@ public class ResponseStaff
 
     public decimal TotalRevenue { get; set; }
     public int TotalSellOrder { get; set; }
+
+    public int TotalBuyOrder { get; set; }
 }

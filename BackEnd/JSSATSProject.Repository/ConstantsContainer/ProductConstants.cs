@@ -10,6 +10,9 @@ public class ProductConstants
     public const int WholesaleGoldCategory = 6;
     public const int DiamondsCategory = 7;
 
+    public const int RetailGoldCategoryType = 3;
+    public const int WholesaleGoldCategoryType = 4;
+
     public const string ActiveStatus = "active";
     public const string InactiveStatus = "inactive";
 

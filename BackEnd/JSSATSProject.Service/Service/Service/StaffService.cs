@@ -59,6 +59,15 @@ public class StaffService : IStaffService
                             .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
                             .Count());
                     break;
+                case "totalbuyorder":
+                    orderBy = ascending
+                        ? q => q.OrderBy(s => s.BuyOrders
+                            .Where(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == OrderConstants.CompletedStatus)
+                            .Count())
+                        : q => q.OrderByDescending(s => s.BuyOrders
+                            .Where(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == OrderConstants.CompletedStatus)
+                            .Count());
+                    break;
                 default:
                     orderBy = ascending
                         ? q => q.OrderBy(s => s.Lastname).ThenBy(s => s.Firstname)
@@ -66,19 +75,19 @@ public class StaffService : IStaffService
                     break;
             }
 
-            // Fetch staff entities with SellOrders included, apply filter, sorting, and pagination
+            // Fetch staff entities with SellOrders and BuyOrders included, apply filter, sorting, and pagination
             var entities = await _unitOfWork.StaffRepository.GetAsync(
                 orderBy: orderBy,
                 pageIndex: pageIndex,
                 pageSize: pageSize,
-                includeProperties: "SellOrders");
+                includeProperties: "SellOrders,BuyOrders");
 
             // Map entities to response model
             var responseList = entities.Select(entity =>
             {
                 var response = _mapper.Map<ResponseStaff>(entity);
 
-                var staffOrders = entity.SellOrders
+                var staffSellOrders = entity.SellOrders
                     .Where(order =>
                         order.CreateDate >= startDate &&
                         order.CreateDate <= endDate &&
@@ -86,8 +95,17 @@ public class StaffService : IStaffService
                         order.Status.Equals(OrderConstants.CompletedStatus))
                     .ToList();
 
-                response.TotalRevenue = staffOrders.Sum(order => order.TotalAmount);
-                response.TotalSellOrder = staffOrders.Count;
+                var staffBuyOrders = entity.BuyOrders
+                    .Where(order =>
+                        order.CreateDate >= startDate &&
+                        order.CreateDate <= endDate &&
+                        !string.IsNullOrEmpty(order.Status) &&
+                        order.Status.Equals(OrderConstants.CompletedStatus))
+                    .ToList();
+
+                response.TotalRevenue = staffSellOrders.Sum(order => order.TotalAmount);
+                response.TotalSellOrder = staffSellOrders.Count;
+                response.TotalBuyOrder = staffBuyOrders.Count;
 
                 return response;
             }).ToList();
@@ -114,8 +132,9 @@ public class StaffService : IStaffService
     }
 
 
+
     public async Task<ResponseModel> SearchAsync(string nameSearch, DateTime startDate, DateTime endDate, int pageIndex,
-        int pageSize)
+    int pageSize)
     {
         // Define filter based on name search
         Expression<Func<Staff, bool>> filter = null;
@@ -124,16 +143,16 @@ public class StaffService : IStaffService
                 staff.Firstname.Contains(nameSearch) ||
                 staff.Lastname.Contains(nameSearch);
 
-
+        // Define ordering by total sell orders count
         Func<IQueryable<Staff>, IOrderedQueryable<Staff>> orderBy = q => q.OrderByDescending(s => s.SellOrders.Count);
 
-
+        // Fetch staff entities with SellOrders and BuyOrders included, apply filter, sorting, and pagination
         var staffEntities = await _unitOfWork.StaffRepository.GetAsync(
             filter,
             orderBy,
             pageIndex: pageIndex,
             pageSize: pageSize,
-            includeProperties: "SellOrders");
+            includeProperties: "SellOrders,BuyOrders");
 
         // Map entities to response model
         var responseList = staffEntities.Select(entity =>
@@ -141,7 +160,7 @@ public class StaffService : IStaffService
             var response = _mapper.Map<ResponseStaff>(entity);
 
             // Filter SellOrders by date range and status, including null checks
-            var staffOrders = entity.SellOrders
+            var staffSellOrders = entity.SellOrders
                 .Where(order =>
                     order.CreateDate >= startDate &&
                     order.CreateDate <= endDate &&
@@ -149,9 +168,19 @@ public class StaffService : IStaffService
                     order.Status.Equals(OrderConstants.CompletedStatus))
                 .ToList();
 
-            // Calculate TotalRevenue and TotalSellOrder
-            response.TotalRevenue = staffOrders.Sum(order => order.TotalAmount);
-            response.TotalSellOrder = staffOrders.Count;
+            // Filter BuyOrders by date range and status, including null checks
+            var staffBuyOrders = entity.BuyOrders
+                .Where(order =>
+                    order.CreateDate >= startDate &&
+                    order.CreateDate <= endDate &&
+                    !string.IsNullOrEmpty(order.Status) &&
+                    order.Status.Equals(OrderConstants.CompletedStatus))
+                .ToList();
+
+            // Calculate TotalRevenue, TotalSellOrder, and TotalBuyOrder
+            response.TotalRevenue = staffSellOrders.Sum(order => order.TotalAmount);
+            response.TotalSellOrder = staffSellOrders.Count;
+            response.TotalBuyOrder = staffBuyOrders.Count;
 
             return response;
         }).ToList();
@@ -167,6 +196,7 @@ public class StaffService : IStaffService
             MessageError = ""
         };
     }
+
 
     public async Task<int?> CountAsync(Expression<Func<Staff, bool>> filter)
     {

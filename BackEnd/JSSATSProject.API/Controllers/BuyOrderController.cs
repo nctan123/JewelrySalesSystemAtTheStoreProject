@@ -64,14 +64,14 @@ public class BuyOrderController : ControllerBase
             //map sp trong sellOrder details thanh response product dto
             var products = await _sellOrderService.GetProducts(sellOrder);
             return Ok(new ResponseCheckOrder
-                {
-                    code = orderCode,
-                    CustomerName = string.Join(" ", sellOrder.Customer.Firstname, sellOrder.Customer.Lastname),
-                    CustomerPhoneNumber = sellOrder.Customer.Phone,
-                    CreateDate = sellOrder.CreateDate,
-                    TotalValue = sellOrder.TotalAmount,
-                    Products = products
-                }
+            {
+                code = orderCode,
+                CustomerName = string.Join(" ", sellOrder.Customer.Firstname, sellOrder.Customer.Lastname),
+                CustomerPhoneNumber = sellOrder.Customer.Phone,
+                CreateDate = sellOrder.CreateDate,
+                TotalValue = sellOrder.TotalAmount,
+                Products = products
+            }
             );
         }
 
@@ -102,6 +102,30 @@ public class BuyOrderController : ControllerBase
         //save buyOrder
         await _buyOrderService.CreateAsync(buyOrder);
         buyOrder.BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder, buyOrder.Id);
+        var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("CreateNonCompanyOrder")]
+    public async Task<IActionResult> CreateNonCompanyOrder(
+        [FromBody] RequestCreateNonCompanyBuyOrder requestCreateBuyOrder)
+    {
+        //assume that all data are already valid
+        var customer =
+            (Customer)(await _customerService.GetEntityByPhoneAsync(requestCreateBuyOrder.CustomerPhoneNumber)).Data!;
+        var buyOrder = new BuyOrder()
+        {
+            CustomerId = customer.Id,
+            StaffId = requestCreateBuyOrder.StaffId,
+            Status = "processing",
+            CreateDate = requestCreateBuyOrder.CreateDate,
+            Description = requestCreateBuyOrder.Description,
+            BuyOrderDetails = null
+        };
+        await _buyOrderService.CreateAsync(buyOrder);
+        buyOrder.BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder, buyOrder.Id);
+        buyOrder.TotalAmount = buyOrder.BuyOrderDetails.Sum(bo => bo.UnitPrice);
         var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
         return Ok(result);
     }

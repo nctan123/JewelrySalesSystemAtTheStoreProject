@@ -176,7 +176,7 @@ public class BuyOrderService : IBuyOrderService
             var diamond = productObj.ProductDiamonds.First().Diamond;
             var diamondGradingCode = diamond.DiamondGradingCode;
             var purchasePriceRatioId =
-                (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(productObj.Category.TypeId)).Id;
+                (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(productObj.Category.TypeId, "company sold")).Id;
 
             //in-company buy orders
             var orderDetail = new BuyOrderDetail
@@ -195,6 +195,43 @@ public class BuyOrderService : IBuyOrderService
         return result;
     }
 
+    public async Task<ICollection<BuyOrderDetail>> CreateOrderDetails(
+        RequestCreateNonCompanyBuyOrder requestCreateBuyOrder,
+        int buyOrderId)
+    {
+        var result = new List<BuyOrderDetail>();
+        var categoryTypeId = requestCreateBuyOrder.CategoryTypeId;
+        var materialId = requestCreateBuyOrder.MaterialId;
+        var materialWeight = requestCreateBuyOrder.MaterialWeight;
+        var diamondGradingCode = requestCreateBuyOrder.DiamondGradingCode;
+        int? purchasePriceRatioId = null;
+        decimal price = requestCreateBuyOrder.BuyPrice;
+
+        if (categoryTypeId is ProductConstants.RetailGoldCategoryType or ProductConstants.WholesaleGoldCategoryType)
+        {
+            price = await _productService.CalculateMaterialBuyPrice(materialId, materialWeight);
+        }
+        else
+        {
+            purchasePriceRatioId =
+                (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(requestCreateBuyOrder.CategoryTypeId, "non-company sold")).Id;
+        }
+
+        //in-company buy orders
+        var orderDetail = new BuyOrderDetail
+        {
+            BuyOrderId = buyOrderId,
+            ProductName = requestCreateBuyOrder.ProductName,
+            CategoryTypeId = requestCreateBuyOrder.CategoryTypeId,
+            DiamondGradingCode = diamondGradingCode,
+            PurchasePriceRatioId = purchasePriceRatioId,
+            MaterialId = materialId,
+            MaterialWeight = materialWeight,
+            UnitPrice = price
+        };
+        result.Add(orderDetail);
+        return result;
+    }
     public async Task<int?> CountAsync(Expression<Func<BuyOrder, bool>> filter)
     {
         return await _unitOfWork.BuyOrderRepository.CountAsync(filter);

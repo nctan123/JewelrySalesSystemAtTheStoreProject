@@ -51,8 +51,6 @@ public class CustomerService : ICustomerService
             MessageError = ""
         };
     }
-
-
     public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
     {
         var entities = await _unitOfWork.CustomerRepository.GetAsync(
@@ -254,7 +252,7 @@ public class CustomerService : ICustomerService
             // Fetch the customer by phone number
             var customer = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
-                includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod");
+                includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Order");
 
             var customerEntity = customer.FirstOrDefault();
 

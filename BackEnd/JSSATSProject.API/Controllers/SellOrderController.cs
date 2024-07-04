@@ -17,14 +17,17 @@ public class SellOrderController : ControllerBase
     private readonly IPointService _pointService;
     private readonly ISellOrderService _sellOrderService;
     private readonly ISpecialDiscountRequestService _specialDiscountRequestService;
+    private readonly IProductService _productService;
 
     public SellOrderController(ISellOrderService sellOrderService,
-        ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper, IPointService pointService)
+        ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper, IPointService pointService,
+        IProductService productService)
     {
         _sellOrderService = sellOrderService;
         _specialDiscountRequestService = specialDiscountRequestService;
         _mapper = mapper;
         _pointService = pointService;
+        _productService = productService;
     }
 
     [HttpGet]
@@ -55,6 +58,16 @@ public class SellOrderController : ControllerBase
         var createDate = requestSellOrder.CreateDate;
         ResponseModel specialDiscountModel;
         ResponseUpdateSellOrderWithSpecialPromotion response;
+
+        //check if this is just an update, not create new order
+        if (requestSellOrder.Id is not null)
+        {
+            var targetOrder = await _sellOrderService.MapOrderAsync(requestSellOrder);
+            await _sellOrderService.RemoveAllSellOrderDetails(requestSellOrder.Id.Value);
+            var result = await _sellOrderService.UpdateOrderAsync(targetOrder.Id, targetOrder);
+            await _productService.UpdateAllProductStatusAsync(targetOrder, ProductConstants.InactiveStatus);
+            return Ok($"Updated order {targetOrder.Id} successfully.");
+        }
 
         //create truoc ti update lai special promotion sau
         var currentOrder = (SellOrder)(await _sellOrderService.CreateOrderAsync(requestSellOrder)).Data!;

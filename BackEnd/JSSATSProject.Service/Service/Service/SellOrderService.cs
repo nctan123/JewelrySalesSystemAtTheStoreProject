@@ -125,7 +125,7 @@ public class SellOrderService : ISellOrderService
         var entities = await _unitOfWork.SellOrderRepository.GetAsync(
             so => so.Id == id,
             includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest");
-       // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
+        // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
         // Map entities to response models
         var responseSellOrders = new List<ResponseSellOrder>();
@@ -351,5 +351,72 @@ public class SellOrderService : ISellOrderService
         }
         while (await _unitOfWork.Context.SellOrders.AnyAsync(so => so.Code == newCode));
         return newCode;
+    }
+
+    public async Task<SellOrder> MapOrderAsync(RequestCreateSellOrder requestSellOrder)
+    {
+        var customer =
+            (Customer)(await _customerService.GetEntityByPhoneAsync(requestSellOrder.CustomerPhoneNumber)).Data!;
+        var sellOrder = _mapper.Map<SellOrder>(requestSellOrder);
+        var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
+        sellOrder.Customer = customer;
+        //fetch order details
+        sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
+            requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
+        sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
+        var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) -
+                          sellOrder.DiscountPoint * pointRate;
+        sellOrder.TotalAmount = totalAmount;
+        sellOrder.Description = requestSellOrder.Description;
+        return sellOrder;
+    }
+
+    public async Task RemoveAllSellOrderDetails(int id)
+    {
+        var sellOrder = await GetEntityByIdAsync(id);
+        var sellOrderDetails = sellOrder.SellOrderDetails.ToList();
+        foreach (var sellOrderDetail in sellOrderDetails)
+        {
+            await _productService.UpdateProductStatusAsync(sellOrderDetail.ProductId, ProductConstants.ActiveStatus);
+            await _unitOfWork.SellOrderDetailRepository.DeleteAsync(sellOrderDetail);
+        }
+    }
+    public async Task<ResponseModel> UpdateOrderAsync(int orderId, SellOrder targetOrder)
+    {
+        try
+        {
+            var order = await _unitOfWork.SellOrderRepository.GetByIDAsync(orderId);
+            if (targetOrder != null)
+            {
+                order.Customer = targetOrder.Customer;
+                order.SellOrderDetails = targetOrder.SellOrderDetails;
+                order.DiscountPoint = targetOrder.DiscountPoint;
+                order.TotalAmount = targetOrder.TotalAmount;
+                order.Description = targetOrder.Description;
+
+                await _unitOfWork.SellOrderRepository.UpdateAsync(order);
+
+                return new ResponseModel
+                {
+                    Data = order,
+                    MessageError = ""
+                };
+            }
+
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Not Found"
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
+        }
     }
 }
