@@ -106,9 +106,6 @@ public class PromotionService : IPromotionService
         };
     }
 
-
-
-
     public async Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion)
     {
         try

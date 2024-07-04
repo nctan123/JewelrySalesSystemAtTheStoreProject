@@ -161,7 +161,6 @@ public class ProductService : IProductService
         return Math.Ceiling(totalPrice);
     }
 
-
     public async Task<ResponseModel> GetByCodeAsync(string code)
     {
         var entities = await _unitOfWork.ProductRepository.GetAsync(
@@ -271,14 +270,13 @@ public class ProductService : IProductService
         }
     }
 
-
     public async Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
         if (includeNullStalls)
         {
-            filter = product => product.CategoryId == categoryId;
+            filter = product => product.CategoryId == categoryId && product.Stalls == null;
         }
         else
         {
@@ -333,8 +331,6 @@ public class ProductService : IProductService
         result.TotalPages = result.CalculateTotalPageCount(pageSize);
         return result;
     }
-
-
 
     public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
@@ -406,8 +402,6 @@ public class ProductService : IProductService
             MessageError = ""
         };
     }
-
-
 
     public async Task<int> CountAsync(Expression<Func<Product, bool>> filter = null)
     {

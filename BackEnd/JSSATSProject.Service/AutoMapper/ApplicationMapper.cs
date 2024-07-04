@@ -48,7 +48,7 @@ public class ApplicationMapper : Profile
             .ReverseMap();
         CreateMap<Account, ResponseAccount>()
             .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.Firstname + " " + src.Staff.Lastname))
-            .ForMember(dest => dest.Role,opt => opt.MapFrom(src => src.Role.Name))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name))
             .ReverseMap();
 
         //BuyOrder
@@ -137,6 +137,10 @@ public class ApplicationMapper : Profile
             .ForMember(dest => dest.SpecialDiscountRate,
                 opt => opt.MapFrom(src => src.SpecialDiscountRequest.DiscountRate))
             .ForMember(dest => dest.SpecialDiscountStatus, opt => opt.MapFrom(src => src.SpecialDiscountRequest.Status))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.Payments
+                                                                                .SelectMany(p => p.PaymentDetails)
+                                                                                .Select(pd => pd.PaymentMethod.Name)
+                                                                                 .FirstOrDefault()))
             .ReverseMap();
 
         CreateMap<SellOrderDetail, ResponseSellOrderDetails>()

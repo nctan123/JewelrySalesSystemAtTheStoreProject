@@ -91,7 +91,7 @@ public class SellOrderService : ISellOrderService
             // Filter based on the status list
             filter,
             includeProperties:
-            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest",
+            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod",
             orderBy: ascending
                 ? q => q.OrderBy(p => p.CreateDate)
                 : q => q.OrderByDescending(p => p.CreateDate),
@@ -124,7 +124,7 @@ public class SellOrderService : ISellOrderService
     {
         var entities = await _unitOfWork.SellOrderRepository.GetAsync(
             so => so.Id == id,
-            includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest");
+            includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod");
         // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
         // Map entities to response models
