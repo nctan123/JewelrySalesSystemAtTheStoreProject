@@ -12,6 +12,8 @@ public interface IBuyOrderService
     public Task<ResponseModel> CreateAsync(BuyOrder entity);
 
     public Task<ResponseModel> UpdateAsync(int buyOrderId, BuyOrder entity);
+    
+    public Task<ResponseModel> UpdateAsync(int buyOrderId, RequestUpdateBuyOrderStatus entity);
 
     public decimal GetPrice(string targetProductCode, Dictionary<string, int> productCodesAndQuantity,
         Dictionary<string, int> productCodesAndEstimatePrices);

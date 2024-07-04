@@ -3,11 +3,6 @@
 public class RequestCreateProduct
 {
     public int CategoryId { get; set; }
-
-    public int? StallsId { get; set; }
-
-    public string? Code { get; set; }
-
     public string Name { get; set; } = null!;
 
     public decimal? MaterialCost { get; set; }

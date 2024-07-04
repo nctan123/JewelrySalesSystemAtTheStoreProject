@@ -54,10 +54,13 @@ public class BuyOrderController : ControllerBase
         if (orderCode.StartsWith(OrderConstants.SellOrderCodePrefix))
         {
             var sellOrder = await _sellOrderService.GetEntityByCodeAsync(orderCode);
-            if (sellOrder is null)
+            if (sellOrder is null || !sellOrder.Status.Equals(OrderConstants.CompletedStatus))
+            {
                 return Problem(statusCode: Convert.ToInt32(HttpStatusCode.BadRequest),
                     title: "Order not found.",
                     detail: $"Cannot find data of order {orderCode}");
+            }
+
             //map sp trong sellOrder details thanh response product dto
             var products = await _sellOrderService.GetProducts(sellOrder);
             return Ok(new ResponseCheckOrder
@@ -126,4 +129,14 @@ public class BuyOrderController : ControllerBase
         var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
         return Ok(result);
     }
+
+    //new
+    [HttpPut]
+    [Route("UpdateStatus")]
+    public async Task<IActionResult> UpdateStatus(int orderId, [FromBody]RequestUpdateBuyOrderStatus buyOrder)
+    {
+        var result = await _buyOrderService.UpdateAsync(orderId, buyOrder);
+        return Ok(result);
+    }
+    //end
 }

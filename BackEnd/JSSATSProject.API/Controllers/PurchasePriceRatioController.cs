@@ -1,6 +1,5 @@
 ﻿using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
@@ -11,7 +10,7 @@ public class PurchasePriceRatioController : ControllerBase
 {
     private readonly IPurchasePriceRatioService _purchasePriceRatioService;
 
-    public PurchasePriceRatioController(PurchasePriceRatioService purchasePriceRatioService)
+    public PurchasePriceRatioController(IPurchasePriceRatioService purchasePriceRatioService)
     {
         _purchasePriceRatioService = purchasePriceRatioService;
     }
@@ -22,5 +21,13 @@ public class PurchasePriceRatioController : ControllerBase
     {
         var responseModel = await _purchasePriceRatioService.CreateAsync(requestCreatePurchasePriceRatio);
         return Ok(responseModel);
+    }
+
+    [HttpGet]
+    [Route("GetByReturnBuyBackPolicyId")]
+    public async Task<IActionResult> GetByReturnBuyBackPolicyId(int id)
+    {
+        var response = await _purchasePriceRatioService.GetByReturnBuyBackPolicyIdAsync(id);
+        return Ok(response);
     }
 }

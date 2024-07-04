@@ -5,6 +5,7 @@ using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
@@ -20,7 +21,8 @@ public class SellOrderController : ControllerBase
     private readonly IProductService _productService;
 
     public SellOrderController(ISellOrderService sellOrderService,
-        ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper, IPointService pointService, IProductService productService)
+        ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper, IPointService pointService,
+        IProductService productService)
     {
         _sellOrderService = sellOrderService;
         _specialDiscountRequestService = specialDiscountRequestService;
@@ -67,7 +69,7 @@ public class SellOrderController : ControllerBase
             await _productService.UpdateAllProductStatusAsync(targetOrder, ProductConstants.InactiveStatus);
             return Ok($"Updated order {targetOrder.Id} successfully.");
         }
-        
+
         //create truoc ti update lai special promotion sau
         var currentOrder = (SellOrder)(await _sellOrderService.CreateOrderAsync(requestSellOrder)).Data!;
 
@@ -137,7 +139,7 @@ public class SellOrderController : ControllerBase
         bool ascending, int pageIndex, [FromQuery] int pageSize)
     {
         var responseModel =
-            await _sellOrderService.SearchByCriteriaAsync(statusList, customerPhone, ascending, pageIndex, pageSize);
+            await _sellOrderService.SearchByAsync(statusList, customerPhone, ascending, pageIndex, pageSize);
         return Ok(responseModel);
     }
 }

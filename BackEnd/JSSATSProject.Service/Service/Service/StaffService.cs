@@ -33,23 +33,31 @@ public class StaffService : IStaffService
     }
 
     public async Task<ResponseModel> GetAllAsync(DateTime startDate, DateTime endDate, int pageIndex, int pageSize,
-        string sortBy, bool ascending)
+    string sortBy, bool ascending)
     {
         try
         {
-            // Define orderBy based on sortBy and ascending parameters
             Func<IQueryable<Staff>, IOrderedQueryable<Staff>> orderBy = null;
+
             switch (sortBy?.ToLower())
             {
                 case "totalrevenue":
                     orderBy = ascending
-                        ? q => q.OrderBy(s => s.SellOrders.Sum(so => so.TotalAmount))
-                        : q => q.OrderByDescending(s => s.SellOrders.Sum(so => so.TotalAmount));
+                        ? q => q.OrderBy(s => s.SellOrders
+                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
+                            .Sum(so => so.TotalAmount))
+                        : q => q.OrderByDescending(s => s.SellOrders
+                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
+                            .Sum(so => so.TotalAmount));
                     break;
                 case "totalsellorder":
                     orderBy = ascending
-                        ? q => q.OrderBy(s => s.SellOrders.Count)
-                        : q => q.OrderByDescending(s => s.SellOrders.Count);
+                        ? q => q.OrderBy(s => s.SellOrders
+                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
+                            .Count())
+                        : q => q.OrderByDescending(s => s.SellOrders
+                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
+                            .Count());
                     break;
                 default:
                     orderBy = ascending
@@ -104,6 +112,7 @@ public class StaffService : IStaffService
             };
         }
     }
+
 
     public async Task<ResponseModel> SearchAsync(string nameSearch, DateTime startDate, DateTime endDate, int pageIndex,
         int pageSize)

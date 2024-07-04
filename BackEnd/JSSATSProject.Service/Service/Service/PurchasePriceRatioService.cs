@@ -30,23 +30,21 @@ public class PurchasePriceRatioService : IPurchasePriceRatioService
         };
     }
 
-    public async Task<ResponseModel> GetAllAsync()
+    public async Task<ResponseModel> GetByReturnBuyBackPolicyIdAsync(int Id)
     {
-        var entities = await _unitOfWork.PurchasePriceRatioRepository.GetAsync();
+        var entities = await _unitOfWork.PurchasePriceRatioRepository.GetAsync(
+            filter: x => x.ReturnbuybackpolicyId == Id
+        );
+
+        var responseEntities = _mapper.Map<IEnumerable<ResponsePurchasePriceRatio>>(entities);
+
         return new ResponseModel
         {
-            Data = entities,
+            Data = responseEntities,
             MessageError = ""
         };
     }
 
-    public async Task<ResponseModel> GetByIdAsync(int id)
-    {
-        var response = await _unitOfWork.PurchasePriceRatioRepository.GetByIDAsync(id);
-        return new ResponseModel
-        {
-            MessageError = "",
-            Data = response
-        };
-    }
+
+
 }

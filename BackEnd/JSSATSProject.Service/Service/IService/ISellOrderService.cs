@@ -19,14 +19,15 @@ public interface ISellOrderService
     public Task<SellOrder?> GetEntityByCodeAsync(string code);
     public Task<ResponseModel> CreateOrderAsync(RequestCreateSellOrder requestSellOrder);
     public Task<ResponseModel> UpdateOrderAsync(int orderId, RequestUpdateSellOrder requestSellOrder);
-    public Task<ResponseModel> UpdateOrderAsync(int orderId, SellOrder targetOrder);
-
-    public Task<SellOrder> MapOrderAsync(RequestCreateSellOrder requestSellOrder);
     public Task<ResponseModel> UpdateStatusAsync(int orderId, UpdateSellOrderStatus requestSellOrder);
     public Task<List<ResponseProductForCheckOrder>> GetProducts(SellOrder? sellOrder);
 
-    public Task<ResponseModel> SearchByCriteriaAsync(List<string> statusList, string customerPhone,
+    public Task<ResponseModel> SearchByAsync(List<string> statusList, string customerPhone,
         bool ascending = true, int pageIndex = 1, int pageSize = 10);
 
     Task RemoveAllSellOrderDetails(int id);
+
+    public Task<SellOrder> MapOrderAsync(RequestCreateSellOrder requestSellOrder);
+
+    public Task<ResponseModel> UpdateOrderAsync(int orderId, SellOrder targetOrder);
 }

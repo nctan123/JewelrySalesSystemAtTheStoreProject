@@ -12,6 +12,8 @@ public partial class BuyOrderDetail
     
     public string ProductName { get; set; }
     
+    public int Quantity { get; set; }
+    
     [JsonIgnore]
 
     public int BuyOrderId { get; set; }

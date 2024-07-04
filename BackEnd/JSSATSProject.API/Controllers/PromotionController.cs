@@ -21,9 +21,7 @@ public class PromotionController : ControllerBase
     {
         try
         {
-            var responseModel = await _promotionService.GetAllAsync(pageIndex, pageIndex, ascending);
-            responseModel.TotalElements = await _promotionService.CountAsync();
-            responseModel.TotalPages = responseModel.CalculateTotalPageCount(pageSize);
+            var responseModel = await _promotionService.GetAllAsync(pageIndex, pageSize, ascending);
             return Ok(responseModel);
         }
         catch (Exception ex)
@@ -65,4 +63,14 @@ public class PromotionController : ControllerBase
             return StatusCode(500, $"An error occurred: {ex.Message}");
         }
     }
+
+    [HttpGet]
+    [Route("GetById")]
+    public async Task<IActionResult> GetByIdAsync(int promotionId)
+    {
+        var responseModel = await _promotionService.GetByIdAsync(promotionId);
+            return Ok(responseModel);
+      
+    }
+
 }

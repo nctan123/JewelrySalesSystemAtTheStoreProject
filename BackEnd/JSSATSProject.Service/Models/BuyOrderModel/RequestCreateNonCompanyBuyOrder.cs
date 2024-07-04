@@ -8,13 +8,15 @@ public class RequestCreateNonCompanyBuyOrder
     
     public string? ProductName { get; set; }
 
-    public string? DiamondGradingCode { get; set; }
+    public int? Quantity { get; set; } = 1;
 
-    public int? MaterialId { get; set; }
+    public string? DiamondGradingCode { get; set; } = null;
 
-    public decimal? MaterialWeight { get; set; }
+    public int? MaterialId { get; set; } = null;
+
+    public decimal? MaterialWeight { get; set; } = null;
     
-    public int CategoryTypeId { get; set; }
+    public int CategoryTypeId { get; set; } 
     
     public decimal BuyPrice { get; set; }
     

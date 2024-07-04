@@ -24,7 +24,6 @@ public partial class SellOrderDetail
 
     [JsonIgnore]
     public virtual SellOrder Order { get; set; }
-    [JsonIgnore]
 
     public virtual Product Product { get; set; }
     [JsonIgnore]
