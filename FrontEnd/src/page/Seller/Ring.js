@@ -97,7 +97,7 @@ const Ring = () => {
   const getRingSearch = async (searchTerm, page) => {
     try {
       const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=1&searchTerm=${searchTerm}&pageIndex=${page}&pageSize=10`
+        `https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=1&searchTerm=${searchTerm}&pageIndex=${page}&pageSize=10&includeNullStalls=false`
       );
       if (res.data && res.data.data) {
         setListRing(res.data.data);

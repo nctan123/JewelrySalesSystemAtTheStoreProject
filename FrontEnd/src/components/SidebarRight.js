@@ -20,6 +20,7 @@ const SidebarRight = () => {
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
   const [description, setDescription] = useState('');
   const [productCodesAndQuantity, setProductCodesAndQuantity] = useState({});
+  const[productCodesAndPromotionIds,setProductCodesAndPromotionIds] = useState({})
   const [specialDiscountRate, setSpecialDiscountRate] = useState('0');
   const [checkedItems, setCheckedItems] = useState({});
   const [totalProduct, setTotalProduct] = useState(0);
@@ -63,6 +64,12 @@ const SidebarRight = () => {
       return acc;
     }, {});
     setProductCodesAndQuantity(codesAndQuantity);
+   
+    const codesAndPromotion = CartProduct.reduce((acc, product) => {
+      acc[product.code] = product.promotionId;
+      return acc;
+    }, {});
+    setProductCodesAndPromotionIds(codesAndPromotion);
 
     if (CusPoint?.phone) {
       setCustomerPhoneNumber(CusPoint.phone);
@@ -120,6 +127,16 @@ const SidebarRight = () => {
   };
 
   const handleSubmitOrder = async (isDraft = false) => {
+    // Create a new object for ProductCodesAndPromotionIds with 0 values replaced by null
+    const adjustedProductCodesAndPromotionIds = Object.fromEntries(
+      Object.entries(productCodesAndPromotionIds).map(([key, value]) => [key, value === 0 ? null : value])
+    );
+  
+    // Remove entries with null values
+    const filteredProductCodesAndPromotionIds = Object.fromEntries(
+      Object.entries(adjustedProductCodesAndPromotionIds).filter(([_, value]) => value !== null)
+    );
+  
     const data = {
       customerPhoneNumber,
       staffId: 4, // Replace with actual staffId if needed
@@ -127,19 +144,20 @@ const SidebarRight = () => {
       description,
       discountPoint: 0,
       productCodesAndQuantity,
-      productCodesAndPromotionIds: null,
+      productCodesAndPromotionIds: Object.keys(filteredProductCodesAndPromotionIds).length === 0 ? null : filteredProductCodesAndPromotionIds,
       isSpecialDiscountRequested: parseFloat(specialDiscountRate) !== 0,
       specialDiscountRate,
       specialDiscountRequestId: null,
       discountRejectedReason: '',
       specialDiscountRequestStatus: null,
     };
-    console.log(data)
+    console.log(data);
+  
     if (!productCodesAndQuantity || Object.keys(productCodesAndQuantity).length === 0) {
       toast.error('No Product');
       return;
     }
-
+  
     try {
       const res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder', data);
       if (!isDraft) {
@@ -160,8 +178,8 @@ const SidebarRight = () => {
         console.error('Unexpected response:', res);
       }
     } catch (error) {
-      console.error('Error adding ivoice:', error);
-
+      console.error('Error adding invoice:', error);
+  
       if (error.response) {
         console.error('Error response:', error.response);
         toast.error(`Add Fail: ${error.response.data.message || 'Unknown error'}`);
@@ -174,6 +192,9 @@ const SidebarRight = () => {
       }
     }
   };
+  
+  
+  
   const handlegetCodeEx = async (listsellorder) => {
     for (const item of listsellorder) {
       try {
@@ -435,7 +456,7 @@ const SidebarRight = () => {
         )}
         <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 '>
 
-          <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(total)}<span>.đ</span></div>
+          <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(total - discount)}<span>.đ</span></div>
           <div className='col-start-3 flex gap-2 justify-end items-center mr-[15px]'>
             <span
               onClick={() => {

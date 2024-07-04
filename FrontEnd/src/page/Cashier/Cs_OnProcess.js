@@ -67,8 +67,10 @@ const Cs_Process = () => {
 
   const [createDate, setcreateDate] = useState(new Date().toISOString())
 
-  const handleComplete = () => {
-    
+  const handleComplete = async (id) => {
+    await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
+      status: 'completed',
+    });
   }
 
 
@@ -106,9 +108,9 @@ const Cs_Process = () => {
                 <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
                   {item.sellOrderDetails.map((orderDetail, index) => (
                     <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                      <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
-                      <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
-                    </div>
+                     <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
+                     <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
+                   </div>
                   ))}
                 </div>
 
@@ -119,7 +121,7 @@ const Cs_Process = () => {
                 <div className='bg-[#87A89E] h-[50px] grid grid-cols-2 '>
                   <input value={formatPrice(item.totalAmount) + '.đ'} readOnly className='mx-[15px] w-fit bg-[#87A89E] flex items-center font-bold text-lg' />
                   <div className='col-start-2 flex justify-end items-center mr-[15px]'>
-                    <button type='button' onClick={handleComplete()} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Complete</button>
+                    <button type='button' onClick={() => handleComplete(item.id)} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Complete</button>
                   </div>
                 </div>
                 <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>

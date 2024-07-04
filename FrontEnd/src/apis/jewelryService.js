@@ -8,25 +8,25 @@ const fetchAllCustomer = (page) => {
     return axios.get(`https://jssatsproject.azurewebsites.net/api/Customer/GetAll?pageIndex=${page}`);
 }
 const fetchAllRing = (page) => {
-    return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=1&pageIndex=${page}&pageSize=12&ascending=true`);
+    return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=1&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`);
 }
 const fetchAllEarring = (page) => {
-     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=2&pageIndex=${page}&pageSize=12&ascending=true`);
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=2&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`);
 }
 const fetchAllBangles = (page) => {
-     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=3&pageIndex=${page}&pageSize=12&ascending=true`);
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=3&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`);
 }
 const fetchAllNecklace = (page) => {
-    return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=4&pageIndex=${page}&pageSize=12&ascending=true`);
+    return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=4&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`);
 }
 const fetchAllReGold = (page) => {
-     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=5&pageIndex=${page}&pageSize=12&ascending=true`);
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=5&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`);
 }
 const fetchAllWhGold = (page) => {
-     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&pageIndex=${page}&pageSize=12&ascending=true`);
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`);
 }
 const fetchAllDiamond = (page) => {
-     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=7&pageIndex=${page}&pageSize=12&ascending=true`);
+     return axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=7&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`);
 }
 const fetchStatusInvoice = (st,page) => {
     return axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getall?statusList=${st}&ascending=true&pageIndex=${page}&pageSize=10`);

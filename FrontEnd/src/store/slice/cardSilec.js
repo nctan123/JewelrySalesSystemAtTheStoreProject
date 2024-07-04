@@ -7,8 +7,32 @@ export const productSlice = createSlice({
         CusPoint:null,
         CartWholesale: [],
         CartPromotion: [],
+        CartProductBuy: [],
+        CartCustomerBuy: null,
+        CartCodeOrder:null,
     },
     reducers: {
+        //Add code order
+        addCodeOrder: (state, action) => {
+            state.CartCodeOrder = action.payload;
+        },
+        // Del code order
+        deleteCodeOrder: (state) => {
+            state.CartCodeOrder = null;
+        },
+        //add product buy
+        addProductBuy: (state, action) => {
+            const productIndex = state.CartProductBuy.findIndex(p => p.code === action.payload.code);
+            if (productIndex === -1) {
+                state.CartProductBuy.push({ ...action.payload, quantity: 1 });
+            } 
+        },
+        deleteProductBuy: (state, action) => {
+            state.CartProductBuy = state.CartProductBuy.filter(item => item.code !== action.payload.code);
+        },
+        deleteProductBuyAll: (state) => {
+            state.CartProductBuy = [];
+        },
         // Add product to main cart
         addProduct: (state, action) => {
             const productIndex = state.CartArr.findIndex(p => p.id === action.payload.id);
@@ -50,6 +74,11 @@ export const productSlice = createSlice({
 
 
 export const {
+    addCodeOrder,
+    deleteCodeOrder,
+    deleteProductBuyAll,
+    addProductBuy,
+    deleteProductBuy,
     addCustomer,
     deleteCustomer,
     addProduct,

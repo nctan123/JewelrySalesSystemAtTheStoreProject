@@ -228,7 +228,7 @@ const Cs_WaitingPayment = () => {
                   <span className='flex justify-end font-bold'><FormatDate isoString={currentTime} /></span>
                   <div className='flex'>
                   <span>Code:</span>
-                  <input className='bg-[#e9ddc200] text-center' value={item.code} readOnly/>
+                  <input className='bg-[#e9ddc200] text-center' value={item.id} readOnly/>
                   </div>
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
@@ -249,9 +249,9 @@ const Cs_WaitingPayment = () => {
                 <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
                   {item.sellOrderDetails.map((orderDetail, index) => (
                     <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                      <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productName}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
-                      <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
-                    </div>
+                     <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
+                     <div className='col-start-3  flex justify-end  text-[12px] pr-2'>{orderDetail.unitPrice}<span className='text-red-500 flex justify-center text-[12px]'>{''}x{orderDetail.quantity}</span> </div>
+                   </div>
                   ))}
                 </div>
 
@@ -548,7 +548,7 @@ const Cs_WaitingPayment = () => {
                                         return(
                                         <tr className="border-b bg-gray-50">
                                           <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
-                                          <td className="whitespace-nowrap px-6 py-4">{p.productId}</td>
+                                          <td className="whitespace-nowrap px-6 py-4">{p.productName}</td>
                                           <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
                                           <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
                                           <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity*p.unitPrice)}</td>
@@ -587,7 +587,7 @@ const Cs_WaitingPayment = () => {
                               </div>
                               <div className='flex justify-between px-4 py-2'>
                                 <button className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
-                                <button onClick={(event) => handleCompleteVnPay(item,event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
+                                <button onClick={(event) => handleCompleteCash(item,event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
                               </div>
                             </div>
                           </div>

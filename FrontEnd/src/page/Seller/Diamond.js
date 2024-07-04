@@ -53,7 +53,7 @@ const Ring = () => {
       if (!token) {
         throw new Error("No token found");
       }
-      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=7&searchTerm=${id}&pageIndex=1&pageSize=12`, {
+      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=7&searchTerm=${id}&pageIndex=1&pageSize=12&includeNullStalls=false`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -97,7 +97,7 @@ const Ring = () => {
   const getRingSearch = async (searchTerm, page) => {
     try {
       const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=7&searchTerm=${searchTerm}&pageIndex=${page}&pageSize=12`
+        `https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=7&searchTerm=${searchTerm}&pageIndex=${page}&pageSize=12&includeNullStalls=false`
       );
       if (res.data && res.data.data) {
         setListRing(res.data.data);

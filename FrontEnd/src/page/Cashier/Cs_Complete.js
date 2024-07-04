@@ -82,10 +82,13 @@ const Cs_Complete = () => {
             return (
               <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[28em] bg-[#e9ddc26d] mt-[20px]'>
                 <div className='flex flex-col justify-between px-[15px] text-black font-thin'>
+                  <div className='flex justify-between'>
+                  <span className='font-mono bg-gray-300 rounded px-1'>{item.paymentMethod}</span>
                   <span className='flex justify-end font-bold'><FormatDate isoString={currentTime} /></span>
+                  </div>
                   <div className='flex'>
                     <span>Code:</span>
-                    <input className='bg-[#e9ddc200] text-center' value={item.code} readOnly />
+                    <input className='bg-[#e9ddc200] text-center' value={item.id} readOnly />
                   </div>
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
@@ -105,7 +108,7 @@ const Cs_Complete = () => {
                 </div>
                 <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
                   {item.sellOrderDetails.map((orderDetail, index) => (
-                    <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
+                      <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
                       <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
                       <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
                     </div>
