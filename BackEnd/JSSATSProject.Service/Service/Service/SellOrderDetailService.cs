@@ -129,14 +129,7 @@ public class SellOrderDetailService : ISellOrderDetailService
             var product = await _productService.GetEntityByCodeAsync(item.Key);
             product.Status = "inactive";
             int? promotionId = null;
-            productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
-            var sellOrderDetails = new SellOrderDetail
-            {
-                ProductId = product.Id,
-                Quantity = item.Value,
-                PromotionId = promotionId is not null ? Convert.ToInt32(promotionId) : null,
-                UnitPrice = await _productService.CalculateProductPrice(product, item.Value),
-=======
+
             decimal promotionRate = 1m;
             productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
             if (promotionId is not null)
@@ -150,7 +143,6 @@ public class SellOrderDetailService : ISellOrderDetailService
                 Quantity = item.Value,
                 PromotionId = promotionId is not null ? Convert.ToInt32(promotionId) : null,
                 UnitPrice = (1-promotionRate) * await _productService.CalculateProductPrice(product, item.Value),
->>>>>>> BE_NhatAnh
                 OrderId = sellOrderId
             };
             result.Add(sellOrderDetails);
