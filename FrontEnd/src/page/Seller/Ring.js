@@ -149,7 +149,7 @@ const Ring = () => {
       <div className='h-[80vh] overflow-y-auto mt-3 flex-col justify-center mx-auto'>
         <div className='grid grid-cols-4 mt-1 w-fit space-x-2 mx-auto'>
           {listRing && listRing.length > 0 &&
-            listRing.filter(item => item.categoryId === 1).map((item, index) => {
+            listRing.map((item, index) => {
               return (
                 <div key={`ring-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
                   <div className=' bg-[#fff] rounded-md shadow-md'>

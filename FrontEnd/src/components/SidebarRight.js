@@ -32,7 +32,7 @@ const SidebarRight = () => {
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [point, setpoint] = useState(0);
-
+  const [IdTemPo,setIdTemPo] = useState();
 
   const dispatch = useDispatch();
   const CartProduct = useSelector(state => state.cart.CartArr);
@@ -138,6 +138,7 @@ const SidebarRight = () => {
     );
   
     const data = {
+      id:IdTemPo,
       customerPhoneNumber,
       staffId: 4, // Replace with actual staffId if needed
       createDate: new Date().toISOString(),
@@ -163,6 +164,7 @@ const SidebarRight = () => {
       if (!isDraft) {
         await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${res.data.id}`, {
           status: 'waiting for customer payment',
+          createDate:new Date().toISOString(),
         });
       }
       if (res.status === 201 || res.status === 200) {
@@ -209,7 +211,7 @@ const SidebarRight = () => {
     }
   };
   
-  const handleRequestToScreen = async (event, phone, listsellorder) => {
+  const handleRequestToScreen = async (event, phone, listsellorder,id) => {
     event.preventDefault();
     try {
       const res = await axios.get(
@@ -217,6 +219,7 @@ const SidebarRight = () => {
       );
       console.log('customer export', res.data.data[0]);
       console.log('list', listsellorder);
+      setIdTemPo(id);
       const item = res.data.data[0];
       dispatch(addCustomer(item));
       await handlegetCodeEx(listsellorder);
@@ -282,7 +285,7 @@ const SidebarRight = () => {
                                 {formatPrice(item.totalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
-                                <button onClick={(event) => handleRequestToScreen(event,item.customerPhoneNumber,item.sellOrderDetails)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                                <button onClick={(event) => handleRequestToScreen(event,item.customerPhoneNumber,item.sellOrderDetails,item.id)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
                                 <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
                                   {close => (
                                   <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>

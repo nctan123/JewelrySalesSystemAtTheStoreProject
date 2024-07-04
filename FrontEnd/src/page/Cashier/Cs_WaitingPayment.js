@@ -14,7 +14,7 @@ import { IconContext } from 'react-icons';
 const FormatDate = ({ isoString }) => {
   // Cs_WaitingPayment
   const parsedDate = parseISO(isoString);
-  const formattedDate = format(parsedDate, 'HH:mm yyyy-MM-dd');
+  const formattedDate = format(parsedDate, "HH:mm yyyy-MM-dd");
   return (
     <div>
       <p>{formattedDate}</p>
@@ -195,28 +195,43 @@ const Cs_WaitingPayment = () => {
       console.error('Error invoice:', error);
     }
   };
-  const handleCompleteVnPay = async (item,event) => {
+  const handleCompleteVnPay = async (item, event) => {
     event.preventDefault();
     let data = {
       paymentId: PaymentID,
-      orderId:item.id,
+      orderId: item.id,
       paymentMethodId: ChosePayMethodID,
       customerId: item.customerId,
-      createDate:createDate,
-      amount:item.totalAmount,     
+      createDate: createDate,
+      amount: item.totalAmount,     
     };
-    console.log(data)
+    console.log(data);
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/VnPay/createpaymentUrl', data);
-      console.log(res.data)
+      console.log(res.data);
       toast.success('Successful');
- 
+  
+      // Automatically redirect to the returned URL
+      window.location.href = res.data;
     } catch (error) {
       toast.error('Fail');
       console.error('Error invoice:', error);
     }
   };
   
+  const handleCancle = async (id) => {
+    try {
+    const res = await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
+      status: 'cancelled',
+      createDate:currentTime,
+      });
+      console.log(res.data)
+      toast.success('Success');
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('Failed to cancel order');
+    }
+  };
   return (<>
     <div>
       <div className='my-0 mx-auto'>
@@ -225,7 +240,7 @@ const Cs_WaitingPayment = () => {
             return (
               <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[28em] bg-[#e9ddc26d] mt-[20px]'>
                 <div className='flex flex-col justify-between px-[15px] text-black font-thin'>
-                  <span className='flex justify-end font-bold'><FormatDate isoString={currentTime} /></span>
+                  <span className='flex justify-end font-bold'><FormatDate isoString={item.createDate} /></span>
                   <div className='flex'>
                   <span>Code:</span>
                   <input className='bg-[#e9ddc200] text-center' value={item.id} readOnly/>
@@ -586,8 +601,8 @@ const Cs_WaitingPayment = () => {
                                 
                               </div>
                               <div className='flex justify-between px-4 py-2'>
-                                <button className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
-                                <button onClick={(event) => handleCompleteCash(item,event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
+                                <button onClick={() => handleCancle(item.id)} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
+                                <button onClick={(event) => handleCompleteVnPay(item,event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
                               </div>
                             </div>
                           </div>
