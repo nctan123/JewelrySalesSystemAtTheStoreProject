@@ -338,7 +338,7 @@ public class ProductService : IProductService
 
         if (includeNullStalls)
         {
-            filter = p => p.CategoryId == categoryId;
+            filter = p => p.CategoryId == categoryId && p.Stalls == null;
         }
         else
         {
