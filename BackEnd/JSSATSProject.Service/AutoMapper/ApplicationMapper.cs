@@ -159,6 +159,7 @@ public class ApplicationMapper : Profile
         CreateMap<Payment, ResponsePayment>()
                 .ForMember(dest => dest.ExternalTransactionCode, opt => opt.MapFrom(src => src.PaymentDetails.FirstOrDefault().ExternalTransactionCode))
                 .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentDetails.FirstOrDefault().PaymentMethod.Name))
+                .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order.Code))
                 .ReverseMap();
 
         //Point

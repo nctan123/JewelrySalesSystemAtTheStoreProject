@@ -19,4 +19,7 @@ public interface IProductService
     public Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true);
 
     public Task<int> CountAsync(Expression<Func<Product, bool>> filter = null);
+    public Task UpdateAllProductStatusAsync(SellOrder sellOrder, string newStatus);
+    public Task<decimal> CalculateMaterialBuyPrice(int? materialId, decimal? materialWeight);
+    public Task<ResponseModel> UpdateProductStatusAsync(int productId, string newStatus);
 }

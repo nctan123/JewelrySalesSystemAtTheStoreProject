@@ -1,10 +1,10 @@
-﻿using System.Text.Json.Serialization;
-using JSSATSProject.Repository.Enums;
+﻿using JSSATSProject.Repository.Enums;
 
 namespace JSSATSProject.Service.Models.OrderModel;
 
 public class RequestCreateSellOrder
 {
+    public int? Id { get; set; }
     public required string CustomerPhoneNumber { get; set; }
     public required int StaffId { get; set; }
     public DateTime CreateDate { get; set; }

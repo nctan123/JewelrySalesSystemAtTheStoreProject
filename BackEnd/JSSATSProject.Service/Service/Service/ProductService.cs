@@ -414,6 +414,21 @@ public class ProductService : IProductService
         return await _unitOfWork.ProductRepository.CountAsync(filter);
     }
 
+    public async Task UpdateAllProductStatusAsync(SellOrder sellOrder, string newStatus)
+    {
+        var productIds = sellOrder.SellOrderDetails.Select(s => s.ProductId);
+        foreach (var productId in productIds)
+        {
+            await UpdateProductStatusAsync(productId, newStatus);
+        }
+    }
+
+    public async Task<decimal> CalculateMaterialBuyPrice(int? materialId, decimal? materialWeight)
+    {
+        var price = await _unitOfWork.MaterialPriceListRepository.GetMaterialBuyPriceAsync(materialId, materialWeight);
+        return price;
+    }
+
     public async Task<bool> AreValidProducts(Dictionary<string, int> productCodes)
     {
         if (!productCodes.Any()) return false;
@@ -455,7 +470,7 @@ public class ProductService : IProductService
                 prefix = ProductConstants.WSGPrefix;
                 break;
             default:
-                prefix = ProductConstants.DIAPrefix; 
+                prefix = ProductConstants.DIAPrefix;
                 break;
         }
         string newCode;
@@ -467,4 +482,43 @@ public class ProductService : IProductService
         return newCode;
     }
 
+    public async Task<ResponseModel> UpdateProductStatusAsync(int productId, string newStatus)
+    {
+        try
+        {
+            var products = await _unitOfWork.ProductRepository.GetAsync(
+                p => p.Id == productId,
+                includeProperties: "Stalls");
+            var product = products.FirstOrDefault();
+
+            if (product != null)
+            {
+                product.Status = newStatus;
+                await _unitOfWork.ProductRepository.UpdateAsync(product);
+                await _unitOfWork.SaveAsync();
+
+                return new ResponseModel
+                {
+                    Data = product,
+                    MessageError = ""
+                };
+            }
+
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Product not found"
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            // Logger.LogError(ex, "An error occurred while updating the product.");
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the product: " + ex.Message
+            };
+        }
+    }
 }

@@ -38,9 +38,9 @@ public class PaymentController : ControllerBase
 
     [HttpGet]
     [Route("GetAll")]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllAsync(int pageIndex, int pageSize)
     {
-        var responseModel = await _paymentService.GetAllAsync();
+        var responseModel = await _paymentService.GetAllAsync(pageIndex, pageSize);
         return Ok(responseModel);
     }
 
@@ -170,4 +170,13 @@ public class PaymentController : ControllerBase
         }
 
     }
+
+    [HttpGet]
+    [Route("GetTotal")]
+    public async Task<IActionResult> GetTotalAsync(int paymentMethod, DateTime startDate, DateTime endDate)
+    {
+            var totalCount = await _paymentService.GetTotal(paymentMethod, startDate, endDate);
+            return Ok(totalCount);
+    }
+
 }
