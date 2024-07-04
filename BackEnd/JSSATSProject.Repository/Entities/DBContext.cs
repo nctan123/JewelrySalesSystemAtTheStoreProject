@@ -193,6 +193,11 @@ public partial class DBContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("product_name");
 
+            //-------------------------------------------------------------------------------
+            entity.Property(e => e.Quantity).HasColumnName("quantity")
+                .IsRequired()
+                .HasColumnType("int");
+            
             entity.HasOne(d => d.BuyOrder).WithMany(p => p.BuyOrderDetails)
                 .HasForeignKey(d => d.BuyOrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

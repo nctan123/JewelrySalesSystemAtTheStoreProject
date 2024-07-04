@@ -44,6 +44,7 @@ public class UnitOfWork
     private SymmetryRepository _symmetry;
     private ShapeRepository _shape;
     private ProductDiamondRespository _productDiamond;
+    private BuyOrderDetailRepository _buyOrderDetail;
 
     private bool disposed;
 
@@ -70,6 +71,14 @@ public class UnitOfWork
         {
             if (_campaignpoint == null) _campaignpoint = new CampaignPointRepository(_context);
             return _campaignpoint;
+        }
+    }
+    public BuyOrderDetailRepository BuyOrderDetailRepository
+    {
+        get
+        {
+            if (_buyOrderDetail == null) _buyOrderDetail = new BuyOrderDetailRepository(_context);
+            return _buyOrderDetail;
         }
     }
 

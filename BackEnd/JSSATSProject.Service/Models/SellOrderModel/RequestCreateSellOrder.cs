@@ -1,4 +1,6 @@
 ﻿using JSSATSProject.Repository.Enums;
+﻿using System.Text.Json.Serialization;
+using JSSATSProject.Repository.Enums;
 
 namespace JSSATSProject.Service.Models.OrderModel;
 

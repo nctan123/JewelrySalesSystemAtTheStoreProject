@@ -72,12 +72,75 @@ public class BuyOrderController : ControllerBase
                 TotalValue = sellOrder.TotalAmount,
                 Products = products
             }
+=======
+                {
+                    code = orderCode,
+                    CustomerName = string.Join(" ", sellOrder.Customer.Firstname, sellOrder.Customer.Lastname),
+                    CustomerPhoneNumber = sellOrder.Customer.Phone,
+                    CreateDate = sellOrder.CreateDate,
+                    TotalValue = sellOrder.TotalAmount,
+                    Products = products
+                }
+>>>>>>> BE_NhatAnh
             );
         }
 
         return Problem(statusCode: Convert.ToInt32(HttpStatusCode.BadRequest),
             title: "Order type is invalid.",
             detail: "The system can just check buyback products from Sell Orders.");
+<<<<<<< HEAD
+    }
+
+    [HttpPost]
+    [Route("CreateInCompanyOrder")]
+    public async Task<IActionResult> CreateInCompanyOrder([FromBody] RequestCreateBuyOrder requestCreateBuyOrder)
+    {
+        //assume that all data are already valid
+        var customer =
+            (Customer)(await _customerService.GetEntityByPhoneAsync(requestCreateBuyOrder.CustomerPhoneNumber)).Data!;
+
+        var buyOrder = new BuyOrder
+        {
+            CustomerId = customer.Id,
+            StaffId = requestCreateBuyOrder.StaffId,
+            Status = "processing",
+            TotalAmount = _buyOrderService.GetTotalAmount(requestCreateBuyOrder.ProductCodesAndQuantity,
+                requestCreateBuyOrder.ProductCodesAndEstimatePrices),
+            CreateDate = requestCreateBuyOrder.CreateDate,
+            Description = requestCreateBuyOrder.Description,
+            BuyOrderDetails = null
+        };
+        //save buyOrder
+        await _buyOrderService.CreateAsync(buyOrder);
+        buyOrder.BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder, buyOrder.Id);
+        var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("CreateNonCompanyOrder")]
+    public async Task<IActionResult> CreateNonCompanyOrder(
+        [FromBody] RequestCreateNonCompanyBuyOrder requestCreateBuyOrder)
+    {
+        //assume that all data are already valid
+        var customer =
+            (Customer)(await _customerService.GetEntityByPhoneAsync(requestCreateBuyOrder.CustomerPhoneNumber)).Data!;
+        var buyOrder = new BuyOrder()
+        {
+            CustomerId = customer.Id,
+            StaffId = requestCreateBuyOrder.StaffId,
+            Status = "processing",
+            CreateDate = requestCreateBuyOrder.CreateDate,
+            Description = requestCreateBuyOrder.Description,
+            BuyOrderDetails = null
+        };
+        await _buyOrderService.CreateAsync(buyOrder);
+        buyOrder.BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder, buyOrder.Id);
+        buyOrder.TotalAmount = buyOrder.BuyOrderDetails.Sum(bo => bo.UnitPrice);
+        var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
+        return Ok(result);
+=======
+>>>>>>> BE_NhatAnh
     }
 
     [HttpPost]
@@ -129,4 +192,14 @@ public class BuyOrderController : ControllerBase
         var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
         return Ok(result);
     }
+
+    //new
+    [HttpPut]
+    [Route("UpdateStatus")]
+    public async Task<IActionResult> UpdateStatus(int orderId, [FromBody]RequestUpdateBuyOrderStatus buyOrder)
+    {
+        var result = await _buyOrderService.UpdateAsync(orderId, buyOrder);
+        return Ok(result);
+    }
+    //end
 }

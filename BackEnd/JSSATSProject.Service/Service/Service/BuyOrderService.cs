@@ -128,6 +128,50 @@ public class BuyOrderService : IBuyOrderService
         }
     }
 
+    public async Task<ResponseModel> UpdateAsync(int buyOrderId, RequestUpdateBuyOrderStatus entity)
+    {
+        try
+        {
+            var buyOrder = await _unitOfWork.BuyOrderRepository.GetEntityAsync(buyOrderId);
+            if (buyOrder != null)
+            {
+                buyOrder.Status = entity.NewStatus;
+                //delete buy order details if order is cancelled
+                if (entity.NewStatus == OrderConstants.CanceledStatus)
+                {
+                    var buyOrderDetails = buyOrder.BuyOrderDetails.ToList();
+                    foreach (var buyOrderDetail in buyOrderDetails)
+                    {
+                        await _unitOfWork.BuyOrderDetailRepository.DeleteAsync(buyOrderDetail);
+                    }
+                }
+                
+                await _unitOfWork.BuyOrderRepository.UpdateAsync(buyOrder);
+
+                return new ResponseModel
+                {
+                    Data = buyOrder,
+                    MessageError = ""
+                };
+            }
+
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Not Found"
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
+        }
+    }
+
     public decimal GetPrice(string targetProductCode, Dictionary<string, int> productCodesAndQuantity,
         Dictionary<string, int> productCodesAndEstimatePrices)
     {
@@ -204,12 +248,14 @@ public class BuyOrderService : IBuyOrderService
         var materialId = requestCreateBuyOrder.MaterialId;
         var materialWeight = requestCreateBuyOrder.MaterialWeight;
         var diamondGradingCode = requestCreateBuyOrder.DiamondGradingCode;
+        var quantity = requestCreateBuyOrder.Quantity!.Value;
         int? purchasePriceRatioId = null;
         decimal price = requestCreateBuyOrder.BuyPrice;
 
         if (categoryTypeId is ProductConstants.RetailGoldCategoryType or ProductConstants.WholesaleGoldCategoryType)
         {
             price = await _productService.CalculateMaterialBuyPrice(materialId, materialWeight);
+            price = quantity * await _productService.CalculateMaterialBuyPrice(materialId, materialWeight);
         }
         else
         {
@@ -222,6 +268,7 @@ public class BuyOrderService : IBuyOrderService
         {
             BuyOrderId = buyOrderId,
             ProductName = requestCreateBuyOrder.ProductName,
+            Quantity = quantity,
             CategoryTypeId = requestCreateBuyOrder.CategoryTypeId,
             DiamondGradingCode = diamondGradingCode,
             PurchasePriceRatioId = purchasePriceRatioId,

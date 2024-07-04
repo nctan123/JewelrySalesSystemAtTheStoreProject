@@ -20,5 +20,6 @@ public class RequestCreateNonCompanyBuyOrder
 
     public DateTime CreateDate { get; set; }
 
+    public int? Quantity { get; set; } = 1;
     public string? Description { get; set; }
 }
