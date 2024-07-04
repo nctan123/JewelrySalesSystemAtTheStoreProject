@@ -8,6 +8,7 @@ using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
@@ -194,7 +195,8 @@ public class SellOrderService : ISellOrderService
             if (order != null)
             {
                 _mapper.Map(requestSellOrder, order);
-
+                DateTime vnTime = CustomLibrary.NowInVietnamTime();
+                order.CreateDate = vnTime;
                 await _unitOfWork.SellOrderRepository.UpdateAsync(order);
                 //neu update status = cancelled
                 if (order.Status.Equals(OrderConstants.CanceledStatus))

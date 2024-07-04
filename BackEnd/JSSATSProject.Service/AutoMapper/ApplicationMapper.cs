@@ -28,6 +28,7 @@ using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 using JSSATSProject.Service.Models.ReturnBuyBackPolicyModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.ShapeModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Models.StaffModel;

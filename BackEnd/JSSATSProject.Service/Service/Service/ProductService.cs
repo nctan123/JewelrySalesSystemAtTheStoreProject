@@ -136,7 +136,7 @@ public class ProductService : IProductService
             //except diamond category, all the rest product categories has material 
             var productMaterial = correspondingProduct.ProductMaterials!.First();
             var closestPriceList = productMaterial.Material.MaterialPriceLists
-                .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
+                .OrderByDescending(m => m.EffectiveDate)
                 .First();
 
             var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;

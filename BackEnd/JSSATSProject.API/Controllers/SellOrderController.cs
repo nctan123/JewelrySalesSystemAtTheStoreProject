@@ -3,6 +3,7 @@ using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
@@ -67,7 +68,7 @@ public class SellOrderController : ControllerBase
             await _sellOrderService.RemoveAllSellOrderDetails(requestSellOrder.Id.Value);
             var result = await _sellOrderService.UpdateOrderAsync(targetOrder.Id, targetOrder);
             await _productService.UpdateAllProductStatusAsync(targetOrder, ProductConstants.InactiveStatus);
-            return Ok($"Updated order {targetOrder.Id} successfully.");
+            return Ok(_mapper.Map<ResponseUpdateSellOrderWithSpecialPromotion>((SellOrder)result.Data!));
         }
 
         //create truoc ti update lai special promotion sau

@@ -126,23 +126,31 @@ public class SellOrderDetailService : ISellOrderDetailService
         var result = new List<SellOrderDetail>();
         foreach (var item in productCodesAndQuantity)
         {
-            var product = await _productService.GetEntityByCodeAsync(item.Key);
-            product.Status = "inactive";
+            var productId = item.Key;
+            var quantity = item.Value;
+            var product = await _productService.GetEntityByCodeAsync(productId);
+            product.Status = ProductConstants.InactiveStatus;
             int? promotionId = null;
 
-            decimal promotionRate = 1m;
+            decimal promotionRate = 0m;
             productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
-            if (promotionId is not null)
+            if (promotionId.HasValue)
             {
                 var promotion = await _unitOfWork.PromotionRepository.GetByIDAsync(promotionId.Value);
                 promotionRate = promotion.DiscountRate!.Value;
             }
+
+            // if (product.CategoryId.Equals(ProductConstants.WholesaleGoldCategory))
+            // {
+            //     await _productService.DecreaseWholesaleGoldQuantityAsync(productId, quantity);
+            // }
+            var basePrice = await _productService.CalculateProductPrice(product, item.Value);
             var sellOrderDetails = new SellOrderDetail
             {
                 ProductId = product.Id,
                 Quantity = item.Value,
                 PromotionId = promotionId is not null ? Convert.ToInt32(promotionId) : null,
-                UnitPrice = (1-promotionRate) * await _productService.CalculateProductPrice(product, item.Value),
+                UnitPrice = (1-promotionRate) * basePrice,
                 OrderId = sellOrderId
             };
             result.Add(sellOrderDetails);
