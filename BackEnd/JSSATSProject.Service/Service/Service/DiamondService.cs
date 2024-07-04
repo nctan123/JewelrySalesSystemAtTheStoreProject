@@ -1,17 +1,19 @@
-﻿using JSSATSProject.Repository.Entities;
+﻿using AutoMapper;
 using JSSATSProject.Repository;
-using JSSATSProject.Service.Models.DiamondModel;
+using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
+using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 public class DiamondService : IDiamondService
 {
-    private readonly UnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly UnitOfWork _unitOfWork;
 
     public DiamondService(UnitOfWork unitOfWork, IMapper mapper)
     {
@@ -19,21 +21,51 @@ public class DiamondService : IDiamondService
         _mapper = mapper;
     }
 
+
+
     public async Task<ResponseModel> CreateDiamondAsync(RequestCreateDiamond requestDiamond)
     {
+        // Create DiamondName
+        var originName = await _unitOfWork.Context.Origins
+            .Where(o => o.Id == requestDiamond.OriginId)
+            .Select(o => o.Name)
+            .FirstOrDefaultAsync();
+
+        var shapeName = await _unitOfWork.Context.Shapes
+            .Where(s => s.Id == requestDiamond.ShapeId)
+            .Select(s => s.Name)
+            .FirstOrDefaultAsync();
+
+        var clarityLevel = await _unitOfWork.Context.Clarities
+            .Where(c => c.Id == requestDiamond.ClarityId)
+            .Select(c => c.Level)
+            .FirstOrDefaultAsync();
+
+        var newName = $"{originName}-{shapeName}-{clarityLevel}";
+        // Create Code
+        var newCode =  await GenerateUniqueCodeAsync();
+
+        //Map
         var entity = _mapper.Map<Diamond>(requestDiamond);
+
+        entity.Name = newName;
+        entity.Code = newCode;
+
         await _unitOfWork.DiamondRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
+
         return new ResponseModel
         {
             Data = entity,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
     public async Task<ResponseModel> GetAllAsync()
     {
-        var entities = await _unitOfWork.DiamondRepository.GetAsync(includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
+        var entities =
+            await _unitOfWork.DiamondRepository.GetAsync(
+                includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
 
         var response = entities.Select(diamond => new ResponseDiamond
         {
@@ -49,13 +81,14 @@ public class DiamondService : IDiamondService
             CutName = diamond.Cut.Level,
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
+            DiamondGradingCode = diamond.DiamondGradingCode,
             Status = diamond.Status
         }).ToList();
 
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
@@ -79,19 +112,20 @@ public class DiamondService : IDiamondService
             CutName = diamond.Cut.Level,
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
+            DiamondGradingCode = diamond.DiamondGradingCode,
             Status = diamond.Status
         }).ToList();
 
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
     public async Task<ResponseModel> GetByIdAsync(int id)
     {
-         var entities = await _unitOfWork.DiamondRepository.GetAsync(
+        var entities = await _unitOfWork.DiamondRepository.GetAsync(
             c => c.Id.Equals(id),
             includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
 
@@ -109,21 +143,22 @@ public class DiamondService : IDiamondService
             CutName = diamond.Cut.Level,
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
+            DiamondGradingCode = diamond.DiamondGradingCode,
             Status = diamond.Status
         }).ToList();
 
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
     public async Task<ResponseModel> GetByNameAsync(string name)
     {
         var entities = await _unitOfWork.DiamondRepository.GetAsync(
-           c => c.Name.Equals(name),
-           includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
+            c => c.Name.Equals(name),
+            includeProperties: "Carat,Clarity,Color,Cut,Fluorescence,Origin,Polish,Shape,Symmetry");
 
         var response = entities.Select(diamond => new ResponseDiamond
         {
@@ -139,13 +174,14 @@ public class DiamondService : IDiamondService
             CutName = diamond.Cut.Level,
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
+            DiamondGradingCode = diamond.DiamondGradingCode,
             Status = diamond.Status
         }).ToList();
 
         return new ResponseModel
         {
             Data = response,
-            MessageError = "",
+            MessageError = ""
         };
     }
 
@@ -156,7 +192,6 @@ public class DiamondService : IDiamondService
             var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
             if (diamond != null)
             {
-
                 _mapper.Map(requestDiamond, diamond);
 
                 await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
@@ -164,14 +199,14 @@ public class DiamondService : IDiamondService
                 return new ResponseModel
                 {
                     Data = diamond,
-                    MessageError = "",
+                    MessageError = ""
                 };
             }
 
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "Not Found",
+                MessageError = "Not Found"
             };
         }
         catch (Exception ex)
@@ -185,14 +220,13 @@ public class DiamondService : IDiamondService
         }
     }
 
-    public  async Task<ResponseModel> UpdateStatusDiamondAsync(int diamondId, RequestUpdateStatusDiamond requestDiamond)
+    public async Task<ResponseModel> UpdateStatusDiamondAsync(int diamondId, RequestUpdateStatusDiamond requestDiamond)
     {
         try
         {
             var diamond = await _unitOfWork.DiamondRepository.GetByIDAsync(diamondId);
             if (diamond != null)
             {
-
                 _mapper.Map(requestDiamond, diamond);
 
                 await _unitOfWork.DiamondRepository.UpdateAsync(diamond);
@@ -200,14 +234,14 @@ public class DiamondService : IDiamondService
                 return new ResponseModel
                 {
                     Data = diamond,
-                    MessageError = "",
+                    MessageError = ""
                 };
             }
 
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "Not Found",
+                MessageError = "Not Found"
             };
         }
         catch (Exception ex)
@@ -219,5 +253,17 @@ public class DiamondService : IDiamondService
                 MessageError = "An error occurred while updating the customer: " + ex.Message
             };
         }
+    }
+
+    public async Task<string> GenerateUniqueCodeAsync()
+    {
+        string newCode;
+        do
+        {
+            var prefix = DiamondConstants.DiamondPrefix;
+            newCode = prefix + CustomLibrary.RandomNumber(3);
+        }
+        while (await _unitOfWork.Context.Diamonds.AnyAsync(so => so.Code == newCode));
+        return newCode;
     }
 }

@@ -2,13 +2,22 @@ import React, { useState, useEffect } from 'react'
 import styles from '../../style/cardForList.module.css'
 import clsx from 'clsx'
 import { BsCash } from "react-icons/bs";
-import { fetchAllListOrder,fetchAllProduct } from '../../apis/jewelryService'
+import { fetchAllListOrder, fetchAllProduct } from '../../apis/jewelryService'
 import Popup from 'reactjs-popup';
+import Modal from 'react-modal';
 
 const Cs_OnProcess = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [listInvoice, setlistInvoice] = useState([]); // list full invoice
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+  const handleDetailClick = (event) => {
+    event.preventDefault()
+    setIsModalOpen(true);
+  }
   useEffect(() => {
     getInvoice();
   }, []);
@@ -109,24 +118,19 @@ const Cs_OnProcess = () => {
 
                 <div className='border border-x-0 border-b-0 mx-[15px] border-t-black py-2 flex justify-between'>
                   <div className='font-bold'>PAYMENT</div>
-
                 </div>
 
                 <div className='bg-[#87A89E] h-[50px] grid grid-cols-2 '>
                   <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(item.totalAmount)} <span>.đ</span></div>
                   <div className='col-start-2 flex justify-end items-center mr-[15px]'>
-                    <Popup trigger={<button className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Pay Bill</button>} position="right center">
+                    <Popup trigger={<button type='button' className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Pay Bill</button>} position="right center">
                       {close => (
-                        <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+                        <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] flex justify-center items-center'>
                           <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[50%] shadow-[#b6b0b0] shadow-md'>
-                            <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
-                              <h3 className="text-md font-semibold text-gray-900">
-                                Payment
-                              </h3>
-                              <a className='cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
-                            </div>
-
-                            <form className="p-4 md:p-5">
+                            <form className="p-4 md:p-5 relative">
+                              <div className=" flex items-center justify-end md:p-0 rounded-t">
+                                <a className='absolute right-0 cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
+                              </div>
                               <div className="grid gap-4 grid-cols-2">
                                 <div className='row-start-1 col-start-1 h-[100px]'>
                                   <h5 className='font-bold '>Customer Info</h5>
@@ -161,15 +165,11 @@ const Cs_OnProcess = () => {
                                     </div>
                                   </div>
                                   <div className='absolute bottom-5 w-[95%] border border-x-0 border-b-0 border-black grid grid-cols-2 grid-rows-3'>
-                                    {/* <div className='row-start-1 col-start-1 font-thin'>Item</div>
-                                    <div className='row-start-1 col-start-2 flex justify-end mr-5'>$</div>
-                                    <div className='row-start-2 col-start-1 font-thin'>Tax(5%)</div>
-                                    <div className='row-start-2 col-start-2 flex justify-end mr-5'>$</div> */}
                                     <div className='row-start-1 col-start-1 font-bold'>Total</div>
                                     <div className='row-start-1 col-start-2 flex justify-end mr-5'>{formatPrice(item.totalAmount)}<span>.đ</span></div>
                                   </div>
                                 </div>
-                        
+
                                 <div class="w-[22rem] h-[500px] bg-[#f6f8f9] rounded-3xl p-4 shadow-2xl dark:bg-[#17181a]">
                                   <div class="h-[100px]">
                                     <textarea type="text" id="display" class="h-full w-full text-3xl font-bold bg-transparent border border-none outline-none resize-none dark:text-white" disabled>0</textarea>
@@ -210,20 +210,12 @@ const Cs_OnProcess = () => {
                                     <input type="button" onClick={() => calculate()} class="w-20 h-14 text-white bg-green-500 hover:bg-green-600 shadow-md font-bold py-1 px-2 rounded-2xl" value="=" />
                                   </div>
                                 </div>
-                                {/* </div> */}
+                     
                               </div>
-                              <div className=''>
-
-                              </div>
-                              <div className=''>
-
-                              </div>
-
-                              <button type="submit" className="text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-4 text-center">
+                              <button onClick={(even) => handleDetailClick(even)} className="mb-0 text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-4 text-center">
                                 Pay Now
                               </button>
                             </form>
-
                           </div>
                         </div>
                       )}
@@ -233,9 +225,23 @@ const Cs_OnProcess = () => {
                 <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
                   {item.description}
                 </div>
+                <Modal
+                  isOpen={isModalOpen}
+                  onRequestClose={closeModal}
+                  contentLabel="Staff Details"
+                  className="bg-white rounded-md shadow-lg max-w-md mx-auto"
+                  overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                >
+                  <div className='bg-[#000]'>
+                    hekk
+                  </div>
+                </Modal>
               </div>
+
+                      
             )
           })}
+        
         </div>
       </div>
     </div>

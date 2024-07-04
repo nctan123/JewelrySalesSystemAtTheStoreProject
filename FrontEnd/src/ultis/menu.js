@@ -67,8 +67,8 @@ export const sidebarMenu = [
         icons: <CiGift size={24} color="white" />
     },
     {
-        path: 'returnExchange',
-        text:'Return/Exchange',
+        path: 'purchase',
+        text:'Purchase',
         icons: <TbArrowsExchange2 size={24} color="white"/>,
       
     },

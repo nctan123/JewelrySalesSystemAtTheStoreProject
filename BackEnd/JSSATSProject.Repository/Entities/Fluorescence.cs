@@ -2,7 +2,6 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -15,6 +14,6 @@ public partial class Fluorescence
     public string Description { get; set; }
 
     public decimal? PriceRate { get; set; }
-    [JsonIgnore]
+
     public virtual ICollection<Diamond> Diamonds { get; set; } = new List<Diamond>();
 }

@@ -149,41 +149,6 @@ export default function Revenue() {
     };
 
 
-    // const handleWeekClick = () => {
-    //     const today = new Date();
-    //     const thisMonday = new Date(today); // Copy today's date
-    //     thisMonday.setDate(today.getDate() - today.getDay() + 1); // Set to Monday this week
-
-    //     const lastSunday = new Date(thisMonday);
-    //     lastSunday.setDate(thisMonday.getDate() - 1); // Set to Sunday last week
-
-    //     const lastMonday = new Date(thisMonday);
-    //     lastMonday.setDate(thisMonday.getDate() - 7); // Set to Monday last week
-
-    //     const lastLastSunday = new Date(lastMonday);
-    //     lastLastSunday.setDate(lastMonday.getDate() - 1); // Set to Sunday the week before last
-
-    //     const lastLastMonday = new Date(lastMonday);
-    //     lastLastMonday.setDate(lastMonday.getDate() - 7); // Set to Monday the week before last
-
-    //     const thisMondayStr = thisMonday.toISOString(); // Monday this week
-    //     const lastSundayStr = lastSunday.toISOString(); // Sunday last week
-    //     const lastMondayStr = lastMonday.toISOString(); // Monday last week
-    //     const lastLastSundayStr = lastLastSunday.toISOString(); // Sunday the week before last
-    //     const lastLastMondayStr = lastLastMonday.toISOString(); // Monday the week before last
-
-    //     // Fetch data for this week and last week
-    //     getRevenue(lastMondayStr, thisMondayStr, setThisWeekRevenue);
-    //     getRevenue(lastLastMondayStr, lastMondayStr, setLastWeekRevenue);
-    //     getNewCustomer(lastMondayStr, thisMondayStr, setThisWeekCustomer);
-    //     getNewCustomer(lastLastMondayStr, lastMondayStr, setLastWeekCustomer);
-    //     getQuantityOrder(lastMondayStr, thisMondayStr, setThisWeekOrder);
-    //     getQuantityOrder(lastLastMondayStr, lastMondayStr, setLastWeekOrder);
-    //     getQuantityProduct(lastMondayStr, thisMondayStr, setThisWeekProduct);
-    //     getQuantityProduct(lastLastMondayStr, lastMondayStr, setLastWeekProduct);
-
-    //     setView('week');
-    // };
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('vi-VN', {
             style: 'currency',
@@ -201,7 +166,7 @@ export default function Revenue() {
 
 
     return (
-        <div className="container mx-auto p-4">
+        <div className="container mx-auto p-4 border border-gray-300 shadow-lg my-4 rounded-md">
             <div className="flex justify-end mb-4">
                 <button
                     type="button"
@@ -372,7 +337,7 @@ export default function Revenue() {
                     </div>
                     {thisWeekProduct && lastWeekProduct ?
                         (<div className={`flex-grow p-4 text-center rounded-xl ${calculatePercentageChange(thisWeekProduct.data.reduce((total, item) => total + item.Quantity, 0), lastWeekProduct.data.reduce((total, item) => total + item.Quantity, 0)) > 0 ? 'bg-green-500' : calculatePercentageChange(thisWeekProduct.data.reduce((total, item) => total + item.Quantity, 0), lastWeekProduct.data.reduce((total, item) => total + item.Quantity, 0)) < 0 ? 'bg-red-500' : 'bg-yellow-500'}`}>
-                            <h1 className="font-bold text-xl p-1">Number of Orders</h1>
+                            <h1 className="font-bold text-xl p-1">Number of Product Sold</h1>
                             <p className="text-2xl">{thisWeekProduct.data.reduce((total, item) => total + item.Quantity, 0)}</p>
                             <div className="flex justify-between text-sm mt-2 space-x-4">
                                 <div>

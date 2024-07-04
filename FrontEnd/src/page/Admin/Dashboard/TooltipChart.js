@@ -1,112 +1,177 @@
-import React, { PureComponent } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const data = [
-    {
-        name: 'Page A',
-        uv: 4000,
-        pv: 2400,
-        amt: 2400,
-    },
-    {
-        name: 'Page B',
-        uv: 3000,
-        pv: 1398,
-        amt: 2210,
-    },
-    {
-        name: 'Page C',
-        uv: 2000,
-        pv: 9800,
-        amt: 2290,
-    },
-    {
-        name: 'Page D',
-        uv: 2780,
-        pv: 3908,
-        amt: 2000,
-    },
-    {
-        name: 'Page E',
-        uv: 1890,
-        pv: 4800,
-        amt: 2181,
-    },
-    {
-        name: 'Page F',
-        uv: 2390,
-        pv: 3800,
-        amt: 2500,
-    },
-    {
-        name: 'Page G',
-        uv: 3490,
-        pv: 4300,
-        amt: 2100,
-    },
-];
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import Chart from 'react-apexcharts';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+const TooltipChart = () => {
+    const [year, setYear] = useState(new Date().getFullYear());
+    const [dates, setDates] = useState([]);
+    const [values, setValues] = useState([]);
+    const [loadingApi, setLoadingApi] = useState(false);
+    useEffect(() => {
+        generateDates(year);
+    }, [year]);
 
-const getIntroOfPage = (label) => {
-    if (label === 'Page A') {
-        return "Page A is about men's clothing";
-    }
-    if (label === 'Page B') {
-        return "Page B is about women's dress";
-    }
-    if (label === 'Page C') {
-        return "Page C is about women's bag";
-    }
-    if (label === 'Page D') {
-        return 'Page D is about household goods';
-    }
-    if (label === 'Page E') {
-        return 'Page E is about food';
-    }
-    if (label === 'Page F') {
-        return 'Page F is about baby food';
-    }
-    return '';
-};
+    const handleChange = (e) => {
+        const selectedYear = parseInt(e.target.value, 10);
+        setYear(selectedYear);
+    };
 
-const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-        return (
-            <div className="custom-tooltip">
-                <p className="label">{`${label} : ${payload[0].value}`}</p>
-                <p className="intro">{getIntroOfPage(label)}</p>
-                <p className="desc">Anything you want can be displayed here.</p>
+    const generateDates = async (year) => {
+        const monthDates = [];
+        const fetchedValues = [];
+        for (let month = 0; month < 12; month++) {
+            const startDate = new Date(year, month, 1);
+            const endDate = new Date(year, month + 1, 0); // 0 gives the last day of the previous month
+            const formattedStartDate = startDate.toISOString().split('T')[0];
+            const formattedEndDate = endDate.toISOString().split('T')[0];
+
+            monthDates.push({
+                month: startDate.toLocaleString('default', { month: 'long' }),
+                startDate: formattedStartDate,
+                endDate: formattedEndDate
+            });
+            setLoadingApi(true);
+            // Fetch data from the API
+            try {
+                const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${formattedStartDate}&endDate=${formattedEndDate}`);
+                const result = response.data && response.data.data ? response.data.data : 0;
+                fetchedValues.push({
+                    month: startDate.toLocaleString('default', { month: 'long' }),
+                    value: result
+                });
+            } catch (error) {
+                console.error(`Error fetching data for ${startDate.toLocaleString('default', { month: 'long' })}:`, error);
+                fetchedValues.push({
+                    month: startDate.toLocaleString('default', { month: 'long' }),
+                    value: 'Error fetching data'
+                });
+            }
+            setLoadingApi(false);
+        }
+        setDates(monthDates);
+        setValues(fetchedValues);
+    };
+    const formatCurrency = (value) => {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+            minimumFractionDigits: 0
+        }).format(value);
+    };
+    const options = {
+        series: [{
+            name: 'Revenue',
+            data: values.map(value => value.value !== 'Error fetching data' ? value.value : 0)
+        }],
+        chart: {
+            height: 350,
+            type: 'bar',
+        },
+        plotOptions: {
+            bar: {
+                borderRadius: 10,
+                dataLabels: {
+                    position: 'top', // top, center, bottom
+                },
+            }
+        },
+        dataLabels: {
+            enabled: true,
+            formatter: function (val) {
+                return formatCurrency(val);
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ["#304758"]
+            }
+        },
+        xaxis: {
+            // categories: dates.map(date => date.month),
+            categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            position: 'top',
+            axisBorder: {
+                show: false
+            },
+            axisTicks: {
+                show: false
+            },
+            crosshairs: {
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        colorFrom: '#D8E3F0',
+                        colorTo: '#BED1E6',
+                        stops: [0, 100],
+                        opacityFrom: 0.4,
+                        opacityTo: 0.5,
+                    }
+                }
+            },
+            tooltip: {
+                enabled: true,
+            }
+        },
+        yaxis: {
+            axisBorder: {
+                show: false
+            },
+            axisTicks: {
+                show: false,
+            },
+            labels: {
+                show: false,
+                formatter: function (val) {
+                    return formatCurrency(val);
+                }
+            }
+        },
+        title: {
+            text: `Total monthly revenue in ${year}`,
+            floating: true,
+            offsetY: 330,
+            align: 'center',
+            style: {
+                color: '#444'
+            }
+        }
+    };
+
+    return (
+        <div className='border border-gray-300 shadow-lg my-4 rounded-md '>
+            <div class="flex justify-end ">
+                <strong className='m-3'>Select: </strong>
+                <input
+                    type="number"
+                    value={year}
+                    className=' my-3'
+                    onChange={handleChange}
+                    min="2000"
+                    max="2050"
+                />
+                {/* {loadingApi && (
+                    <FontAwesomeIcon
+                        icon={faSpinner}
+                        className='fa-spin-pulse fa-spin-reverse fa-1.5x me-2 m-3 '
+                    />
+                )} */}
+
             </div>
-        );
-    }
-
-    return null;
+            <div className='flex justify-center'>
+                {loadingApi && (
+                    <FontAwesomeIcon
+                        icon={faSpinner}
+                        className='fa-spin-pulse fa-spin-reverse fa-1.5x me-2 '
+                    />
+                )}
+            </div>
+            <div className=' p-6'>
+                <Chart options={options} series={options.series} type="bar" height={350} />
+            </div>
+        </div>
+    );
 };
 
-export default class TooltipChart extends PureComponent {
-    static demoUrl = 'https://codesandbox.io/p/sandbox/tooltip-with-customized-content-vgl956';
-
-    render() {
-        return (
-            <ResponsiveContainer width="100%" height={400} className="flex items-center justify-center">
-                <BarChart
-                    width={500}
-                    height={300}
-                    data={data}
-                    margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Bar dataKey="pv" barSize={20} fill="#8884d8" />
-                </BarChart>
-            </ResponsiveContainer>
-        );
-    }
-}
+export default TooltipChart;

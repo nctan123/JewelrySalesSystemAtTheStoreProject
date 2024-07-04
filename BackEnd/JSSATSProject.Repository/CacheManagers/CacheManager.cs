@@ -1,8 +1,5 @@
 ﻿namespace JSSATSProject.Repository.CacheManagers;
 
-using System;
-using System.Collections.Generic;
-
 public class CacheManager<T>
 {
     private readonly Dictionary<string, T> _cache = new();

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
 import Modal from 'react-modal';
-
+import { CiViewList } from "react-icons/ci";
 // Set the app element for accessibility
 Modal.setAppElement('#root');
 
@@ -61,9 +61,10 @@ const StaffMana = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log('... check account', res);
+            // console.log('... check account', res);
             if (res && res.data && res.data.data) {
-                const account = res.data.data;
+                // const sellerAccounts = accounts.filter(account => account.role === 'seller');
+                const account = res.data.data.filter(account => account.roleId === 1 || account.roleId === 3);
                 setOriginalListaccount(account);
                 setListaccount(account);
             }
@@ -143,9 +144,9 @@ const StaffMana = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 className="text-2xl font-bold text-center mb-4">Staff management list</h1>
+                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline">Staff management list</h1>
                 <div className="flex mb-4">
                     <div className="relative">
                         <input
@@ -158,27 +159,27 @@ const StaffMana = () => {
                         <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSearch} />
                     </div>
                 </div>
-                <div className="w-[1000px] overflow-hidden">
+                <div className="w-[1200px] overflow-hidden ">
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                        <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
-                            <tr>
-                                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">ID</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Name</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Username</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Password</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Role Id</th>
-                                <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
+                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
+                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
+                                <th className="py-3 pl-3 rounded-l-lg">ID</th>
+                                <th >Name</th>
+                                <th >Username</th>
+                                <th >Password</th>
+                                <th >Role Id</th>
+                                <th className=" rounded-r-lg ">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {mergedData.map((item, index) => (
                                 // hover:shadow-2xl
-                                <tr key={index} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl" >
-                                    <td className="rounded-l-lg pl-3 text-base font-normal text-[#637381] py-4">{item.id}</td>
-                                    <td className="text-base font-normal text-[#637381] py-4">{item.firstname} {item.lastname}</td>
-                                    <td className="text-base font-normal text-[#637381] py-4">{item.username}</td>
-                                    <td className="text-base font-normal text-[#637381] py-4">{item.password}</td>
-                                    <td className="text-base font-normal text-[#637381] py-4">
+                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pl-3  py-4 text-black">{item.id}</td>
+                                    <td >{item.firstname} {item.lastname}</td>
+                                    <td >{item.username}</td>
+                                    <td >{item.password}</td>
+                                    <td >
                                         {
                                             item.roleId === 2
                                                 ? 'Admin'
@@ -191,11 +192,8 @@ const StaffMana = () => {
                                                             : item.roleId
                                         }
                                     </td>
-                                    <td className="text-base font-normal text-[#637381] py-4">
-                                        <button className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none" onClick={() => handleIdClick(item.id)}>
-                                            Detail
-                                        </button>
-                                    </td>
+                                    <td className="text-3xl text-[#000099] pl-2"><CiViewList onClick={() => handleIdClick(item.id)} /></td>
+
                                 </tr>
                             ))}
                             {placeholders.map((_, index) => (
@@ -233,10 +231,10 @@ const StaffMana = () => {
                     isOpen={isModalOpen}
                     onRequestClose={closeModal}
                     contentLabel="Staff Details"
-                    className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto"
-                    overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+                    className="bg-white w-[600px] p-6 rounded-lg shadow-lg max-w-md mx-auto"
+                    overlayClassName="fixed inset-0 z-30 bg-black bg-opacity-50 flex justify-center items-center"
                 >
-                    <h2 className="text-xl font-bold mb-4">Staff Details</h2>
+                    <h2 className="text-xl font-bold text-blue-600 text-center mb-4">Staff Details</h2>
                     {selectedStaff && (
                         <div>
                             <p><strong>ID:</strong> {selectedStaff.id}</p>

@@ -2,6 +2,7 @@
 #nullable disable
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace JSSATSProject.Repository.Entities;
 
@@ -32,7 +33,8 @@ public partial class Diamond
     public int CaratId { get; set; }
 
     public string Status { get; set; }
-
+    
+    public string DiamondGradingCode { get; set; }
     public virtual Carat Carat { get; set; }
 
     public virtual Clarity Clarity { get; set; }
@@ -52,4 +54,6 @@ public partial class Diamond
     public virtual Symmetry Symmetry { get; set; }
 
     public virtual ICollection<ProductDiamond> ProductDiamonds { get; set; } = new List<ProductDiamond>();
+
+
 }

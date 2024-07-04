@@ -1,500 +1,431 @@
 ﻿using JSSATSProject.Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using JSSATSProject.Repository.Repos;
 
-namespace JSSATSProject.Repository
+namespace JSSATSProject.Repository;
+
+public class UnitOfWork
 {
-    public class UnitOfWork
+    private AccountRepository _account;
+    private BuyOrderRepository _buyOrder;
+    private CampaignPointRepository _campaignpoint;
+    private CaratRepository _carat;
+    private ClarityRepository _clarity;
+    private ColorRepository _color;
+    private readonly DBContext _context;
+    private CustomerRepository _customer;
+    private CutRepository _cut;
+    private DiamondRepository _diamond;
+    private DiamondPriceListRepository _diamondpricelist;
+    private FluorescenceRepository _fluorescence;
+    private GuaranteeRepository _guarantee;
+    private MaterialRepository _material;
+    private MaterialPriceListRepository _materialpricelist;
+    private OriginRepository _origin;
+    private PaymentRepository _payment;
+    private PaymentDetailRepository _paymentdetail;
+    private PaymentMethodRepository _paymentmethod;
+    private PointRepository _point;
+    private PolishRepository _polish;
+    private ProductCategoryTypeRepository _prodcutcategorytype;
+    private ProductRepository _product;
+    private ProductCategoryRepository _productcategory;
+    private ProductMaterialRepository _productmaterial;
+    private PromotionRepository _promotion;
+    private PromotionRequestRepository _promotionrequest;
+    private PurchasePriceRatioRepository _purchasePriceRatioRepository;
+    private ReturnBuyBackPolicyRepository _returnbuybackpolicy;
+    private RoleRepository _role;
+    private SellOrderRepository _sellOrder;
+    private SellOrderDetailRepository _sellorderdetail;
+    private SpecialDiscountRequestRepository _specialdiscountrequest;
+    private StaffRepository _staff;
+    private StallRepository _stall;
+    private StallTypeRepository _stalltype;
+    private SymmetryRepository _symmetry;
+    private ShapeRepository _shape;
+    private ProductDiamondRespository _productDiamond;
+    private BuyOrderDetailRepository _buyOrderDetail;
+
+    private bool disposed;
+
+    public UnitOfWork(DBContext context)
     {
-        private DBContext _context;
-        private AccountRepository _account;
-        private CustomerRepository _customer;
-        private DiamondRepository _diamond;
-        private DiamondPriceListRepository _diamondpricelist;
-        private GuaranteeRepository _guarantee;
-        private MaterialPriceListRepository _materialpricelist;
-        private MaterialRepository _material;
-        private SellOrderRepository _sellorder;
-        private PaymentRepository _payment;
-        private PaymentMethodRepository _paymentmethod;
-        private PointRepository _point;
-        private ProductRepository _product;
-        private ProductCategoryRepository _productcategory;
-        private ProductCategoryTypeRepository _prodcutcategorytype;
-        private PromotionRepository _promotion;
-        private ReturnBuyBackPolicyRepository _returnbuybackpolicy;
-        private StaffRepository _staff;
-        private StallRepository _stall;
-        private StallTypeRepository _stalltype;
-        private OriginRepository _origin;
-        private CutRepository _cut;
-        private ColorRepository _color;
-        private ClarityRepository _clarity;
-        private CaratRepository _carat;
-        private FluorescenceRepository _fluorescence;
-        private PolishRepository _polish;
-        private SymmetryRepository _symmetry;
-        private RoleRepository _role;
-        private ProductMaterialRepository _productmaterial;
-        private SellOrderDetailRepository _sellorderdetail;
-        private PromotionRequestRepository _promotionrequest;
-        private SpecialDiscountRequestRepository _specialdiscountrequest;
-        private PaymentDetailRepository _paymentdetailrepository;
-        private PurchasePriceRatioRepository _purchasePriceRatioRepository;
-        private SellOrderRepository _sellorderrepository;
+        _context = context;
+    }
+    // bổ sung mới Procedures
+    public DBContext Context => _context;
 
-        public UnitOfWork(DBContext context)
+    public PurchasePriceRatioRepository PurchasePriceRatioRepository
+    {
+        get
         {
-            _context = context;
+            if (_purchasePriceRatioRepository == null)
+                _purchasePriceRatioRepository = new PurchasePriceRatioRepository(_context);
+            return _purchasePriceRatioRepository;
         }
+    }
 
-        public SellOrderRepository SellOrderRepository
+    public CampaignPointRepository CampaignPointRepository
+    {
+        get
         {
-            get
-            {
-                if (_sellorderrepository == null)
-                {
-                    _sellorderrepository = new SellOrderRepository(_context);
-                }
-                return _sellorderrepository;
-            }
-
+            if (_campaignpoint == null) _campaignpoint = new CampaignPointRepository(_context);
+            return _campaignpoint;
         }
-
-        public PurchasePriceRatioRepository PurchasePriceRatioRepository
+    }
+    public BuyOrderDetailRepository BuyOrderDetailRepository
+    {
+        get
         {
-            get
-            {
-                if (_purchasePriceRatioRepository == null)
-                {
-                    _purchasePriceRatioRepository = new PurchasePriceRatioRepository(_context);
-                }
-                return _purchasePriceRatioRepository;
-            }
-
+            if (_buyOrderDetail == null) _buyOrderDetail = new BuyOrderDetailRepository(_context);
+            return _buyOrderDetail;
         }
-        public SellOrderDetailRepository SellOrderDetailRepository
+    }
+
+    public SellOrderDetailRepository SellOrderDetailRepository
+    {
+        get
         {
-            get
-            {
-                if (_sellorderdetail == null)
-                {
-                    _sellorderdetail = new SellOrderDetailRepository(_context);
-                }
-                return _sellorderdetail;
-            }
-
+            if (_sellorderdetail == null) _sellorderdetail = new SellOrderDetailRepository(_context);
+            return _sellorderdetail;
         }
+    }
 
-        public ProductMaterialRepository ProductMaterialRepository
+    public PaymentDetailRepository PaymentDetailRepository
+    {
+        get
         {
-            get
-            {
-                if (_productmaterial == null)
-                {
-                    _productmaterial = new ProductMaterialRepository(_context);
-                }
-                return _productmaterial;
-            }
-
+            if (_paymentdetail == null) _paymentdetail = new PaymentDetailRepository(_context);
+            return _paymentdetail;
         }
+    }
 
-        public StallTypeRepository StallTypeRepository
+    public BuyOrderRepository BuyOrderRepository
+    {
+        get
         {
-            get
-            {
-                if (_stalltype == null)
-                {
-                    _stalltype = new StallTypeRepository(_context);
-                }
-                return _stalltype;
-            }
-
+            if (_buyOrder == null) _buyOrder = new BuyOrderRepository(_context);
+            return _buyOrder;
         }
-        public AccountRepository AccountRepository
+    }
+
+    public ProductMaterialRepository ProductMaterialRepository
+    {
+        get
         {
-            get
-            {
-                if (_account == null)
-                {
-                    _account = new AccountRepository(_context);
-                }
-                return _account;
-            }
+            if (_productmaterial == null) _productmaterial = new ProductMaterialRepository(_context);
+            return _productmaterial;
         }
+    }
 
-        public CustomerRepository CustomerRepository
+    public StallTypeRepository StallTypeRepository
+    {
+        get
         {
-            get
-            {
-                if (_customer == null)
-                {
-                    _customer = new CustomerRepository(_context);
-                }
-                return _customer;
-            }
+            if (_stalltype == null) _stalltype = new StallTypeRepository(_context);
+            return _stalltype;
         }
+    }
 
-        public DiamondRepository DiamondRepository
+    public AccountRepository AccountRepository
+    {
+        get
         {
-            get
-            {
-                if (_diamond == null)
-                {
-                    _diamond = new DiamondRepository(_context);
-                }
-                return _diamond;
-            }
+            if (_account == null) _account = new AccountRepository(_context);
+            return _account;
         }
+    }
 
-        public DiamondPriceListRepository DiamondPriceListRepository
+    public CustomerRepository CustomerRepository
+    {
+        get
         {
-            get
-            {
-                if (_diamondpricelist == null)
-                {
-                    _diamondpricelist = new DiamondPriceListRepository(_context);
-                }
-                return _diamondpricelist;
-            }
+            if (_customer == null) _customer = new CustomerRepository(_context);
+            return _customer;
         }
+    }
 
-        public GuaranteeRepository GuaranteeRepository
+    public DiamondRepository DiamondRepository
+    {
+        get
         {
-            get
-            {
-                if (_guarantee == null)
-                {
-                    _guarantee = new GuaranteeRepository(_context);
-                }
-                return _guarantee;
-            }
+            if (_diamond == null) _diamond = new DiamondRepository(_context);
+            return _diamond;
         }
+    }
 
-        public MaterialPriceListRepository MaterialPriceListRepository
+    public DiamondPriceListRepository DiamondPriceListRepository
+    {
+        get
         {
-            get
-            {
-                if (_materialpricelist == null)
-                {
-                    _materialpricelist = new MaterialPriceListRepository(_context);
-                }
-                return _materialpricelist;
-            }
+            if (_diamondpricelist == null) _diamondpricelist = new DiamondPriceListRepository(_context);
+            return _diamondpricelist;
         }
+    }
 
-        public MaterialRepository MaterialRepository
+    public GuaranteeRepository GuaranteeRepository
+    {
+        get
         {
-            get
-            {
-                if (_material == null)
-                {
-                    _material = new MaterialRepository(_context);
-                }
-                return _material;
-            }
+            if (_guarantee == null) _guarantee = new GuaranteeRepository(_context);
+            return _guarantee;
         }
+    }
 
-
-        public PaymentRepository PaymentRepository
+    public MaterialPriceListRepository MaterialPriceListRepository
+    {
+        get
         {
-            get
-            {
-                if (_payment == null)
-                {
-                    _payment = new PaymentRepository(_context);
-                }
-                return _payment;
-            }
+            if (_materialpricelist == null) _materialpricelist = new MaterialPriceListRepository(_context);
+            return _materialpricelist;
         }
+    }
 
-        public PaymentMethodRepository PaymentMethodRepository
+    public MaterialRepository MaterialRepository
+    {
+        get
         {
-            get
-            {
-                if (_paymentmethod == null)
-                {
-                    _paymentmethod = new PaymentMethodRepository(_context);
-                }
-                return _paymentmethod;
-            }
+            if (_material == null) _material = new MaterialRepository(_context);
+            return _material;
         }
+    }
 
-        public PointRepository PointRepository
+    public SellOrderRepository SellOrderRepository
+    {
+        get
         {
-            get
-            {
-                if (_point == null)
-                {
-                    _point = new PointRepository(_context);
-                }
-                return _point;
-            }
+            if (_sellOrder == null) _sellOrder = new SellOrderRepository(_context);
+            return _sellOrder;
         }
+    }
 
-        public ProductRepository ProductRepository
+    public PaymentRepository PaymentRepository
+    {
+        get
         {
-            get
-            {
-                if (_product == null)
-                {
-                    _product = new ProductRepository(_context);
-                }
-                return _product;
-            }
+            if (_payment == null) _payment = new PaymentRepository(_context);
+            return _payment;
         }
+    }
 
-        public ProductCategoryRepository ProductCategoryRepository
+    public PaymentMethodRepository PaymentMethodRepository
+    {
+        get
         {
-            get
-            {
-                if (_productcategory == null)
-                {
-                    _productcategory = new ProductCategoryRepository(_context);
-                }
-                return _productcategory;
-            }
+            if (_paymentmethod == null) _paymentmethod = new PaymentMethodRepository(_context);
+            return _paymentmethod;
         }
+    }
 
-        public ProductCategoryTypeRepository ProductCategoryTypeRepository
+    public PointRepository PointRepository
+    {
+        get
         {
-            get
-            {
-                if (_prodcutcategorytype == null)
-                {
-                    _prodcutcategorytype = new ProductCategoryTypeRepository(_context);
-                }
-                return _prodcutcategorytype;
-            }
+            if (_point == null) _point = new PointRepository(_context);
+            return _point;
         }
+    }
 
-        public PromotionRepository PromotionRepository
+    public ProductRepository ProductRepository
+    {
+        get
         {
-            get
-            {
-                if (_promotion == null)
-                {
-                    _promotion = new PromotionRepository(_context);
-                }
-                return _promotion;
-            }
+            if (_product == null) _product = new ProductRepository(_context);
+            return _product;
         }
+    }
 
-        public ReturnBuyBackPolicyRepository ReturnBuyBackPolicyRepository
+    public ProductCategoryRepository ProductCategoryRepository
+    {
+        get
         {
-            get
-            {
-                if (_returnbuybackpolicy == null)
-                {
-                    _returnbuybackpolicy = new ReturnBuyBackPolicyRepository(_context);
-                }
-                return _returnbuybackpolicy;
-            }
+            if (_productcategory == null) _productcategory = new ProductCategoryRepository(_context);
+            return _productcategory;
         }
+    }
 
-        public StaffRepository StaffRepository
+    public ProductCategoryTypeRepository ProductCategoryTypeRepository
+    {
+        get
         {
-            get
-            {
-                if (_staff == null)
-                {
-                    _staff = new StaffRepository(_context);
-                }
-                return _staff;
-            }
+            if (_prodcutcategorytype == null) _prodcutcategorytype = new ProductCategoryTypeRepository(_context);
+            return _prodcutcategorytype;
         }
+    }
 
-        public StallRepository StallRepository
+    public PromotionRepository PromotionRepository
+    {
+        get
         {
-            get
-            {
-                if (_stall == null)
-                {
-                    _stall = new StallRepository(_context);
-                }
-                return _stall;
-            }
+            if (_promotion == null) _promotion = new PromotionRepository(_context);
+            return _promotion;
         }
+    }
 
-        public CutRepository CutRepository
+    public ReturnBuyBackPolicyRepository ReturnBuyBackPolicyRepository
+    {
+        get
         {
-            get
-            {
-                if (_cut == null)
-                {
-                    _cut = new CutRepository(_context);
-                }
-                return _cut;
-            }
+            if (_returnbuybackpolicy == null) _returnbuybackpolicy = new ReturnBuyBackPolicyRepository(_context);
+            return _returnbuybackpolicy;
         }
+    }
 
-        public ClarityRepository ClarityRepository
+    public StaffRepository StaffRepository
+    {
+        get
         {
-            get
-            {
-                if (_clarity == null)
-                {
-                    _clarity = new ClarityRepository(_context);
-                }
-                return _clarity;
-            }
+            if (_staff == null) _staff = new StaffRepository(_context);
+            return _staff;
         }
+    }
 
-        public ColorRepository ColorRepository
+    public StallRepository StallRepository
+    {
+        get
         {
-            get
-            {
-                if (_color == null)
-                {
-                    _color = new ColorRepository(_context);
-                }
-                return _color;
-            }
+            if (_stall == null) _stall = new StallRepository(_context);
+            return _stall;
         }
+    }
 
-        public CaratRepository CaratRepository
+    public CutRepository CutRepository
+    {
+        get
         {
-            get
-            {
-                if (_carat == null)
-                {
-                    _carat = new CaratRepository(_context);
-                }
-                return _carat;
-            }
+            if (_cut == null) _cut = new CutRepository(_context);
+            return _cut;
         }
+    }
 
-        public PolishRepository PolishRepository
+    public ClarityRepository ClarityRepository
+    {
+        get
         {
-            get
-            {
-                if (_polish == null)
-                {
-                    _polish = new PolishRepository(_context);
-                }
-                return _polish;
-            }
+            if (_clarity == null) _clarity = new ClarityRepository(_context);
+            return _clarity;
         }
+    }
 
-        public FluorescenceRepository FluorescenceRepository
+    public ColorRepository ColorRepository
+    {
+        get
         {
-            get
-            {
-                if (_fluorescence == null)
-                {
-                    _fluorescence = new FluorescenceRepository(_context);
-                }
-                return _fluorescence;
-            }
+            if (_color == null) _color = new ColorRepository(_context);
+            return _color;
         }
+    }
 
-        public SymmetryRepository SymmetryRepository
+    public CaratRepository CaratRepository
+    {
+        get
         {
-            get
-            {
-                if (_symmetry == null)
-                {
-                    _symmetry = new SymmetryRepository(_context);
-                }
-                return _symmetry;
-            }
+            if (_carat == null) _carat = new CaratRepository(_context);
+            return _carat;
         }
+    }
 
-        public OriginRepository OriginRepository
+    public PolishRepository PolishRepository
+    {
+        get
         {
-            get
-            {
-                if (_origin == null)
-                {
-                    _origin = new OriginRepository(_context);
-                }
-                return _origin;
-            }
+            if (_polish == null) _polish = new PolishRepository(_context);
+            return _polish;
         }
+    }
 
-        public RoleRepository RoleRepository
+    public FluorescenceRepository FluorescenceRepository
+    {
+        get
         {
-            get
-            {
-                if (_role == null)
-                {
-                    _role = new RoleRepository(_context);
-                }
-                return _role;
-            }
+            if (_fluorescence == null) _fluorescence = new FluorescenceRepository(_context);
+            return _fluorescence;
         }
+    }
 
-        public PromotionRequestRepository PromotionRequestRepository
+    public SymmetryRepository SymmetryRepository
+    {
+        get
         {
-            get
-            {
-                if (_promotionrequest == null)
-                {
-                    _promotionrequest = new PromotionRequestRepository(_context);
-                }
-                return _promotionrequest;
-            }
+            if (_symmetry == null) _symmetry = new SymmetryRepository(_context);
+            return _symmetry;
         }
+    }
 
-        public SpecialDiscountRequestRepository SpecialDiscountRequestRepository
+    public OriginRepository OriginRepository
+    {
+        get
         {
-            get
-            {
-                if (_specialdiscountrequest == null)
-                {
-                    _specialdiscountrequest = new SpecialDiscountRequestRepository(_context);
-                }
-                return _specialdiscountrequest;
-            }
+            if (_origin == null) _origin = new OriginRepository(_context);
+            return _origin;
         }
+    }
 
-        public PaymentDetailRepository PaymentDetailRepository
+    public RoleRepository RoleRepository
+    {
+        get
         {
-            get
-            {
-                if (_paymentdetailrepository == null)
-                {
-                    _paymentdetailrepository = new PaymentDetailRepository(_context);
-                }
-                return _paymentdetailrepository;
-            }
+            if (_role == null) _role = new RoleRepository(_context);
+            return _role;
         }
+    }
 
-
-
-
-
-
-
-        public async Task SaveAsync()
+    public PromotionRequestRepository PromotionRequestRepository
+    {
+        get
         {
-            await _context.SaveChangesAsync();
+            if (_promotionrequest == null) _promotionrequest = new PromotionRequestRepository(_context);
+            return _promotionrequest;
         }
+    }
 
-        private bool disposed = false;
-
-        protected virtual async ValueTask Dispose(bool disposing)
+    public SpecialDiscountRequestRepository SpecialDiscountRequestRepository
+    {
+        get
         {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    await _context.DisposeAsync();
-                }
-            }
-            this.disposed = true;
+            if (_specialdiscountrequest == null)
+                _specialdiscountrequest = new SpecialDiscountRequestRepository(_context);
+            return _specialdiscountrequest;
         }
+    }
 
-        public async ValueTask Dispose()
+    public ShapeRepository ShapeRepository
+    {
+        get
         {
-            await Dispose(true);
-            GC.SuppressFinalize(this);
+            if (_shape == null)
+                _shape = new ShapeRepository(_context);
+            return _shape;
         }
+    }
 
+    public ProductDiamondRespository ProductDiamondRespository
+    {
+        get
+        {
+            if (_productDiamond == null)
+                _productDiamond = new ProductDiamondRespository(_context);
+            return _productDiamond;
+        }
+    }
+
+
+    public async Task SaveAsync()
+    {
+        await _context.SaveChangesAsync();
+    }
+
+    protected virtual async ValueTask Dispose(bool disposing)
+    {
+        if (!disposed)
+            if (disposing)
+                await _context.DisposeAsync();
+        disposed = true;
+    }
+
+    public async ValueTask Dispose()
+    {
+        await Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }
-

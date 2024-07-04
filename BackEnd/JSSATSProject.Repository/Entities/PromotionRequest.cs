@@ -24,7 +24,7 @@ public partial class PromotionRequest
     public DateTime CreatedAt { get; set; }
 
     public int? ApprovedBy { get; set; }
-
+    
     public virtual Staff ApprovedByNavigation { get; set; }
 
     public virtual Staff Manager { get; set; }

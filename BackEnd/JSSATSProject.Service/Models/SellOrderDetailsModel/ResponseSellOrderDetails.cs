@@ -1,30 +1,25 @@
-﻿using JSSATSProject.Repository.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
+using JSSATSProject.Repository.Entities;
 
-namespace JSSATSProject.Service.Models.SellOrderDetailsModel
+namespace JSSATSProject.Service.Models.SellOrderDetailsModel;
+
+public class ResponseSellOrderDetails
 {
-    public class ResponseSellOrderDetails
-    {
-       
-        public int ProductId { get; set; }
+    public int Id { get; set; }
 
-        public string Name { get; set; }
+    public int OrderId { get; set; }
+    public int ProductId { get; set; }
+    public required string ProductName { get; set; }
+    public required string ProductCode { get; set; }
 
-        public decimal UnitPrice { get; set; }
+    public decimal UnitPrice { get; set; }
 
-        public int Quantity { get; set; }
+    public int Quantity { get; set; }
 
-        public int? PromotionId { get; set; }
+    public required string Status { get; set; }
 
-        public int OrderId { get; set; }
+    [JsonIgnore]
+    public virtual Product Product { get; set; }
 
-
-
-
-    }
+    public int? PromotionId { get; set; }
 }

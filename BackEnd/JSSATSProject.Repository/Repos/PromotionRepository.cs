@@ -13,7 +13,7 @@ public class PromotionRepository : GenericRepository<Promotion>
     {
         var promotions = await context.Promotions
             .Include(p => p.Categories)
-            .Where(p => p.Categories.Any(c => c.Id == productCategoryId))
+            .Where(p => p.Categories.Any(c => c.Id == productCategoryId) && p.Status.Equals("active"))
             .OrderByDescending(p => p.DiscountRate)
             .ToListAsync();
 

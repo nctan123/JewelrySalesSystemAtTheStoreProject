@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { fetchAllCustomer } from '../../../apis/jewelryService';
 import axios from 'axios';
 import clsx from 'clsx';
+import { toast } from 'react-toastify';
 import { IoIosSearch } from 'react-icons/io';
+import { FiEdit3 } from "react-icons/fi";
 
 const Customer = () => {
     const [originalListCustomer, setOriginalListCustomer] = useState([]);
@@ -69,6 +71,7 @@ const Customer = () => {
                 setOriginalListCustomer(updatedCustomers);
                 setListCustomer(updatedCustomers);
                 setIsModalOpen(false);
+                toast.success('Update customer success')
             }
         } catch (error) {
             console.error('Failed to update customer:', error);
@@ -85,8 +88,8 @@ const Customer = () => {
     const renderModal = () => {
         if (!isModalOpen || !selectedCustomer) return null;
         return (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-50">
-                <div className="bg-white p-6 rounded-lg">
+            <div className="fixed inset-0 z-30 flex items-center justify-center bg-gray-600 bg-opacity-50">
+                <div className="bg-white w-[600px] p-6 rounded-lg">
                     <h2 className="text-xl mb-4">Edit Customer</h2>
                     <form>
                         <div className="mb-4">
@@ -144,18 +147,19 @@ const Customer = () => {
                         <div className="flex justify-end">
                             <button
                                 type="button"
-                                onClick={() => setIsModalOpen(false)}
-                                className="mr-2 px-4 py-2 bg-gray-500 text-white rounded-md"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
                                 onClick={handleSaveChanges}
-                                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+                                className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
                             >
                                 Save
                             </button>
+                            <button
+                                type="button"
+                                onClick={() => setIsModalOpen(false)}
+                                className="mr-2 ml-0 px-4 py-2 bg-red-500 text-white rounded-md"
+                            >
+                                Cancel
+                            </button>
+
                         </div>
                     </form>
                 </div>
@@ -164,9 +168,9 @@ const Customer = () => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 className="text-2xl font-bold text-center mb-4">Customer Management List</h1>
+                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline">Customer management list</h1>
                 <div className="flex mb-4">
                     <div className="relative">
                         <input
@@ -179,34 +183,28 @@ const Customer = () => {
                         <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSearch} />
                     </div>
                 </div>
-                <div className="w-[1000px] overflow-hidden">
+                <div className="w-[1200px] overflow-hidden ">
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                        <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
-                            <tr>
-                                <th className="whitespace-nowrap rounded-l-lg py-3 pl-3 text-sm font-normal text-[#212B36] bg-[#f6f8fa]">Customer ID</th>
-                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">Full Name</th>
-                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">PhoneNumber</th>
-                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">Gender</th>
-                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa]">Total Point</th>
-                                <th className="whitespace-nowrap py-3 text-base  font-normal text-[#212B36] bg-[#f6f8fa] text-center">Action</th>
+                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
+                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
+                                <th className="py-3 pl-3 rounded-l-lg">ID</th>
+                                <th >Name</th>
+                                <th >Phone Number</th>
+                                <th >Gender</th>
+                                <th >Total Point</th>
+                                <th className=" rounded-r-lg ">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentCustomers.map((item, index) => (
-                                <tr key={index} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381]">{item.id}</td>
-                                    <td className="text-base  font-normal text-[#637381]">{item.firstname} {item.lastname}</td>
-                                    <td className="text-base  font-normal text-[#637381]">{item.phone}</td>
-                                    <td className="text-base  font-normal text-[#637381]">{item.gender}</td>
-                                    <td className="text-base  font-normal text-[#637381]">{item.totalPoint}</td>
-                                    <td className="text-base  font-normal text-[#637381]">
-                                        <button
-                                            onClick={() => handleEditClick(item)}
-                                            className="my-2 border border-white bg-[#4741b1d7] text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
-                                        >
-                                            Edit
-                                        </button>
-                                    </td>
+                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pl-3  py-4 text-black">{item.id}</td>
+                                    <td >{item.firstname} {item.lastname}</td>
+                                    <td >{item.phone}</td>
+                                    <td >{item.gender}</td>
+                                    <td >{item.totalPoint}</td>
+                                    <td className="text-2xl text-green-500 pl-4"><FiEdit3 onClick={() => handleEditClick(item)} /></td>
+
                                 </tr>
                             ))}
                             {placeholders.map((_, index) => (

@@ -2,14 +2,15 @@ using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
+using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 using JSSATSProject.Service.Service.IService;
 
 namespace JSSATSProject.Service.Service.Service;
 
 public class PurchasePriceRatioService : IPurchasePriceRatioService
 {
-    private readonly UnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly UnitOfWork _unitOfWork;
 
     public PurchasePriceRatioService(UnitOfWork unitOfWork, IMapper mapper)
     {
@@ -17,28 +18,33 @@ public class PurchasePriceRatioService : IPurchasePriceRatioService
         _mapper = mapper;
     }
 
-    public async Task<ResponseModel> GetAllAsync()
+    public async Task<ResponseModel> CreateAsync(RequestCreatePurchasePriceRatio requestCreatePurchasePriceRatio)
     {
-        var entities = await _unitOfWork.PurchasePriceRatioRepository.GetAsync();
+        var entity = _mapper.Map<PurchasePriceRatio>(requestCreatePurchasePriceRatio);
+        await _unitOfWork.PurchasePriceRatioRepository.InsertAsync(entity);
+        await _unitOfWork.SaveAsync();
         return new ResponseModel
         {
-            Data = entities,
-            MessageError = "",
+            Data = entity,
+            MessageError = ""
         };
     }
 
-    public async Task<ResponseModel> GetByIdAsync(int id)
+    public async Task<ResponseModel> GetByReturnBuyBackPolicyIdAsync(int Id)
     {
-        var response = await _unitOfWork.PurchasePriceRatioRepository.GetByIDAsync(
-            id
+        var entities = await _unitOfWork.PurchasePriceRatioRepository.GetAsync(
+            filter: x => x.ReturnbuybackpolicyId == Id
         );
 
+        var responseEntities = _mapper.Map<IEnumerable<ResponsePurchasePriceRatio>>(entities);
 
         return new ResponseModel
         {
-            MessageError = "",
-            Data = response
+            Data = responseEntities,
+            MessageError = ""
         };
     }
-    
+
+
+
 }

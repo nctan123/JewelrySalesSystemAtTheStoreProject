@@ -4,91 +4,87 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PaymentMethodModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace JSSATSProject.Service.Service.Service
+namespace JSSATSProject.Service.Service.Service;
+
+public class PaymentMethodService : IPaymentMethodService
 {
-    public class PaymentMethodService : IPaymentMethodService
+    private readonly IMapper _mapper;
+    private readonly UnitOfWork _unitOfWork;
+
+    public PaymentMethodService(UnitOfWork unitOfWork, IMapper mapper)
     {
-        private readonly UnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
+        _unitOfWork = unitOfWork;
+        _mapper = mapper;
+    }
 
-        public PaymentMethodService(UnitOfWork unitOfWork, IMapper mapper)
+    public async Task<ResponseModel> CreatePaymentMethodAsync(RequestCreatePaymentMethod requestPaymentMethod)
+    {
+        var entity = _mapper.Map<PaymentMethod>(requestPaymentMethod);
+        await _unitOfWork.PaymentMethodRepository.InsertAsync(entity);
+        await _unitOfWork.SaveAsync();
+        return new ResponseModel
         {
-            _unitOfWork = unitOfWork;
-            _mapper = mapper;
-        }
+            Data = entity,
+            MessageError = ""
+        };
+    }
 
-        public async Task<ResponseModel> CreatePaymentMethodAsync(RequestCreatePaymentMethod requestPaymentMethod)
+    public async Task<ResponseModel> GetAllAsync()
+    {
+        var entities = await _unitOfWork.PaymentMethodRepository.GetAsync();
+        var response = _mapper.Map<List<ResponsePaymentMethod>>(entities);
+        return new ResponseModel
         {
-            var entity = _mapper.Map<PaymentMethod>(requestPaymentMethod);
-            await _unitOfWork.PaymentMethodRepository.InsertAsync(entity);
-            await _unitOfWork.SaveAsync();
-            return new ResponseModel
+            Data = response,
+            MessageError = ""
+        };
+    }
+
+    public async Task<ResponseModel> GetByIdAsync(int id)
+    {
+        var entity = await _unitOfWork.PaymentMethodRepository.GetByIDAsync(id);
+        var response = _mapper.Map<ResponsePaymentMethod>(entity);
+        return new ResponseModel
+        {
+            Data = response,
+            MessageError = ""
+        };
+    }
+
+    public async Task<ResponseModel> UpdatePaymentMethodAsync(int paymentmethodid,
+        RequestUpdatePaymentMethod requestPaymentMethod)
+    {
+        try
+        {
+            var paymentmethod = await _unitOfWork.PaymentMethodRepository.GetByIDAsync(paymentmethodid);
+            if (paymentmethod != null)
             {
-                Data = entity,
-                MessageError = "",
-            };
-        }
+                _mapper.Map(requestPaymentMethod, paymentmethod);
 
-        public async Task<ResponseModel> GetAllAsync()
-        {
-            var entities = await _unitOfWork.PaymentMethodRepository.GetAsync();
-            var response = _mapper.Map<List<ResponsePaymentMethod>>(entities);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
-        public async Task<ResponseModel> GetByIdAsync(int id)
-        {
-            var entity = await _unitOfWork.PaymentMethodRepository.GetByIDAsync(id);
-            var response = _mapper.Map<ResponsePaymentMethod>(entity);
-            return new ResponseModel
-            {
-                Data = response,
-                MessageError = "",
-            };
-        }
-
-        public async Task<ResponseModel> UpdatePaymentMethodAsync(int paymentmethodid, RequestUpdatePaymentMethod requestPaymentMethod)
-        {
-            try
-            {
-                var paymentmethod = await _unitOfWork.PaymentMethodRepository.GetByIDAsync(paymentmethodid);
-                if (paymentmethod != null)
-                {
-
-                    _mapper.Map(requestPaymentMethod, paymentmethod);
-
-                    await _unitOfWork.PaymentMethodRepository.UpdateAsync(paymentmethod);
-
-                    return new ResponseModel
-                    {
-                        Data = paymentmethod,
-                        MessageError = "",
-                    };
-                }
+                await _unitOfWork.PaymentMethodRepository.UpdateAsync(paymentmethod);
 
                 return new ResponseModel
                 {
-                    Data = null,
-                    MessageError = "Not Found",
+                    Data = paymentmethod,
+                    MessageError = ""
                 };
             }
-            catch (Exception ex)
+
+            return new ResponseModel
             {
-                // Log the exception and return an appropriate error response
-                return new ResponseModel
-                {
-                    Data = null,
-                    MessageError = "An error occurred while updating the customer: " + ex.Message
-                };
-            }
+                Data = null,
+                MessageError = "Not Found"
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
         }
     }
 }

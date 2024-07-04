@@ -4,6 +4,16 @@
     <projectFile profileName="IIS Express">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
     <projectFile profileName="http">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
     <projectFile profileName="https">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/JSSATS - Web Deploy.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP1.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy1.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy2.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy3.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy4.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
+    <projectFile pubXmlPath="JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy1.pubxml">JSSATSProject.API/JSSATSProject.API.csproj</projectFile>
   </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
@@ -60,6 +70,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/vAny/DecompilerCache/decompiler/1240204ae7fd409382222112eb18fadc190078/94/4be67575/SqlBuffer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/vAny/DecompilerCache/decompiler/8abdcbb5fcc64df6970a7bc170085c0b1de908/ad/40154c8d/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/vAny/DecompilerCache/decompiler/cdfdf789176240d1830d4a03357141dc26a828/02/69709782/ModelBuilder.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/vAny/DecompilerCache/decompiler/de3edec1170e48a0a2478d8743508635c8e910/23/f4ea00ee/MethodBaseInvoker.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/JetBrains/Shared/vAny/DecompilerCache/decompiler/fcbf4f8a5ab54375abcfa46e8f5896b5358a0/b4/3b2e6968/CallSiteRuntimeResolver.cs" root0="SKIP_HIGHLIGHTING" />
@@ -70,6 +81,7 @@
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/efcore/f42a208554fed9bb37603c5ed4f02206b2b1b9fa/src/EFCore/DbSet.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/2d7eea252964e69be94cb9c847b371b23e4dd470/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/List.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/2d7eea252964e69be94cb9c847b371b23e4dd470/src/libraries/System.Private.CoreLib/src/System/Reflection/MethodBaseInvoker.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$USER_HOME$/AppData/Local/Symbols/src/dotnet/runtime/2d7eea252964e69be94cb9c847b371b23e4dd470/src/libraries/System.Private.CoreLib/src/System/Runtime/ExceptionServices/ExceptionDispatchInfo.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
@@ -83,29 +95,72 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.JSSATSProject.API: https.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "BE__Tan",
-    "ignore.virus.scanning.warn.message": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "CodeLensConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.JSSATSProject.API: https.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CodeLensConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "rider.external.source.directories": [
-      "C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\DecompilerCache",
-      "C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\SourcesCache",
-      "C:\\Users\\nhata\\AppData\\Local\\Symbols\\src"
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\DecompilerCache&quot;,
+      &quot;C:\\Users\\nhata\\AppData\\Local\\JetBrains\\Shared\\vAny\\SourcesCache&quot;,
+      &quot;C:\\Users\\nhata\\AppData\\Local\\Symbols\\src&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.JSSATSProject.API: https">
+    <configuration name="JSSATSProject.API: JSSATS - Web Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="JSSATS - Web Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/JSSATS - Web Deploy.pubxml" user_name="$JSSATS" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - FTP" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - FTP.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP.pubxml" user_name="jssatsproject\$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - FTP1" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - FTP1.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - FTP1.pubxml" user_name="jssatsproject\$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy1" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy1.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy1.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy2" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy2.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy2.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy3" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy3.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy3.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy4" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy4.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy4.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy5" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy5.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy5.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Zip Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Zip Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Zip Deploy1" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Zip Deploy1.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy1.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
     <configuration name="JSSATSProject.API: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/JSSATSProject.API/JSSATSProject.API.csproj" />
       <option name="LAUNCH_PROFILE_TFM" value="net8.0" />
@@ -176,6 +231,15 @@
       <workItem from="1718093152589" duration="1507000" />
       <workItem from="1718098074193" duration="63000" />
       <workItem from="1718098172667" duration="6000" />
+      <workItem from="1719079536901" duration="888000" />
+      <workItem from="1719080485233" duration="428000" />
+      <workItem from="1719125930249" duration="1294000" />
+      <workItem from="1719198364965" duration="4495000" />
+      <workItem from="1719226237243" duration="8254000" />
+      <workItem from="1719405880382" duration="10076000" />
+      <workItem from="1719502118397" duration="7924000" />
+      <workItem from="1719554887003" duration="4244000" />
+      <workItem from="1719562307374" duration="4280000" />
     </task>
     <servers />
   </component>
@@ -203,6 +267,11 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#JSSATSProject.Repository.Entities.BuyOrder" memberName="BuyOrderDetails" />
+      </pinned-members>
+    </pin-to-top-manager>
     <watches-manager>
       <configuration name="LaunchSettings">
         <watch expression="$exception.Source" />

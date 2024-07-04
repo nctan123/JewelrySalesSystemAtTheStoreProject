@@ -200,9 +200,9 @@ const PromotionRequestMana = () => {
 
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
       <div>
-        <h1 className="text-2xl font-bold text-center mb-4">Promotion Request List</h1>
+        <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline"> Promotion Request List</h1>
         <div className="flex mb-4 items-center">
           <div>
             <button
@@ -224,7 +224,7 @@ const PromotionRequestMana = () => {
           </div>
         </div>
 
-        <div className="w-[1000px] overflow-hidden">
+        {/* <div className="w-[1000px] overflow-hidden">
           <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
             <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white sticky top-0">
               <tr>
@@ -270,6 +270,53 @@ const PromotionRequestMana = () => {
               ))}
             </tbody>
           </table>
+        </div> */}
+        <div className="w-[1200px] overflow-hidden ">
+          <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
+            <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
+              <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
+                <th className="py-3 pl-3 rounded-l-lg">ID</th>
+                <th >Name</th>
+                <th >Description</th>
+                <th className=" text-center">Discount Rate</th>
+                <th >From</th>
+                <th >To</th>
+                <th className="text-center rounded-r-lg">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentPromotions.map((item, index) => (
+                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
+                  <td className="rounded-l-lg pl-3  py-4 text-black">{item.requestId}</td>
+                  <td >{getNamefromDescription(item.description)}</td>
+                  <td>{getDescription(item.description)}</td>
+                  <td className="text-center ">{item.discountRate}</td>
+                  <td >{format(new Date(item.startDate), 'dd/MM/yyyy')}</td>
+                  <td >{format(new Date(item.endDate), 'dd/MM/yyyy')}</td>
+                  <td className=" text-center">
+                    {item.status === 'approved'
+                      ? (<span className="text-green-500 ">Approved</span>)
+                      : item.status === 'rejected' ? (
+                        <span className="text-red-500">Rejected</span>
+                      ) : ''
+                    }
+
+                  </td>
+                </tr>
+              ))}
+              {placeholders.map((_, index) => (
+                <tr key={`placeholder-${index}`} className="cursor-pointer bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)]">
+                  <td className="rounded-l-lg pl-3 text-sm font-normal text-[#637381] py-4">-</td>
+                  <td className="text-sm font-normal text-[#637381] py-4">-</td>
+                  <td className="text-sm font-normal text-[#637381] text-center py-4">-</td>
+                  <td className="text-sm font-normal text-[#637381] py-4">-</td>
+                  <td className="text-sm font-normal text-[#637381] py-4">-</td>
+                  <td className="text-sm font-normal text-[#637381] py-4">-</td>
+                  <td className="text-sm font-normal text-[#637381] py-4">-</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
 
         <div className="flex justify-center my-4">
@@ -294,7 +341,7 @@ const PromotionRequestMana = () => {
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg w-[500px]">
 
-            <h2 className="text-lg font-semibold mb-4">Add New Promotion</h2>
+            <h2 className="text-2xl font-semibold text-center text-blue-600 mb-4">Add New Promotion</h2>
             <form onSubmit={handleCreatePromotion}>
 
               <div className="mb-4">
