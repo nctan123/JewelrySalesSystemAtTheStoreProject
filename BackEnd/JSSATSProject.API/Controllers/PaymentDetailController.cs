@@ -79,7 +79,7 @@ public class PaymentDetailController : ControllerBase
         var discountPoint = sellorder.DiscountPoint;
         var customerPhone = sellorder.Customer.Phone;
         var sellorderAmount = sellorder.TotalAmount;
-        await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
+        //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
         await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
 
         //Update SpecialDiscount

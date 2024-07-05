@@ -100,6 +100,7 @@ public class BuyOrderController : ControllerBase
             Description = requestCreateBuyOrder.Description,
             BuyOrderDetails = null
         };
+
         //save buyOrder
         await _buyOrderService.CreateAsync(buyOrder);
         buyOrder.BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder, buyOrder.Id);

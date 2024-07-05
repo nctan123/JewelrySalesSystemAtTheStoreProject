@@ -17,7 +17,7 @@ public class PurchasePriceRatioRepository : GenericRepository<PurchasePriceRatio
         return rate?.Percentage ?? 1;
     }
 
-    public async Task<PurchasePriceRatio> GetEntity(int categoryTypeId, string type)
+    public async Task<PurchasePriceRatio?> GetEntity(int categoryTypeId, string type)
     {
         var rate = await context.PurchasePriceRatios
             .Where(p => p.CategoryTypeId == categoryTypeId

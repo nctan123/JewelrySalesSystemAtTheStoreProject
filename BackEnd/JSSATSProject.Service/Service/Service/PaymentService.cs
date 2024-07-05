@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PaymentModel;
@@ -23,6 +24,7 @@ public class PaymentService : IPaymentService
     public async Task<ResponseModel> CreatePaymentAsync(RequestCreatePayment requestPayment)
     {
         var entity = _mapper.Map<Payment>(requestPayment);
+        entity.CreateDate = CustomLibrary.NowInVietnamTime();
         await _unitOfWork.PaymentRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
         return new ResponseModel

@@ -101,7 +101,6 @@ public class SellOrderController : ControllerBase
             response = _mapper.Map<ResponseUpdateSellOrderWithSpecialPromotion>(currentOrder);
         }
 
-        //if no exception occurs
         await _pointService.DecreaseCustomerAvailablePointAsync(customerPhoneNumber, requestSellOrder.DiscountPoint);
 
         return Ok(response);

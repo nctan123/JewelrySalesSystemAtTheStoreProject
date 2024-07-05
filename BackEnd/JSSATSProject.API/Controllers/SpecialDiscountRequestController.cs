@@ -1,8 +1,11 @@
 ﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace JSSATSProject.API.Controllers;
 
@@ -64,12 +67,23 @@ public class SpecialDiscountRequestController : ControllerBase
         var response = await _specialdiscountrequestService.UpdateAsync(id, specialdiscountRequest);
         var targetEntity = await _specialdiscountrequestService.GetEntityByIdAsync(id);
         var sellOrderId = targetEntity!.SellOrders.First().Id;
-        await _sellOrderService.UpdateOrderAsync(sellOrderId, new RequestUpdateSellOrder
+        if (specialdiscountRequest.Status == SpecialDiscountRequestConstants.ApprovedStatus)
         {
-            SpecialDiscountRequest = targetEntity,
-            Status = OrderConstants.WaitingForCustomer
-        });
+            await _sellOrderService.UpdateOrderAsync(sellOrderId, new RequestUpdateSellOrder
+            {
+                SpecialDiscountRequest = targetEntity,
+                Status = OrderConstants.WaitingForCustomer
+            });
+        }
+        else
+        {
 
+            await _sellOrderService.UpdateOrderAsync(sellOrderId, new RequestUpdateSellOrder
+            {
+                SpecialDiscountRequest = null,
+                Status = OrderConstants.WaitingForCustomer
+            });
+        }
         return Ok(response);
     }
 

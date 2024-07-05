@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PromotionRequestModel;
@@ -22,6 +23,8 @@ public class PromotionRequestService : IPromotionRequestService
     public async Task<ResponseModel> CreatePromotionRequestAsync(CreatePromotionRequest promotionRequest)
     {
         var entity = _mapper.Map<PromotionRequest>(promotionRequest);
+
+        entity.CreatedAt = CustomLibrary.NowInVietnamTime();
 
         if (promotionRequest.CategoriIds.Any())
         {

@@ -311,7 +311,7 @@ public class ProductService : IProductService
 
         // Always sort by Status descending first, then apply sorting based on the ascending parameter
         responseList = responseList
-            .OrderByDescending(rp => rp.Status)
+            .OrderBy(rp => rp.Status)
             .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.ProductValue) : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
             .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.Name) : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
             .ToList();

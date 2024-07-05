@@ -84,6 +84,7 @@ public class BuyOrderService : IBuyOrderService
     public async Task<ResponseModel> CreateAsync(BuyOrder entity)
     {
         entity.Code = await GenerateUniqueCodeAsync();
+        entity.CreateDate = CustomLibrary.NowInVietnamTime(); 
         await _unitOfWork.BuyOrderRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
 
@@ -217,14 +218,15 @@ public class BuyOrderService : IBuyOrderService
             var quantity = product.Value;
             requestCreateBuyOrder.ProductCodesAndEstimatePrices.TryGetValue(productCode, out var price);
             var productObj = await _productService.GetEntityByCodeAsync(productCode);
-            var diamond = productObj.ProductDiamonds.First().Diamond;
-            var diamondGradingCode = diamond.DiamondGradingCode;
+            var diamond = productObj.ProductDiamonds.FirstOrDefault()?.Diamond;
+            var diamondGradingCode = diamond?.DiamondGradingCode;
             var purchasePriceRatioId =
-                (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(productObj.Category.TypeId, "company sold")).Id;
+                (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(productObj.Category.TypeId, "company sold"))?.Id;
 
             //in-company buy orders
             var orderDetail = new BuyOrderDetail
             {
+                Quantity = quantity,
                 BuyOrderId = buyOrderId,
                 CategoryTypeId = productObj.Category.TypeId,
                 DiamondGradingCode = diamondGradingCode,
