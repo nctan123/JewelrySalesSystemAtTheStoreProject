@@ -11,19 +11,21 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 const SidebarForBuy = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
-  const [orderCode, setOrderCode] = useState()
-  const [guaranteeCode, setGuaranteeCode] = useState('GRU_OR3J3VJEC0')
   const [description, setDescription] = useState('');
   const [productCodesAndQuantity, setProductCodesAndQuantity] = useState({});
-  const [productCodesAndEstimatePrices, setProductCodesAndEstimatePrices] = useState()
+  const [productCodesAndEstimatePrices, setProductCodesAndEstimatePrices] = useState({});
+  const [productName, setProductName] = useState('');
+  const [diamondGradingCode, setDiamondGradingCode] = useState('');
+  const [materialId, setMaterialId] = useState(0);
+  const [materialWeight, setMaterialWeight] = useState(0);
+  const [categoryTypeId, setCategoryTypeId] = useState(0);
+  const [buyPrice, setBuyPrice] = useState(0);
 
   const [total, setTotal] = useState(0);
-
 
   const dispatch = useDispatch();
   const CartProductBuy = useSelector(state => state.cart.CartProductBuy);
   const CusPoint = useSelector(state => state.cart.CusPoint);
-
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -35,12 +37,10 @@ const SidebarForBuy = () => {
   useEffect(() => {
     const calculateTotals = () => {
       let totalValue = 0;
-      let totalDiscount = 0;
       CartProductBuy.forEach(product => {
         totalValue += product.estimateBuyPrice * product.quantity;
       });
-      setTotal(totalValue)
-
+      setTotal(totalValue);
     };
     calculateTotals();
 
@@ -54,31 +54,68 @@ const SidebarForBuy = () => {
       acc[product.code] = product.estimateBuyPrice;
       return acc;
     }, {});
-    setProductCodesAndEstimatePrices(codesAndEstimate)
+    setProductCodesAndEstimatePrices(codesAndEstimate);
 
     if (CusPoint?.phone) {
       setCustomerPhoneNumber(CusPoint.phone);
     }
   }, [CartProductBuy, CusPoint]);
 
-
   const formatPrice = price => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
-
-
-  const handleSubmitOrder = async (isDraft = false) => {
-    let data = {
-        customerPhoneNumber,
-        staffId:4,
-        orderCode,
-        guaranteeCode,
-        createDate:new Date().toISOString(),
-        description,
-        productCodesAndQuantity,
-        productCodesAndEstimatePrices,
+  const handleSubmitNonCompany = async () => {
+    const data = {
+      customerPhoneNumber,
+      staffId:4,
+      productName,
+      diamondGradingCode,
+      materialId,
+      materialWeight,
+      categoryTypeId,
+      buyPrice,
+      createDate: new Date().toISOString(),
+      description,
+    }
+    console.log(data);
+    if (!productName || Object.keys(productName) === null) {
+      toast.error('No Product');
+      return;
+    }
+    try {
+      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/BuyOrder/CreateNonCompanyOrder', data);
+      if (res.status === 201 || res.status === 200) {
+        toast.success('Success');
+        setDescription('');
+      } else {
+        toast.error('Add Fail');
+        console.error('Unexpected response:', res);
       }
-    console.log(data)
+    } catch (error) {
+      console.error('Error adding invoice:', error);
+      if (error.response) {
+        console.error('Error response:', error.response);
+        toast.error(`Add Fail: ${error.response.data.message || 'Unknown error'}`);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+        toast.error('Add Fail: No response received from server');
+      } else {
+        console.error('Error message:', error.message);
+        toast.error(`Add Fail: ${error.message}`);
+      }
+    }
+  }
+  const handleSubmitOrder = async (isDraft = false) => {
+    const data = {
+      customerPhoneNumber,
+      createDate: new Date().toISOString(),
+      staffId: 4, // Update this ID based on your logic
+      description,
+      productCodesAndQuantity,
+      productCodesAndEstimatePrices,
+    };
+
+    console.log(data);
     if (!productCodesAndQuantity || Object.keys(productCodesAndQuantity).length === 0) {
       toast.error('No Product');
       return;
@@ -91,14 +128,12 @@ const SidebarForBuy = () => {
         dispatch(deleteCustomer());
         dispatch(deleteProductAll());
         setDescription('');
-
       } else {
         toast.error('Add Fail');
         console.error('Unexpected response:', res);
       }
     } catch (error) {
-      console.error('Error adding ivoice:', error);
-
+      console.error('Error adding invoice:', error);
       if (error.response) {
         console.error('Error response:', error.response);
         toast.error(`Add Fail: ${error.response.data.message || 'Unknown error'}`);

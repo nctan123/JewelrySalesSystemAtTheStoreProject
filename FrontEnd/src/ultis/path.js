@@ -20,8 +20,8 @@ const path = {
     PROMOTION: 'promotion',
     RETURN_EX: 'purchase',
 
-    BUY:'buy',
-    WARRANTY: 'warranty',
+    BUY:'buyIn',
+    BUYOUT: 'buyOut',
 // Cashier
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',

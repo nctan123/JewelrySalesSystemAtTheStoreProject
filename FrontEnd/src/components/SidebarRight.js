@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteProduct, deleteCustomer, deleteProductAll,addCustomer, addProduct} from '../store/slice/cardSilec';
+import { deleteProduct, deleteCustomer, deleteProductAll,addCustomer, addProduct, addRate} from '../store/slice/cardSilec';
 import { MdDeleteOutline } from 'react-icons/md';
 import { VscGitStashApply } from 'react-icons/vsc';
 import Popup from 'reactjs-popup';
@@ -20,7 +20,7 @@ const SidebarRight = () => {
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
   const [description, setDescription] = useState('');
   const [productCodesAndQuantity, setProductCodesAndQuantity] = useState({});
-  const[productCodesAndPromotionIds,setProductCodesAndPromotionIds] = useState({})
+  const [productCodesAndPromotionIds,setProductCodesAndPromotionIds] = useState({})
   const [specialDiscountRate, setSpecialDiscountRate] = useState('0');
   const [checkedItems, setCheckedItems] = useState({});
   const [totalProduct, setTotalProduct] = useState(0);
@@ -33,11 +33,12 @@ const SidebarRight = () => {
   const [discount, setDiscount] = useState(0);
   const [point, setpoint] = useState(0);
   const [IdTemPo,setIdTemPo] = useState();
+  const [TotalInvoice,setTotalInvoice] = useState(0);
 
   const dispatch = useDispatch();
   const CartProduct = useSelector(state => state.cart.CartArr);
   const CusPoint = useSelector(state => state.cart.CusPoint);
-
+  const Rate = useSelector(state => state.cart.Rate);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -45,7 +46,21 @@ const SidebarRight = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
+  const getDisCountPoint = async (amount,phone) => {
+    let data = {
+      customerPhoneNumber:phone,
+      totalOrderPrice:amount
+    }
+    try {
+      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/Point/GetPointForOrder',data)
+      console.log(res.data)
+      setpoint(res.data)
+      toast.success('Point Success')
+    } catch (error) {
+      toast.error('Fail')
+    }
 
+  }
   useEffect(() => {
     const calculateTotals = () => {
       let totalValue = 0;
@@ -54,27 +69,38 @@ const SidebarRight = () => {
         totalValue += product.productValue * product.quantity;
         totalDiscount += product.productValue * product.quantity * product.discountRate;
       });
-      setTotal(totalValue)
+      setTotal(totalValue);
       setDiscount(totalDiscount);
+  
+      console.log("Total Value:", totalValue);
+      console.log("Total Discount:", totalDiscount);
+      console.log("Point:", point);
+      console.log("Special Discount Rate:", specialDiscountRate);
+  
+      const invoiceTotal = (totalValue - totalDiscount - point) * (1 - specialDiscountRate);
+      console.log("Calculated Total Invoice:", invoiceTotal);
+      setTotalInvoice(invoiceTotal);
     };
+  
     calculateTotals();
-
+  
     const codesAndQuantity = CartProduct.reduce((acc, product) => {
       acc[product.code] = product.quantity;
       return acc;
     }, {});
     setProductCodesAndQuantity(codesAndQuantity);
-   
+  
     const codesAndPromotion = CartProduct.reduce((acc, product) => {
       acc[product.code] = product.promotionId;
       return acc;
     }, {});
     setProductCodesAndPromotionIds(codesAndPromotion);
-
+  
     if (CusPoint?.phone) {
       setCustomerPhoneNumber(CusPoint.phone);
     }
-  }, [CartProduct, CusPoint]);
+  }, [CartProduct, CusPoint, point, specialDiscountRate]);
+  
 
   useEffect(() => {
     getListOrder(1);
@@ -115,7 +141,7 @@ const SidebarRight = () => {
   };
   const getResponseManager = async page => {
     try {
-      const res = await fetchStatusInvoice('waiting for customer confirmation for discount result', page);
+      const res = await fetchStatusInvoice('waiting for customer confirmation for discount', page);
       if (res?.data?.data) {
         setListResponseManager(res.data.data);
         setTotalProductForManger(res.data.totalElements);
@@ -136,14 +162,16 @@ const SidebarRight = () => {
     const filteredProductCodesAndPromotionIds = Object.fromEntries(
       Object.entries(adjustedProductCodesAndPromotionIds).filter(([_, value]) => value !== null)
     );
-  
+    // useEffect(() => {
+    //   point;
+    // }, );
     const data = {
       id:IdTemPo,
       customerPhoneNumber,
       staffId: 4, // Replace with actual staffId if needed
       createDate: new Date().toISOString(),
       description,
-      discountPoint: 0,
+      discountPoint: point,
       productCodesAndQuantity,
       productCodesAndPromotionIds: Object.keys(filteredProductCodesAndPromotionIds).length === 0 ? null : filteredProductCodesAndPromotionIds,
       isSpecialDiscountRequested: parseFloat(specialDiscountRate) !== 0,
@@ -173,6 +201,8 @@ const SidebarRight = () => {
         dispatch(deleteProductAll());
         setDescription('');
         setSpecialDiscountRate('0');
+        setTotalInvoice(0);
+        setpoint(0)
         // Update the invoice list immediately
         getListOrder(1);
       } else {
@@ -211,7 +241,7 @@ const SidebarRight = () => {
     }
   };
   
-  const handleRequestToScreen = async (event, phone, listsellorder,id) => {
+  const handleRequestToScreen = async (event, phone, listsellorder,id,rate) => {
     event.preventDefault();
     try {
       const res = await axios.get(
@@ -222,13 +252,12 @@ const SidebarRight = () => {
       setIdTemPo(id);
       const item = res.data.data[0];
       dispatch(addCustomer(item));
+      setSpecialDiscountRate(rate)
       await handlegetCodeEx(listsellorder);
     } catch (error) {
       console.error('Error fetching customer or products:', error);
     }
   };
-  
-  
   const handleShowListTemPo = () => {
     confirmAlert({
       customUI: ({ onClose }) => {
@@ -261,9 +290,6 @@ const SidebarRight = () => {
                           </th>
                           <th scope="col" class="px-6 py-3">
                             Action
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Special Discount
                           </th>
 
                         </tr>
@@ -324,24 +350,6 @@ const SidebarRight = () => {
                                   )}
                                 </Popup>
                               </td>
-                              {item.status === 'waiting for special discount response' && (
-                                <td class="px-14 py-4 ">
-                                  <label className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                      type="checkbox"
-                                      disabled={checkedItems[item.id]}
-                                      checked={checkedItems[item.id] || false}
-                                      className="sr-only peer"
-                                    />
-                                    <div
-                                      className={`peer ring-0 bg-rose-400 rounded-full outline-none duration-300 after:duration-500 w-8 h-8 shadow-md ${checkedItems //[item.id]
-                                        ? 'bg-emerald-700 after:content-["✔️"]'
-                                        : 'after:content-["✖️"]'
-                                        } after:rounded-full after:absolute after:outline-none after:h-6 after:w-6 after:bg-gray-50 after:top-1 after:left-1 after:flex after:justify-center after:items-center  peer-hover:after:scale-75`}
-                                    />
-                                  </label>
-                                </td>
-                              )}
                             </tr>
                           )
                         })}
@@ -386,6 +394,149 @@ const SidebarRight = () => {
       },
     });
   };
+  const handleShowListResponse = () => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className="fixed inset-0 flex items-center justify-center bg-[#0602027d] bg-opacity-20 z-10">
+            <div className='bg-[#fff] mx-auto rounded-md w-[55%] shadow-[#b6b0b0] shadow-md h-[95vh] my-auto mt-4'>
+              <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 className="text-md font-semibold text-gray-900">
+                  List Response
+                </h3>
+                <a className='cursor-pointer text-black text-[24px] py-0' onClick={onClose}>&times;</a>
+              </div>
+              <form className="p-4 md:p-5">
+                <div className=''>
+                  <div class="relative overflow-x-auto shadow-md sm:rounded-lg h-[75vh]">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-white uppercase bg-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" class="px-6 py-3">
+                            ID Invoice
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Customer Name
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Phone Number
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Total Amount
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Action
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Special Discount
+                          </th>
+
+                        </tr>
+                      </thead>
+                      <tbody className='overflow-y-auto'>
+                      {listResponseManager && listResponseManager.map((item) => {
+                          return (
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
+                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {item.id}
+                              </th>
+                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {item.customerName}
+                              </th>
+                              <td class="px-6 py-4">
+                                {item.customerPhoneNumber}
+                              </td>
+                              <td class="px-6 py-4">
+                                {formatPrice(item.totalAmount)}
+                              </td>
+                              <td class="flex py-4 gap-1 items-center justify-center">
+                                <button onClick={(event) => handleRequestToScreen(event,item.customerPhoneNumber,item.sellOrderDetails,item.id,item.specialDiscountRate)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                                <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
+                                  {close => (
+                                  <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+                                    <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
+                                      <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
+                                      <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
+                                      <div className="flex justify-end">
+                                        <button
+                                          onClick={close}
+                                          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
+                                        >
+                                          No
+                                        </button>
+                                        <button
+                                          onClick={async () => {
+                                            try {
+                                              await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
+                                                status: 'cancelled',
+                                              });
+                                              // Update the invoice list immediately
+                                              getListOrder(1);
+                                              toast.success('Invoice deleted successfully');
+                                            } catch (error) {
+                                              console.error('Error deleting invoice:', error);
+                                              toast.error('Failed to delete invoice');
+                                            }
+                                            onClose();
+                                          }}
+                                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
+                                        >
+                                          Yes
+                                        </button>
+                                      </div>
+                                    </div>
+                                    </div>       
+                                  )}
+                                </Popup>
+                              </td>
+                              <td class="px-6 py-4 font-bold text-red-600">
+                                {item.specialDiscountRate}
+                              </td>
+                            </tr>
+                          )
+                        })}
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <ReactPaginate
+                    onPageChange={handlePageClickForManager}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={totalPageForManager}
+                    pageClassName="mx-1"
+                    pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
+                    previousClassName="mx-1"
+                    previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+                    nextClassName="mx-1"
+                    nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+                    breakLabel="..."
+                    breakClassName="mx-1 "
+                    breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
+                    containerClassName="flex justify-center items-center space-x-4"
+                    activeClassName="bg-blue-500 text-white rounded-xl"
+                    renderOnZeroPageCount={null}
+                    // className="bg-black flex justify-center items-center"
+                    previousLabel={
+                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                        <AiFillLeftCircle />
+                      </IconContext.Provider>
+                    }
+                    nextLabel={
+                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                        <AiFillRightCircle />
+                      </IconContext.Provider>
+                    }
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+        );
+      },
+    });
+  }
+
   return (<>
 
 
@@ -441,8 +592,11 @@ const SidebarRight = () => {
         </div>
         {CusPoint && (
           <div className='px-[15px] grid grid-cols-2 pb-2' >
-            <div className='font-thin'>Point:{CusPoint.point.totalpoint} </div>
-            <input value={point} onChange={(even) => setpoint(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold  pl-2" type="number" name="point" min="-9"  id="inputPoint" placeholder="Use Point" />
+            <div className='font-thin flex gap-3'>
+              <span>Point:{CusPoint.point.availablePoint} </span>
+              <button className='m-0 p-0 w-fit' onClick={() => getDisCountPoint(total - discount, CusPoint.phone)} type='button'>CheckPoint</button>
+            </div>
+            <input value={point} className="w-20 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold ml-20" type="number" name="point" min="-9"  id="inputPoint" placeholder="Use Point" />
             <div className='font-thin'>Special Discount:</div>
             <div className='flex items-center justify-center gap-2'>
               <input
@@ -459,13 +613,15 @@ const SidebarRight = () => {
         )}
         <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 '>
 
-          <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(total - discount)}<span>.đ</span></div>
+          <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(TotalInvoice)}<span>.đ</span></div>
           <div className='col-start-3 flex gap-2 justify-end items-center mr-[15px]'>
             <span
               onClick={() => {
                 dispatch(deleteCustomer());
                 dispatch(deleteProductAll());
-                setSpecialDiscountRate(0)
+                setSpecialDiscountRate(0);
+                setpoint(0);
+                setTotalInvoice(0)
               }} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md bg-[#fef7f7] py-1 hover:bg-[#ffffff]'><MdDeleteOutline size='20px' color='#ef4e4e' />
             </span>
             <button onClick={() => {
@@ -479,7 +635,6 @@ const SidebarRight = () => {
               <span class="text-sm text-lime-400 font-bold pr-1">Temporary</span>
             </button>
           </div>
-
         </div>
       </div>
     </div>
@@ -496,123 +651,19 @@ const SidebarRight = () => {
           </span>
         </button>
       </div>
-      <div className='grid grid-cols-2 justify-center my-4'>
+      <div className='grid grid-cols-2 justify-center my-4'>      
         <div className='flex justify-center'>
-
           <button onClick={() => handleShowListTemPo()} className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
             Draft/Special Discount
           </button>
-
         </div>
+
         <div className='flex justify-center'>
-          <Popup trigger={<button className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
+          <button onClick={() => handleShowListResponse()} className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
             Response Manager
-          </button>} position="right center">
-            {close => (
-              <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto '>
-                <div className='bg-[#fff] mx-auto rounded-md w-[50%] shadow-[#b6b0b0] shadow-md h-[95vh] my-auto mt-4'>
-                  <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
-                    <h3 className="text-md font-semibold text-gray-900">
-                      List Temporary
-                    </h3>
-                    <a className='cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
-                  </div>
-                  <form className="p-4 md:p-5">
-                    <div className=''>
-                      <div class="relative overflow-x-auto shadow-md sm:rounded-lg h-[75vh]">
-                        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                              <th scope="col" class="px-6 py-3">
-                                ID Invoice
-                              </th>
-                              <th scope="col" class="px-6 py-3">
-                                Customer Name
-                              </th>
-                              <th scope="col" class="px-6 py-3">
-                                Phone Number
-                              </th>
-                              <th scope="col" class="px-6 py-3">
-                                Total Amount
-                              </th>
-                              <th scope="col" class="px-6 py-3">
-                                Action
-                              </th>
-
-                              <th scope="col" class="px-6 py-3">
-                                Special Discount
-                              </th>
-
-                            </tr>
-                          </thead>
-                          <tbody className='overflow-y-auto'>
-                            {listResponseManager && listResponseManager.map((item) => {
-                              return (
-                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {item.id}
-                                  </th>
-                                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {item.customerName}
-                                  </th>
-                                  <td class="px-6 py-4">
-                                    {item.customerPhoneNumber}
-                                  </td>
-                                  <td class="px-6 py-4">
-                                    {formatPrice(item.totalAmount)}
-                                  </td>
-                                  <td class="flex py-4 gap-1 items-center justify-center">
-                                    <button className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
-                                    <button className='m-0 p-3 bg-red-500'><MdDeleteOutline /></button>
-                                  </td>
-                                </tr>
-                              )
-                            })}
-
-                          </tbody>
-                        </table>
-                      </div>
-                      <ReactPaginate
-                        onPageChange={handlePageClickForManager}
-                        pageRangeDisplayed={3}
-                        marginPagesDisplayed={2}
-                        // pageCount={totalPageForManager}
-                        pageCount={3}
-                        pageClassName="mx-1"
-                        pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
-                        previousClassName="mx-1"
-                        previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                        nextClassName="mx-1"
-                        nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                        breakLabel="..."
-                        breakClassName="mx-1 "
-                        breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-                        containerClassName="flex justify-center items-center space-x-4"
-                        activeClassName="bg-blue-500 text-white rounded-xl"
-                        renderOnZeroPageCount={null}
-                        // className="bg-black flex justify-center items-center"
-                        previousLabel={
-                          <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                            <AiFillLeftCircle />
-                          </IconContext.Provider>
-                        }
-                        nextLabel={
-                          <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                            <AiFillRightCircle />
-                          </IconContext.Provider>
-                        }
-                      />
-                    </div>
-                  </form>
-
-                </div>
-
-              </div>
-            )}
-          </Popup>
+          </button>
         </div>
       </div>
-
     </div>
   </>
   )

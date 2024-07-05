@@ -221,7 +221,7 @@ const Customer = () => {
                   <th className="whitespace-nowrap py-3 pl-1 text-sm font-normal text-[#212B36]">First Name</th>
                   <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Last Name</th>
                   <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">PhoneNumber</th>
-                  <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Total Point</th>
+                  <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Available Point</th>
                   <th className="whitespace-nowrap py-3 text-sm font-normal text-[#212B36]">Action</th>
                 </tr>
               </thead>
@@ -232,7 +232,7 @@ const Customer = () => {
                     <td className="text-sm font-normal text-[#637381]">{item.firstname}</td>
                     <td className="text-sm font-normal text-[#637381]">{item.lastname}</td>
                     <td className="text-sm font-normal text-[#637381]">{item.phone}</td>
-                    <td className="text-sm font-normal text-[#637381]">{item.point.totalpoint}</td>
+                    <td className="text-sm font-normal text-[#637381]">{item.point.availablePoint}</td>
                     <td className="text-sm font-normal text-[#637381]">
                       <button
                         onClick={() => handleCheckItem(item)}

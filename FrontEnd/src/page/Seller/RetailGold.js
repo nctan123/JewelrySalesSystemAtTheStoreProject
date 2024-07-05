@@ -166,8 +166,12 @@ const Ring = () => {
                     </div>
                     <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
                       <button onClick={() => handleDetailClick(item.code)} class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>
-                      <button onClick={() => dispatch(addProduct(item))} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
-                    </div>
+                      {item.status !== 'inactive' && (
+                        <button onClick={() => dispatch(addProduct(item))} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
+                      )}
+                      {item.status == 'inactive' && (
+                        <button class="px-2 border-2 bg-[#ff2929] border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white">Sold out</button>
+                      )}                    </div>
                   </div>
                 </div>
               )

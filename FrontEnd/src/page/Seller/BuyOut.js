@@ -5,8 +5,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useDispatch } from 'react-redux';
 import { addCodeOrder, addCustomer, addProductBuy } from '../../store/slice/cardSilec';
 
-
-const Buy = () => {
+const BuyOut = () => {
   const dispatch = useDispatch()
   const [InvoiceCode, setInvoiceCode] = useState('');
   const [ListInvoice, setListInvoice] = useState(null); // Initialize as null
@@ -145,4 +144,5 @@ const Buy = () => {
   );
 }
 
-export default Buy;
+
+export default BuyOut

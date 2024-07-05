@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'; //mang action đến red
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex,Buy ,Warranty} from './page/Seller';
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex,Buy ,Warranty, BuyOut} from './page/Seller';
 
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess, Cs_WaitingPayment } from './page/Cashier';
 import Login from './page/Home/Login';
@@ -131,7 +131,7 @@ function App() {
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
               <Route path={path.BUY} element={<Buy />} />
-              <Route path={path.WARRANTY} element={<Warranty/>}/>
+              <Route path={path.BUYOUT} element={<BuyOut/>}/>
             </Route>
           </Route>
           {/* Cashier */}

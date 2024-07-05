@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const productSlice = createSlice({
     name: 'products',
     initialState: {
+        Rate:null,
         CartArr: [],
         CusPoint:null,
         CartWholesale: [],
@@ -12,6 +13,10 @@ export const productSlice = createSlice({
         CartCodeOrder:null,
     },
     reducers: {
+        //Add Rate
+        addRate: (state, action) => {
+            state.Rate = action.payload;
+        },
         //Add code order
         addCodeOrder: (state, action) => {
             state.CartCodeOrder = action.payload;
@@ -74,6 +79,7 @@ export const productSlice = createSlice({
 
 
 export const {
+    addRate,
     addCodeOrder,
     deleteCodeOrder,
     deleteProductBuyAll,
