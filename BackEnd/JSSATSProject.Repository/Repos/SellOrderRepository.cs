@@ -16,6 +16,7 @@ public class SellOrderRepository : GenericRepository<SellOrder>
             .Include(o => o.SellOrderDetails)
             .Include(o => o.Customer)
             .Include(o => o.SpecialDiscountRequest)
+            .Include(o => o.Customer.Point)
             .FirstOrDefaultAsync();
     }
 

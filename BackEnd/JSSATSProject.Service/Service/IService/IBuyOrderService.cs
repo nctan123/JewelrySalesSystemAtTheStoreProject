@@ -26,7 +26,7 @@ public interface IBuyOrderService
 
     public Task<ICollection<BuyOrderDetail>> CreateOrderDetails(RequestCreateNonCompanyBuyOrder requestCreateBuyOrder,
         int buyOrderId);
-    
+
     Task<int?> CountAsync(Expression<Func<BuyOrder, bool>> filter);
 
     Task<ResponseModel> SearchByCriteriaAsync(List<string> statusList, string customerPhone, bool ascending,

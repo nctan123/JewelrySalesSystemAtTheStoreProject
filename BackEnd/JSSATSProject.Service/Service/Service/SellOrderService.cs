@@ -4,10 +4,13 @@ using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
+using JSSATSProject.Repository.Repos;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.PointModel;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,16 +22,18 @@ public class SellOrderService : ISellOrderService
     private readonly IMapper _mapper;
     private readonly IProductService _productService;
     private readonly ISellOrderDetailService _sellOrderDetailService;
+    private readonly IPointService _pointService;
     private readonly UnitOfWork _unitOfWork;
 
     public SellOrderService(UnitOfWork unitOfWork, IMapper mapper, ICustomerService customerService,
-        ISellOrderDetailService sellOrderDetailService, IProductService productService)
+        ISellOrderDetailService sellOrderDetailService, IProductService productService, IPointService pointService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _customerService = customerService;
         _sellOrderDetailService = sellOrderDetailService;
         _productService = productService;
+        _pointService = pointService;
     }
 
     public async Task<int> CountAsync(Expression<Func<SellOrder, bool>> filter = null)
@@ -54,8 +59,8 @@ public class SellOrderService : ISellOrderService
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
             requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
         sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
-        var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) -
-                          sellOrder.DiscountPoint * pointRate;
+        var totalAmount = sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion.DiscountRate).GetValueOrDefault()) * s!.UnitPrice * s.Quantity) -
+                           sellOrder.DiscountPoint * pointRate;
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
@@ -63,8 +68,13 @@ public class SellOrderService : ISellOrderService
         // CreateCode
         sellOrder.Code = await GenerateUniqueCodeAsync();
 
+        // SetDateTime
+        DateTime vnTime = CustomLibrary.NowInVietnamTime();
+        sellOrder.CreateDate = vnTime;
+
         await _unitOfWork.SellOrderRepository.InsertAsync(sellOrder);
         await _unitOfWork.SaveAsync();
+        
 
         return new ResponseModel
         {
@@ -91,7 +101,7 @@ public class SellOrderService : ISellOrderService
             // Filter based on the status list
             filter,
             includeProperties:
-            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest",
+            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod",
             orderBy: ascending
                 ? q => q.OrderBy(p => p.CreateDate)
                 : q => q.OrderByDescending(p => p.CreateDate),
@@ -124,8 +134,8 @@ public class SellOrderService : ISellOrderService
     {
         var entities = await _unitOfWork.SellOrderRepository.GetAsync(
             so => so.Id == id,
-            includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest");
-       // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
+            includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod");
+        // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
         // Map entities to response models
         var responseSellOrders = new List<ResponseSellOrder>();
@@ -194,11 +204,24 @@ public class SellOrderService : ISellOrderService
             if (order != null)
             {
                 _mapper.Map(requestSellOrder, order);
-
+                DateTime vnTime = CustomLibrary.NowInVietnamTime();
+                order.CreateDate = vnTime;
                 await _unitOfWork.SellOrderRepository.UpdateAsync(order);
                 //neu update status = cancelled
-                if (order.Status.Equals(OrderConstants.CanceledStatus))
+                if (order.Status.Equals(OrderConstants.CanceledStatus)) 
+                {
                     await _sellOrderDetailService.UpdateAllOrderDetailsStatus(order, OrderConstants.CanceledStatus);
+
+                    //update point 
+                    var pointId =  order.Customer.Point.Id;
+
+                    var updatepoint = new RequestUpdatePoint
+                    {
+                        AvailablePoint = order.DiscountPoint
+                    };
+                    await _pointService.UpdatePointAsync(pointId, updatepoint);
+
+                }
                 else if (order.Status.Equals(OrderConstants.CompletedStatus))
                     await _sellOrderDetailService.UpdateAllOrderDetailsStatus(order,
                         SellOrderDetailsConstants.Delivered);

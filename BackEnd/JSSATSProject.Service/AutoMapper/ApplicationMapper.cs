@@ -28,6 +28,7 @@ using JSSATSProject.Service.Models.PromotionRequestModel;
 using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 using JSSATSProject.Service.Models.ReturnBuyBackPolicyModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.ShapeModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Models.StaffModel;
@@ -48,7 +49,7 @@ public class ApplicationMapper : Profile
             .ReverseMap();
         CreateMap<Account, ResponseAccount>()
             .ForMember(dest => dest.StaffName, opt => opt.MapFrom(src => src.Staff.Firstname + " " + src.Staff.Lastname))
-            .ForMember(dest => dest.Role,opt => opt.MapFrom(src => src.Role.Name))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Name))
             .ReverseMap();
 
         //BuyOrder
@@ -114,8 +115,11 @@ public class ApplicationMapper : Profile
             .ForMember(dest => dest.SpecialDiscountRequestStatus, opt => opt.MapFrom(src => src.Status))
             .ReverseMap()
             .ForMember(dest => dest.SpecialDiscountRequest, opt => opt.Ignore());
+
         CreateMap<SellOrder, RequestUpdateSellOrder>().ReverseMap();
+
         CreateMap<SellOrder, UpdateSellOrderStatus>().ReverseMap();
+
         CreateMap<SellOrder, ResponseUpdateSellOrderWithSpecialPromotion>()
             .ForMember(dest => dest.CustomerName,
                 opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
@@ -126,26 +130,26 @@ public class ApplicationMapper : Profile
             .ForMember(dest => dest.ProductCodesAndQuantity,
                 opt => opt.MapFrom(src => src.SellOrderDetails.ToDictionary(s => s.Product.Code, s => s.Quantity)))
             .ReverseMap();
+
         CreateMap<SellOrder, ResponseSellOrder>()
             .ForMember(dest => dest.SellOrderDetails, opt => opt.Ignore())
-            .ForMember(dest => dest.CustomerName,
-                opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
+            .ForMember(dest => dest.CustomerName,opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
             .ForMember(dest => dest.CustomerPhoneNumber, opt => opt.MapFrom(src => src.Customer.Phone))
              .ForMember(dest => dest.CustomerId, opt => opt.MapFrom(src => src.Customer.Id))
-            .ForMember(dest => dest.StaffName,
-                opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
-            .ForMember(dest => dest.SpecialDiscountRate,
-                opt => opt.MapFrom(src => src.SpecialDiscountRequest.DiscountRate))
+            .ForMember(dest => dest.StaffName,opt => opt.MapFrom(src => string.Join(" ", src.Staff.Firstname, src.Staff.Lastname)))
+            .ForMember(dest => dest.SpecialDiscountRate,opt => opt.MapFrom(src => src.SpecialDiscountRequest.DiscountRate))
             .ForMember(dest => dest.SpecialDiscountStatus, opt => opt.MapFrom(src => src.SpecialDiscountRequest.Status))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.Payments
+                                                                                .SelectMany(p => p.PaymentDetails)
+                                                                                .Select(pd => pd.PaymentMethod.Name)
+                                                                                 .FirstOrDefault()))
             .ReverseMap();
 
         CreateMap<SellOrderDetail, ResponseSellOrderDetails>()
-            .ForMember(dest => dest.ProductId,
-                opt => opt.MapFrom(src => src.ProductId))
-            .ForMember(dest => dest.ProductName,
-                opt => opt.MapFrom(src => src.Product.Name))
-            .ForMember(dest => dest.ProductCode,
-                opt => opt.MapFrom(src => src.Product.Code))
+            .ForMember(dest => dest.ProductId,opt => opt.MapFrom(src => src.ProductId))
+            .ForMember(dest => dest.ProductName,opt => opt.MapFrom(src => src.Product.Name))
+            .ForMember(dest => dest.ProductCode, opt => opt.MapFrom(src => src.Product.Code))
+            .ForMember(dest => dest.PromotionRate, opt =>opt.MapFrom(src => src.Promotion.DiscountRate))
             .ReverseMap();
 
 
@@ -159,11 +163,13 @@ public class ApplicationMapper : Profile
         CreateMap<Payment, ResponsePayment>()
                 .ForMember(dest => dest.ExternalTransactionCode, opt => opt.MapFrom(src => src.PaymentDetails.FirstOrDefault().ExternalTransactionCode))
                 .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentDetails.FirstOrDefault().PaymentMethod.Name))
+                .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order.Code))
                 .ReverseMap();
 
         //Point
         CreateMap<Point, RequestCreatePoint>().ReverseMap();
         CreateMap<Point, ResponsePoint>().ReverseMap();
+        CreateMap<Point, RequestUpdatePoint>().ReverseMap();
 
         //ProductCategory
         CreateMap<ProductCategory, RequestCreateProductCategory>().ReverseMap();
@@ -265,7 +271,7 @@ public class ApplicationMapper : Profile
             .ForMember(dest => dest.CustomerName,
                 opt => opt.MapFrom(src => $"{src.Customer.Firstname} {src.Customer.Lastname}"))
             .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.Phone))
-            .ForMember(dest => dest.SellOrderCode, opt => opt.MapFrom(src => src.SellOrders.FirstOrDefault().Code))
+            .ForMember(dest => dest.SellOrderId, opt => opt.MapFrom(src => src.SellOrders.FirstOrDefault().Id))
             .ReverseMap();
 
 

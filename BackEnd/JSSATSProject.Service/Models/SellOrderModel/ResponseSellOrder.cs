@@ -23,4 +23,5 @@ public class ResponseSellOrder
 
     public decimal SpecialDiscountRate { get; set; }
     public string SpecialDiscountStatus { get; set; }
+    public string PaymentMethod { get; set; }
 }

@@ -73,7 +73,6 @@ public class UnitOfWork
             return _campaignpoint;
         }
     }
-    
     public BuyOrderDetailRepository BuyOrderDetailRepository
     {
         get

@@ -1,6 +1,8 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.BuyOrderDetailModel;
@@ -28,6 +30,7 @@ public class CustomerService : ICustomerService
     {
         var entity = _mapper.Map<Customer>(requestCustomer);
 
+        entity.CreateDate = CustomLibrary.NowInVietnamTime();
 
         var point = new Point
         {
@@ -51,8 +54,6 @@ public class CustomerService : ICustomerService
             MessageError = ""
         };
     }
-
-
     public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
     {
         var entities = await _unitOfWork.CustomerRepository.GetAsync(
@@ -254,7 +255,7 @@ public class CustomerService : ICustomerService
             // Fetch the customer by phone number
             var customer = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
-                includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod");
+                includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Order");
 
             var customerEntity = customer.FirstOrDefault();
 

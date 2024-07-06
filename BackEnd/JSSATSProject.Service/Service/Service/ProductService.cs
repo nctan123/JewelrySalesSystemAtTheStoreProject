@@ -136,7 +136,7 @@ public class ProductService : IProductService
             //except diamond category, all the rest product categories has material 
             var productMaterial = correspondingProduct.ProductMaterials!.First();
             var closestPriceList = productMaterial.Material.MaterialPriceLists
-                .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
+                .OrderByDescending(m => m.EffectiveDate)
                 .First();
 
             var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
@@ -160,7 +160,6 @@ public class ProductService : IProductService
 
         return Math.Ceiling(totalPrice);
     }
-
 
     public async Task<ResponseModel> GetByCodeAsync(string code)
     {
@@ -271,14 +270,13 @@ public class ProductService : IProductService
         }
     }
 
-
     public async Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
         if (includeNullStalls)
         {
-            filter = product => product.CategoryId == categoryId;
+            filter = product => product.CategoryId == categoryId && product.Stalls == null;
         }
         else
         {
@@ -313,7 +311,7 @@ public class ProductService : IProductService
 
         // Always sort by Status descending first, then apply sorting based on the ascending parameter
         responseList = responseList
-            .OrderByDescending(rp => rp.Status)
+            .OrderBy(rp => rp.Status)
             .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.ProductValue) : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
             .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.Name) : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
             .ToList();
@@ -334,15 +332,13 @@ public class ProductService : IProductService
         return result;
     }
 
-
-
     public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
         if (includeNullStalls)
         {
-            filter = p => p.CategoryId == categoryId;
+            filter = p => p.CategoryId == categoryId && p.Stalls == null;
         }
         else
         {
@@ -407,8 +403,6 @@ public class ProductService : IProductService
         };
     }
 
-
-
     public async Task<int> CountAsync(Expression<Func<Product, bool>> filter = null)
     {
         return await _unitOfWork.ProductRepository.CountAsync(filter);
@@ -470,7 +464,7 @@ public class ProductService : IProductService
                 prefix = ProductConstants.WSGPrefix;
                 break;
             default:
-                prefix = ProductConstants.DIAPrefix; 
+                prefix = ProductConstants.DIAPrefix;
                 break;
         }
         string newCode;

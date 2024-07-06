@@ -12,7 +12,7 @@ public class ProductConstants
 
     public const int RetailGoldCategoryType = 3;
     public const int WholesaleGoldCategoryType = 4;
-    
+
     public const string ActiveStatus = "active";
     public const string InactiveStatus = "inactive";
 

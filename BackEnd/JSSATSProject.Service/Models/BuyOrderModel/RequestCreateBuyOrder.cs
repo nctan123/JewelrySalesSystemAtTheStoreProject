@@ -5,8 +5,6 @@ public class RequestCreateBuyOrder
     public required string CustomerPhoneNumber { get; set; }
 
     public required int StaffId { get; set; }
-    public int? OrderCode { get; set; }
-    public int? GuaranteeCode { get; set; }
 
     public DateTime CreateDate { get; set; }
 
