@@ -1,4 +1,6 @@
-﻿namespace JSSATSProject.Service.Models.ProductModel;
+﻿using Microsoft.AspNetCore.Http;
+
+namespace JSSATSProject.Service.Models.ProductModel;
 
 public class RequestCreateProduct
 {
@@ -11,9 +13,9 @@ public class RequestCreateProduct
 
     public decimal? GemCost { get; set; }
 
-    public string? Img { get; set; }
-
     public decimal PriceRate { get; set; }
+
+    public IFormFile ImgFile { get; set; }
 
     public string? Status { get; set; }
 }

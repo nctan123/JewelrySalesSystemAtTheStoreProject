@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.AzureBlob;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
@@ -14,30 +15,38 @@ namespace JSSATSProject.Service.Service.Service;
 public class ProductService : IProductService
 {
     private readonly IDiamondPriceListService _diamondPriceListService;
-    private readonly IMapper _mapper;
     private readonly UnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
+    private readonly AzureBlobStorage _blobService;
 
-    public ProductService(UnitOfWork unitOfWork, IMapper mapper, IDiamondPriceListService diamondPriceListService
-    )
+    public ProductService(UnitOfWork unitOfWork, IMapper mapper, AzureBlobStorage blobService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _diamondPriceListService = diamondPriceListService;
+        _blobService = blobService;
     }
-
 
     public async Task<ResponseModel> CreateProductAsync(RequestCreateProduct requestProduct)
     {
+        string imageUrl = null;
+        // Upload image and get URL
+        if (requestProduct.ImgFile != null)
+        {
+            string fileName = $"{Guid.NewGuid()}_{requestProduct.ImgFile.FileName}";
+            imageUrl = await _blobService.UploadImageAsync(requestProduct.ImgFile.OpenReadStream(), fileName);
+        }
+
         var entity = _mapper.Map<Product>(requestProduct);
+        entity.Img = imageUrl;
 
         var productCategoryTypeId = await _unitOfWork.ProductCategoryRepository.GetTypeIdByCategoryIdAsync(requestProduct.CategoryId);
-
         var newCode = await GenerateUniqueCodeAsync(productCategoryTypeId);
 
         entity.Code = newCode;
 
         await _unitOfWork.ProductRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
+
         return new ResponseModel
         {
             Data = entity,

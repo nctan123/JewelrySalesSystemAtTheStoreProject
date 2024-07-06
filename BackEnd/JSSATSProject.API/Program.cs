@@ -1,5 +1,7 @@
 ﻿using System.Text;
+using Azure.Storage.Blobs;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.AzureBlob;
 using JSSATSProject.Repository.CacheManagers;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.AutoMapper;
@@ -59,6 +61,11 @@ public class Program
         });
 
         builder.Services.AddScoped<UnitOfWork>();
+
+        // Azure Blob Storage
+        var blobServiceClient = new BlobServiceClient(config.GetConnectionString("AzureBlobService"));
+        services.AddSingleton(blobServiceClient);
+        services.AddSingleton<AzureBlobStorage>();
 
         // AutoMapper
         builder.Services.AddAutoMapper(typeof(ApplicationMapper));

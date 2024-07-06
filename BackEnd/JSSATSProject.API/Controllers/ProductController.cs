@@ -26,10 +26,18 @@ public class ProductController : ControllerBase
 
     [HttpPost]
     [Route("CreateProduct")]
-    public async Task<IActionResult> CreateAsync([FromBody] RequestCreateProduct requestProduct)
+    public async Task<IActionResult> CreateProduct([FromForm] RequestCreateProduct requestProduct)
     {
-        var responseModel = await _productService.CreateProductAsync(requestProduct);
-        return Ok(responseModel);
+        try
+        {
+            var response = await _productService.CreateProductAsync(requestProduct);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            // Return a generic error response
+            return StatusCode(500, "Internal server error. Please try again later.");
+        }
     }
 
     [HttpPut]

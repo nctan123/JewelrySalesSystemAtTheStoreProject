@@ -101,7 +101,8 @@ public class SellOrderService : ISellOrderService
             // Filter based on the status list
             filter,
             includeProperties:
-            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod",
+            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product," +
+            "SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod,SellOrderDetails.Promotion",
             orderBy: ascending
                 ? q => q.OrderBy(p => p.CreateDate)
                 : q => q.OrderByDescending(p => p.CreateDate),
