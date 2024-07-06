@@ -21,7 +21,6 @@ public partial class BuyOrderDetail
     public int CategoryTypeId { get; set; }
 
     public string DiamondGradingCode { get; set; }
-    [JsonIgnore]
 
     public int? MaterialId { get; set; }
 
