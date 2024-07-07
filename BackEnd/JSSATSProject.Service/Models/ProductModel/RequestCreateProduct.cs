@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-﻿using Microsoft.AspNetCore.Http;
-=======
+using Microsoft.AspNetCore.Http;
 ﻿using System.ComponentModel.DataAnnotations;
->>>>>>> BE_NhatAnh
+
 
 namespace JSSATSProject.Service.Models.ProductModel;
 

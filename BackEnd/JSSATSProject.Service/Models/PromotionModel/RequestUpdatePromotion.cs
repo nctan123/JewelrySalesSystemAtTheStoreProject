@@ -1,8 +1,9 @@
 ﻿using JSSATSProject.Repository.CustomValidators;
+using JSSATSProject.Repository.CustomValidors;
 
 namespace JSSATSProject.Service.Models.PromotionModel;
-
-public class RequestUpdatePromotion
+[DateRange]
+public class RequestUpdatePromotion : IDateRange
 {
     public string Name { get; set; } = null!;
 

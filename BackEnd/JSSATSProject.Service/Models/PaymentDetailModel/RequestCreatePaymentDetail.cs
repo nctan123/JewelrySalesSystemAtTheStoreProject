@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using JSSATSProject.Repository.CustomValidators;
+using System.ComponentModel.DataAnnotations;
 
 namespace JSSATSProject.Service.Models.PaymentDetailModel;
 
@@ -13,5 +14,6 @@ public class RequestCreatePaymentDetail
 
     public string ExternalTransactionCode { get; set; }
 
+    [StatusValidator("completed", "failed")]
     public string Status { get; set; }
 }

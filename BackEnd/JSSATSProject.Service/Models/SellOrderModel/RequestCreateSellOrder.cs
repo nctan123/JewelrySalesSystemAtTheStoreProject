@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-﻿using JSSATSProject.Repository.Enums;
-=======
+
 ﻿using System.ComponentModel.DataAnnotations;
 using JSSATSProject.Repository.Enums;
->>>>>>> BE_NhatAnh
-﻿using System.Text.Json.Serialization;
-using JSSATSProject.Repository.Enums;
+
 
 namespace JSSATSProject.Service.Models.OrderModel;
 

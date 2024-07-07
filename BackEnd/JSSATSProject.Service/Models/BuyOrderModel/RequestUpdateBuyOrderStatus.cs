@@ -1,8 +1,11 @@
 using JSSATSProject.Repository.CustomValidators;
+using System.ComponentModel.DataAnnotations;
 
 namespace JSSATSProject.Service.Models.BuyOrderModel;
 
 public class RequestUpdateBuyOrderStatus
 {
-    public required string NewStatus { get; set; }
+    [Required]
+
+    public  string NewStatus { get; set; }
 }

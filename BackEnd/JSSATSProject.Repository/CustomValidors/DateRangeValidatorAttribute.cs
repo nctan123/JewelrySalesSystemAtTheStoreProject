@@ -1,5 +1,6 @@
 using JSSATSProject.Repository.CustomValidors;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace JSSATSProject.Repository.CustomValidators
 {
@@ -32,5 +33,26 @@ namespace JSSATSProject.Repository.CustomValidators
             return ValidationResult.Success;
         }
 
+    }
+
+    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
+    public class VietnamesePhoneAttribute : ValidationAttribute
+    {
+        private const string PhonePattern = @"^(0[3|5|7|8|9]\d{8}|0[2]\d{9})$";
+
+        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        {
+            if (value is not string phoneNumber)
+            {
+                return new ValidationResult("Invalid phone number type.");
+            }
+
+            if (!Regex.IsMatch(phoneNumber, PhonePattern))
+            {
+                return new ValidationResult("Phone number must be a valid Vietnamese phone number.");
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }
