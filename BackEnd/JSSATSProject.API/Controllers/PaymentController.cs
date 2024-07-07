@@ -2,6 +2,7 @@
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -38,9 +39,9 @@ public class PaymentController : ControllerBase
 
     [HttpGet]
     [Route("GetAll")]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllAsync(int pageIndex, int pageSize)
     {
-        var responseModel = await _paymentService.GetAllAsync();
+        var responseModel = await _paymentService.GetAllAsync(pageIndex, pageSize);
         return Ok(responseModel);
     }
 
@@ -69,7 +70,7 @@ public class PaymentController : ControllerBase
 
         if (requestPayment.Status.Equals("cancelled"))
         {
-            var updatesellorderstatus = new UpdateSellOrderStatus
+            var updatesellorderstatus = new UpdateSellOrderStatus()
             {
                 Status = OrderConstants.CanceledStatus,
                 //Description = "Cancelled Payment"

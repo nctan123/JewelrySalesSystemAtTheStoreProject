@@ -2,6 +2,7 @@
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -61,7 +62,7 @@ public class PaymentDetailController : ControllerBase
 
 
         // Update Status SellOrder
-        var updatesellsrderstatus = new UpdateSellOrderStatus
+        var updatesellsrderstatus = new UpdateSellOrderStatus()
         {
             Status = OrderConstants.ProcessingStatus
      
