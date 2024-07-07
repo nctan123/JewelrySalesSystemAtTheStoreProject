@@ -1,4 +1,6 @@
-﻿namespace JSSATSProject.Service.Models.DiamondModel;
+﻿using JSSATSProject.Repository.CustomValidators;
+
+namespace JSSATSProject.Service.Models.DiamondModel;
 
 public class RequestCreateDiamond
 {
@@ -15,11 +17,11 @@ public class RequestCreateDiamond
     public int PolishId { get; set; }
 
     public int CutId { get; set; }
-
     public int ClarityId { get; set; }
 
     public int CaratId { get; set; }
-
+    
+    [StatusValidator("active", "inactive")]
     public string? Status { get; set; }
 
     public string DiamondGradingCode { get; set; }

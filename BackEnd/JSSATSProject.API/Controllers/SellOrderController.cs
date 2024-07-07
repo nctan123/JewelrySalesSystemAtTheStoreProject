@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
@@ -54,6 +55,7 @@ public class SellOrderController : ControllerBase
     [Route("CreateOrder")]
     public async Task<IActionResult> CreateAsync([FromBody] RequestCreateSellOrder requestSellOrder)
     {
+        if (!ModelState.IsValid) return Problem(statusCode: 400, detail: ModelState.ToString());
         var updatedOrder = new ResponseModel();
         var customerPhoneNumber = requestSellOrder.CustomerPhoneNumber;
         var staffId = requestSellOrder.StaffId;

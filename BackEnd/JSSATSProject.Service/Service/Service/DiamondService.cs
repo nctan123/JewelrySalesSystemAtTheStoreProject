@@ -82,7 +82,6 @@ public class DiamondService : IDiamondService
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
             DiamondGradingCode = diamond.DiamondGradingCode,
-            Status = diamond.Status
         }).ToList();
 
         return new ResponseModel
@@ -113,7 +112,6 @@ public class DiamondService : IDiamondService
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
             DiamondGradingCode = diamond.DiamondGradingCode,
-            Status = diamond.Status
         }).ToList();
 
         return new ResponseModel
@@ -144,7 +142,6 @@ public class DiamondService : IDiamondService
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
             DiamondGradingCode = diamond.DiamondGradingCode,
-            Status = diamond.Status
         }).ToList();
 
         return new ResponseModel
@@ -175,7 +172,6 @@ public class DiamondService : IDiamondService
             ClarityName = diamond.Clarity.Level,
             CaratWeight = diamond.Carat.Weight,
             DiamondGradingCode = diamond.DiamondGradingCode,
-            Status = diamond.Status
         }).ToList();
 
         return new ResponseModel

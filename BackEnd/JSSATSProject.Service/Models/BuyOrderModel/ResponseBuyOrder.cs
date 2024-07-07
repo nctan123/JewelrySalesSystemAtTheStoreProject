@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using JSSATSProject.Service.Models.BuyOrderDetailModel;
 
 namespace JSSATSProject.Service.Models.BuyOrderModel;
@@ -18,6 +19,7 @@ public class ResponseBuyOrder
 
     public DateTime CreateDate { get; set; }
 
+    [Range(0, (double)decimal.MaxValue)]
     public decimal TotalAmount { get; set; }
 
     public string Description { get; set; }

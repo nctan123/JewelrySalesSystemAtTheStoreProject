@@ -8,7 +8,6 @@ public class RequestCreateNonCompanyBuyOrder
 
     public required int StaffId { get; set; }
     public DateTime CreateDate { get; set; }
-
     public required List<NonCompanyProduct> Products { get; set; } = [];
     public string? Description { get; set; }
 }
