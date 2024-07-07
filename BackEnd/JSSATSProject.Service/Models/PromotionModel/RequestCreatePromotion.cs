@@ -1,6 +1,10 @@
-﻿namespace JSSATSProject.Service.Models.PromotionModel;
+﻿using JSSATSProject.Repository.CustomValidators;
+using JSSATSProject.Repository.CustomValidors;
 
-public class RequestCreatePromotion
+namespace JSSATSProject.Service.Models.PromotionModel;
+
+[DateRange]
+public class RequestCreatePromotion :IDateRange
 {
     public string Name { get; set; } = null!;
 
