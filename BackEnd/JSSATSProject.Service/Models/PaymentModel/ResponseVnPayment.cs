@@ -2,23 +2,24 @@
 
 public class ResponseVnPayment
 {
-    public ResponseVnPayment(bool success, string paymentMethod, string orderDescription, string orderId,
-        string paymentId, string transactionId, string token, string vnPayResponseCode, string paymentMethodId)
-    {
-        Success = success;
-        PaymentMethod = paymentMethod;
-        OrderDescription = orderDescription;
-        OrderId = orderId;
-        PaymentId = paymentId;
-        TransactionId = transactionId;
-        Token = token;
-        VnPayResponseCode = vnPayResponseCode;
-        PaymentMethodId = paymentMethodId;
-    }
+    //public ResponseVnPayment(bool success, string paymentMethod, string orderDescription, string orderId,
+    //    string paymentId, string transactionId, string token, string vnPayResponseCode, string paymentMethodId, string vnpayTranStatus)
+    //{
+    //    Success = success;
+    //    PaymentMethod = paymentMethod;
+    //    OrderDescription = orderDescription;
+    //    OrderId = orderId;
+    //    PaymentId = paymentId;
+    //    TransactionId = transactionId;
+    //    Token = token;
+    //    VnPayResponseCode = vnPayResponseCode;
+    //    PaymentMethodId = paymentMethodId;
+    //    vnPayTranStatus = vnpayTranStatus;
+    //}
 
-    public ResponseVnPayment()
-    {
-    }
+    //public ResponseVnPayment()
+    //{
+    //}
 
     public bool Success { get; set; }
     public string PaymentMethod { get; set; }
@@ -31,5 +32,6 @@ public class ResponseVnPayment
 
     public string PaymentMethodId { get; set; }
 
-    // You can add other methods as needed
+    public string vnPayTranStatus { get; set; }
+
 }

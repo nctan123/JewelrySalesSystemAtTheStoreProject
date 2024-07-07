@@ -21,6 +21,7 @@ public class VnPayLibrary
 
         //var orderId = Convert.ToInt64(vnPay.GetResponseData("vnp_TxnRef"));
         var vnPayTranId = Convert.ToInt64(vnPay.GetResponseData("vnp_TransactionNo"));
+        var vnp_TransactionStatus = vnPay.GetResponseData("vnp_TransactionStatus");
         var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
         var vnpSecureHash = collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value;
         var orderInfo = vnPay.GetResponseData("vnp_OrderInfo");
@@ -29,7 +30,7 @@ public class VnPayLibrary
         if (!checkSignature)
             return new ResponseVnPayment
             {
-                Success = false
+                Success = false,
             };
 
         // Assuming orderInfo is formatted as "OrderId Amount PaymentId"
@@ -48,7 +49,8 @@ public class VnPayLibrary
             TransactionId = vnPayTranId.ToString(),
             Token = vnpSecureHash,
             VnPayResponseCode = vnpResponseCode,
-            PaymentMethodId = paymentmethodId
+            PaymentMethodId = paymentmethodId,
+            vnPayTranStatus = "99"
         };
     }
 

@@ -292,4 +292,69 @@ public class StaffService : IStaffService
             Data = result
         };
     }
+
+    public async Task<ResponseModel> GetByIdAsync(int id, DateTime startDate, DateTime endDate)
+    {
+        try
+        {
+            // Fetch the staff entity with SellOrders and BuyOrders included, filter by ID
+            var entities = await _unitOfWork.StaffRepository.GetAsync(
+                filter: s => s.Id == id,
+                includeProperties: "SellOrders,BuyOrders");
+
+            if (entities == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found"
+                };
+            }
+
+
+            var responseList = entities.Select(entity =>
+            {
+                var response = _mapper.Map<ResponseStaff>(entity);
+
+                var staffSellOrders = entity.SellOrders
+                    .Where(order =>
+                        order.CreateDate >= startDate &&
+                        order.CreateDate <= endDate &&
+                        !string.IsNullOrEmpty(order.Status) &&
+                        order.Status.Equals(OrderConstants.CompletedStatus))
+                    .ToList();
+
+                var staffBuyOrders = entity.BuyOrders
+                    .Where(order =>
+                        order.CreateDate >= startDate &&
+                        order.CreateDate <= endDate &&
+                        !string.IsNullOrEmpty(order.Status) &&
+                        order.Status.Equals(OrderConstants.CompletedStatus))
+                    .ToList();
+
+                response.TotalRevenue = staffSellOrders.Sum(order => order.TotalAmount);
+                response.TotalSellOrder = staffSellOrders.Count;
+                response.TotalBuyOrder = staffBuyOrders.Count;
+
+                return response;
+            }).ToList();
+
+            return new ResponseModel
+            {
+                Data = responseList,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = ex.Message
+            };
+        }
+    }
+
+
+
 }

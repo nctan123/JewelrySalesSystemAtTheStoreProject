@@ -12,7 +12,5 @@ public class RequestCreatePromotion
 
     public DateTime EndDate { get; set; }
 
-    public string? Status { get; set; }
-
     public List<int> CategoriIds { get; set; } = new();
 }

@@ -180,8 +180,7 @@ public class ApplicationMapper : Profile
         CreateMap<ProductCategoryType, ResponseProductCategoryType>().ReverseMap();
 
         //Product
-        CreateMap<Product, RequestCreateProduct>()
-            .ReverseMap();
+        CreateMap<Product, RequestCreateProduct>().ReverseMap();
 
         CreateMap<Product, RequestUpdateProduct>()
             .ForMember(dest => dest.StallsId, opt => opt.Ignore())

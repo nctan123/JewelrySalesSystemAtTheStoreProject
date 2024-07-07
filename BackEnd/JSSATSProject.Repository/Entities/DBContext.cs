@@ -391,7 +391,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValue("inactive")
+                .HasDefaultValue("active")
                 .HasColumnName("status");
             entity.Property(e => e.SymmetryId).HasColumnName("symmetry_id");
 
@@ -752,6 +752,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsUnicode(false)
+                 .HasDefaultValue("active")
                 .HasColumnName("status");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
@@ -1013,7 +1014,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValue("active")
+                .HasDefaultValue("inactive")
                 .HasColumnName("status");
         });
 

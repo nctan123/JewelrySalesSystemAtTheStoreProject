@@ -20,7 +20,5 @@ public class RequestCreateDiamond
 
     public int CaratId { get; set; }
 
-    public string? Status { get; set; }
-
     public string DiamondGradingCode { get; set; }
 }

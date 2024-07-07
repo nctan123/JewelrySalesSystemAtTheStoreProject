@@ -17,5 +17,4 @@ public class RequestCreateProduct
 
     public IFormFile ImgFile { get; set; }
 
-    public string? Status { get; set; }
 }
