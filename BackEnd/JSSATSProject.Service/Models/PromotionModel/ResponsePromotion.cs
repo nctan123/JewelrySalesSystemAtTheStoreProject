@@ -1,4 +1,5 @@
-﻿using JSSATSProject.Repository.Entities;
+﻿using JSSATSProject.Repository.CustomValidators;
+using JSSATSProject.Repository.Entities;
 
 namespace JSSATSProject.Service.Models.PromotionModel;
 
@@ -15,6 +16,7 @@ public class ResponsePromotion
 
     public DateTime EndDate { get; set; }
 
+    [StatusValidator("active", "inactive")]
     public string? Status { get; set; }
 
     public virtual ICollection<ProductCategory> Categories { get; set; } = new List<ProductCategory>();

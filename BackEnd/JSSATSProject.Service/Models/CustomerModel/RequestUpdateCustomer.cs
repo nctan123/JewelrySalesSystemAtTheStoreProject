@@ -1,4 +1,6 @@
-﻿namespace JSSATSProject.Service.Models.CustomerModel;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace JSSATSProject.Service.Models.CustomerModel;
 
 public class RequestUpdateCustomer
 {
@@ -6,10 +8,13 @@ public class RequestUpdateCustomer
 
     public string? Lastname { get; set; }
 
-    public string? Phone { get; set; }
+    [Phone(ErrorMessage = "{0} must be a valid phone number." )]
+    public string Phone { get; set; } = null!;
 
-    public string? Email { get; set; }
-
+    [EmailAddress(ErrorMessage = "{0} must be a valid email address.")]
+    public string Email { get; set; } = null!;
+    
+    [RegularExpression("(?i)(male|female)", ErrorMessage = "{0} must be either 'male' or 'female'.")]
     public string? Gender { get; set; }
 
     public string? Address { get; set; }

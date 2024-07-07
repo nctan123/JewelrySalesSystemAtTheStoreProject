@@ -62,7 +62,7 @@ public class PaymentDetailController : ControllerBase
 
 
         // Update Status SellOrder
-        var updatesellsrderstatus = new UpdateSellOrderStatus
+        var updatesellsrderstatus = new UpdateSellOrderStatus()
         {
             Status = OrderConstants.ProcessingStatus
      

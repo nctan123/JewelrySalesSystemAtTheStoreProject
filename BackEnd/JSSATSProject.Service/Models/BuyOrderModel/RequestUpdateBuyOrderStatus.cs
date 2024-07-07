@@ -1,3 +1,5 @@
+using JSSATSProject.Repository.CustomValidators;
+
 namespace JSSATSProject.Service.Models.BuyOrderModel;
 
 public class RequestUpdateBuyOrderStatus

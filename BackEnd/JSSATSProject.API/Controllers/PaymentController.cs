@@ -70,7 +70,7 @@ public class PaymentController : ControllerBase
 
         if (requestPayment.Status.Equals("cancelled"))
         {
-            var updatesellorderstatus = new UpdateSellOrderStatus
+            var updatesellorderstatus = new UpdateSellOrderStatus()
             {
                 Status = OrderConstants.CanceledStatus,
                 //Description = "Cancelled Payment"
