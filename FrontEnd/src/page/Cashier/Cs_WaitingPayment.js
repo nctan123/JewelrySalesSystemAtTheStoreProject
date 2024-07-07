@@ -34,10 +34,11 @@ const Cs_WaitingPayment = () => {
   const [PaymentID, setPaymentID] = useState();
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
   const handleSelectChange = (event) => {
     setChosePayMethod(event.target.value);
     setChosePayMethodID(event.target.key);
-    
+
   };
   const closeModal = () => {
     setIsModalOpen(false);
@@ -52,18 +53,42 @@ const Cs_WaitingPayment = () => {
   useEffect(() => {
     getPayMentMethod();
   }, []);
-
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.trim();
+    setSearchTerm(searchTerm);
+    if (searchTerm === '') {
+      // Nếu searchTerm rỗng thì gọi lại getCustomer với page 1
+      getInvoice(1);
+    } else {
+      getWaitingSearch(searchTerm, 1);
+    }
+  };
+  const getWaitingSearch = async (phone, page) => {
+    try {
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=waiting%20for%20customer%20payment&customerPhone=${phone}&ascending=true&pageIndex=${page}&pageSize=10`
+      );
+      if (res.data && res.data.data) {
+        setlistInvoice(res.data.data);
+        setTotalProduct(res.data.totalElements);
+        setTotalPage(res.data.totalPages);
+      }
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      toast.error('Failed to fetch customers');
+    }
+  };
   const getInvoice = async (page) => {
     try {
-        let res = await fetchStatusInvoice('waiting for customer payment',page);
-        if (res?.data?.data) {
-          setlistInvoice(res.data.data);
-          setTotalProduct(res.data.totalElements);
-          setTotalPage(res.data.totalPages);
-        }
-      } catch (error) {
-        console.error('Error fetching orders:', error);
+      let res = await fetchStatusInvoice('waiting for customer payment', page);
+      if (res?.data?.data) {
+        setlistInvoice(res.data.data);
+        setTotalProduct(res.data.totalElements);
+        setTotalPage(res.data.totalPages);
       }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
   };
   const getPayMentMethod = async () => {
     let res = await fetchPaymentMethod();
@@ -121,9 +146,13 @@ const Cs_WaitingPayment = () => {
       document.getElementById('display').value = "Invalid Input";
     }
   }
-  function formatPrice(price) {
-    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
+  const formatPrice = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(value);
+  };
 
   const [createDate, setcreateDate] = useState(new Date().toISOString())
 
@@ -136,19 +165,19 @@ const Cs_WaitingPayment = () => {
       amount: item.totalAmount,
     };
     console.log("Submitting order with data:", data);
-  
+
     try {
       // Simulate a possible error for testing
       if (!data.orderId || !data.customerId || !data.createDate || !data.amount) {
         throw new Error("Missing required fields in order data");
       }
-  
+
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment', data);
       console.log("Response from payment API:", res);
-  
+
       const paymentID = res.data.data.id;
       console.log("Payment ID received:", paymentID);
-  
+
       toast.success('Successful');
       setIsPaymentCompleted(true);
       setIsPaymentCompletedDefault(false);
@@ -156,7 +185,7 @@ const Cs_WaitingPayment = () => {
     } catch (error) {
       toast.error('Fail');
       console.error('Error during payment process:', error);
-      
+
       // Additional logging for detailed error information
       if (error.response) {
         // Server responded with a status other than 200 range
@@ -173,23 +202,23 @@ const Cs_WaitingPayment = () => {
       console.error("Error config:", error.config);
     }
   };
-  
+
   const [externalTransactionCode, setexternalTransactionCode] = useState('')
-  const handleCompleteCash = async (item,event) => {
+  const handleCompleteCash = async (item, event) => {
     event.preventDefault();
     let data = {
       paymentId: PaymentID,
       paymentMethodId: ChosePayMethodID,
-      amount:item.totalAmount,
-      externalTransactionCode:externalTransactionCode ,
+      amount: item.totalAmount,
+      externalTransactionCode: externalTransactionCode,
       status: 'completed',
     };
-  
+
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data);
 
       toast.success('Successful');
- 
+
     } catch (error) {
       toast.error('Fail');
       console.error('Error invoice:', error);
@@ -200,17 +229,17 @@ const Cs_WaitingPayment = () => {
     let data = {
       paymentId: PaymentID,
       orderId: item.id,
-      paymentMethodId: ChosePayMethodID,
+      paymentMethodId: 4,
       customerId: item.customerId,
       createDate: createDate,
-      amount: item.totalAmount,     
+      amount: item.totalAmount,
     };
     console.log(data);
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/VnPay/createpaymentUrl', data);
       console.log(res.data);
       toast.success('Successful');
-  
+
       // Automatically redirect to the returned URL
       window.location.href = res.data;
     } catch (error) {
@@ -218,15 +247,16 @@ const Cs_WaitingPayment = () => {
       console.error('Error invoice:', error);
     }
   };
-  
+
   const handleCancle = async (id) => {
     try {
-    const res = await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
-      status: 'cancelled',
-      createDate:currentTime,
+      const res = await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
+        status: 'cancelled',
+        createDate: currentTime,
       });
       console.log(res.data)
       toast.success('Success');
+      getInvoice(1);
     } catch (error) {
       console.error('Error updating status:', error);
       toast.error('Failed to cancel order');
@@ -234,50 +264,87 @@ const Cs_WaitingPayment = () => {
   };
   return (<>
     <div>
-      <div className='my-0 mx-auto'>
-        <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[76vh]'>
+    <form className="max-w-md mx-auto">
+        <div className="relative">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg
+              className="w-4 h-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          <input
+            type="search"
+            id="default-search"
+            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Search Item, ID in here..."
+            required
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
+      </form>
+      <div className='my-0 mx-auto mt-2'>
+        <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[78vh]'>
           {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => {
             return (
-              <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[28em] bg-[#e9ddc26d] mt-[20px]'>
+              <div className='shadow-md shadow-gray-600 pt-[10px] rounded-2xl w-[93%] h-[25em] bg-[#ffff] mb-[20px]'>
                 <div className='flex flex-col justify-between px-[15px] text-black font-thin'>
-                  <span className='flex justify-end font-bold'><FormatDate isoString={item.createDate} /></span>
-                  <div className='flex'>
-                  <span>Code:</span>
-                  <input className='bg-[#e9ddc200] text-center' value={item.id} readOnly/>
-                  </div>
+                  <span className='flex justify-end font-thin italic'><FormatDate isoString={item.createDate} /></span>
+                </div>
+                <div className='text-[15px]'>
+                <div className='flex px-[15px] gap-3 '>
+                  <span className='font-serif'>Code:</span>
+                  <span className='font-thin'>{item.code}</span>
+                  <span className='font-serif'>-</span>
+                  <span className='font-thin'>{item.id}</span>
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
-                <input hidden className='bg-[#e9ddc200] text-center' value={item.customerId} readOnly/>
+                  <input hidden className='bg-[#e9ddc200] text-center font-thin' value={item.customerId} readOnly />
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
-                  <p className='font-light w-full'>Customer Name: </p>
-                  <span className='w-full flex justify-center font-serif'>{item.customerName}</span>
+                  <p className='font-serif w-full'>Customer Name: </p>
+                  <span className='w-full flex justify-center font-thin'>{item.customerName}</span>
                 </div>
                 <div className='flex  px-[15px] text-black'>
-                  <p className='w-[260px] font-light '>Staff Name:</p>
-                  <span className='w-full flex font-serif'>{item.staffName}</span>
+                  <p className='w-[260px] font-serif '>Staff Name:</p>
+                  <span className='w-full flex font-thin'>{item.staffName}</span>
                 </div>
-                <div className='grid grid-cols-3 border-x-0 border-t-0 border mx-[10px] border-b-black pb-[2px]'>
+                </div>
+                <div className='grid grid-cols-3 border-x-0 font-extralight italic border-t-0 border mx-[10px] border-b-black pb-[2px]'>
                   <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
                   <div className='col-start-3 ml-6 flex justify-start'>Price</div>
                 </div>
                 <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
                   {item.sellOrderDetails.map((orderDetail, index) => (
                     <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                     <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
-                     <div className='col-start-3  flex justify-end  text-[12px] pr-2'>{orderDetail.unitPrice}<span className='text-red-500 flex justify-center text-[12px]'>{''}x{orderDetail.quantity}</span> </div>
-                   </div>
+                      <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
+                      <div className='col-start-3 gap-1 flex justify-end text-[12px]'>
+                        <span>{orderDetail.unitPrice}</span>
+                        <span className='text-red-500 flex justify-center text-[12px]'>{''}x{orderDetail.quantity}</span>
+                      </div>
+                    </div>
                   ))}
                 </div>
 
                 <div className='border border-x-0 border-b-0 mx-[15px] border-t-black py-2 flex justify-between'>
-                  <div className='font-bold'>PAYMENT</div>
+                  <div className='font-bold'>Total</div>
+                  <span className='font-semibold'>{formatPrice(item.totalAmount)}</span>
                 </div>
 
-                <div className='bg-[#87A89E] h-[50px] grid grid-cols-2 '>
-                  <input value={formatPrice(item.totalAmount)+'.đ'} readOnly className='mx-[15px] w-fit bg-[#87A89E] flex items-center font-bold text-lg'/>
-                  <div className='col-start-2 flex justify-end items-center mr-[15px]'>
-                    <Popup trigger={<button type='button' className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Pay Bill</button>} position="right center">
+                <div className=' flex justify-around'>
+                    <button onClick={() => handleCancle(item.id)} type='button' className="m-0 py-2 border border-[#ffffff] bg-[#c4472b] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#bd5f4f7e] active:bg-[#ffff] focus:outline-none">Cancel</button> 
+                    <Popup trigger={<button type='button' className=" m-0 py-2 border border-[#ffffff] bg-[#469086] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Pay Bill</button>} position="right center">
                       {close => (
                         <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] grid grid-cols-2'>
                           <div className='flex justify-center items-center fixed top-0 bottom-0 left-0 p-2'>
@@ -296,12 +363,12 @@ const Cs_WaitingPayment = () => {
                                   </div>
                                   <div className='row-start-1 col-start-2 h-[100px]'>
                                     <h5 className='font-bold'>Select a payment method</h5>
-                                    <select  onChange={handleSelectChange} class="mt-[10px] w-[100%] px-2 bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150">
-                                    {paymentMethod && paymentMethod.length > 0 && paymentMethod.map((item)=> {
-                                      return (
+                                    <select onChange={handleSelectChange} class="mt-[10px] w-[100%] px-2 bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150">
+                                      {paymentMethod && paymentMethod.length > 0 && paymentMethod.map((item) => {
+                                        return (
                                           <option key={item.id} value={item.name} className='text-black text-center'>{item.name}</option>
-                                      )
-                                    })}
+                                        )
+                                      })}
                                     </select>
                                   </div>
                                 </div>
@@ -370,7 +437,7 @@ const Cs_WaitingPayment = () => {
                                   </div>
 
                                 </div>
-                                <button type='submit' onClick={(event) => handleSubmitOrder(item, event)}  className="mb-0 text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-4 text-center">
+                                <button type='submit' onClick={(event) => handleSubmitOrder(item, event)} className="mb-0 text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-4 text-center">
                                   Pay Now
                                 </button>
                               </form>
@@ -379,238 +446,246 @@ const Cs_WaitingPayment = () => {
                           {/* Bill */}
                           {isPaymentCompletedDefault && (
                             <div className='col-start-2 my-auto mx-3 h-[100vh] overflow-y-auto'>
-                            <div className="bg-white shadow-lg w-full border border-black rounded-lg">
-                              <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
-                                <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
-                                  <QRCode
-                                    size={256}
-                                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                                    value={item.id}
-                                    viewBox={`0 0 256 256`}
-                                  />
-                                </div>
-                                <div className='flex flex-col items-center justify-center'>
-                                  <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
-                                  JEWELRY BILL OF SALE
-                                  </h1>
-                                  <h2 className='text-center text-gray-600'>
-                                  <FormatDate isoString={currentTime} /> 
-                                  </h2>
-                                </div>
-                                <div></div>
-                              </div>
-                              <div className='border border-black mx-4 my-2 p-4'>
-                                {/* Customer Information */}
-                                <div className='flex justify-between mb-4'>
-                                  <div className='flex items-center'>
-                                    <h1 className='font-semibold'>Customer Name:</h1>
-                                    <h2 className='text-black ml-2'>............................</h2>
+                              <div className="bg-white shadow-lg w-full border border-black rounded-lg">
+                                <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
+                                  <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
+                                    <QRCode
+                                      size={256}
+                                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                                      value={item.id}
+                                      viewBox={`0 0 256 256`}
+                                    />
                                   </div>
-                                  <div className='flex items-center'>
-                                    <h1 className='font-semibold'>Account Number:</h1>
+                                  <div className='flex flex-col items-center justify-center'>
+                                    <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
+                                      JEWELRY BILL OF SALE
+                                    </h1>
+                                    <h2 className='text-center text-gray-600'>
+                                      <FormatDate isoString={currentTime} />
+                                    </h2>
+                                  </div>
+                                  <div></div>
+                                </div>
+                                <div className='border border-black mx-4 my-2 p-4'>
+                                  {/* Customer Information */}
+                                  <div className='flex justify-between mb-4'>
+                                    <div className='flex items-center'>
+                                      <h1 className='font-semibold'>Customer Name:</h1>
+                                      <h2 className='text-black ml-2'>............................</h2>
+                                    </div>
+                                    <div className='flex items-center'>
+                                      <h1 className='font-semibold'>Account Number:</h1>
+                                      <h2 className='text-black ml-2'>
+                                        {[...Array(50)].map((_, index) => (
+                                          <span key={index}>.</span>
+                                        ))}
+                                      </h2>
+                                    </div>
+                                  </div>
+                                  <div className='flex items-center mb-4'>
+                                    <h1 className='font-semibold'>Address:</h1>
                                     <h2 className='text-black ml-2'>
                                       {[...Array(50)].map((_, index) => (
                                         <span key={index}>.</span>
                                       ))}
                                     </h2>
                                   </div>
-                                </div>
-                                <div className='flex items-center mb-4'>
-                                  <h1 className='font-semibold'>Address:</h1>
-                                  <h2 className='text-black ml-2'>
-                                    {[...Array(50)].map((_, index) => (
-                                      <span key={index}>.</span>
-                                    ))}
-                                  </h2>
-                                </div>
-                                <div className='flex items-center mb-4'>
-                                  <h1 className='font-semibold'>Payment methods:</h1>
-                                  <h2 className='text-black ml-2'>
-                                    {[...Array(50)].map((_, index) => (
-                                      <span key={index}>.</span>
-                                    ))}
-                                  </h2>
-                                </div>
-                                {/* Product Information */}
-                                <div className='border border-black mt-5 overflow-hidden'>
-                                  <table className="min-w-full text-left text-sm font-light text-gray-900">
-                                    <thead className="border-b bg-gray-100 font-medium">
-                                      <tr>
-                                        <th scope="col" className="px-4 py-4 text-center">N.O</th>
-                                        <th scope="col" className="px-6 py-4 text-center">Name Product</th>
-                                        <th scope="col" className="px-4 py-4 text-center">Quantity</th>
-                                        <th scope="col" className="px-6 py-4 text-center">Cost</th>
-                                        <th scope="col" className="px-6 py-4 text-center">Value</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr className="border-b bg-gray-50">
-                                        <td className="whitespace-nowrap px-4 py-4 text-center font-medium">...</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                        <td className="whitespace-nowrap px-4 py-4 text-center">...</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                      </tr>
-                                      <tr className="border-b bg-gray-50">
-                                        <td className="whitespace-nowrap px-4 py-4 text-center font-medium">...</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                        <td className="whitespace-nowrap px-4 py-4 text-center">...</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                        <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
-                                </div>
-                                <div className='border border-black mt-2 p-4'>
-                                  <div className='flex justify-between'>
-                                    <h1 className='font-bold'>Total Value</h1>
-                                    <h1>............</h1>
-                                  </div>
-                                </div>
-                                <div className='h-40 flex justify-around items-center'>
-                                  <div className='text-center '>
-                                    <h1 className='font-bold'>Customer</h1>
-                                    <h1 className='pb-2'>(Sign, write full name)</h1>
-                                    <SignatureCanvas penColor='black' 
-                                     canvasProps={{width: 300, height: 100, className: 'sigCanvas', style: { 
-                                      // border: '1px solid black', 
-                                      backgroundColor: '#f0f0f085' 
-                                    }}} />
-                                  </div>
-                                  <div className='text-center '>
-                                    <h1 className='font-bold'>Staff</h1>
-                                    <h1 className='pb-2'>(Sign, write full name)</h1>
-                                    <SignatureCanvas penColor='black'
-                                     canvasProps={{width: 300, height: 100, className: 'sigCanvas', style: { 
-                                      // border: '2px solid black', 
-                                      backgroundColor: '#f0f0f085' 
-                                    }}} />
-                                  </div>
-                                 </div>
-                                
-                              </div>
-                              <div className='flex justify-between px-4 py-2'>
-                                <button className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
-                                <button className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
-                              </div>
-                            </div>
-                          </div>
-                          )}
-                          {isPaymentCompleted &&  (
-                          <div className='col-start-2 my-auto mx-3 h-[100vh] overflow-y-auto'>
-                            <div className="bg-white shadow-lg w-full border border-black rounded-lg">
-                              <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
-                                <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
-                                  <QRCode
-                                    size={256}
-                                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                                    value={item.id}
-                                    viewBox={`0 0 256 256`}
-                                  />
-                                </div>
-                                <div className='flex flex-col items-center justify-center'>
-                                  <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
-                                  JEWELRY BILL OF SALE
-                                  </h1>
-                                  <h2 className='text-center text-gray-600'>
-                                    {currentTime}
-                                  </h2>
-                                </div>
-                                <div></div>
-                              </div>
-                              <div className='border border-black mx-4 my-2 p-4'>
-                                {/* Customer Information */}
-                                <div className='flex justify-between mb-4'>
-                                  <div className='flex items-center'>
-                                    <h1 className='font-semibold'>Customer Name:</h1>
-                                    <h2 className='text-black ml-2'>{item.customerName}</h2>
-                                  </div>
-                                  <div className='flex items-center'>
-                                    <h1 className='font-semibold'>Phoner Number:</h1>
+                                  <div className='flex items-center mb-4'>
+                                    <h1 className='font-semibold'>Payment methods:</h1>
                                     <h2 className='text-black ml-2'>
-                                      {item.customerPhoneNumber}
+                                      {[...Array(50)].map((_, index) => (
+                                        <span key={index}>.</span>
+                                      ))}
                                     </h2>
                                   </div>
-                                </div>
-                                <div className='flex items-center mb-4'>
-                                  <h1 className='font-semibold'>Address:</h1>
-                                  <h2 className='text-black ml-2'>
-                                    {[...Array(50)].map((_, index) => (
-                                      <span key={index}>.</span>
-                                    ))}
-                                  </h2>
-                                </div>
-                                <div className='flex items-center mb-4'>
-                                  <h1 className='font-semibold'>Payment methods:</h1>
-                                  <h2 className='text-black ml-2'>
-                                    {ChosePayMethod}
-                                  </h2>
-                                </div>
-                                {/* Product Information */}
-                                <div className='border border-black mt-5 overflow-hidden'>
-                                  <table className="min-w-full text-left text-sm font-light text-gray-900">
-                                    <thead className="border-b bg-gray-100 font-medium">
-                                      <tr>
-                                        <th scope="col" className="px-4 py-4 text-center">N.O</th>
-                                        <th scope="col" className="px-6 py-4 text-center">Name Product</th>
-                                        <th scope="col" className="px-4 py-4 text-center">Quantity</th>
-                                        <th scope="col" className="px-6 py-4 text-center">Cost</th>
-                                        <th scope="col" className="px-6 py-4 text-center">Value</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      {item.sellOrderDetails && item.sellOrderDetails.length > 0 && item.sellOrderDetails.map((p) => {
-                                        return(
+                                  {/* Product Information */}
+                                  <div className='border border-black mt-5 overflow-hidden'>
+                                    <table className="min-w-full text-left text-sm font-light text-gray-900">
+                                      <thead className="border-b bg-gray-100 font-medium">
+                                        <tr>
+                                          <th scope="col" className="px-4 py-4 text-center">N.O</th>
+                                          <th scope="col" className="px-6 py-4 text-center">Name Product</th>
+                                          <th scope="col" className="px-4 py-4 text-center">Quantity</th>
+                                          <th scope="col" className="px-6 py-4 text-center">Cost</th>
+                                          <th scope="col" className="px-6 py-4 text-center">Value</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
                                         <tr className="border-b bg-gray-50">
-                                          <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
-                                          <td className="whitespace-nowrap px-6 py-4">{p.productName}</td>
-                                          <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity*p.unitPrice)}</td>
-                                        </tr>)
-                                        })}
-                                    </tbody>
-                                  </table>
+                                          <td className="whitespace-nowrap px-4 py-4 text-center font-medium">...</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
+                                          <td className="whitespace-nowrap px-4 py-4 text-center">...</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
+                                        </tr>
+                                        <tr className="border-b bg-gray-50">
+                                          <td className="whitespace-nowrap px-4 py-4 text-center font-medium">...</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
+                                          <td className="whitespace-nowrap px-4 py-4 text-center">...</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
+                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  <div className='border border-black mt-2 p-4'>
+                                    <div className='flex justify-between'>
+                                      <h1 className='font-bold'>Total Value</h1>
+                                      <h1>............</h1>
+                                    </div>
+                                  </div>
+                                  <div className='h-40 flex justify-around items-center'>
+                                    <div className='text-center '>
+                                      <h1 className='font-bold'>Customer</h1>
+                                      <h1 className='pb-2'>(Sign, write full name)</h1>
+                                      <SignatureCanvas penColor='black'
+                                        canvasProps={{
+                                          width: 300, height: 100, className: 'sigCanvas', style: {
+                                            // border: '1px solid black', 
+                                            backgroundColor: '#f0f0f085'
+                                          }
+                                        }} />
+                                    </div>
+                                    <div className='text-center '>
+                                      <h1 className='font-bold'>Staff</h1>
+                                      <h1 className='pb-2'>(Sign, write full name)</h1>
+                                      <SignatureCanvas penColor='black'
+                                        canvasProps={{
+                                          width: 300, height: 100, className: 'sigCanvas', style: {
+                                            // border: '2px solid black', 
+                                            backgroundColor: '#f0f0f085'
+                                          }
+                                        }} />
+                                    </div>
+                                  </div>
+
                                 </div>
-                                <div className='border border-black mt-2 p-4'>
-                                  <div className='flex justify-between'>
-                                    <h1 className='font-bold'>Total Value</h1>
-                                    <h1>{formatPrice(item.totalAmount)}</h1>
-                                  </div>
+                                <div className='flex justify-between px-4 py-2'>
+                                  <button className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
+                                  <button className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
                                 </div>
-                                <div className='h-40 flex justify-around items-center'>
-                                  <div className='text-center '>
-                                    <h1 className='font-bold'>Customer</h1>
-                                    <h1 className='pb-2'>(Sign, write full name)</h1>
-                                    <SignatureCanvas penColor='black' 
-                                     canvasProps={{width: 300, height: 100, className: 'sigCanvas', style: { 
-                                      // border: '1px solid black', 
-                                      backgroundColor: '#f0f0f085' 
-                                    }}} />
-                                  </div>
-                                  <div className='text-center '>
-                                    <h1 className='font-bold'>Staff</h1>
-                                    <h1 className='pb-2'>(Sign, write full name)</h1>
-                                    <SignatureCanvas penColor='black'
-                                     canvasProps={{width: 300, height: 100, className: 'sigCanvas', style: { 
-                                      // border: '2px solid black', 
-                                      backgroundColor: '#f0f0f085' 
-                                    }}} />
-                                  </div>
-                                 </div>
-                                
-                              </div>
-                              <div className='flex justify-between px-4 py-2'>
-                                <button onClick={() => handleCancle(item.id)} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
-                                <button onClick={(event) => handleCompleteVnPay(item,event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
                               </div>
                             </div>
-                          </div>
+                          )}
+                          {isPaymentCompleted && (
+                            <div className='col-start-2 my-auto mx-3 h-[100vh] overflow-y-auto'>
+                              <div className="bg-white shadow-lg w-full border border-black rounded-lg">
+                                <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
+                                  <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
+                                    <QRCode
+                                      size={256}
+                                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                                      value={item.id}
+                                      viewBox={`0 0 256 256`}
+                                    />
+                                  </div>
+                                  <div className='flex flex-col items-center justify-center'>
+                                    <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
+                                      JEWELRY BILL OF SALE
+                                    </h1>
+                                    <h2 className='text-center text-gray-600'>
+                                      {currentTime}
+                                    </h2>
+                                  </div>
+                                  <div></div>
+                                </div>
+                                <div className='border border-black mx-4 my-2 p-4'>
+                                  {/* Customer Information */}
+                                  <div className='flex justify-between mb-4'>
+                                    <div className='flex items-center'>
+                                      <h1 className='font-semibold'>Customer Name:</h1>
+                                      <h2 className='text-black ml-2'>{item.customerName}</h2>
+                                    </div>
+                                    <div className='flex items-center'>
+                                      <h1 className='font-semibold'>Phoner Number:</h1>
+                                      <h2 className='text-black ml-2'>
+                                        {item.customerPhoneNumber}
+                                      </h2>
+                                    </div>
+                                  </div>
+                                  <div className='flex items-center mb-4'>
+                                    <h1 className='font-semibold'>Address:</h1>
+                                    <h2 className='text-black ml-2'>
+                                      {[...Array(50)].map((_, index) => (
+                                        <span key={index}>.</span>
+                                      ))}
+                                    </h2>
+                                  </div>
+                                  <div className='flex items-center mb-4'>
+                                    <h1 className='font-semibold'>Payment methods:</h1>
+                                    <h2 className='text-black ml-2'>
+                                      {ChosePayMethod}
+                                    </h2>
+                                  </div>
+                                  {/* Product Information */}
+                                  <div className='border border-black mt-5 overflow-hidden'>
+                                    <table className="min-w-full text-left text-sm font-light text-gray-900">
+                                      <thead className="border-b bg-gray-100 font-medium">
+                                        <tr>
+                                          <th scope="col" className="px-4 py-4 text-center">N.O</th>
+                                          <th scope="col" className="px-6 py-4 text-center">Name Product</th>
+                                          <th scope="col" className="px-4 py-4 text-center">Quantity</th>
+                                          <th scope="col" className="px-6 py-4 text-center">Cost</th>
+                                          <th scope="col" className="px-6 py-4 text-center">Value</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {item.sellOrderDetails && item.sellOrderDetails.length > 0 && item.sellOrderDetails.map((p) => {
+                                          return (
+                                            <tr className="border-b bg-gray-50">
+                                              <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
+                                              <td className="whitespace-nowrap px-6 py-4">{p.productName}</td>
+                                              <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
+                                              <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
+                                              <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity * p.unitPrice)}</td>
+                                            </tr>)
+                                        })}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                  <div className='border border-black mt-2 p-4'>
+                                    <div className='flex justify-between'>
+                                      <h1 className='font-bold'>Total Value</h1>
+                                      <h1>{formatPrice(item.totalAmount)}</h1>
+                                    </div>
+                                  </div>
+                                  <div className='h-40 flex justify-around items-center'>
+                                    <div className='text-center '>
+                                      <h1 className='font-bold'>Customer</h1>
+                                      <h1 className='pb-2'>(Sign, write full name)</h1>
+                                      <SignatureCanvas penColor='black'
+                                        canvasProps={{
+                                          width: 300, height: 100, className: 'sigCanvas', style: {
+                                            // border: '1px solid black', 
+                                            backgroundColor: '#f0f0f085'
+                                          }
+                                        }} />
+                                    </div>
+                                    <div className='text-center '>
+                                      <h1 className='font-bold'>Staff</h1>
+                                      <h1 className='pb-2'>(Sign, write full name)</h1>
+                                      <SignatureCanvas penColor='black'
+                                        canvasProps={{
+                                          width: 300, height: 100, className: 'sigCanvas', style: {
+                                            // border: '2px solid black', 
+                                            backgroundColor: '#f0f0f085'
+                                          }
+                                        }} />
+                                    </div>
+                                  </div>
+
+                                </div>
+                                <div className='flex justify-between px-4 py-2'>
+                                  <button onClick={() => handleCancle(item.id)} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
+                                  <button onClick={(event) => handleCompleteVnPay(item, event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
+                                </div>
+                              </div>
+                            </div>
                           )}
                         </div>
                       )}
                     </Popup>
-                  </div>
+                  
                 </div>
                 <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
                   {item.description}
@@ -619,37 +694,37 @@ const Cs_WaitingPayment = () => {
             )
           })}
         </div>
-                 
+
       </div>
       <ReactPaginate
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={totalPage}
-                    pageClassName="mx-1"
-                    pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
-                    previousClassName="mx-1"
-                    previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                    nextClassName="mx-1"
-                    nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                    breakLabel="..."
-                    breakClassName="mx-1 "
-                    breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-                    containerClassName="flex justify-center items-center space-x-4"
-                    activeClassName="bg-blue-500 text-white rounded-xl"
-                    renderOnZeroPageCount={null}
-                    // className="bg-black flex justify-center items-center"
-                    previousLabel={
-                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                        <AiFillLeftCircle />
-                      </IconContext.Provider>
-                    }
-                    nextLabel={
-                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                        <AiFillRightCircle />
-                      </IconContext.Provider>
-                    }
-                  />
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={3}
+        marginPagesDisplayed={2}
+        pageCount={totalPage}
+        pageClassName="mx-1"
+        pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
+        previousClassName="mx-1"
+        previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+        nextClassName="mx-1"
+        nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+        breakLabel="..."
+        breakClassName="mx-1 "
+        breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
+        containerClassName="flex justify-center items-center space-x-4"
+        activeClassName="bg-blue-500 text-white rounded-xl"
+        renderOnZeroPageCount={null}
+        // className="bg-black flex justify-center items-center"
+        previousLabel={
+          <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+            <AiFillLeftCircle />
+          </IconContext.Provider>
+        }
+        nextLabel={
+          <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+            <AiFillRightCircle />
+          </IconContext.Provider>
+        }
+      />
     </div>
 
   </>)

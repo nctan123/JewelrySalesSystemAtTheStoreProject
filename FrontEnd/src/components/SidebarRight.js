@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteProduct, deleteCustomer, deleteProductAll,addCustomer, addProduct, addRate} from '../store/slice/cardSilec';
+import { deleteProduct, deleteCustomer, deleteProductAll, addCustomer, addProduct, addRate } from '../store/slice/cardSilec';
 import { MdDeleteOutline } from 'react-icons/md';
 import { VscGitStashApply } from 'react-icons/vsc';
 import Popup from 'reactjs-popup';
@@ -20,7 +20,7 @@ const SidebarRight = () => {
   const [customerPhoneNumber, setCustomerPhoneNumber] = useState('');
   const [description, setDescription] = useState('');
   const [productCodesAndQuantity, setProductCodesAndQuantity] = useState({});
-  const [productCodesAndPromotionIds,setProductCodesAndPromotionIds] = useState({})
+  const [productCodesAndPromotionIds, setProductCodesAndPromotionIds] = useState({})
   const [specialDiscountRate, setSpecialDiscountRate] = useState('0');
   const [checkedItems, setCheckedItems] = useState({});
   const [totalProduct, setTotalProduct] = useState(0);
@@ -32,8 +32,8 @@ const SidebarRight = () => {
   const [total, setTotal] = useState(0);
   const [discount, setDiscount] = useState(0);
   const [point, setpoint] = useState(0);
-  const [IdTemPo,setIdTemPo] = useState();
-  const [TotalInvoice,setTotalInvoice] = useState(0);
+  const [IdTemPo, setIdTemPo] = useState();
+  const [TotalInvoice, setTotalInvoice] = useState(0);
 
   const dispatch = useDispatch();
   const CartProduct = useSelector(state => state.cart.CartArr);
@@ -46,13 +46,13 @@ const SidebarRight = () => {
     }, 1000);
     return () => clearInterval(interval);
   }, []);
-  const getDisCountPoint = async (amount,phone) => {
+  const getDisCountPoint = async (amount, phone) => {
     let data = {
-      customerPhoneNumber:phone,
-      totalOrderPrice:amount
+      customerPhoneNumber: phone,
+      totalOrderPrice: amount
     }
     try {
-      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/Point/GetPointForOrder',data)
+      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/Point/GetPointForOrder', data)
       console.log(res.data)
       setpoint(res.data)
       toast.success('Point Success')
@@ -71,36 +71,36 @@ const SidebarRight = () => {
       });
       setTotal(totalValue);
       setDiscount(totalDiscount);
-  
+
       console.log("Total Value:", totalValue);
       console.log("Total Discount:", totalDiscount);
       console.log("Point:", point);
       console.log("Special Discount Rate:", specialDiscountRate);
-  
+
       const invoiceTotal = (totalValue - totalDiscount - point) * (1 - specialDiscountRate);
       console.log("Calculated Total Invoice:", invoiceTotal);
       setTotalInvoice(invoiceTotal);
     };
-  
+
     calculateTotals();
-  
+
     const codesAndQuantity = CartProduct.reduce((acc, product) => {
       acc[product.code] = product.quantity;
       return acc;
     }, {});
     setProductCodesAndQuantity(codesAndQuantity);
-  
+
     const codesAndPromotion = CartProduct.reduce((acc, product) => {
       acc[product.code] = product.promotionId;
       return acc;
     }, {});
     setProductCodesAndPromotionIds(codesAndPromotion);
-  
+
     if (CusPoint?.phone) {
       setCustomerPhoneNumber(CusPoint.phone);
     }
   }, [CartProduct, CusPoint, point, specialDiscountRate]);
-  
+
 
   useEffect(() => {
     getListOrder(1);
@@ -117,8 +117,15 @@ const SidebarRight = () => {
     toast.warning('Sent Special Discount');
   };
 
-  const formatPrice = price => {
+  const formatNumber = price => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+  const formatPrice = (value) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      minimumFractionDigits: 0
+    }).format(value);
   };
 
   const handlePageClick = event => {
@@ -157,7 +164,7 @@ const SidebarRight = () => {
     const adjustedProductCodesAndPromotionIds = Object.fromEntries(
       Object.entries(productCodesAndPromotionIds).map(([key, value]) => [key, value === 0 ? null : value])
     );
-  
+
     // Remove entries with null values
     const filteredProductCodesAndPromotionIds = Object.fromEntries(
       Object.entries(adjustedProductCodesAndPromotionIds).filter(([_, value]) => value !== null)
@@ -166,7 +173,7 @@ const SidebarRight = () => {
     //   point;
     // }, );
     const data = {
-      id:IdTemPo,
+      id: IdTemPo,
       customerPhoneNumber,
       staffId: 4, // Replace with actual staffId if needed
       createDate: new Date().toISOString(),
@@ -181,18 +188,18 @@ const SidebarRight = () => {
       specialDiscountRequestStatus: null,
     };
     console.log(data);
-  
+
     if (!productCodesAndQuantity || Object.keys(productCodesAndQuantity).length === 0) {
       toast.error('No Product');
       return;
     }
-  
+
     try {
       const res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder', data);
       if (!isDraft) {
         await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${res.data.id}`, {
           status: 'waiting for customer payment',
-          createDate:new Date().toISOString(),
+          createDate: new Date().toISOString(),
         });
       }
       if (res.status === 201 || res.status === 200) {
@@ -211,7 +218,7 @@ const SidebarRight = () => {
       }
     } catch (error) {
       console.error('Error adding invoice:', error);
-  
+
       if (error.response) {
         console.error('Error response:', error.response);
         toast.error(`Add Fail: ${error.response.data.message || 'Unknown error'}`);
@@ -224,9 +231,9 @@ const SidebarRight = () => {
       }
     }
   };
-  
-  
-  
+
+
+
   const handlegetCodeEx = async (listsellorder) => {
     for (const item of listsellorder) {
       try {
@@ -240,8 +247,8 @@ const SidebarRight = () => {
       }
     }
   };
-  
-  const handleRequestToScreen = async (event, phone, listsellorder,id,rate) => {
+
+  const handleRequestToScreen = async (event, phone, listsellorder, id, rate) => {
     event.preventDefault();
     try {
       const res = await axios.get(
@@ -311,42 +318,42 @@ const SidebarRight = () => {
                                 {formatPrice(item.totalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
-                                <button onClick={(event) => handleRequestToScreen(event,item.customerPhoneNumber,item.sellOrderDetails,item.id)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                                <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
                                 <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
                                   {close => (
-                                  <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
-                                    <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
-                                      <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
-                                      <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
-                                      <div className="flex justify-end">
-                                        <button
-                                          onClick={close}
-                                          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
-                                        >
-                                          No
-                                        </button>
-                                        <button
-                                          onClick={async () => {
-                                            try {
-                                              await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
-                                                status: 'cancelled',
-                                              });
-                                              // Update the invoice list immediately
-                                              getListOrder(1);
-                                              toast.success('Invoice deleted successfully');
-                                            } catch (error) {
-                                              console.error('Error deleting invoice:', error);
-                                              toast.error('Failed to delete invoice');
-                                            }
-                                            onClose();
-                                          }}
-                                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
-                                        >
-                                          Yes
-                                        </button>
+                                    <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+                                      <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
+                                        <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
+                                        <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
+                                        <div className="flex justify-end">
+                                          <button
+                                            onClick={close}
+                                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
+                                          >
+                                            No
+                                          </button>
+                                          <button
+                                            onClick={async () => {
+                                              try {
+                                                await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
+                                                  status: 'cancelled',
+                                                });
+                                                // Update the invoice list immediately
+                                                getListOrder(1);
+                                                toast.success('Invoice deleted successfully');
+                                              } catch (error) {
+                                                console.error('Error deleting invoice:', error);
+                                                toast.error('Failed to delete invoice');
+                                              }
+                                              onClose();
+                                            }}
+                                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
+                                          >
+                                            Yes
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                    </div>       
                                   )}
                                 </Popup>
                               </td>
@@ -434,7 +441,7 @@ const SidebarRight = () => {
                         </tr>
                       </thead>
                       <tbody className='overflow-y-auto'>
-                      {listResponseManager && listResponseManager.map((item) => {
+                        {listResponseManager && listResponseManager.map((item) => {
                           return (
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
                               <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
@@ -450,42 +457,42 @@ const SidebarRight = () => {
                                 {formatPrice(item.totalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
-                                <button onClick={(event) => handleRequestToScreen(event,item.customerPhoneNumber,item.sellOrderDetails,item.id,item.specialDiscountRate)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                                <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id, item.specialDiscountRate)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
                                 <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
                                   {close => (
-                                  <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
-                                    <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
-                                      <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
-                                      <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
-                                      <div className="flex justify-end">
-                                        <button
-                                          onClick={close}
-                                          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
-                                        >
-                                          No
-                                        </button>
-                                        <button
-                                          onClick={async () => {
-                                            try {
-                                              await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
-                                                status: 'cancelled',
-                                              });
-                                              // Update the invoice list immediately
-                                              getListOrder(1);
-                                              toast.success('Invoice deleted successfully');
-                                            } catch (error) {
-                                              console.error('Error deleting invoice:', error);
-                                              toast.error('Failed to delete invoice');
-                                            }
-                                            onClose();
-                                          }}
-                                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
-                                        >
-                                          Yes
-                                        </button>
+                                    <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+                                      <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
+                                        <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
+                                        <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
+                                        <div className="flex justify-end">
+                                          <button
+                                            onClick={close}
+                                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
+                                          >
+                                            No
+                                          </button>
+                                          <button
+                                            onClick={async () => {
+                                              try {
+                                                await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
+                                                  status: 'cancelled',
+                                                });
+                                                // Update the invoice list immediately
+                                                getListOrder(1);
+                                                toast.success('Invoice deleted successfully');
+                                              } catch (error) {
+                                                console.error('Error deleting invoice:', error);
+                                                toast.error('Failed to delete invoice');
+                                              }
+                                              onClose();
+                                            }}
+                                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
+                                          >
+                                            Yes
+                                          </button>
+                                        </div>
                                       </div>
                                     </div>
-                                    </div>       
                                   )}
                                 </Popup>
                               </td>
@@ -584,36 +591,41 @@ const SidebarRight = () => {
           <div className='font-bold'>PAYMENT</div>
           <input value={description} onChange={(even) => setDescription(even.target.value)} className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#ffff] text-red font-semibold  pl-2" type="text" placeholder="Note" />
         </div>
-        <div className='px-[15px] grid grid-cols-2 grid-rows-2'>
-          <div className='row-start-1 font-thin'>Total:</div>
-          <div className='col-start-2 flex justify-end'>{formatPrice(total.toFixed())}</div>
-          <div className='row-start-2 font-thin'>Discount:</div>
-          <div className='col-start-2 flex justify-end'>{formatPrice(discount)}</div>
-        </div>
-        {CusPoint && (
-          <div className='px-[15px] grid grid-cols-2 pb-2' >
-            <div className='font-thin flex gap-3'>
-              <span>Point:{CusPoint.point.availablePoint} </span>
-              <button className='m-0 p-0 w-fit' onClick={() => getDisCountPoint(total - discount, CusPoint.phone)} type='button'>CheckPoint</button>
+        <div className='px-[15px] grid grid-cols-2 grid-rows-4 mb-2'>
+          <div className='row-start-1 font-mono'>Total:</div>
+          <div className='col-start-2 flex justify-end text-[#d48c20]'>{formatPrice(total.toFixed())}</div>
+          <div className='row-start-2 font-mono'>Discount:</div>
+          <div className='col-start-2 flex justify-end text-[#d44420]'>{formatPrice(discount)}</div>
+          <div className='row-start-3 flex gap-2'>
+            <span className='font-mono'>Point:</span>
+            {CusPoint && (
+               <span>{formatNumber(CusPoint.point.availablePoint)}</span>
+            )}
+          </div>
+          <div className='col-start-2 flex justify-between'>
+            <div>
+                <button className='m-0 p-0 px-4 w-fit bg-[#2b4fc6dc]' onClick={() => getDisCountPoint(total - discount, CusPoint.phone)} type='button'>Use</button>    
             </div>
-            <input value={point} className="w-20 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold ml-20" type="number" name="point" min="-9"  id="inputPoint" placeholder="Use Point" />
-            <div className='font-thin'>Special Discount:</div>
-            <div className='flex items-center justify-center gap-2'>
-              <input
-                className="w-42 h-full border-none rounded-md outline-none text-sm bg-[#f3f1ed] text-red font-semibold pl-2"
+            <div>       
+                <span>{formatPrice(point)}</span>
+            </div>
+          </div>
+          <div className='row-start-4 font-mono'>Special Discount:</div>
+          <div className='col-start-2 flex justify-end'>
+          <input
+                className="w-20 h-full text-center rounded-md outline-none text-sm text-red font-semibold"
                 type="number"
                 min="0"
                 max="1"
                 value={specialDiscountRate}
                 onChange={(even) => setSpecialDiscountRate(even.target.value)}
                 placeholder="Rate"
-              />
-            </div>
+            />
           </div>
-        )}
+        </div>
         <div className='bg-[#87A89E] h-[50px] grid grid-cols-3 '>
 
-          <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(TotalInvoice)}<span>.đ</span></div>
+          <div className='mx-[15px] flex items-center font-bold text-lg'>{formatPrice(TotalInvoice)}</div>
           <div className='col-start-3 flex gap-2 justify-end items-center mr-[15px]'>
             <span
               onClick={() => {
@@ -651,7 +663,7 @@ const SidebarRight = () => {
           </span>
         </button>
       </div>
-      <div className='grid grid-cols-2 justify-center my-4'>      
+      <div className='grid grid-cols-2 justify-center my-4'>
         <div className='flex justify-center'>
           <button onClick={() => handleShowListTemPo()} className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
             Draft/Special Discount
