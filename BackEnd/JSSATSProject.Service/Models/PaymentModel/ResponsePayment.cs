@@ -7,7 +7,9 @@ public class ResponsePayment
     public int OrderId { get; set; }
     public string OrderCode { get; set; }
 
-    public int CustomerId { get; set; }
+    public string CustomerPhone { get; set; }
+
+    public string CustomerName { get; set; }
 
     public DateTime CreateDate { get; set; }
 

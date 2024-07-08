@@ -86,7 +86,9 @@ public class SellOrderService : ISellOrderService
     {
         var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
         var discountPoint = sellOrder.DiscountPoint;
-        var specialDiscountRate = (sellOrder.SpecialDiscountRequest?.DiscountRate).GetValueOrDefault(0);
+        var specialDiscountRequest = sellOrder.SpecialDiscountRequest;
+        var specialDiscountRate = (specialDiscountRequest?.DiscountRate).GetValueOrDefault(0);
+        if (specialDiscountRequest?.Status == "cancelled") specialDiscountRate = 0;
         decimal finalPrice = (sellOrder!.TotalAmount - discountPoint * pointRate) * (1-specialDiscountRate);
         return finalPrice;
     }

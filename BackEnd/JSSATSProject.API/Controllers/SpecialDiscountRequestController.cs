@@ -80,7 +80,7 @@ public class SpecialDiscountRequestController : ControllerBase
 
             await _sellOrderService.UpdateOrderAsync(sellOrderId, new RequestUpdateSellOrder
             {
-                SpecialDiscountRequest = null,
+                SpecialDiscountRequest = targetEntity,
                 Status = OrderConstants.WaitingForCustomer
             });
         }

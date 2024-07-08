@@ -44,7 +44,7 @@ public class PaymentService : IPaymentService
             orderBy: orderBy,
             pageIndex: pageIndex,
             pageSize: pageSize,
-            includeProperties: "Order,PaymentDetails");
+            includeProperties: "Order,PaymentDetails,Customer,PaymentDetails.PaymentMethod");
 
         // Map entities to response model
         var responseList = _mapper.Map<List<ResponsePayment>>(entities.ToList());
@@ -112,25 +112,53 @@ public class PaymentService : IPaymentService
         var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
         return payment.OrderId;
     }
-    public async Task<decimal> GetTotal(int paymentMethod, DateTime startDate, DateTime endDate)
+    public async Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate)
     {
-        // Define filter to get completed payments with amount > 0, specific payment method, within the date range,
-        // and with PaymentDetails having status as completed
+        // Define the filter expression
         Expression<Func<Payment, bool>> filter = payment =>
             payment.Status == PaymentConstants.CompletedStatus &&
             payment.Amount > 0 &&
             payment.CreateDate >= startDate &&
-            payment.CreateDate <= endDate &&
-            payment.PaymentDetails.Any(pd => pd.PaymentMethodId == paymentMethod && pd.Status == PaymentConstants.CompletedStatus);
+            payment.CreateDate <= endDate;
 
-        // Fetch payments that match the filter criteria
-        var payments = await _unitOfWork.PaymentRepository.GetAsync(filter);
+        // Fetch payments within the specified date range
+        var payments = await _unitOfWork.PaymentRepository.GetAsync(
+            filter,
+            includeProperties: "PaymentDetails.PaymentMethod"
+            );
 
-        // Calculate the sum of amounts
-        var totalSum = payments.Sum(payment => payment.Amount);
+        // Group payment details by PaymentMethod and calculate the total amount
+        var paymentMethodTotalSums = payments
+            .SelectMany(payment => payment.PaymentDetails)
+            .Where(pd => pd.Status == PaymentConstants.CompletedStatus)
+            .GroupBy(pd => pd.PaymentMethod.Name)
+            .Select(group => new
+            {
+                PaymentMethodName = group.Key,
+                TotalAmount = group.Sum(pd => pd.Payment.Amount)
+            })
+            .ToList();
 
-        return totalSum;
+        // Initialize result list
+        var result = new List<Dictionary<string, object>>();
+
+        // Add payment method totals to result
+        foreach (var paymentMethodSum in paymentMethodTotalSums)
+        {
+            result.Add(new Dictionary<string, object>
+        {
+            { "PaymentMethodName", paymentMethodSum.PaymentMethodName },
+            { "TotalAmount", paymentMethodSum.TotalAmount }
+        });
+        }
+
+        // Return the response model with the result data
+        return new ResponseModel
+        {
+            Data = result
+        };
     }
+
 
 
 

@@ -94,8 +94,8 @@ public class PointService : IPointService
         var availablePoint = pointObj!.AvailablePoint.GetValueOrDefault();
         var rate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
 
-        if (totalOrderPrice / rate <= availablePoint) return (int)(totalOrderPrice / rate);
-        var result = totalOrderPrice - availablePoint * rate > 0 ? availablePoint : totalOrderPrice;
+        if (totalOrderPrice / rate <= availablePoint) return (int)(totalOrderPrice * rate);
+        var result = totalOrderPrice - availablePoint * rate > 0 ? availablePoint : totalOrderPrice * rate;
         return Convert.ToInt32(result);
     }
 
