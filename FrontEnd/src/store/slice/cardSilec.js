@@ -5,14 +5,24 @@ export const productSlice = createSlice({
     initialState: {
         Rate:null,
         CartArr: [],
-        CusPoint:null,
-        CartWholesale: [],
-        CartPromotion: [],
+        CusPoint:null, 
+        CartWholesale: [], 
+        CartPromotion: [], 
         CartProductBuy: [],
-        CartCustomerBuy: null,
+        CartCustomerBuy: null, 
         CartCodeOrder:null,
+        products: [] 
+
     },
     reducers: {
+        // Add product to products list non com
+        addProductToList: (state, action) => {
+            state.products.push(action.payload);
+        },
+        // Remove product from products list non com
+        removeProductFromList: (state, action) => {
+            state.products = state.products.filter(product => product.productName !== action.payload.productName);
+        },
         //Add Rate
         addRate: (state, action) => {
             state.Rate = action.payload;
@@ -79,6 +89,8 @@ export const productSlice = createSlice({
 
 
 export const {
+    addProductToList,
+    removeProductFromList,
     addRate,
     addCodeOrder,
     deleteCodeOrder,

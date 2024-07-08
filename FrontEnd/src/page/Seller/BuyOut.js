@@ -2,16 +2,72 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { MdDeleteOutline } from "react-icons/md";
-import { useDispatch } from 'react-redux';
-import { addCodeOrder, addCustomer, addProductBuy } from '../../store/slice/cardSilec';
+import { useDispatch, useSelector } from 'react-redux';
+import { addCodeOrder, addCustomer, addProductBuy, addProductToList } from '../../store/slice/cardSilec';
 
 const BuyOut = () => {
   const dispatch = useDispatch()
+  const ProductListNone = useSelector(state => state.cart.products)
   const [InvoiceCode, setInvoiceCode] = useState('');
   const [ListInvoice, setListInvoice] = useState(null); // Initialize as null
   const [selectedProduct, setSelectedProduct] = useState(null); // State to store selected product
+  const [CustomerPhone, setCustomerPhone] = useState('')
+  const [ListInforCustomer, setListInforCustomer] = useState(null)
 
+  const [productName, setProductName] = useState('');
+  const [diamondGradingCode, setDiamondGradingCode] = useState('');
+  const [materialId, setMaterialId] = useState([]);
+  const [materialWeight, setMaterialWeight] = useState('');
+  const [categoryTypeId, setCategoryTypeId] = useState('');
+  const [buyPrice, setBuyPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
 
+  const handleAddProduct = () => {
+    const newProduct = {
+      productName,
+      diamondGradingCode,
+      materialId: materialId ? parseInt(materialId) : null,
+      materialWeight: materialWeight ? parseFloat(materialWeight) : null,
+      categoryTypeId: parseInt(categoryTypeId),
+      buyPrice: parseFloat(buyPrice),
+      quantity: parseInt(quantity)
+    };
+    dispatch(addProductToList(newProduct));
+    // Reset form fields
+    setProductName('');
+    setDiamondGradingCode('');
+    setMaterialId('');
+    setMaterialWeight('');
+    setCategoryTypeId('');
+    setBuyPrice('');
+    setQuantity('');
+  };
+
+  const SubmitBuyNonCompany = () => {
+    // let data = {
+    //   customerPhoneNumber,
+    //   staffId:4,
+    //   createDate,
+    //   products: [
+    //     {
+    //       productName
+    //     }
+    //   ]
+    // }
+  }
+  // const [first, setfirst] = useState(second)
+  useEffect(() => {
+   
+  }, [materialId]); 
+  const MaterialID = async () => {
+      try {
+        const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Material/getall`);
+        setMaterialId(res.data.data)
+      } catch (error) {
+        console.error('Error fetching material:', error); 
+        toast.error('Error fetching material');
+      }
+  }
   const getInvoiceCode = async () => {
     try {
       console.log(`Fetching invoice for code: ${InvoiceCode}`); // Add logging
@@ -45,15 +101,16 @@ const BuyOut = () => {
   function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
-  const getProductBuy = async (product,phone) => {
+  const getCustormer = async () => {
     // event.preventDefault();
     try {
       const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${phone}&pageIndex=1&pageSize=10`
+        `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${CustomerPhone}&pageIndex=1&pageSize=10`
       );
       const item = res.data.data[0];
+      setListInforCustomer(item)
       dispatch(addCustomer(item));
-      dispatch(addProductBuy(product))
+
     } catch (error) {
       console.error('Error fetching customer or products:', error);
     }
@@ -61,10 +118,10 @@ const BuyOut = () => {
   return (
     <div className='w-full'>
       <div className='w-full h-fit flex justify-evenly'>
-        <div className="max-w-full w-full rounded-3xl flex flex-col py-6 pl-6 bg-[#fefffe] bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-100 text-gray-100 drop-shadow-lg">
+        <div className="max-w-full w-full rounded-3xl flex flex-col py-6 px-6 bg-[#fefffe] bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-100 text-gray-100 drop-shadow-lg">
 
           <div className="flex justify-between items-center gap-2">
-            <h2 className="text-xl text-black">Check Information Product</h2>
+            <h2 className="text-xl text-black">Create Buy Product Non Company</h2>
             <p className='cursor-pointer mr-3 p-2 rounded bg-[#edebeb]' onClick={() => { setListInvoice(null); setInvoiceCode(''); }}>
               <MdDeleteOutline size='17px' color='#ef4e4e' />
             </p>
@@ -73,22 +130,23 @@ const BuyOut = () => {
           <div className="flex py-4 gap-2.5">
             <div className="w-12/12 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
               <input
-                value={InvoiceCode}
-                onChange={(event) => setInvoiceCode(event.target.value)}
-                placeholder="Invoice Code / Warranty"
+                value={CustomerPhone}
+                onChange={(event) => setCustomerPhone(event.target.value)}
+                placeholder="Customer PhoneNumber"
                 type="text"
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
               />
               <div className="text-gray-600 cursor-pointer flex items-center w-3/12 px-4 bg-transparent appearance-none border-l-2 border-gray-500 h-5/6 focus:outline-none text-lg">
-                <span onClick={getInvoiceCode} className='hover:scale-75 duration-500'>Check</span>
+                <span onClick={getCustormer} className='hover:scale-75 duration-500'>Check</span>
               </div>
             </div>
 
-            {ListInvoice && (
+
+            {ListInforCustomer && (
               <>
                 <div className="w-12/12 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
                   <input
-                    value={ListInvoice.customerName}
+                    value={ListInforCustomer.firstname + ' ' + ListInforCustomer.lastname}
                     placeholder="Customer Name"
                     className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                     readOnly
@@ -96,7 +154,7 @@ const BuyOut = () => {
                 </div>
                 <div className="w-12/12 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
                   <input
-                    value={ListInvoice.customerPhoneNumber}
+                    value={ListInforCustomer.phone}
                     // onChange={(event) => setCustomerPhoneNumber(event.target.value)}
                     placeholder="Phone Number"
                     className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
@@ -106,36 +164,112 @@ const BuyOut = () => {
               </>
             )}
           </div>
-          <div class="inline-block min-w-full p-0">
+
+          <h2 className="text-xl text-black mb-2">Create Product</h2>
+          <form onSubmit={(e) => { e.preventDefault(); handleAddProduct(); }}
+            className='grid grid-cols-4'
+          >
+            <div className="w-11/12 mb-2 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+              <input
+                className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                type="text"
+                placeholder="Product Name"
+                value={productName}
+                onChange={(e) => setProductName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+              <input
+                className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                type="text"
+                placeholder="Diamond Grading Code"
+                value={diamondGradingCode}
+                onChange={(e) => setDiamondGradingCode(e.target.value)}
+              />
+            </div>
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+              <input
+                className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                type="number"
+                placeholder="Material ID"
+                value={materialId}
+                onChange={(e) => setMaterialId(e.target.value)}
+              />
+            </div>
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+              <input
+                className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                type="number"
+                placeholder="Material Weight"
+                value={materialWeight}
+                onChange={(e) => setMaterialWeight(e.target.value)}
+              />
+            </div>
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+              <input
+                className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                type="number"
+                placeholder="Category Type ID"
+                value={categoryTypeId}
+                onChange={(e) => setCategoryTypeId(e.target.value)}
+                required
+              />
+            </div>
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+              <input
+                className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                type="number"
+                placeholder="Buy Price"
+                value={buyPrice}
+                onChange={(e) => setBuyPrice(e.target.value)}
+                required
+              />
+            </div>
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+              <input
+                className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                type="number"
+                placeholder="Quantity"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                required
+              />
+            </div>
+            <div className="w-11/12  h-14 flex rounded-lg justify-center  items-center">
+              <button className='m-0' type="submit">Add Product</button>
+            </div>
+          </form>
+
+          <div class="inline-block min-w-full p-0 mt-4">
             <div class="overflow-hidden">
-              <table
-                class="min-w-full text-left text-black text-sm font-light text-surface dark:text-white">
-                <thead
-                  class="border-b border-neutral-200 font-medium dark:border-white/10">
-                  <tr className='text-center'>
-                    <th scope="col" class="px-0 py-4">Name</th>
-                    <th scope="col" className="pl-6-0 py-4">Price</th>
-                    <th scope="col" class="px-6 py-4">Price Order</th>
-                    <th scope="col" class="px-0 py-4">Quantity</th>
-                    <th scope="col" class="px-6 py-4">Estimate</th>
-                    <th scope="col" class="px-0 py-4">Reason</th>
-                    <th scope="col" class="px-6 py-4">Apply</th>
+              <table class="min-w-full text-left text-sm font-light text-surface dark:text-white">
+                <thead class="border-b border-neutral-200 font-medium dark:border-white/10">
+                  <tr class="text-center text-black bg-gray-300">
+                    <th scope="col" class="px-4 py-2">Name</th>
+                    <th scope="col" class="px-4 py-2">Diamond Grading Code</th>
+                    <th scope="col" class="px-4 py-2">Material Id</th>
+                    <th scope="col" class="px-4 py-2">Material Weight</th>
+                    <th scope="col" class="px-4 py-2">Category Type Id</th>
+                    <th scope="col" class="px-4 py-2">Buy Price</th>
+                    <th scope="col" class="px-4 py-2">Quantity</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ListInvoice && ListInvoice.products && ListInvoice.products.map((product, index) => (
-                    <tr class="border-b border-neutral-200 transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-white/10 dark:hover:bg-neutral-600">
-                      <td class="whitespace-nowrap px-0 py-4 font-medium">{product.code}</td>
-                      <td class="whitespace-nowrap pl-6 py-4">{product.name}</td>
-                      <td scope="col" class="px-6 py-4">{formatPrice(product.priceInOrder)}</td>
-                      <td class="whitespace-nowrap px-0 py-4 text-center">{product.quantity}</td>
-                      <td class="whitespace-nowrap px-6 py-4">{formatPrice(product.estimateBuyPrice)}</td>
-                      <td scope="col" class="px-0 py-4 text-center">{product.reasonForEstimateBuyPrice}</td>
-                      <td scope="col" class="px-6 py-4"><button onClick={()=>getProductBuy(product,ListInvoice.customerPhoneNumber)}>Apply</button></td>
+                  {ProductListNone && ProductListNone.map((product, index) => (
+                    <tr key={index} class="border-b text-gray-600 text-center border-neutral-200 transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-white/10 dark:hover:bg-neutral-600">
+                      <td class="whitespace-nowrap px-4 py-2 font-medium">{product.productName}</td>
+                      <td class="whitespace-nowrap px-4 py-2">{product.diamondGradingCode}</td>
+                      <td class="whitespace-nowrap px-4 py-2">{product.materialId}</td>
+                      <td class="whitespace-nowrap px-4 py-2 text-center">{product.materialWeight}</td>
+                      <td class="whitespace-nowrap px-4 py-2">{product.categoryTypeId}</td>
+                      <td class="whitespace-nowrap px-4 py-2 text-center">{product.buyPrice}</td>
+                      <td class="whitespace-nowrap px-4 py-2">{product.quantity}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
+
             </div>
           </div>
         </div>

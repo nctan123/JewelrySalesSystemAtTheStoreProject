@@ -4,7 +4,7 @@ const {GiReceiveMoney,BsCartPlus,BsCartCheck,BsCart3} = icons
 
 export const sidebarMenuCashier = [
     {
-        path: 'cs_order/cs_onprocess',
+        path: 'cs_order/cs_waitingPayment',
         text: 'Order',
         icons: <BsCart3  size={24} color="white" />,
     },

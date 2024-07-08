@@ -315,7 +315,7 @@ const SidebarRight = () => {
                                 {item.customerPhoneNumber}
                               </td>
                               <td class="px-6 py-4">
-                                {formatPrice(item.totalAmount)}
+                                {formatPrice(item.finalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
                                 <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
@@ -454,7 +454,7 @@ const SidebarRight = () => {
                                 {item.customerPhoneNumber}
                               </td>
                               <td class="px-6 py-4">
-                                {formatPrice(item.totalAmount)}
+                                {formatPrice(item.finalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
                                 <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id, item.specialDiscountRate)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>

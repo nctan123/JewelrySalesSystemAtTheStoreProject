@@ -10,6 +10,8 @@ import { format, parseISO } from 'date-fns';
 import ReactPaginate from 'react-paginate';
 import { AiFillLeftCircle, AiFillRightCircle } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const FormatDate = ({ isoString }) => {
   // Cs_WaitingPayment
@@ -28,17 +30,24 @@ const Cs_WaitingPayment = () => {
   const [IdOrder, setIdOrder] = useState('')
   const [isPaymentCompleted, setIsPaymentCompleted] = useState(false);
   const [isPaymentCompletedDefault, setIsPaymentCompletedDefault] = useState(true);
-  const [paymentMethod, setpaymentMethod] = useState('')
+  const [paymentMethod, setPaymentMethod] = useState([]);
   const [ChosePayMethod, setChosePayMethod] = useState('Cash');
   const [ChosePayMethodID, setChosePayMethodID] = useState(3);
   const [PaymentID, setPaymentID] = useState();
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const handleSelectChange = (event) => {
-    setChosePayMethod(event.target.value);
-    setChosePayMethodID(event.target.key);
+  const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
 
+  const handleChange = (event) => {
+    const selectedMethod = paymentMethod.find(
+      (method) => method.name === event.target.value
+    );
+    console.log(selectedMethod.id)
+    if (selectedMethod) {
+      setChosePayMethod(selectedMethod.name);
+      setChosePayMethodID(selectedMethod.id);
+    }
   };
   const closeModal = () => {
     setIsModalOpen(false);
@@ -50,9 +59,7 @@ const Cs_WaitingPayment = () => {
     getInvoice(1);
     console.log(listInvoice)
   }, []);
-  useEffect(() => {
-    getPayMentMethod();
-  }, []);
+
   const handleSearch = (event) => {
     const searchTerm = event.target.value.trim();
     setSearchTerm(searchTerm);
@@ -78,6 +85,20 @@ const Cs_WaitingPayment = () => {
       toast.error('Failed to fetch customers');
     }
   };
+  const getCompletedSearch = async (phone) => {
+    try {
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=completed&customerPhone=${phone}&ascending=true&pageIndex=1&pageSize=10`
+      );
+      console.log('search completed:',res.data.data)
+      // if (res.data && res.data.data) {
+      //   showBill(res.data.data[0]);
+      // }
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      toast.error('Failed to fetch customers');
+    }
+  };
   const getInvoice = async (page) => {
     try {
       let res = await fetchStatusInvoice('waiting for customer payment', page);
@@ -90,10 +111,13 @@ const Cs_WaitingPayment = () => {
       console.error('Error fetching orders:', error);
     }
   };
+  useEffect(() => {
+    getPayMentMethod();
+  }, []);
   const getPayMentMethod = async () => {
     let res = await fetchPaymentMethod();
     if (res && res.data && res.data.data) {
-      setpaymentMethod(res.data.data)
+      setPaymentMethod(res.data.data)
     }
   };
 
@@ -162,9 +186,9 @@ const Cs_WaitingPayment = () => {
       orderId: item.id,
       customerId: item.customerId,
       createDate: currentTime,
-      amount: item.totalAmount,
+      amount: item.finalAmount,
     };
-    console.log("Submitting order with data:", data);
+    console.log("Submitting order with data:", data, item.customerPhoneNumber);
 
     try {
       // Simulate a possible error for testing
@@ -176,12 +200,18 @@ const Cs_WaitingPayment = () => {
       console.log("Response from payment API:", res);
 
       const paymentID = res.data.data.id;
+      const item1 = res.data.data;
       console.log("Payment ID received:", paymentID);
 
-      toast.success('Successful');
+      toast.success('Create Invoice Successful');
       setIsPaymentCompleted(true);
       setIsPaymentCompletedDefault(false);
-      setPaymentID(paymentID);
+      if (ChosePayMethodID === 3) {
+        handleCompleteCash(item1,item.customerPhoneNumber);
+      } else if (ChosePayMethodID === 4) {
+        handleCompleteVnPay(item1);
+      }
+      // setPaymentID(paymentID);
     } catch (error) {
       toast.error('Fail');
       console.error('Error during payment process:', error);
@@ -204,42 +234,163 @@ const Cs_WaitingPayment = () => {
   };
 
   const [externalTransactionCode, setexternalTransactionCode] = useState('')
-  const handleCompleteCash = async (item, event) => {
-    event.preventDefault();
+  const handleCompleteCash = async (item,phone) => {
+    // event.preventDefault();
     let data = {
-      paymentId: PaymentID,
+      paymentId: item.id,
       paymentMethodId: ChosePayMethodID,
-      amount: item.totalAmount,
+      amount: item.amount,
       externalTransactionCode: externalTransactionCode,
       status: 'completed',
     };
 
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data);
-
-      toast.success('Successful');
-
+      toast.success('Cash payment successful');
+      getCompletedSearch(phone)
     } catch (error) {
       toast.error('Fail');
       console.error('Error invoice:', error);
     }
   };
-  const handleCompleteVnPay = async (item, event) => {
-    event.preventDefault();
+  const showBill = (item) => {
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div>
+            <button onClick={onClose} className="btn btn-primary">Close</button>
+                                  
+                          <div className='col-start-2 my-auto mx-3 h-[100vh] overflow-y-auto'>
+                            <div className="bg-white shadow-lg w-full border border-black rounded-lg">
+                              <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
+                                <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
+                                  <QRCode
+                                    size={256}
+                                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                                    value={item.id}
+                                    viewBox={`0 0 256 256`}
+                                  />
+                                </div>
+                                <div className='flex flex-col items-center justify-center'>
+                                  <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
+                                    JEWELRY BILL OF SALE
+                                  </h1>
+                                  <h2 className='text-center text-gray-600'>
+                                    {currentTime}
+                                  </h2>
+                                </div>
+                                <div></div>
+                              </div>
+                              <div className='border border-black mx-4 my-2 p-4'>
+                                {/* Customer Information */}
+                                <div className='flex justify-between mb-4'>
+                                  <div className='flex items-center'>
+                                    <h1 className='font-semibold'>Customer Name:</h1>
+                                    <h2 className='text-black ml-2'>{item.customerName}</h2>
+                                  </div>
+                                  <div className='flex items-center'>
+                                    <h1 className='font-semibold'>Phoner Number:</h1>
+                                    <h2 className='text-black ml-2'>
+                                      {item.customerPhoneNumber}
+                                    </h2>
+                                  </div>
+                                </div>
+                                <div className='flex items-center mb-4'>
+                                  <h1 className='font-semibold'>Address:</h1>
+                                  <h2 className='text-black ml-2'>
+                                    {[...Array(50)].map((_, index) => (
+                                      <span key={index}>.</span>
+                                    ))}
+                                  </h2>
+                                </div>
+                                <div className='flex items-center mb-4'>
+                                  <h1 className='font-semibold'>Payment methods:</h1>
+                                  <h2 className='text-black ml-2'>
+                                    {ChosePayMethod}
+                                  </h2>
+                                </div>
+                                {/* Product Information */}
+                                <div className='border border-black mt-5 overflow-hidden'>
+                                  <table className="min-w-full text-left text-sm font-light text-gray-900">
+                                    <thead className="border-b bg-gray-100 font-medium">
+                                      <tr>
+                                        <th scope="col" className="px-4 py-4 text-center">N.O</th>
+                                        <th scope="col" className="px-6 py-4 text-center">Name Product</th>
+                                        <th scope="col" className="px-4 py-4 text-center">Quantity</th>
+                                        <th scope="col" className="px-6 py-4 text-center">Cost</th>
+                                        <th scope="col" className="px-6 py-4 text-center">Value</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      {item.sellOrderDetails && item.sellOrderDetails.length > 0 && item.sellOrderDetails.map((p) => {
+                                        return (
+                                          <tr className="border-b bg-gray-50">
+                                            <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
+                                            <td className="whitespace-nowrap px-6 py-4">{p.productName}</td>
+                                            <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
+                                            <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
+                                            <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity * p.unitPrice)}</td>
+                                          </tr>)
+                                      })}
+                                    </tbody>
+                                  </table>
+                                </div>
+                                <div className='border border-black mt-2 p-4'>
+                                  <div className='flex justify-between'>
+                                    <h1 className='font-bold'>Total Value</h1>
+                                    <h1>{formatPrice(item.finalAmount)}</h1>
+                                  </div>
+                                </div>
+                                <div className='h-40 flex justify-around items-center'>
+                                  <div className='text-center '>
+                                    <h1 className='font-bold'>Customer</h1>
+                                    <h1 className='pb-2'>(Sign, write full name)</h1>
+                                    <SignatureCanvas penColor='black'
+                                      canvasProps={{
+                                        width: 300, height: 100, className: 'sigCanvas', style: {
+                                          // border: '1px solid black', 
+                                          backgroundColor: '#f0f0f085'
+                                        }
+                                      }} />
+                                  </div>
+                                  <div className='text-center '>
+                                    <h1 className='font-bold'>Staff</h1>
+                                    <h1 className='pb-2'>(Sign, write full name)</h1>
+                                    <SignatureCanvas penColor='black'
+                                      canvasProps={{
+                                        width: 300, height: 100, className: 'sigCanvas', style: {
+                                          // border: '2px solid black', 
+                                          backgroundColor: '#f0f0f085'
+                                        }
+                                      }} />
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                     
+          </div>
+          )
+      },
+    });
+  };
+
+  const handleCompleteVnPay = async (item) => {
+    // event.preventDefault();
     let data = {
-      paymentId: PaymentID,
-      orderId: item.id,
-      paymentMethodId: 4,
+      paymentId: item.id,
+      orderId: item.orderId,
+      paymentMethodId: ChosePayMethodID,
       customerId: item.customerId,
       createDate: createDate,
-      amount: item.totalAmount,
+      amount: item.amount,
     };
-    console.log(data);
+    console.log('VNPay request', data);
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/VnPay/createpaymentUrl', data);
       console.log(res.data);
       toast.success('Successful');
-
       // Automatically redirect to the returned URL
       window.location.href = res.data;
     } catch (error) {
@@ -249,22 +400,51 @@ const Cs_WaitingPayment = () => {
   };
 
   const handleCancle = async (id) => {
-    try {
-      const res = await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
-        status: 'cancelled',
-        createDate: currentTime,
-      });
-      console.log(res.data)
-      toast.success('Success');
-      getInvoice(1);
-    } catch (error) {
-      console.error('Error updating status:', error);
-      toast.error('Failed to cancel order');
-    }
+    confirmAlert({
+      customUI: ({ onClose }) => {
+        return (
+          <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+            <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
+              <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
+              <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={async () => {
+                    try {
+                      const res = await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
+                        status: 'cancelled',
+                        createDate: currentTime,
+                      });
+                      console.log(res.data)
+                      toast.success('Success');
+                      getInvoice(1);
+                    } catch (error) {
+                      console.error('Error updating status:', error);
+                      toast.error('Failed to cancel order');
+                    }
+                    onClose();
+                  }}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={onClose}
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
+                >
+                  No
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      },
+    });
   };
+
   return (<>
     <div>
-    <form className="max-w-md mx-auto">
+      <form className="max-w-md mx-auto">
         <div className="relative">
           <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg
@@ -303,23 +483,23 @@ const Cs_WaitingPayment = () => {
                   <span className='flex justify-end font-thin italic'><FormatDate isoString={item.createDate} /></span>
                 </div>
                 <div className='text-[15px]'>
-                <div className='flex px-[15px] gap-3 '>
-                  <span className='font-serif'>Code:</span>
-                  <span className='font-thin'>{item.code}</span>
-                  <span className='font-serif'>-</span>
-                  <span className='font-thin'>{item.id}</span>
-                </div>
-                <div className='flex justify-start px-[15px] text-black'>
-                  <input hidden className='bg-[#e9ddc200] text-center font-thin' value={item.customerId} readOnly />
-                </div>
-                <div className='flex justify-start px-[15px] text-black'>
-                  <p className='font-serif w-full'>Customer Name: </p>
-                  <span className='w-full flex justify-center font-thin'>{item.customerName}</span>
-                </div>
-                <div className='flex  px-[15px] text-black'>
-                  <p className='w-[260px] font-serif '>Staff Name:</p>
-                  <span className='w-full flex font-thin'>{item.staffName}</span>
-                </div>
+                  <div className='flex px-[15px] gap-3 '>
+                    <span className='font-serif'>Code:</span>
+                    <span className='font-thin'>{item.code}</span>
+                    <span className='font-serif'>-</span>
+                    <span className='font-thin'>{item.id}</span>
+                  </div>
+                  <div className='flex justify-start px-[15px] text-black'>
+                    <input hidden className='bg-[#e9ddc200] text-center font-thin' value={item.customerId} readOnly />
+                  </div>
+                  <div className='flex justify-start px-[15px] text-black'>
+                    <p className='font-serif w-full'>Customer Name: </p>
+                    <span className='w-full flex justify-center font-thin'>{item.customerName}</span>
+                  </div>
+                  <div className='flex  px-[15px] text-black'>
+                    <p className='w-[260px] font-serif '>Staff Name:</p>
+                    <span className='w-full flex font-thin'>{item.staffName}</span>
+                  </div>
                 </div>
                 <div className='grid grid-cols-3 border-x-0 font-extralight italic border-t-0 border mx-[10px] border-b-black pb-[2px]'>
                   <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
@@ -339,353 +519,118 @@ const Cs_WaitingPayment = () => {
 
                 <div className='border border-x-0 border-b-0 mx-[15px] border-t-black py-2 flex justify-between'>
                   <div className='font-bold'>Total</div>
-                  <span className='font-semibold'>{formatPrice(item.totalAmount)}</span>
+                  <span className='font-semibold'>{formatPrice(item.finalAmount)}</span>
                 </div>
 
                 <div className=' flex justify-around'>
-                    <button onClick={() => handleCancle(item.id)} type='button' className="m-0 py-2 border border-[#ffffff] bg-[#c4472b] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#bd5f4f7e] active:bg-[#ffff] focus:outline-none">Cancel</button> 
-                    <Popup trigger={<button type='button' className=" m-0 py-2 border border-[#ffffff] bg-[#469086] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Pay Bill</button>} position="right center">
-                      {close => (
-                        <div className='fixed top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] grid grid-cols-2'>
-                          <div className='flex justify-center items-center fixed top-0 bottom-0 left-0 p-2'>
-                            <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[100%] shadow-[#b6b0b0] shadow-md'>
-                              <form className="p-4 md:p-5 relative">
-                                <div className=" flex items-center justify-end md:p-0 rounded-t">
-                                  <a className='absolute right-0 cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
-                                </div>
-                                <div className="grid gap-4 grid-cols-2">
-                                  <div className='row-start-1 col-start-1 h-[100px]'>
-                                    <h5 className='font-bold '>Customer Info</h5>
-                                    <div id='inforCustomer' className='text-[12px]'>
-                                      <p className='bg-gray-100 px-2 py-1 rounded-md mb-1'>Name: {item.customerName}</p>
-                                      <p className='bg-gray-100 px-2 py-1 rounded-md'>Code Invoice: {item.code}</p>
-                                    </div>
-                                  </div>
-                                  <div className='row-start-1 col-start-2 h-[100px]'>
-                                    <h5 className='font-bold'>Select a payment method</h5>
-                                    <select onChange={handleSelectChange} class="mt-[10px] w-[100%] px-2 bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150">
-                                      {paymentMethod && paymentMethod.length > 0 && paymentMethod.map((item) => {
-                                        return (
-                                          <option key={item.id} value={item.name} className='text-black text-center'>{item.name}</option>
-                                        )
-                                      })}
-                                    </select>
+                  <button onClick={() => handleCancle(item.id)} type='button' className="m-0 py-2 border border-[#ffffff] bg-[#c4472b] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#bd5f4f7e] active:bg-[#ffff] focus:outline-none">Cancel</button>
+                  <Popup trigger={<button type='button' className=" m-0 py-2 border border-[#ffffff] bg-[#469086] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Pay Bill</button>} position="right center">
+                    {close => (
+                      <div className='fixed top-0 bottom-0 left-0 right-0 flex justify-center bg-[#6f85ab61]'>
+                        <div className='flex justify-center items-center w-fit p-2'>
+                          <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[100%] shadow-[#b6b0b0] shadow-md'>
+                            <form className="p-4 md:p-5 relative">
+                              <div className=" flex items-center justify-end md:p-0 rounded-t">
+                                <a className='absolute right-0 cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
+                              </div>
+                              <div className="grid gap-4 grid-cols-2">
+                                <div className='row-start-1 col-start-1 h-[100px]'>
+                                  <h5 className='font-bold '>Customer Info</h5>
+                                  <div id='inforCustomer' className='text-[12px]'>
+                                    <p className='bg-gray-100 px-2 py-1 rounded-md mb-1'>Name: {item.customerName}</p>
+                                    <p className='bg-gray-100 px-2 py-1 rounded-md'>Code Invoice: {item.code}</p>
                                   </div>
                                 </div>
-                                <div className="grid gap-4 grid-cols-2">
-                                  <div className='col-start-1 rounded-md bg-gray-100 p-[10px] relative'>
-                                    <h3 className='font-bold'>Transaction Details</h3>
-                                    <div className='overflow-y-scroll'>
-                                      <div className='grid grid-cols-3 border-x-0 border-t-0 border mx-[10px] border-b-black pb-[2px]'>
-                                        <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
-                                        <div className='col-start-3 ml-6 flex justify-start'>Price</div>
-                                      </div>
-                                      <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
-                                        {item.sellOrderDetails.map((orderDetail, index) => (
-                                          <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                                            <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
-                                            <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
-                                          </div>
-                                        ))}
-                                      </div>
-                                    </div>
-                                    <div className='absolute bottom-5 w-[95%] border border-x-0 border-b-0 border-black grid grid-cols-2 grid-rows-3'>
-                                      <div className='row-start-1 col-start-1 font-bold'>Total</div>
-                                      <div className='row-start-1 col-start-2 flex justify-end mr-5'>{formatPrice(item.totalAmount)}<span>.đ</span></div>
-                                    </div>
-                                  </div>
-
-                                  <div class="w-[22rem] h-[500px] bg-[#f6f8f9] rounded-3xl p-4 shadow-2xl dark:bg-[#17181a]">
-                                    <div class="h-[100px]">
-                                      <textarea type="text" id="display" class="h-full w-full text-3xl font-bold bg-transparent border border-none outline-none resize-none dark:text-white" disabled>0</textarea>
-                                    </div>
-
-                                    <div class="flex space-x-2 mt-3">
-                                      <input type="button" onClick={() => clearDisplay()} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#2d191e] dark:text-red-500" value="C" />
-                                      <input type="button" onClick={() => updateDisplay('(')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="(" />
-                                      <input type="button" onClick={() => updateDisplay(')')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value=")" />
-                                      <input type="button" onClick={() => updateDisplay('/')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="/" />
-                                    </div>
-
-                                    <div class="flex space-x-2 mt-3">
-                                      <input type="button" onClick={() => updateDisplay('7')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="7" />
-                                      <input type="button" onClick={() => updateDisplay('8')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="8" />
-                                      <input type="button" onClick={() => updateDisplay('9')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="9" />
-                                      <input type="button" onClick={() => updateDisplay('+')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="+" />
-                                    </div>
-
-                                    <div class="flex space-x-2 mt-3">
-                                      <input type="button" onClick={() => updateDisplay('4')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="4" />
-                                      <input type="button" onClick={() => updateDisplay('5')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="5" />
-                                      <input type="button" onClick={() => updateDisplay('6')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="6" />
-                                      <input type="button" onClick={() => updateDisplay('*')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="x" />
-                                    </div>
-
-                                    <div class="flex space-x-2 mt-3">
-                                      <input type="button" onClick={() => updateDisplay('3')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="3" />
-                                      <input type="button" onClick={() => updateDisplay('2')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="2" />
-                                      <input type="button" onClick={() => updateDisplay('1')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="1" />
-                                      <input type="button" onClick={() => updateDisplay('-')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="-" />
-                                    </div>
-
-                                    <div class="flex space-x-2 mt-3">
-                                      <input type="button" onClick={() => updateDisplay('0')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="" />
-                                      <input type="button" onClick={() => updateDisplay('0')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="0" />
-                                      <input type="button" onClick={() => updateDisplay('.')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="." />
-                                      <input type="button" onClick={() => calculate()} class="w-20 h-14 text-white bg-green-500 hover:bg-green-600 shadow-md font-bold py-1 px-2 rounded-2xl" value="=" />
-                                    </div>
-                                  </div>
-
+                                <div className='row-start-1 col-start-2 h-[100px]'>
+                                  <h5 className='font-bold'>Select a payment method</h5>
+                                  <select value={ChosePayMethod} onChange={handleChange} class="mt-[10px] w-[100%] px-2 bg-gray-100 text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150">
+                                    {paymentMethod && paymentMethod.length > 0 && paymentMethod.map((item) => {
+                                      return (
+                                        <option key={item.id} value={item.name} className='text-black text-center'>{item.name}</option>
+                                      )
+                                    })}
+                                  </select>
                                 </div>
-                                <button type='submit' onClick={(event) => handleSubmitOrder(item, event)} className="mb-0 text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-4 text-center">
-                                  Pay Now
-                                </button>
-                              </form>
-                            </div>
+                              </div>
+                              <div className="grid gap-4 grid-cols-2">
+                                <div className='col-start-1 rounded-md bg-gray-100 p-[10px] relative'>
+                                  <h3 className='font-bold'>Transaction Details</h3>
+                                  <div className='overflow-y-scroll'>
+                                    <div className='grid grid-cols-3 border-x-0 border-t-0 border mx-[10px] border-b-black pb-[2px]'>
+                                      <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
+                                      <div className='col-start-3 ml-6 flex justify-start'>Price</div>
+                                    </div>
+                                    <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
+                                      {item.sellOrderDetails.map((orderDetail, index) => (
+                                        <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
+                                          <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
+                                          <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                  <div className='absolute bottom-5 w-[95%] border border-x-0 border-b-0 border-black grid grid-cols-2 grid-rows-3'>
+                                    <div className='row-start-1 col-start-1 font-bold'>Total</div>
+                                    <div className='row-start-1 col-start-2 flex justify-end mr-5'>{formatPrice(item.finalAmount)}<span>.đ</span></div>
+                                  </div>
+                                </div>
+
+                                <div class="w-[22rem] h-[500px] bg-[#f6f8f9] rounded-3xl p-4 shadow-2xl dark:bg-[#17181a]">
+                                  <div class="h-[100px]">
+                                    <textarea type="text" id="display" class="h-full w-full text-3xl font-bold bg-transparent border border-none outline-none resize-none dark:text-white" disabled>0</textarea>
+                                  </div>
+
+                                  <div class="flex space-x-2 mt-3">
+                                    <input type="button" onClick={() => clearDisplay()} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#2d191e] dark:text-red-500" value="C" />
+                                    <input type="button" onClick={() => updateDisplay('(')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="(" />
+                                    <input type="button" onClick={() => updateDisplay(')')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value=")" />
+                                    <input type="button" onClick={() => updateDisplay('/')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="/" />
+                                  </div>
+
+                                  <div class="flex space-x-2 mt-3">
+                                    <input type="button" onClick={() => updateDisplay('7')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="7" />
+                                    <input type="button" onClick={() => updateDisplay('8')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="8" />
+                                    <input type="button" onClick={() => updateDisplay('9')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="9" />
+                                    <input type="button" onClick={() => updateDisplay('+')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="+" />
+                                  </div>
+
+                                  <div class="flex space-x-2 mt-3">
+                                    <input type="button" onClick={() => updateDisplay('4')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="4" />
+                                    <input type="button" onClick={() => updateDisplay('5')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="5" />
+                                    <input type="button" onClick={() => updateDisplay('6')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="6" />
+                                    <input type="button" onClick={() => updateDisplay('*')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="x" />
+                                  </div>
+
+                                  <div class="flex space-x-2 mt-3">
+                                    <input type="button" onClick={() => updateDisplay('3')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="3" />
+                                    <input type="button" onClick={() => updateDisplay('2')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="2" />
+                                    <input type="button" onClick={() => updateDisplay('1')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="1" />
+                                    <input type="button" onClick={() => updateDisplay('-')} class="w-20 h-14 text-white bg-[#ff9500] hover:bg-[#e68600] shadow-md font-bold py-1 px-2 rounded-2xl" value="-" />
+                                  </div>
+
+                                  <div class="flex space-x-2 mt-3">
+                                    <input type="button" onClick={() => updateDisplay('0')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="" />
+                                    <input type="button" onClick={() => updateDisplay('0')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="0" />
+                                    <input type="button" onClick={() => updateDisplay('.')} class="w-20 h-14 text-black bg-[#e9f0f4] hover:bg-gray-200 shadow-md font-bold py-1 px-2 rounded-2xl dark:bg-[#222427] dark:text-white" value="." />
+                                    <input type="button" onClick={() => calculate()} class="w-20 h-14 text-white bg-green-500 hover:bg-green-600 shadow-md font-bold py-1 px-2 rounded-2xl" value="=" />
+                                  </div>
+                                </div>
+
+                              </div>
+                              <button type='submit' onClick={(event) => {
+                                handleSubmitOrder(item, event);
+                                setTimeout(() => {
+                                  close();
+                                }, 2000);
+                              }} className="mb-0 text-white flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-10 py-4 text-center">
+                                Pay Now
+                              </button>
+                            </form>
                           </div>
-                          {/* Bill */}
-                          {isPaymentCompletedDefault && (
-                            <div className='col-start-2 my-auto mx-3 h-[100vh] overflow-y-auto'>
-                              <div className="bg-white shadow-lg w-full border border-black rounded-lg">
-                                <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
-                                  <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
-                                    <QRCode
-                                      size={256}
-                                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                                      value={item.id}
-                                      viewBox={`0 0 256 256`}
-                                    />
-                                  </div>
-                                  <div className='flex flex-col items-center justify-center'>
-                                    <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
-                                      JEWELRY BILL OF SALE
-                                    </h1>
-                                    <h2 className='text-center text-gray-600'>
-                                      <FormatDate isoString={currentTime} />
-                                    </h2>
-                                  </div>
-                                  <div></div>
-                                </div>
-                                <div className='border border-black mx-4 my-2 p-4'>
-                                  {/* Customer Information */}
-                                  <div className='flex justify-between mb-4'>
-                                    <div className='flex items-center'>
-                                      <h1 className='font-semibold'>Customer Name:</h1>
-                                      <h2 className='text-black ml-2'>............................</h2>
-                                    </div>
-                                    <div className='flex items-center'>
-                                      <h1 className='font-semibold'>Account Number:</h1>
-                                      <h2 className='text-black ml-2'>
-                                        {[...Array(50)].map((_, index) => (
-                                          <span key={index}>.</span>
-                                        ))}
-                                      </h2>
-                                    </div>
-                                  </div>
-                                  <div className='flex items-center mb-4'>
-                                    <h1 className='font-semibold'>Address:</h1>
-                                    <h2 className='text-black ml-2'>
-                                      {[...Array(50)].map((_, index) => (
-                                        <span key={index}>.</span>
-                                      ))}
-                                    </h2>
-                                  </div>
-                                  <div className='flex items-center mb-4'>
-                                    <h1 className='font-semibold'>Payment methods:</h1>
-                                    <h2 className='text-black ml-2'>
-                                      {[...Array(50)].map((_, index) => (
-                                        <span key={index}>.</span>
-                                      ))}
-                                    </h2>
-                                  </div>
-                                  {/* Product Information */}
-                                  <div className='border border-black mt-5 overflow-hidden'>
-                                    <table className="min-w-full text-left text-sm font-light text-gray-900">
-                                      <thead className="border-b bg-gray-100 font-medium">
-                                        <tr>
-                                          <th scope="col" className="px-4 py-4 text-center">N.O</th>
-                                          <th scope="col" className="px-6 py-4 text-center">Name Product</th>
-                                          <th scope="col" className="px-4 py-4 text-center">Quantity</th>
-                                          <th scope="col" className="px-6 py-4 text-center">Cost</th>
-                                          <th scope="col" className="px-6 py-4 text-center">Value</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr className="border-b bg-gray-50">
-                                          <td className="whitespace-nowrap px-4 py-4 text-center font-medium">...</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                          <td className="whitespace-nowrap px-4 py-4 text-center">...</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                        </tr>
-                                        <tr className="border-b bg-gray-50">
-                                          <td className="whitespace-nowrap px-4 py-4 text-center font-medium">...</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                          <td className="whitespace-nowrap px-4 py-4 text-center">...</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                          <td className="whitespace-nowrap px-6 py-4 text-center">...</td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                  <div className='border border-black mt-2 p-4'>
-                                    <div className='flex justify-between'>
-                                      <h1 className='font-bold'>Total Value</h1>
-                                      <h1>............</h1>
-                                    </div>
-                                  </div>
-                                  <div className='h-40 flex justify-around items-center'>
-                                    <div className='text-center '>
-                                      <h1 className='font-bold'>Customer</h1>
-                                      <h1 className='pb-2'>(Sign, write full name)</h1>
-                                      <SignatureCanvas penColor='black'
-                                        canvasProps={{
-                                          width: 300, height: 100, className: 'sigCanvas', style: {
-                                            // border: '1px solid black', 
-                                            backgroundColor: '#f0f0f085'
-                                          }
-                                        }} />
-                                    </div>
-                                    <div className='text-center '>
-                                      <h1 className='font-bold'>Staff</h1>
-                                      <h1 className='pb-2'>(Sign, write full name)</h1>
-                                      <SignatureCanvas penColor='black'
-                                        canvasProps={{
-                                          width: 300, height: 100, className: 'sigCanvas', style: {
-                                            // border: '2px solid black', 
-                                            backgroundColor: '#f0f0f085'
-                                          }
-                                        }} />
-                                    </div>
-                                  </div>
-
-                                </div>
-                                <div className='flex justify-between px-4 py-2'>
-                                  <button className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
-                                  <button className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                          {isPaymentCompleted && (
-                            <div className='col-start-2 my-auto mx-3 h-[100vh] overflow-y-auto'>
-                              <div className="bg-white shadow-lg w-full border border-black rounded-lg">
-                                <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
-                                  <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
-                                    <QRCode
-                                      size={256}
-                                      style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                                      value={item.id}
-                                      viewBox={`0 0 256 256`}
-                                    />
-                                  </div>
-                                  <div className='flex flex-col items-center justify-center'>
-                                    <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
-                                      JEWELRY BILL OF SALE
-                                    </h1>
-                                    <h2 className='text-center text-gray-600'>
-                                      {currentTime}
-                                    </h2>
-                                  </div>
-                                  <div></div>
-                                </div>
-                                <div className='border border-black mx-4 my-2 p-4'>
-                                  {/* Customer Information */}
-                                  <div className='flex justify-between mb-4'>
-                                    <div className='flex items-center'>
-                                      <h1 className='font-semibold'>Customer Name:</h1>
-                                      <h2 className='text-black ml-2'>{item.customerName}</h2>
-                                    </div>
-                                    <div className='flex items-center'>
-                                      <h1 className='font-semibold'>Phoner Number:</h1>
-                                      <h2 className='text-black ml-2'>
-                                        {item.customerPhoneNumber}
-                                      </h2>
-                                    </div>
-                                  </div>
-                                  <div className='flex items-center mb-4'>
-                                    <h1 className='font-semibold'>Address:</h1>
-                                    <h2 className='text-black ml-2'>
-                                      {[...Array(50)].map((_, index) => (
-                                        <span key={index}>.</span>
-                                      ))}
-                                    </h2>
-                                  </div>
-                                  <div className='flex items-center mb-4'>
-                                    <h1 className='font-semibold'>Payment methods:</h1>
-                                    <h2 className='text-black ml-2'>
-                                      {ChosePayMethod}
-                                    </h2>
-                                  </div>
-                                  {/* Product Information */}
-                                  <div className='border border-black mt-5 overflow-hidden'>
-                                    <table className="min-w-full text-left text-sm font-light text-gray-900">
-                                      <thead className="border-b bg-gray-100 font-medium">
-                                        <tr>
-                                          <th scope="col" className="px-4 py-4 text-center">N.O</th>
-                                          <th scope="col" className="px-6 py-4 text-center">Name Product</th>
-                                          <th scope="col" className="px-4 py-4 text-center">Quantity</th>
-                                          <th scope="col" className="px-6 py-4 text-center">Cost</th>
-                                          <th scope="col" className="px-6 py-4 text-center">Value</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        {item.sellOrderDetails && item.sellOrderDetails.length > 0 && item.sellOrderDetails.map((p) => {
-                                          return (
-                                            <tr className="border-b bg-gray-50">
-                                              <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
-                                              <td className="whitespace-nowrap px-6 py-4">{p.productName}</td>
-                                              <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
-                                              <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
-                                              <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity * p.unitPrice)}</td>
-                                            </tr>)
-                                        })}
-                                      </tbody>
-                                    </table>
-                                  </div>
-                                  <div className='border border-black mt-2 p-4'>
-                                    <div className='flex justify-between'>
-                                      <h1 className='font-bold'>Total Value</h1>
-                                      <h1>{formatPrice(item.totalAmount)}</h1>
-                                    </div>
-                                  </div>
-                                  <div className='h-40 flex justify-around items-center'>
-                                    <div className='text-center '>
-                                      <h1 className='font-bold'>Customer</h1>
-                                      <h1 className='pb-2'>(Sign, write full name)</h1>
-                                      <SignatureCanvas penColor='black'
-                                        canvasProps={{
-                                          width: 300, height: 100, className: 'sigCanvas', style: {
-                                            // border: '1px solid black', 
-                                            backgroundColor: '#f0f0f085'
-                                          }
-                                        }} />
-                                    </div>
-                                    <div className='text-center '>
-                                      <h1 className='font-bold'>Staff</h1>
-                                      <h1 className='pb-2'>(Sign, write full name)</h1>
-                                      <SignatureCanvas penColor='black'
-                                        canvasProps={{
-                                          width: 300, height: 100, className: 'sigCanvas', style: {
-                                            // border: '2px solid black', 
-                                            backgroundColor: '#f0f0f085'
-                                          }
-                                        }} />
-                                    </div>
-                                  </div>
-
-                                </div>
-                                <div className='flex justify-between px-4 py-2'>
-                                  <button onClick={() => handleCancle(item.id)} className='bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600'>Cancel</button>
-                                  <button onClick={(event) => handleCompleteVnPay(item, event)} className='bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600'>Complete</button>
-                                </div>
-                              </div>
-                            </div>
-                          )}
                         </div>
-                      )}
-                    </Popup>
-                  
+                      </div>
+                    )}
+                  </Popup>
                 </div>
                 <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
                   {item.description}

@@ -119,7 +119,7 @@ const Cs_Process = () => {
                 </div>
 
                 <div className='bg-[#87A89E] h-[50px] grid grid-cols-2 '>
-                  <input value={formatPrice(item.totalAmount) + '.đ'} readOnly className='mx-[15px] w-fit bg-[#87A89E] flex items-center font-bold text-lg' />
+                  <input value={formatPrice(item.finalAmount) + '.đ'} readOnly className='mx-[15px] w-fit bg-[#87A89E] flex items-center font-bold text-lg' />
                   <div className='col-start-2 flex justify-end items-center mr-[15px]'>
                     <button type='button' onClick={() => handleComplete(item.id)} className=" m-0 border border-[#ffffff] bg-[#3f6d67] text-white px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Complete</button>
                   </div>
