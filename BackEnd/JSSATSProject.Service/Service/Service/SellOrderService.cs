@@ -403,8 +403,7 @@ public class SellOrderService : ISellOrderService
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
             requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
         sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
-        var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) -
-                          sellOrder.DiscountPoint * pointRate;
+        var totalAmount = sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice);
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         return sellOrder;

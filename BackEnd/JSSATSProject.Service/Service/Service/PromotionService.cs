@@ -185,4 +185,9 @@ public class PromotionService : IPromotionService
     {
         return await _unitOfWork.PromotionRepository.CountAsync(filter);
     }
+
+    public async Task UpdatePromotionStatusesAsync()
+    {
+        await _unitOfWork.PromotionRepository.UpdateStatusesAsync();
+    }
 }

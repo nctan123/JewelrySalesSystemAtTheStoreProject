@@ -14,4 +14,6 @@ public interface IPromotionService
     public Task<int> CountAsync(Expression<Func<Promotion, bool>> filter = null);
 
     public Task<ResponseModel> GetByIdAsync(int promotionId);
+
+    Task UpdatePromotionStatusesAsync();
 }

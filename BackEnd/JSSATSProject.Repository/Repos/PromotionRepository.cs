@@ -19,4 +19,18 @@ public class PromotionRepository : GenericRepository<Promotion>
 
         return promotions.FirstOrDefault();
     }
+
+    public async Task UpdateStatusesAsync()
+    {
+        var promotions = await context.Promotions
+            .Where(p => p.EndDate < DateTime.Now && p.Status != "inactive")
+            .ToListAsync();
+
+        foreach (var promotion in promotions)
+        {
+            promotion.Status = "inactive";
+        }
+
+        await context.SaveChangesAsync();
+    }
 }

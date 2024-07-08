@@ -5,6 +5,7 @@ using JSSATSProject.Repository.AzureBlob;
 using JSSATSProject.Repository.CacheManagers;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.AutoMapper;
+using JSSATSProject.Service.Service.BackgroundService;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -118,6 +119,9 @@ public class Program
         services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
         services.AddScoped<IProductService, ProductService>();
 
+        //microservices
+        services.AddHostedService<PromotionStatusUpdateService>();
+        
         var app = builder.Build();
 
         // Configure the HTTP request pipeline
