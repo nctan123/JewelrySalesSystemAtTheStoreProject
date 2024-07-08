@@ -158,7 +158,8 @@ public class SpecialDiscountRequestService : ISpecialDiscountRequestService
 
 
         Expression<Func<SpecialDiscountRequest, bool>> filter = q =>
-            string.IsNullOrEmpty(searchTerm) || q.SellOrders.Any(so => so.Code.Contains(searchTerm));
+            string.IsNullOrEmpty(searchTerm) || q.SellOrders.Any(so => so.Code.Contains(searchTerm) 
+            || q.SellOrders.Any(so => so.Customer.Phone.Contains(searchTerm)));
 
         var entities = await _unitOfWork.SpecialDiscountRequestRepository.GetAsync(
             filter,

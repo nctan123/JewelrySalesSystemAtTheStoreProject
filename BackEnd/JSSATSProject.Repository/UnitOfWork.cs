@@ -1,4 +1,5 @@
-﻿using JSSATSProject.Repository.Entities;
+﻿using JSSATSProject.Repository.AzureBlob;
+using JSSATSProject.Repository.Entities;
 using JSSATSProject.Repository.Repos;
 
 namespace JSSATSProject.Repository;
@@ -45,12 +46,14 @@ public class UnitOfWork
     private ShapeRepository _shape;
     private ProductDiamondRespository _productDiamond;
     private BuyOrderDetailRepository _buyOrderDetail;
-
     private bool disposed;
 
-    public UnitOfWork(DBContext context)
+    private readonly AzureBlobStorage _blobService;
+
+    public UnitOfWork(DBContext context, AzureBlobStorage blobService)
     {
         _context = context;
+        _blobService = blobService;
     }
     // bổ sung mới Procedures
     public DBContext Context => _context;

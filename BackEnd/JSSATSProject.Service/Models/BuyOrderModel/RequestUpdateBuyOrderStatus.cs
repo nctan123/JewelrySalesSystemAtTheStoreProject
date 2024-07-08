@@ -1,4 +1,3 @@
-using JSSATSProject.Repository.CustomValidators;
 using System.ComponentModel.DataAnnotations;
 
 namespace JSSATSProject.Service.Models.BuyOrderModel;

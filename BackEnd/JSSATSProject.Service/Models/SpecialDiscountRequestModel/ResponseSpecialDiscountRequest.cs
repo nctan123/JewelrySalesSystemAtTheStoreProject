@@ -16,4 +16,6 @@ public class ResponseSpecialDiscountRequest
     public string Status { get; set; }
 
     public int SellOrderId { get; set; }
+
+    public string  SellOrderCode { get; set; }
 }

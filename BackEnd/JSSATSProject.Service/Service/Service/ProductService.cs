@@ -19,11 +19,12 @@ public class ProductService : IProductService
     private readonly IMapper _mapper;
     private readonly AzureBlobStorage _blobService;
 
-    public ProductService(UnitOfWork unitOfWork, IMapper mapper, AzureBlobStorage blobService)
+    public ProductService(UnitOfWork unitOfWork, IMapper mapper, AzureBlobStorage blobService, IDiamondPriceListService diamondPriceListService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _blobService = blobService;
+        _diamondPriceListService = diamondPriceListService;
     }
 
     public async Task<ResponseModel> CreateProductAsync(RequestCreateProduct requestProduct)
@@ -53,6 +54,7 @@ public class ProductService : IProductService
             MessageError = ""
         };
     }
+
 
     public async Task<decimal> CalculateProductPrice(Product correspondingProduct)
     {
@@ -358,7 +360,7 @@ public class ProductService : IProductService
         {
             if (includeNullStalls)
             {
-                filter = p => p.CategoryId == categoryId && (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
+                filter = p => p.CategoryId == categoryId && p.Stalls == null && (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
             }
             else
             {

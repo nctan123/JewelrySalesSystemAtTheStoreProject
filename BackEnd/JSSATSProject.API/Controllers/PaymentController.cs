@@ -97,7 +97,7 @@ public class PaymentController : ControllerBase
         try
         {
             //Status_PaymentDetail == failed 
-            if (Convert.ToInt32(response.VnPayResponseCode).ToString() != "00")
+            if (response.VnPayResponseCode != "00" || response.VnPayTranStatus != "00")
             {
                 var order = await _sellOrderService.GetEntityByIdAsync(Convert.ToInt32(response.OrderId));
                 var paymentDetail = new RequestCreatePaymentDetail

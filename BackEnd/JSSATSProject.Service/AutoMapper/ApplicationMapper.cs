@@ -271,6 +271,7 @@ public class ApplicationMapper : Profile
                 opt => opt.MapFrom(src => $"{src.Customer.Firstname} {src.Customer.Lastname}"))
             .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.Phone))
             .ForMember(dest => dest.SellOrderId, opt => opt.MapFrom(src => src.SellOrders.FirstOrDefault().Id))
+             .ForMember(dest => dest.SellOrderCode, opt => opt.MapFrom(src => src.SellOrders.FirstOrDefault().Code))
             .ReverseMap();
 
 
