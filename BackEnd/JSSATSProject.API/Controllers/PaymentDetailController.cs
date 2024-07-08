@@ -78,7 +78,7 @@ public class PaymentDetailController : ControllerBase
         var sellorder = await _sellOrderService.GetEntityByIdAsync(sellorderId);
         var discountPoint = sellorder.DiscountPoint;
         var customerPhone = sellorder.Customer.Phone;
-        var sellorderAmount = sellorder.TotalAmount;
+        var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
         //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
         await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
 

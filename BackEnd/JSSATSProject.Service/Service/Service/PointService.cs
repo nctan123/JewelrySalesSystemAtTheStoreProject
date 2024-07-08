@@ -122,7 +122,7 @@ public class PointService : IPointService
         var pointToCurrencyRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
 
 
-        var pointToAdd = (int)Math.Floor(orderAmount * accumulativePointRate / pointToCurrencyRate);
+        var pointToAdd = (int)Math.Floor(orderAmount * accumulativePointRate * pointToCurrencyRate);
 
         if (pointObj != null)
         {
