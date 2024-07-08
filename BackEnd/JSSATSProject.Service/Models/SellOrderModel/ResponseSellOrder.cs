@@ -15,7 +15,8 @@ public class ResponseSellOrder
     public string Status { get; set; }
     public string Description { get; set; }
     public int DiscountPoint { get; set; } = 0;
-    public decimal TotalAmount { get; set; }
+    public decimal FinalAmount { get; set; }
+    
     public int? SpecialDiscountRequestId { get; set; }
 
     public virtual ICollection<ResponseSellOrderDetails> SellOrderDetails { get; set; } =

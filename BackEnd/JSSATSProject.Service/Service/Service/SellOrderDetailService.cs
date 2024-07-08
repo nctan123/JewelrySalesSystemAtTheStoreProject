@@ -141,8 +141,8 @@ public class SellOrderDetailService : ISellOrderDetailService
             var sellOrderDetails = new SellOrderDetail
             {
                 ProductId = product.Id,
-                Quantity = item.Value,
-                UnitPrice = basePrice,
+                Quantity = quantity,
+                UnitPrice = quantity * basePrice,
                 OrderId = sellOrderId,
                 PromotionId = promotionId is not null ? Convert.ToInt32(promotionId) : null,
                 Promotion = promotion

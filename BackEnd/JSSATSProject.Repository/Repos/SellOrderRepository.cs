@@ -14,6 +14,7 @@ public class SellOrderRepository : GenericRepository<SellOrder>
     {
         return await context.SellOrders.Where(o => o.Id == id)
             .Include(o => o.SellOrderDetails)
+            .ThenInclude(sd => sd.Promotion)
             .Include(o => o.Customer)
             .Include(o => o.SpecialDiscountRequest)
             .Include(o => o.Customer.Point)

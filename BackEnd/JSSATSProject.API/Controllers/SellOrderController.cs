@@ -108,8 +108,6 @@ public class SellOrderController : ControllerBase
         return Ok(response);
     }
 
-
-    //Xai o trang customer approve gia cuoi cua order
     [HttpPut]
     [Route("UpdateStatus")]
     public async Task<IActionResult> UpdateSellOrderStatusAsync(int id,

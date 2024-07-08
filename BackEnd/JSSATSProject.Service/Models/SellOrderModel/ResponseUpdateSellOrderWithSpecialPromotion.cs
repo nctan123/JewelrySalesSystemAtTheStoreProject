@@ -8,7 +8,7 @@ public class ResponseUpdateSellOrderWithSpecialPromotion
     public decimal? SpecialDiscountRate { get; set; }
 
     public string? Description { get; set; }
-    public required decimal TotalAmount { get; set; }
+    public required decimal FinalAmount { get; set; }
     public required Dictionary<string, int> ProductCodesAndQuantity { get; set; }
     public required string Status { get; set; }
 }

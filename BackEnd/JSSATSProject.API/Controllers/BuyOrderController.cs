@@ -69,7 +69,7 @@ public class BuyOrderController : ControllerBase
                     CustomerName = string.Join(" ", sellOrder.Customer.Firstname, sellOrder.Customer.Lastname),
                     CustomerPhoneNumber = sellOrder.Customer.Phone,
                     CreateDate = sellOrder.CreateDate,
-                    TotalValue = sellOrder.TotalAmount,
+                    TotalValue = await _sellOrderService.GetFinalPriceAsync(sellOrder) ,
                     Products = products
                 }
             );

@@ -59,8 +59,7 @@ public class SellOrderService : ISellOrderService
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
             requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
         sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
-        var totalAmount = sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice * s.Quantity) -
-                           sellOrder.DiscountPoint * pointRate;
+        var totalAmount = sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice);
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
@@ -81,6 +80,15 @@ public class SellOrderService : ISellOrderService
             Data = sellOrder,
             MessageError = ""
         };
+    }
+    
+    public async Task<decimal> GetFinalPriceAsync(SellOrder sellOrder)
+    {
+        var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
+        var discountPoint = sellOrder.DiscountPoint;
+        var specialDiscountRate = (sellOrder.SpecialDiscountRequest?.DiscountRate).GetValueOrDefault(0);
+        decimal finalPrice = (sellOrder!.TotalAmount - discountPoint * pointRate) * (1-specialDiscountRate);
+        return finalPrice;
     }
 
     public async Task<ResponseModel> GetAllAsync(List<string> statusList, bool ascending = true, int pageIndex = 1,
@@ -116,6 +124,7 @@ public class SellOrderService : ISellOrderService
             var responseSellOrder = _mapper.Map<ResponseSellOrder>(sellOrder);
             responseSellOrder.SellOrderDetails =
                 _mapper.Map<List<ResponseSellOrderDetails>>(sellOrder.SellOrderDetails);
+            responseSellOrder.FinalAmount = await GetFinalPriceAsync(sellOrder);
             responseSellOrders.Add(responseSellOrder);
         }
 
@@ -135,7 +144,9 @@ public class SellOrderService : ISellOrderService
     {
         var entities = await _unitOfWork.SellOrderRepository.GetAsync(
             so => so.Id == id,
-            includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod");
+            includeProperties: "SellOrderDetails.Promotion,Staff,Customer,Payments," +
+                               "SellOrderDetails.Product,SpecialDiscountRequest," +
+                               "Payments.PaymentDetails.PaymentMethod");
         // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
         // Map entities to response models
@@ -145,6 +156,7 @@ public class SellOrderService : ISellOrderService
             var responseSellOrder = _mapper.Map<ResponseSellOrder>(sellOrder);
             responseSellOrder.SellOrderDetails =
                 _mapper.Map<List<ResponseSellOrderDetails>>(sellOrder.SellOrderDetails);
+            responseSellOrder.FinalAmount = await GetFinalPriceAsync(sellOrder);
             responseSellOrders.Add(responseSellOrder);
         }
 
@@ -354,6 +366,7 @@ public class SellOrderService : ISellOrderService
             var responseSellOrder = _mapper.Map<ResponseSellOrder>(sellOrder);
             responseSellOrder.SellOrderDetails =
                 _mapper.Map<List<ResponseSellOrderDetails>>(sellOrder.SellOrderDetails);
+            responseSellOrder.FinalAmount = await GetFinalPriceAsync(sellOrder);
             result.Add(responseSellOrder);
         }
 

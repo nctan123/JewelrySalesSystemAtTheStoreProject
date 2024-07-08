@@ -31,4 +31,7 @@ public interface ISellOrderService
     public Task<SellOrder> MapOrderAsync(RequestCreateSellOrder requestSellOrder);
 
     public Task<ResponseModel> UpdateOrderAsync(int orderId, SellOrder targetOrder);
+
+    public Task<decimal> GetFinalPriceAsync(SellOrder sellOrder);
+
 }
