@@ -88,7 +88,7 @@ public class SellOrderService : ISellOrderService
         var discountPoint = sellOrder.DiscountPoint;
         var specialDiscountRequest = sellOrder.SpecialDiscountRequest;
         var specialDiscountRate = (specialDiscountRequest?.DiscountRate).GetValueOrDefault(0);
-        if (specialDiscountRequest?.Status == "cancelled") specialDiscountRate = 0;
+        if (specialDiscountRequest?.Status == SpecialDiscountRequestConstants.RejectedStatus) specialDiscountRate = 0;
         decimal finalPrice = (sellOrder!.TotalAmount - discountPoint * pointRate) * (1-specialDiscountRate);
         return finalPrice;
     }
