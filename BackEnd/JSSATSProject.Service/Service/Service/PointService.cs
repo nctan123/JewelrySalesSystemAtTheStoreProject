@@ -118,8 +118,11 @@ public class PointService : IPointService
     public async Task<ResponseModel> AddCustomerPoint(string customerPhoneNumber, decimal orderAmount)
     {
         var pointObj = await _unitOfWork.PointRepository.GetByCustomerPhoneNumber(customerPhoneNumber);
-        var rate = await _unitOfWork.CampaignPointRepository.GetOrderValueToPointConversionRate(DateTime.Now);
-        var pointToAdd = (int)Math.Ceiling(orderAmount * rate);
+        var accumulativePointRate = await _unitOfWork.CampaignPointRepository.GetOrderValueToPointConversionRate(DateTime.Now);
+        var pointToCurrencyRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
+
+
+        var pointToAdd = (int)Math.Floor(orderAmount * accumulativePointRate / pointToCurrencyRate);
 
         if (pointObj != null)
         {
