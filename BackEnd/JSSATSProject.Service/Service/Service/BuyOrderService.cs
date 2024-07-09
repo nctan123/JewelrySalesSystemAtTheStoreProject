@@ -234,7 +234,8 @@ public class BuyOrderService : IBuyOrderService
                 PurchasePriceRatioId = purchasePriceRatioId,
                 MaterialId = productObj.ProductMaterials.First().Material.Id,
                 MaterialWeight = productObj.ProductMaterials.First().Weight,
-                UnitPrice = price
+                UnitPrice = price,
+                ProductName = productObj.Name
             };
             result.Add(orderDetail);
         }

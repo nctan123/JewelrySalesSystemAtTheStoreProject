@@ -1,4 +1,6 @@
-﻿namespace JSSATSProject.Service.Models.StaffModel;
+﻿using JSSATSProject.Repository.Entities;
+
+namespace JSSATSProject.Service.Models.StaffModel;
 
 public class ResponseStaff
 {
@@ -24,4 +26,8 @@ public class ResponseStaff
     public int TotalSellOrder { get; set; }
 
     public int TotalBuyOrder { get; set; }
+
+    public  ICollection<BuyOrder> BuyOrders { get; set; }
+
+    public ICollection<SellOrder> SellOrders { get; set; }
 }

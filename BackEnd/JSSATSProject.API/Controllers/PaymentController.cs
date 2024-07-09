@@ -1,4 +1,5 @@
 ﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentModel;
@@ -21,11 +22,13 @@ public class PaymentController : ControllerBase
     private readonly ISellOrderService _sellOrderService;
     private readonly ISpecialDiscountRequestService _specialDiscountRequestService;
     private readonly IVnPayService _vnPayService;
+    private readonly IBuyOrderService _buyOrderService;
 
     public PaymentController(IPaymentService paymentService, IVnPayService vnPayService,
         IPaymentDetailService paymentDetailService, ISellOrderService sellOrderService,
         IGuaranteeService guaranteeService, ISellOrderDetailService sellOrderDetailService,
-        IPointService pointService, ISpecialDiscountRequestService specialDiscountRequestService)
+        IPointService pointService, ISpecialDiscountRequestService specialDiscountRequestService,
+        IBuyOrderService buyOrderService)
     {
         _paymentService = paymentService;
         _vnPayService = vnPayService;
@@ -35,6 +38,7 @@ public class PaymentController : ControllerBase
         _sellOrderDetailService = sellOrderDetailService;
         _pointService = pointService;
         _specialDiscountRequestService = specialDiscountRequestService;
+        _buyOrderService = buyOrderService;
     }
 
     [HttpGet]
@@ -73,11 +77,27 @@ public class PaymentController : ControllerBase
             var updatesellorderstatus = new UpdateSellOrderStatus()
             {
                 Status = OrderConstants.CanceledStatus,
-                //Description = "Cancelled Payment"
             };
-            //update sellorder
-            var orderId = await _paymentService.GetOrderIdByPaymentIdAsync(id);
-            await _sellOrderService.UpdateStatusAsync(orderId, updatesellorderstatus);
+
+            var updatebuyorderstatus = new RequestUpdateBuyOrderStatus() { 
+                NewStatus = OrderConstants.CanceledStatus
+            };
+
+            
+            //update Order
+            var sellorderId = await _paymentService.GetSellOrderIdByPaymentIdAsync(id);
+            var buyorderId = await _paymentService.GetBuyOrderIdByPaymentIdAsync(id); 
+
+            if(sellorderId != null)
+            {
+                //sellorder
+                await _sellOrderService.UpdateStatusAsync(sellorderId.Value, updatesellorderstatus);
+            }
+            else
+            {
+                //buyorder
+                await _buyOrderService.UpdateAsync(buyorderId.Value, updatebuyorderstatus);
+            }
 
             
         }

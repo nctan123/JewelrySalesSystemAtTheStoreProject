@@ -40,7 +40,7 @@ public class VnPayService : IVnPayService
         pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
         pay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
         pay.AddRequestData("vnp_OrderInfo",
-            $"{model.OrderId} {model.Amount} {model.PaymentId} {model.PaymentMethodId}");
+            $"{(model.OrderId)} {model.Amount} {model.PaymentId} {model.PaymentMethodId}");
         pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
         pay.AddRequestData("vnp_TxnRef", tick);
 

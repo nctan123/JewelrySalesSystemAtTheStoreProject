@@ -163,7 +163,8 @@ public class ApplicationMapper : Profile
         CreateMap<Payment, ResponsePayment>()
                 .ForMember(dest => dest.ExternalTransactionCode, opt => opt.MapFrom(src => src.PaymentDetails.FirstOrDefault().ExternalTransactionCode))
                 .ForMember(dest => dest.PaymentMethodName, opt => opt.MapFrom(src => src.PaymentDetails.FirstOrDefault().PaymentMethod.Name))
-                .ForMember(dest => dest.OrderCode, opt => opt.MapFrom(src => src.Order.Code))
+                .ForMember(dest => dest.SellOrderCode, opt => opt.MapFrom(src => src.Sellorder.Code))
+                .ForMember(dest => dest.BuyOrderCode,opt => opt.MapFrom(src => src.Buyorder.Code))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.Phone))
                 .ReverseMap();

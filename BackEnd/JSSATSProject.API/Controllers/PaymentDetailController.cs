@@ -1,11 +1,14 @@
 ﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentModel;
 using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging;
 
 namespace JSSATSProject.API.Controllers;
 
@@ -21,11 +24,13 @@ public class PaymentDetailController : ControllerBase
     private readonly ISellOrderService _sellOrderService;
     private readonly ISpecialDiscountRequestService _specialDiscountRequestService;
     private readonly IVnPayService _vnPayService;
+    private readonly IBuyOrderService _buyOrderService;
 
     public PaymentDetailController(IPaymentDetailService paymentDetailService, IPaymentService paymentService,
         ISellOrderService sellOrderService, IVnPayService vnPayService, IGuaranteeService guaranteeService,
         ISellOrderDetailService sellOrderDetailService, IPointService pointService,
-        ISpecialDiscountRequestService specialDiscountRequestService)
+        ISpecialDiscountRequestService specialDiscountRequestService, 
+        IBuyOrderService buyOrderService)
     {
         _paymentDetailService = paymentDetailService;
         _paymentService = paymentService;
@@ -35,6 +40,7 @@ public class PaymentDetailController : ControllerBase
         _guaranteeService = guaranteeService;
         _pointService = pointService;
         _specialDiscountRequestService = specialDiscountRequestService;
+        _buyOrderService = buyOrderService;
     }
 
     [HttpGet]
@@ -62,40 +68,59 @@ public class PaymentDetailController : ControllerBase
 
 
         // Update Status SellOrder
-        var updatesellsrderstatus = new UpdateSellOrderStatus()
+        var updatesellorderstatus = new UpdateSellOrderStatus()
         {
             Status = OrderConstants.ProcessingStatus
-     
         };
-        var sellorderId = await _paymentService.GetOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
-        await _sellOrderService.UpdateStatusAsync(sellorderId, updatesellsrderstatus);
 
-        //Create Guarantee
-        var products = await _sellOrderDetailService.GetProductFromSellOrderDetailAsync(sellorderId);
-        await _guaranteeService.CreateGuaranteeAsync(products);
-
-        //Update Point
-        var sellorder = await _sellOrderService.GetEntityByIdAsync(sellorderId);
-        var discountPoint = sellorder.DiscountPoint;
-        var customerPhone = sellorder.Customer.Phone;
-        var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
-        //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
-        await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
-
-        //Update SpecialDiscount
-        var specialDiscount = sellorder.SpecialDiscountRequestId;
-
-        if (specialDiscount != null)
+        var updatebuyorderstatus = new RequestUpdateBuyOrderStatus()
         {
-            var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
-            var newspecialdiscount = new UpdateSpecialDiscountRequest
+            NewStatus = OrderConstants.CompletedStatus
+        };
+
+
+        //update Order
+        var sellorderId = await _paymentService.GetSellOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
+        var buyorderId = await _paymentService.GetBuyOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
+
+        if (sellorderId != null)
+        {
+            //sellorder
+            await _sellOrderService.UpdateStatusAsync(sellorderId.Value, updatesellorderstatus);
+
+            //Create Guarantee
+            var products = await _sellOrderDetailService.GetProductFromSellOrderDetailAsync(sellorderId.Value);
+            await _guaranteeService.CreateGuaranteeAsync(products);
+
+            //Update Point
+            var sellorder = await _sellOrderService.GetEntityByIdAsync(sellorderId.Value);
+            var discountPoint = sellorder.DiscountPoint;
+            var customerPhone = sellorder.Customer.Phone;
+            var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
+            //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
+            await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
+
+            //Update SpecialDiscount
+            var specialDiscount = sellorder.SpecialDiscountRequestId;
+
+            if (specialDiscount != null)
             {
-                DiscountRate = sellorder.SpecialDiscountRequest?.DiscountRate ?? 0,
-                Status = "used",
-                ApprovedBy = sellorder.SpecialDiscountRequest.ApprovedBy ?? 0
-            };
-            await _specialDiscountRequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
+                var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
+                var newspecialdiscount = new UpdateSpecialDiscountRequest
+                {
+                    DiscountRate = sellorder.SpecialDiscountRequest?.DiscountRate ?? 0,
+                    Status = "used",
+                    ApprovedBy = sellorder.SpecialDiscountRequest.ApprovedBy ?? 0
+                };
+                await _specialDiscountRequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
+            }
         }
+        else
+        {
+            //buyorder
+            await _buyOrderService.UpdateAsync(buyorderId.Value, updatebuyorderstatus);
+        }
+
 
         return Ok();
     }

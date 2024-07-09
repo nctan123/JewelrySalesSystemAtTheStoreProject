@@ -216,17 +216,31 @@ public class SellOrderService : ISellOrderService
         try
         {
             var order = await GetEntityByIdAsync(orderId);
+            var oldtime = order.CreateDate;
             if (order != null)
             {
                 _mapper.Map(requestSellOrder, order);
-                DateTime vnTime = CustomLibrary.NowInVietnamTime();
-                order.CreateDate = vnTime;
+
+                if (order.Status.Equals(OrderConstants.WaitingForPayment))
+                {
+                    DateTime newTime = CustomLibrary.NowInVietnamTime();
+                    order.CreateDate = newTime;
+
+                    await _unitOfWork.SellOrderRepository.UpdateAsync(order);
+
+                    return new ResponseModel
+                    {
+                        Data = order,
+                        MessageError = ""
+                    };
+                }
+
+                order.CreateDate = oldtime;
                 await _unitOfWork.SellOrderRepository.UpdateAsync(order);
                 //neu update status = cancelled
                 if (order.Status.Equals(OrderConstants.CanceledStatus)) 
                 {
                     await _sellOrderDetailService.UpdateAllOrderDetailsStatus(order, OrderConstants.CanceledStatus);
-
                     //update point 
                     var pointId =  order.Customer.Point.Id;
 

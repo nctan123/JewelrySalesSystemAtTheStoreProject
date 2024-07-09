@@ -16,6 +16,8 @@ public class ResponseSellOrder
     public string Description { get; set; }
     public int DiscountPoint { get; set; } = 0;
     public decimal FinalAmount { get; set; }
+
+    public decimal TotalAmount { get; set; }
     
     public int? SpecialDiscountRequestId { get; set; }
 

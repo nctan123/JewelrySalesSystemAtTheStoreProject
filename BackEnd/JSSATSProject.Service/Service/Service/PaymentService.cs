@@ -44,7 +44,7 @@ public class PaymentService : IPaymentService
             orderBy: orderBy,
             pageIndex: pageIndex,
             pageSize: pageSize,
-            includeProperties: "Order,PaymentDetails,Customer,PaymentDetails.PaymentMethod");
+            includeProperties: "Sellorder,Buyorder,PaymentDetails,Customer,PaymentDetails.PaymentMethod");
 
         // Map entities to response model
         var responseList = _mapper.Map<List<ResponsePayment>>(entities.ToList());
@@ -107,27 +107,37 @@ public class PaymentService : IPaymentService
         }
     }
 
-    public async Task<int> GetOrderIdByPaymentIdAsync(int id)
+    public async Task<int?> GetSellOrderIdByPaymentIdAsync(int id)
     {
         var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-        return payment.OrderId;
+        if (payment.SellorderId == null) return 0;
+        return payment.SellorderId;
     }
+
+    public async Task<int?> GetBuyOrderIdByPaymentIdAsync(int id)
+    {
+        var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+        if (payment.BuyorderId == null) return 0;
+        return payment.BuyorderId;
+    }
+
     public async Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate)
     {
-        // Define the filter expression
+    
         Expression<Func<Payment, bool>> filter = payment =>
             payment.Status == PaymentConstants.CompletedStatus &&
+            payment.SellorderId != null &&
             payment.Amount > 0 &&
             payment.CreateDate >= startDate &&
             payment.CreateDate <= endDate;
 
-        // Fetch payments within the specified date range
+    
         var payments = await _unitOfWork.PaymentRepository.GetAsync(
             filter,
             includeProperties: "PaymentDetails.PaymentMethod"
             );
 
-        // Group payment details by PaymentMethod and calculate the total amount
+   
         var paymentMethodTotalSums = payments
             .SelectMany(payment => payment.PaymentDetails)
             .Where(pd => pd.Status == PaymentConstants.CompletedStatus)
@@ -139,10 +149,10 @@ public class PaymentService : IPaymentService
             })
             .ToList();
 
-        // Initialize result list
+
         var result = new List<Dictionary<string, object>>();
 
-        // Add payment method totals to result
+      
         foreach (var paymentMethodSum in paymentMethodTotalSums)
         {
             result.Add(new Dictionary<string, object>
