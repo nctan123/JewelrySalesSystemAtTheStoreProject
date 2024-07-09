@@ -381,7 +381,7 @@ const Cs_WaitingPayment = () => {
     // event.preventDefault();
     let data = {
       paymentId: item.id,
-      sellOrderId: item.sellOrderId,
+      sellOrderId: item.sellorderId,
       paymentMethodId: ChosePayMethodID,
       customerId: item.customerId,
       createDate: createDate,
