@@ -2,9 +2,16 @@ import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
+<<<<<<< HEAD
 import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty } from './page/Seller';
 
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
+=======
+
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex,Buy ,Warranty, BuyOut} from './page/Seller';
+
+import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess, Cs_WaitingPayment } from './page/Cashier';
+>>>>>>> FE_Giang
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
 import Home from './page/Home/Home';
@@ -142,12 +149,13 @@ function App() {
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
               <Route path={path.BUY} element={<Buy />} />
-              <Route path={path.WARRANTY} element={<Warranty />} />
+              <Route path={path.BUYOUT} element={<BuyOut/>}/>
             </Route>
           </Route>
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
             <Route path={path.CS_ORDER} element={<Cs_Order />}>
+              <Route path={path.CS_WAITINGPAYMENT} element={<Cs_WaitingPayment />} />  
               <Route path={path.CS_ONPROCESS} element={<Cs_OnProcess />} />
               <Route path={path.CS_COMPLETE} element={<Cs_Complete />} />
             </Route>
@@ -155,7 +163,16 @@ function App() {
           </Route>
         </Routes>
       </div>
+<<<<<<< HEAD
       <ToastContainer />
+=======
+
+
+      <ToastContainer
+
+      />
+
+>>>>>>> FE_Giang
     </>
   );
 }

@@ -37,7 +37,7 @@ const Sidebar = () => {
 
 
   }
-
+  const name = localStorage.getItem('name');
   return (
     <div className="container_sidebarleft flex flex-col">
       <div className="w-full mb-6 h-[70px] pt-[70px] pb-[80px] flex flex-col gap-2 font-serif text-white text-[25px] justify-center items-center">
@@ -86,6 +86,7 @@ const Sidebar = () => {
         ))}
         <NavLink to='/login' onClick={() => handleLogOut()}><BiLogOut size={24} color="white" /> Logout</NavLink>
       </div>
+      <h1>{name}</h1>
     </div>
   );
 };

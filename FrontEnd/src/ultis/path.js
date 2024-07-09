@@ -20,17 +20,23 @@ const path = {
     PROMOTION: 'promotion',
     RETURN_EX: 'purchase',
 
+<<<<<<< HEAD
     BUY: 'buy',
     WARRANTY: 'warranty',
     // Cashier
+=======
+    BUY:'buyIn',
+    BUYOUT: 'buyOut',
+// Cashier
+>>>>>>> FE_Giang
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
-    // ADMIN
+    CS_WAITINGPAYMENT: 'cs_waitingPayment',
+// ADMIN
     DASHBOARD: 'Dashboard',
-
     MANAGE: 'Manage',
     CUSTOMERADMIN: 'customeradmin',
     PRODUCTADMIN: 'productadmin',
