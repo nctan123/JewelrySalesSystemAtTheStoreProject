@@ -56,16 +56,16 @@ export const sidebarMenu = [
         end: true,
         icons: <MdDiamond size={24} color="white" />
     },
-    {
-        path: 'searchInvoice',
-        text: 'Search Invoice',
-        icons: <LiaFileInvoiceDollarSolid size={24} color="white" />
-    },
-    {
-        path: 'promotion',
-        text: 'Promotion',
-        icons: <CiGift size={24} color="white" />
-    },
+    // {
+    //     path: 'searchInvoice',
+    //     text: 'Search Invoice',
+    //     icons: <LiaFileInvoiceDollarSolid size={24} color="white" />
+    // },
+    // {
+    //     path: 'promotion',
+    //     text: 'Promotion',
+    //     icons: <CiGift size={24} color="white" />
+    // },
     {
         path: 'purchase/buyIn',
         text:'Purchase',

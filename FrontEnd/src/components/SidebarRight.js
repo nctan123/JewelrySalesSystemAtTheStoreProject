@@ -169,9 +169,7 @@ const SidebarRight = () => {
     const filteredProductCodesAndPromotionIds = Object.fromEntries(
       Object.entries(adjustedProductCodesAndPromotionIds).filter(([_, value]) => value !== null)
     );
-    // useEffect(() => {
-    //   point;
-    // }, );
+
     const data = {
       id: IdTemPo,
       customerPhoneNumber,
@@ -212,6 +210,7 @@ const SidebarRight = () => {
         setpoint(0)
         // Update the invoice list immediately
         getListOrder(1);
+        getResponseManager(1)
       } else {
         toast.error('Add Fail');
         console.error('Unexpected response:', res);
@@ -437,7 +436,9 @@ const SidebarRight = () => {
                           <th scope="col" class="px-6 py-3">
                             Special Discount
                           </th>
-
+                          <th scope="col" class="px-6 py-3">
+                            Status
+                          </th>
                         </tr>
                       </thead>
                       <tbody className='overflow-y-auto'>
@@ -457,7 +458,14 @@ const SidebarRight = () => {
                                 {formatPrice(item.finalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
-                                <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id, item.specialDiscountRate)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                                {/* {item.specialDiscountStatus === 'approved' && ( */}
+                                  <button
+                                    onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id, item.specialDiscountRate)}
+                                    className='m-0 p-3 bg-green-500'>
+                                    <VscGitStashApply />
+                                  </button>
+                                {/* )} */}
+
                                 <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
                                   {close => (
                                     <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
@@ -498,6 +506,9 @@ const SidebarRight = () => {
                               </td>
                               <td class="px-6 py-4 font-bold text-red-600">
                                 {item.specialDiscountRate}
+                              </td>
+                              <td class="px-6 py-4 font-bold text-red-600">
+                                {item.specialDiscountStatus}
                               </td>
                             </tr>
                           )
@@ -599,27 +610,27 @@ const SidebarRight = () => {
           <div className='row-start-3 flex gap-2'>
             <span className='font-mono'>Point:</span>
             {CusPoint && (
-               <span>{formatNumber(CusPoint.point.availablePoint)}</span>
+              <span>{formatNumber(CusPoint.point.availablePoint)}</span>
             )}
           </div>
           <div className='col-start-2 flex justify-between'>
             <div>
-                <button className='m-0 p-0 px-4 w-fit bg-[#2b4fc6dc]' onClick={() => getDisCountPoint(total - discount, CusPoint.phone)} type='button'>Use</button>    
+              <button className='m-0 p-0 px-4 w-fit bg-[#2b4fc6dc]' onClick={() => getDisCountPoint(total - discount, CusPoint.phone)} type='button'>Use</button>
             </div>
-            <div>       
-                <span>{formatPrice(point)}</span>
+            <div>
+              <span>{formatPrice(point)}</span>
             </div>
           </div>
           <div className='row-start-4 font-mono'>Special Discount:</div>
           <div className='col-start-2 flex justify-end'>
-          <input
-                className="w-20 h-full text-center rounded-md outline-none text-sm text-red font-semibold"
-                type="number"
-                min="0"
-                max="1"
-                value={specialDiscountRate}
-                onChange={(even) => setSpecialDiscountRate(even.target.value)}
-                placeholder="Rate"
+            <input
+              className="w-20 h-full text-center rounded-md outline-none text-sm text-red font-semibold"
+              type="number"
+              min="0"
+              max="1"
+              value={specialDiscountRate}
+              onChange={(even) => setSpecialDiscountRate(even.target.value)}
+              placeholder="Rate"
             />
           </div>
         </div>

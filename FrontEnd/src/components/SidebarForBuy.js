@@ -219,7 +219,7 @@ const SidebarForBuy = () => {
           onClick={() => {
             handleSubmitOrder();
             dispatch(deleteCustomer());
-            dispatch(deleteProductAll());
+            dispatch(deleteProductBuyAll());
           }} class="m-0 relative cursor-pointer opacity-90 hover:opacity-100 transition-opacity p-[2px] bg-black rounded-[16px] bg-gradient-to-t from-[#5d5fef6b] to-[#7b7deb] active:scale-95">
           <span class="w-full h-full flex items-center gap-2 px-8 py-3 text-white rounded-[14px] bg-gradient-to-t from-[#5D5FEF] to-[#5D5FEF]">
             <FaFileInvoiceDollar /> Invoice

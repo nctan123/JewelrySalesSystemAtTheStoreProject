@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { MdDeleteOutline } from "react-icons/md";
 import { useDispatch, useSelector } from 'react-redux';
-import { addCodeOrder, addCustomer, addProductBuy, addProductToList } from '../../store/slice/cardSilec';
+import { addCodeOrder, addCustomer, addProductBuy, addProductToList, clearCustomerInfo, clearProductList, removeProductFromList } from '../../store/slice/cardSilec';
 
 const BuyOut = () => {
   const dispatch = useDispatch()
@@ -42,20 +42,6 @@ const BuyOut = () => {
     setBuyPrice('');
     setQuantity('');
   };
-
-  const SubmitBuyNonCompany = () => {
-    // let data = {
-    //   customerPhoneNumber,
-    //   staffId:4,
-    //   createDate,
-    //   products: [
-    //     {
-    //       productName
-    //     }
-    //   ]
-    // }
-  }
-  // const [first, setfirst] = useState(second)
   useEffect(() => {
    
   }, [materialId]); 
@@ -115,14 +101,44 @@ const BuyOut = () => {
       console.error('Error fetching customer or products:', error);
     }
   }
+  const [staffId, setStaffId] = useState(0)
+  const [description, setDescription] = useState('')
+  const handleCreateOrder = async () => {
+    const invalidProducts = ProductListNone.filter(product => !product.productName || product.buyPrice == null);
+    if (invalidProducts.length > 0) {
+      toast.error('Some products have missing name or price. Please check and correct the entries.');
+      return;
+    }
+    const orderData = {
+      customerPhoneNumber: CustomerPhone,
+      staffId: 4,
+      createDate: new Date().toISOString(),
+      description,
+      products: ProductListNone
+    };
+    console.log(orderData)
+    try {
+      await axios.post('https://jssatsproject.azurewebsites.net/api/BuyOrder/CreateNonCompanyOrder', orderData);
+      setListInforCustomer(null); setInvoiceCode(''); 
+      setCustomerPhone('');
+      setDescription('')
+      dispatch(clearCustomerInfo());
+      dispatch(clearProductList())
+      toast.success('Order created successfully!');
+    } catch (error) {
+      console.error('Error creating order:', error);
+      toast.error('Failed to create order.');
+    }
+  };
+
   return (
     <div className='w-full'>
       <div className='w-full h-fit flex justify-evenly'>
         <div className="max-w-full w-full rounded-3xl flex flex-col py-6 px-6 bg-[#fefffe] bg-clip-padding backdrop-filter backdrop-blur-lg border border-gray-100 text-gray-100 drop-shadow-lg">
 
-          <div className="flex justify-between items-center gap-2">
+          <div className="flex items-center gap-2">
             <h2 className="text-xl text-black">Create Buy Product Non Company</h2>
-            <p className='cursor-pointer mr-3 p-2 rounded bg-[#edebeb]' onClick={() => { setListInvoice(null); setInvoiceCode(''); }}>
+            <p className='cursor-pointer mr-3 p-2 rounded bg-[#edebeb]' onClick={() => { setListInforCustomer(null); setInvoiceCode(''); setDescription('') }}>
               <MdDeleteOutline size='17px' color='#ef4e4e' />
             </p>
           </div>
@@ -154,12 +170,23 @@ const BuyOut = () => {
                 </div>
                 <div className="w-12/12 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
                   <input
-                    value={ListInforCustomer.phone}
-                    // onChange={(event) => setCustomerPhoneNumber(event.target.value)}
-                    placeholder="Phone Number"
-                    className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                    value={ListInforCustomer.gender}
+                    placeholder="Gender"
+                    className="w-fit h-14 px-4 bg-transparent focus:outline-none text-black"
                     readOnly
                   />
+                </div>
+                <div className="w-12/12 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+                  <input
+                    value={description}
+                    onChange={(event) => setDescription(event.target.value)}
+                    placeholder="Description"
+                    className="w-12/12 h-14 px-4 bg-transparent focus:outline-none text-black"
+                  />
+                </div>
+        
+                <div className="w-12/12 h-14 flex rounded-lg justify-center items-center">
+                   <button onClick={handleCreateOrder} className='w-full mx-6 bg-[#309c6a]' type="submit">Create Order</button>
                 </div>
               </>
             )}
@@ -253,6 +280,7 @@ const BuyOut = () => {
                     <th scope="col" class="px-4 py-2">Category Type Id</th>
                     <th scope="col" class="px-4 py-2">Buy Price</th>
                     <th scope="col" class="px-4 py-2">Quantity</th>
+                    <th scope="col" class="px-4 py-2">Edit</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -265,7 +293,9 @@ const BuyOut = () => {
                       <td class="whitespace-nowrap px-4 py-2">{product.categoryTypeId}</td>
                       <td class="whitespace-nowrap px-4 py-2 text-center">{product.buyPrice}</td>
                       <td class="whitespace-nowrap px-4 py-2">{product.quantity}</td>
-                    </tr>
+                      <td class="whitespace-nowrap px-4 py-2">
+                        <button className='bg-white' onClick = {() => dispatch(removeProductFromList(index))}><MdDeleteOutline color='red'/></button></td>
+                      </tr>
                   ))}
                 </tbody>
               </table>
