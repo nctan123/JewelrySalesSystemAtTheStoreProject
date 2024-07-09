@@ -53,21 +53,24 @@ const Ring = () => {
       if (!token) {
         throw new Error("No token found");
       }
-      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=2&searchTerm=${id}&pageIndex=1&pageSize=10`, {
+      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/getbycode?code=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log('ressssss',res)
       if (res && res.data && res.data.data) {
         const details = res.data.data[0];
+        console.log('detail',details)
         setselectedJewelry(details);
         const resDiamond = await axios.get(`https://jssatsproject.azurewebsites.net/api/diamond/getbycode?code=${details.diamondCode}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log('resDiamond',resDiamond)
         setselectedDiamond(resDiamond.data.data[0]);
-
+        setIsModalOpen(true)
       }
     } catch (error) {
       console.error('Error fetching staff details:', error);
@@ -150,7 +153,7 @@ const Ring = () => {
               return (
                 <div key={`ring-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
                   <div className=' bg-[#fff] rounded-md shadow-md'>
-                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={earring} />
+                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={item.img} />
                   </div>
                   <div class="max-w-sm h-auto">
 

@@ -53,13 +53,14 @@ const Ring = () => {
       if (!token) {
         throw new Error("No token found");
       }
-      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=6&searchTerm=${id}&pageIndex=1&pageSize=10`, {
+      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Product/getbycode?code=${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log('ressssss',res)
       if (res && res.data && res.data.data) {
-        const details = res.data.data[0];
+        const details = res.data[0];
         setselectedJewelry(details);
         const resDiamond = await axios.get(`https://jssatsproject.azurewebsites.net/api/diamond/getbycode?code=${details.diamondCode}`, {
           headers: {
@@ -150,7 +151,7 @@ const Ring = () => {
               return (
                 <div key={`ring-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
                   <div className=' bg-[#fff] rounded-md shadow-md'>
-                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={WhGold} />
+                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={item.img} />
                   </div>
                   <div class="max-w-sm h-auto">
 
@@ -165,7 +166,7 @@ const Ring = () => {
                       </div>
                     </div>
                     <div class="absolute bottom-[-10px] right-0 w-full flex justify-around items-center">
-                      <button onClick={() => handleDetailClick(item.code)} class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>
+                      <button onClick={handleDetailClick(item.code)} class="px-3 bg-[#3b9c7f] p-1 rounded-md text-white font-semibold shadow-md shadow-[#87A89E] hover:ring-2 ring-blue-400 hover:scale-75 duration-500">Details</button>
                       {item.status !== 'inactive' && (
                         <button onClick={() => dispatch(addProduct(item))} class="px-2 border-2 border-white p-1 rounded-md text-white font-semibold shadow-lg shadow-white hover:scale-75 duration-500">Add to Cart</button>
                       )}

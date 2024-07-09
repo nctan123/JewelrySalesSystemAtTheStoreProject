@@ -150,7 +150,7 @@ const Ring = () => {
               return (
                 <div key={`ring-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
                   <div className=' bg-[#fff] rounded-md shadow-md'>
-                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={ReGold} />
+                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={item.img} />
                   </div>
                   <div class="max-w-sm h-auto">
 

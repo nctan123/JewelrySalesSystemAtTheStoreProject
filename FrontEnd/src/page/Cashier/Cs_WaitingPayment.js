@@ -64,7 +64,6 @@ const Cs_WaitingPayment = () => {
     const searchTerm = event.target.value.trim();
     setSearchTerm(searchTerm);
     if (searchTerm === '') {
-      // Nếu searchTerm rỗng thì gọi lại getCustomer với page 1
       getInvoice(1);
     } else {
       getWaitingSearch(searchTerm, 1);
@@ -183,7 +182,8 @@ const Cs_WaitingPayment = () => {
   const handleSubmitOrder = async (item, event) => {
     event.preventDefault();
     let data = {
-      orderId: item.id,
+      sellOrderId: item.id,
+      buyOrderId:null,
       customerId: item.customerId,
       createDate: currentTime,
       amount: item.finalAmount,
@@ -192,7 +192,7 @@ const Cs_WaitingPayment = () => {
 
     try {
       // Simulate a possible error for testing
-      if (!data.orderId || !data.customerId || !data.createDate || !data.amount) {
+      if (!data.sellOrderId || !data.customerId || !data.createDate || !data.amount) {
         throw new Error("Missing required fields in order data");
       }
 
@@ -201,6 +201,7 @@ const Cs_WaitingPayment = () => {
 
       const paymentID = res.data.data.id;
       const item1 = res.data.data;
+      console.log('item1',item1)
       console.log("Payment ID received:", paymentID);
 
       toast.success('Create Invoice Successful');
@@ -380,7 +381,7 @@ const Cs_WaitingPayment = () => {
     // event.preventDefault();
     let data = {
       paymentId: item.id,
-      orderId: item.orderId,
+      sellOrderId: item.sellOrderId,
       paymentMethodId: ChosePayMethodID,
       customerId: item.customerId,
       createDate: createDate,
@@ -514,7 +515,7 @@ const Cs_WaitingPayment = () => {
                     <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
                       <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
                       <div className='col-start-3 gap-1 flex justify-end text-[12px]'>
-                        <span>{formatPrice(orderDetail.unitPrice-orderDetail.unitPrice * orderDetail.promotionRate)}</span>
+                        <span>{formatPrice(orderDetail.unitPrice - orderDetail.unitPrice * orderDetail.promotionRate)}</span>
                         <span className='text-red-500 flex justify-center text-[12px]'>{''}x{orderDetail.quantity}</span>
                       </div>
                       <span className='text-[12px]'>(-{formatPrice(orderDetail.unitPrice * orderDetail.promotionRate)})</span>
@@ -534,7 +535,7 @@ const Cs_WaitingPayment = () => {
                   <div className='font-thin italic'>Discount Rate</div>
                   <span className='font-thin'>{item.specialDiscountRate}</span>
                 </div>
-                
+
 
                 <div className=' flex justify-around'>
                   <button onClick={() => handleCancle(item.id)} type='button' className="m-0 py-2 border border-[#ffffff] bg-[#c4472b] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#bd5f4f7e] active:bg-[#ffff] focus:outline-none">Cancel</button>
@@ -577,15 +578,23 @@ const Cs_WaitingPayment = () => {
                                     <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
                                       {item.sellOrderDetails.map((orderDetail, index) => (
                                         <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                                          <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
-                                          <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
+                                          <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
+                                          <div className='col-start-3 gap-1 flex justify-end text-[12px]'>
+                                            <span>{formatPrice(orderDetail.unitPrice - orderDetail.unitPrice * orderDetail.promotionRate)}</span>
+                                            <span className='text-red-500 flex justify-center text-[12px]'>{''}x{orderDetail.quantity}</span>
+                                          </div>
+                                          <span className='text-[12px]'>(-{formatPrice(orderDetail.unitPrice * orderDetail.promotionRate)})</span>
                                         </div>
                                       ))}
                                     </div>
                                   </div>
-                                  <div className='absolute bottom-5 w-[95%] border border-x-0 border-b-0 border-black grid grid-cols-2 grid-rows-3'>
-                                    <div className='row-start-1 col-start-1 font-bold'>Total</div>
-                                    <div className='row-start-1 col-start-2 flex justify-end mr-5'>{formatPrice(item.finalAmount)}<span>.đ</span></div>
+                                  <div className='absolute bottom-5 w-[95%] border text-start border-x-0 border-b-0 border-black grid grid-cols-2 grid-rows-3'>
+                                    <div className='font-bold'>Total</div>
+                                    <span className='font-semibold'>{formatPrice(item.finalAmount)}</span>
+                                    <div className='font-thin italic'>Discount Promotion</div>
+                                    <span className='font-thin'>{formatPrice(calculateTotalPromotionValue(item))}</span>
+                                    <div className='font-thin italic'>Discount Rate</div>
+                                    <span className='font-thin'>{item.specialDiscountRate}</span>
                                   </div>
                                 </div>
 

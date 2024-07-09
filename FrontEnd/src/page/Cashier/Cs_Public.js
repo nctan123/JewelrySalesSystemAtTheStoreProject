@@ -13,6 +13,8 @@ const Cs_Public = () => {
       navigate('/login');
     }
   }, [navigate]);
+  
+  const name = localStorage.getItem('name');
   return (
     <div className='w-full flex h-[100vh] '>
       <div className='w-[240px] overflow-y-scroll flex-none bg-[#5D5FEF] '>
@@ -23,6 +25,9 @@ const Cs_Public = () => {
         <div className='h-[90%] flex justify-start'><Outlet /></div>
       </div>
 
+      {/* <div className='text-black'>
+          {name}
+      </div> */}
     </div>
   )
 }
