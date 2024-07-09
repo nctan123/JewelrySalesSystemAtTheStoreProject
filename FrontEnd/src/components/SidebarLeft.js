@@ -35,7 +35,7 @@ const Sidebar = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
 
-    toast.success('Log out success!!!')
+
   }
 
   return (

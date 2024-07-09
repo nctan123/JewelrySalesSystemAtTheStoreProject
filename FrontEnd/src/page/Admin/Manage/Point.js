@@ -57,7 +57,7 @@ const Point = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline">Customer point management list</h1>
+                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4">Customer point management list</h1>
                 <div className="flex mb-4">
                     <div className="relative">
                         <input

@@ -5,7 +5,7 @@ import moment from 'moment'; // Import moment.js for date manipulation
 import axios from 'axios';
 import ReactApexChart from 'react-apexcharts';
 
-const TestChart = () => {
+const P2 = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [datesInRange, setDatesInRange] = useState([]);
@@ -57,8 +57,28 @@ const TestChart = () => {
     };
 
     const fetchData = async (startDate, endDate) => {
+        // Format startDate to 00:00
+        const formattedStartDate = new Date(startDate);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(endDate);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        // const endDateString = formattedEndDate.toISOString().slice(0, 19); // Remove milliseconds and timezone
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
         try {
-            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/Staff/getTop6ByMonth?startDate=${startDate}&endDate=${endDate}`);
+            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/Staff/getTop6ByMonth?startDate=${startDateString}&endDate=${endDateString}`);
             if (response.data && response.data.data) {
                 const seriesData = response.data.data.map(item => item.TotalRevenue);
                 const labelsData = response.data.data.map(item => item.Firstname);
@@ -72,9 +92,30 @@ const TestChart = () => {
             console.error('Error fetching data:', error);
         }
     };
+
     const fetchData2 = async (startDate, endDate) => {
+        // Format startDate to 00:00
+        const formattedStartDate = new Date(startDate);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(endDate);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
         try {
-            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDate}&endDate=${endDate}`);
+            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`);
             if (response.data && response.data.data) {
                 const seriesData = response.data.data.map(item => item.Quantity);
                 const labelsData = response.data.data.map(item => item.Category);
@@ -87,6 +128,7 @@ const TestChart = () => {
             console.error('Error fetching data:', error);
         }
     };
+
 
     useEffect(() => {
         fetchData(startDate, endDate);
@@ -319,4 +361,4 @@ const TestChart = () => {
     );
 };
 
-export default TestChart;
+export default P2;

@@ -4,7 +4,7 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-const TooltipChart = () => {
+const P3 = () => {
     const [year, setYear] = useState(new Date().getFullYear());
     const [dates, setDates] = useState([]);
     const [values, setValues] = useState([]);
@@ -174,4 +174,4 @@ const TooltipChart = () => {
     );
 };
 
-export default TooltipChart;
+export default P3;

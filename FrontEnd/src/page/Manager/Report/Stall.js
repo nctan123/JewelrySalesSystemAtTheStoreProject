@@ -116,7 +116,7 @@ const Stall = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline">Stall revenue list</h1>
+                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4">Stall revenue list</h1>
                 <div className="flex space-x-4 mb-4">
                     <select
                         value={selectedMonth}
@@ -144,12 +144,12 @@ const Stall = () => {
 
                 <div className="w-[1200px] overflow-hidden ">
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
+
                         <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-sm font-bold text-[#212B36] ">
-                                <th className="py-3 pl-3 rounded-l-lg">ID</th>
-                                <th >Name</th>
-                                <th >Type_Id</th>
-                                <th >Description</th>
+                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
+                                <th className=" rounded-l-lg"></th>
+                                <th className="py-3 ">Name</th>
+                                <th >Type</th>
                                 <th >Status</th>
                                 <th className=" rounded-r-lg ">Revenue</th>
                             </tr>
@@ -157,12 +157,15 @@ const Stall = () => {
                         <tbody>
                             {listStall.map((item, index) => (
                                 <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3  py-4 text-black">{item.id}</td>
+                                    <td className="rounded-l-lg pl-3  py-4 text-black">{index + 1}</td>
                                     <td > {item.name}</td>
-                                    <td >{item.typeId}</td>
                                     <td >{item.description}</td>
-                                    <td>{item.status}</td>
-                                    <td >
+                                    <td>
+                                        {item.status === 'active'
+                                            ? (<span className="text-green-500">Active</span>)
+                                            : <span className="text-red-500">Inactive</span>}
+                                    </td>
+                                    <td className='rounded-r-lg '>
                                         {formatCurrency(revenueData.find(re => re.StallName === item.name)?.TotalRevenue || 0)}
                                     </td>
                                 </tr>

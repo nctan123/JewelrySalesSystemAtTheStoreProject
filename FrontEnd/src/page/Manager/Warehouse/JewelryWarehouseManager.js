@@ -1,28 +1,31 @@
-
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import Modal from 'react-modal';
-import { IoIosSearch } from 'react-icons/io';
-import logo from '../../../assets/img/seller/diamond.webp';
 import clsx from 'clsx';
-import { CiViewList } from "react-icons/ci";
+import { IoIosSearch } from 'react-icons/io';
+import { CiViewList } from 'react-icons/ci';
+import Modal from 'react-modal';
+import logoRing from '../../../assets/img/seller/ring.png';
+import logoEarrings from '../../../assets/img/seller/earring.png';
+import logoNecklace from '../../../assets/img/seller/necklace.png';
+import logoBracelet from '../../../assets/img/seller/bangles.png';
 import { toast } from 'react-toastify';
 
-const DiamondManager = () => {
+const JewelryWarehouseManager = () => {
     const scrollRef = useRef(null);
     const [isYesNoOpen, setIsYesNoOpen] = useState(false);
-
     const [listProduct, setListProduct] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
+    const [selectedJewelry, setSelectedJewelry] = useState(null);
     const [selectedDiamond, setSelectedDiamond] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [stalls, setStalls] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const productPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
-    const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
+    const [selectedCategory, setSelectedCategory] = useState(1); // Default category ID
+    const [totalPages, setTotalPages] = useState(1);
     const [ascending, setAscending] = useState(true);
 
     useEffect(() => {
@@ -33,15 +36,11 @@ const DiamondManager = () => {
 
     useEffect(() => {
         if (searchQuery) {
-
             handleSearch();
-
         } else {
-
-            getProduct();
-
+            getProduct(selectedCategory);
         }
-    }, [pageSize, currentPage, searchQuery, ascending]);
+    }, [pageSize, currentPage, searchQuery, selectedCategory, ascending]);
 
     useEffect(() => {
         const fetchStalls = async () => {
@@ -66,6 +65,12 @@ const DiamondManager = () => {
         fetchStalls();
     }, []);
 
+    const handleCategory = (e) => {
+        setSelectedCategory(Number(e.target.value));
+        setSearchQuery('')
+        setSearchQuery1('')
+        setCurrentPage(1);
+    }
     const handleDetailClick = async (code, diamondCode) => {
         try {
             const token = localStorage.getItem('token');
@@ -87,12 +92,13 @@ const DiamondManager = () => {
                 const details1 = res1.data.data[0];
                 setSelectedDiamond(details);
                 setSelectedProduct(details1); // Set selected product for editing
-
-                setIsModalOpen(true); // Open modal when staff details are fetched
+                console.log('>>> check diamond', res)
+                console.log('>>> check product', res)
+                setIsModalOpen(true); // Open modal when product details are fetched
             }
 
         } catch (error) {
-            console.error('Error fetching staff details:', error);
+            console.error('Error fetching product details:', error);
         }
     };
 
@@ -126,14 +132,15 @@ const DiamondManager = () => {
         }
     };
 
-    const getProduct = async () => {
+
+    const getProduct = async (categoryID) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=7&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=${categoryID}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=true`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -173,7 +180,6 @@ const DiamondManager = () => {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
-
     const handleSearchChange = (e) => {
         setSearchQuery1(e.target.value);
     };
@@ -190,7 +196,7 @@ const DiamondManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=7&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=${selectedCategory}&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=true`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -201,7 +207,7 @@ const DiamondManager = () => {
                 const searchedProducts = res.data.data;
                 setListProduct(searchedProducts);
                 setTotalPages(res.data.totalPages);
-                console.log('>>> check search', res)
+                // console.log('>>> check search', res)
             }
             else {
                 setListProduct([]);
@@ -222,22 +228,21 @@ const DiamondManager = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setSelectedDiamond(null);
-        setSelectedProduct(null);
+        setSelectedJewelry(null);
     };
     const formatUpper = (str) => {
         if (!str) return '';
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
+
     const handleYesNo = () => {
         setIsYesNoOpen(true);
     };
     const placeholders = Array.from({ length: pageSize - listProduct.length });
-
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of diamond</h1>
+                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of Jewelry</h1>
                 <div className="flex justify-between mb-4">
                     <div className="flex items-center ml-2">
                         <label className="block mb-1 mr-2">Page Size:</label>
@@ -253,18 +258,37 @@ const DiamondManager = () => {
                                 <option key={size} value={size}>{size}</option>
                             ))}
                         </select>
+
                     </div>
-                    <div className="relative w-[400px]">
-                        <input
-                            type="text"
-                            placeholder="Search by product code"
-                            value={searchQuery1}
-                            onChange={handleSearchChange}
-                            className="px-3 py-2 border border-gray-300 rounded-md w-full"
-                        />
-                        <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
+                    <div className="relative flex">
+                        <div>
+                            <select
+                                value={selectedCategory}
+                                // onChange={(e) => setSelectedCategory(Number(e.target.value))}
+                                onChange={handleCategory}
+                                className="px-3 py-2 border border-gray-300 rounded-md mx-4"
+                            >
+                                <option value={1}>Rings</option>
+                                <option value={2}>Earrings</option>
+                                <option value={3}>Bracelets</option>
+                                <option value={4}>Necklaces</option>
+                            </select>
+                        </div>
+                        <div className=" w-[400px]">
+
+                            <input
+                                type="text"
+                                placeholder="Search by product code"
+                                value={searchQuery1}
+                                onChange={handleSearchChange}
+                                className="px-3 py-2 border border-gray-300 rounded-md w-full"
+                            />
+                            <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
+                        </div>
                     </div>
+
                 </div>
+
                 <div className="w-[1200px] overflow-hidden ">
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
                         <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
@@ -283,7 +307,6 @@ const DiamondManager = () => {
                                 <th className="rounded-r-lg">Action</th>
                             </tr>
                         </thead>
-
                         <tbody>
                             {listProduct.map((item, index) => (
                                 <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
@@ -292,9 +315,16 @@ const DiamondManager = () => {
                                     <td>{item.code}</td>
                                     <td>{item.name}</td>
                                     <td>
-                                        {' '}
-                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
-                                        {/* {item.img} */}
+
+                                        {selectedCategory === 1
+                                            ? <img src={logoRing} className="w-20 h-20" alt="Product Logo" />
+                                            : selectedCategory === 2
+                                                ? <img src={logoEarrings} className="w-20 h-20" alt="Product Logo" />
+                                                : selectedCategory === 3
+                                                    ? <img src={logoBracelet} className="w-20 h-20" alt="Product Logo" />
+                                                    : selectedCategory === 4
+                                                        ? <img src={logoNecklace} className="w-20 h-20" alt="Product Logo" />
+                                                        : 'Null'}
                                     </td>
                                     <td>{formatCurrency(item.productValue)}</td>
                                     <td>
@@ -341,16 +371,20 @@ const DiamondManager = () => {
                         </button>
                     ))}
                 </div>
-                <Modal
-                    isOpen={isModalOpen}
-                    onRequestClose={closeModal}
-                    contentLabel="Product Details"
-                    className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto"
-                    overlayClassName="fixed inset-0 z-30 bg-black bg-opacity-50 flex justify-center items-center"
-                >
-                    {selectedDiamond && (
-                        <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
-                            <div className="bg-white rounded-lg p-8 max-w-md w-full">
+            </div>
+
+            {/* Modal for product details */}
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={closeModal}
+                contentLabel="Product Details"
+                className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto"
+                overlayClassName="fixed inset-0 z-30 bg-black bg-opacity-50 flex justify-center items-center"
+            >
+                {selectedProduct && (
+                    <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
+                        <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                            {selectedDiamond && (<>
                                 <h2 className="text-xl text-blue-600 text-center font-bold mb-4">
                                     {selectedDiamond.name}
                                 </h2>
@@ -386,89 +420,88 @@ const DiamondManager = () => {
                                 </p>
                                 <p>
                                     <strong>Carat:</strong> {selectedDiamond.caratWeight}
-                                </p>
-                                <form className="mt-4">
-                                    <div className="mb-2">
-                                        <label className="block text-sm font-medium text-gray-700">
-                                            Stall
-                                        </label>
-                                        <select
-                                            name="stallsId"
-                                            value={selectedProduct?.stalls?.id ?? ''}
-                                            onChange={(e) => {
-                                                const value = e.target.value === 'null' ? null : e.target.value;
-                                                setSelectedProduct((prevSelectedProduct) => ({
-                                                    ...prevSelectedProduct,
-                                                    stalls: {
-                                                        id: value
-                                                    }
-                                                }));
-                                            }}
-                                            className="px-3 py-2 border border-gray-300 rounded-md w-full"
-                                        >
-                                            <option value="" disabled selected>
-                                                {selectedProduct.stalls ? selectedProduct.stalls.name : 'null'}
+                                </p></>
+                            )}
+                            <form className="mt-4">
+                                <div className="mb-2">
+                                    <label className="block text-lg font-medium ">
+                                        <strong>Stall: </strong>
+                                    </label>
+                                    <select
+                                        name="stallsId"
+                                        value={selectedProduct?.stalls?.id ?? ''}
+                                        onChange={(e) => {
+                                            const value = e.target.value === 'null' ? null : e.target.value;
+                                            setSelectedProduct((prevSelectedProduct) => ({
+                                                ...prevSelectedProduct,
+                                                stalls: {
+                                                    id: value
+                                                }
+                                            }));
+                                        }}
+                                        className="px-3 py-2 border border-gray-300 rounded-md w-full"
+                                    >
+                                        <option value="" disabled selected>
+                                            {selectedProduct.stalls ? selectedProduct.stalls.name : 'null'}
+                                        </option>
+                                        {stalls.map((stall) => (
+                                            <option key={stall.id} value={stall.id}>
+                                                {stall.name} - {stall.description && formatUpper(stall.description)}
                                             </option>
-                                            {stalls.map((stall) => (
-                                                <option key={stall.id} value={stall.id}>
-                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
-                                                </option>
-                                            ))}
-                                            <option value="null">Null</option>
-                                        </select>
-
-                                    </div>
-                                </form>
-                                <div className="flex">
-                                    <button
-                                        onClick={handleYesNo}
-                                        className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-                                        style={{ width: '5rem' }}
-                                    >
-                                        Save
-                                    </button>
-                                    <button
-                                        onClick={closeModal}
-                                        className="mr-2 ml-0 px-4 py-2 bg-gray-500 text-white rounded-md"
-                                        style={{ width: '5rem' }}
-                                    >
-                                        Close
-                                    </button>
+                                        ))}
+                                        <option value="null">Null</option>
+                                    </select>
                                 </div>
-                            </div>
-                        </div>
-                    )}
-                </Modal>
-                {isYesNoOpen && (
-                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                        <div className="bg-white rounded-lg p-8 max-w-md w-full">
-                            <h2 className="text-2xl font-bold text-black mb-4">Confilm to update</h2>
-                            <p>Are you sure to update this product's stall</p>
-
-                            <div className="flex justify-end">
+                            </form>
+                            <div className="flex">
                                 <button
-                                    type="button"
+                                    onClick={handleYesNo}
                                     className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-                                    onClick={handleUpdateProduct}
+                                    style={{ width: '5rem' }}
                                 >
-                                    Yes
+                                    Save
                                 </button>
                                 <button
-                                    type="button"
-                                    className="mr-2 ml-0 px-4 py-2 bg-red-500 text-white rounded-md"
-                                    onClick={() => setIsYesNoOpen(false)}
+                                    onClick={closeModal}
+                                    className="mr-2 ml-0 px-4 py-2 bg-gray-500 text-white rounded-md"
+                                    style={{ width: '5rem' }}
                                 >
-                                    No
+                                    Close
                                 </button>
                             </div>
-
-
                         </div>
                     </div>
                 )}
-            </div>
+            </Modal>
+            {isYesNoOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                    <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                        <h2 className="text-2xl font-bold text-black mb-4">Confilm to update</h2>
+                        <p>Are you sure to update this product's stall</p>
+
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+                                onClick={handleUpdateProduct}
+                            >
+                                Yes
+                            </button>
+                            <button
+                                type="button"
+                                className="mr-2 ml-0 px-4 py-2 bg-red-500 text-white rounded-md"
+                                onClick={() => setIsYesNoOpen(false)}
+                            >
+                                No
+                            </button>
+                        </div>
+
+
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
-export default DiamondManager;
+export default JewelryWarehouseManager;

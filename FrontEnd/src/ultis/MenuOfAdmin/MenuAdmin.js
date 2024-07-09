@@ -8,7 +8,7 @@ const { FaChartSimple,
     TbDeviceIpadCancel,
     RiAccountPinCircleFill,
     BiLogOut, FaChevronDown, IoMdArrowDropdown, IoMdArrowDropup, TbFileInvoice, CgUserList, LiaFileInvoiceDollarSolid, GrUserManager,
-    MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges, GiGoldNuggets, GrDocumentStore } = iconAdmin
+    MdOutlineManageAccounts, GiStonePile, LiaGiftsSolid, VscGitPullRequestGoToChanges, GiGoldNuggets, GrDocumentStore, MdOutlinePayments } = iconAdmin
 
 export const sidebarMenuAdmin = [
     // {
@@ -34,9 +34,9 @@ export const sidebarMenuAdmin = [
                 iconAdmin: <TbFileInvoice size={24} color="#000055" />
             },
             {
-                path: 'ProductSold',
-                text: 'Product sold',
-                iconAdmin: <LiaFileInvoiceDollarSolid size={24} color="#000055" />
+                path: 'Payment',
+                text: ' Payment',
+                iconAdmin: <MdOutlinePayments size={24} color="#000055" />
             },
             {
                 path: 'Employee',
@@ -59,21 +59,21 @@ export const sidebarMenuAdmin = [
         iconAdmin2: <IoMdArrowDropdown size={24} color="#000055" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="#000055" />,
         subMenu: [
-            {
-                path: 'productadmin',
-                text: 'Product',
-                iconAdmin: <GiStonePile size={24} color="#000055" />
-            },
+            // {
+            //     path: 'productadmin',
+            //     text: 'Product',
+            //     iconAdmin: <GiStonePile size={24} color="#000055" />
+            // },
             {
                 path: 'customeradmin',
                 text: 'Customer',
                 iconAdmin: <GrUserManager size={24} color="#000055" />
             },
-            {
-                path: 'point',
-                text: 'Point of customer',
-                iconAdmin: <GiGoldNuggets size={24} color="#000055" />
-            },
+            // {
+            //     path: 'point',
+            //     text: 'Point of customer',
+            //     iconAdmin: <GiGoldNuggets size={24} color="#000055" />
+            // },
             {
                 path: 'staff',
                 text: 'Staff',

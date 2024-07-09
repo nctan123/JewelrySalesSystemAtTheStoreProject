@@ -16,10 +16,6 @@ export default function LoginToStore() {
 
   const navigate = useNavigate();
 
-  const handleBackClick = () => {
-    navigate('/');
-  };
-
   const handleLogin = async () => {
     if (!username || !password) {
       toast.error('Username/Password is required!!!');
