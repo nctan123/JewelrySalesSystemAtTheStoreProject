@@ -84,7 +84,6 @@ const Sidebar = () => {
             )}
           </div>
         ))}
-        <NavLink to='/login' onClick={() => handleLogOut()}><BiLogOut size={24} color="white" /> Logout</NavLink>
       </div>
       <h1>{name}</h1>
     </div>

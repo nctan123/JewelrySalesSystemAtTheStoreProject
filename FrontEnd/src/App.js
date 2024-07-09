@@ -2,16 +2,12 @@ import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-<<<<<<< HEAD
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty } from './page/Seller';
 
-import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess } from './page/Cashier';
-=======
 
 import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex,Buy ,Warranty, BuyOut} from './page/Seller';
 
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess, Cs_WaitingPayment } from './page/Cashier';
->>>>>>> FE_Giang
+
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
 import Home from './page/Home/Home';
@@ -163,16 +159,14 @@ function App() {
           </Route>
         </Routes>
       </div>
-<<<<<<< HEAD
-      <ToastContainer />
-=======
+
 
 
       <ToastContainer
 
       />
 
->>>>>>> FE_Giang
+
     </>
   );
 }

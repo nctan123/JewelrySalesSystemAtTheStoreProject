@@ -20,15 +20,11 @@ const path = {
     PROMOTION: 'promotion',
     RETURN_EX: 'purchase',
 
-<<<<<<< HEAD
-    BUY: 'buy',
-    WARRANTY: 'warranty',
-    // Cashier
-=======
+
     BUY:'buyIn',
     BUYOUT: 'buyOut',
 // Cashier
->>>>>>> FE_Giang
+
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
     CS_REVENUE: 'cs_revenue',

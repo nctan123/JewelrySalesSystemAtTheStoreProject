@@ -5,11 +5,6 @@ export const productSlice = createSlice({
     initialState: {
         Rate:null,
         CartArr: [],
-<<<<<<< HEAD
-        CusPoint: [],
-        CartWholesale: [],
-        CartPromotion: [],
-=======
         CusPoint:null, 
         CartWholesale: [], 
         CartPromotion: [], 
@@ -21,11 +16,7 @@ export const productSlice = createSlice({
         staffId: null,
         createDate: '',
         description: '',
->>>>>>> FE_Giang
     },
-
-    
-
     reducers: {
         // Add product to products list non com
         addProductToList: (state, action) => {
@@ -76,48 +67,12 @@ export const productSlice = createSlice({
             if (productIndex === -1) {
                 state.CartArr.push({ ...action.payload, quantity: 1 });
             } else {
-<<<<<<< HEAD
-                if (action.payload.categoryId === 7) {
-=======
                 if (action.payload.categoryId === 6) {
->>>>>>> FE_Giang
                     state.CartArr[productIndex].quantity += 1;
                 }
             }
         },
         deleteProduct: (state, action) => {
-<<<<<<< HEAD
-            const productIndexRemove = action.payload.id
-            const newCart = state.CartArr.filter((item) => item.id !== productIndexRemove)
-            return { ...state, CartArr: newCart }
-        },
-
-
-        deleteProductAll: (state, action) => {
-            return { ...state, CartArr: [] }
-        },
-
-
-        addCustomer: (state, action) => {
-            const productIndex = state.CusPoint.findIndex((p) => p.id === action.payload.id)
-            if (productIndex === -1) {
-                state.CusPoint.push({ ...action.payload, quantity: 1 })
-            } 
-        },
-        deleteCustomer: (state, action) => {
-            return { ...state, CusPoint: [] }
-        },
-        addPromotion: (state, action) => {
-            const productIndex = state.CartPromotion.findIndex((p) => p.id === action.payload.id)
-            if (productIndex === -1) {
-                state.CartPromotion.push({ ...action.payload, quantity: 1 })
-            } 
-        },
-        deletePromotion: (state, action) => {
-            const productIndexRemove = action.payload.id
-            const newPromotion = state.CartPromotion.filter((item) => item.id !== productIndexRemove)
-            return { ...state, CartPromotion: newPromotion }
-=======
             state.CartArr = state.CartArr.filter(item => item.id !== action.payload.id);
         },
         //Add customer
@@ -138,7 +93,6 @@ export const productSlice = createSlice({
             if (promotionIndex === -1) {
                 state.CartPromotion.push({ ...action.payload, quantity: 1 });
             }
->>>>>>> FE_Giang
         },
         deletePromotion: (state, action) => {
             state.CartPromotion = state.CartPromotion.filter(item => item.id !== action.payload.id);
@@ -167,13 +121,4 @@ export const {
     deletePromotion,
 } = productSlice.actions;
 
-<<<<<<< HEAD
-// Action creators are generated for each case reducer function
-
-export const { addProduct, deleteProduct, addCustomer, deleteCustomer, deleteProductAll, addProductWholesale, deleteProductWholesale,addPromotion,deletePromotion } = productSlice.actions
-
-
-export default productSlice.reducer
-=======
 export default productSlice.reducer;
->>>>>>> FE_Giang

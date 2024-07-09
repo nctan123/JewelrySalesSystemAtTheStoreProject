@@ -27,11 +27,7 @@ const Return_Ex = () => {
         </NavLink>
       ))}
       </div>
-<<<<<<< HEAD
-      <div className='flex justify-center p-4 items-center h-[80vh]'><Outlet /></div>
-=======
       <div className='flex justify-center p-4 h-[80vh]'><Outlet /></div>
->>>>>>> FE_Giang
     </div>
 
   )

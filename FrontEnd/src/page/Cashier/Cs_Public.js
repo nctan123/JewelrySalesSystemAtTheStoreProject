@@ -21,16 +21,10 @@ const Cs_Public = () => {
         <Cs_SidebarLeft />
       </div>
 
-<<<<<<< HEAD
-      <div className='flex-auto border bg-[#ffffff25] '>
 
-      <div className='h-[70px] px-[30px] flex items-center mb-2'><Header/></div>
-      <div className='h-[90%] flex justify-start'><Outlet/></div>
-
-=======
       <div className='flex-auto border bg-[#b9a6a663] '>
         <div className='h-[90%] flex justify-start'><Outlet /></div>
->>>>>>> FE_Giang
+
       </div>
 
       {/* <div className='text-black'>

@@ -19,18 +19,6 @@ const Public = () => {
   const hideSidebarRight = location.pathname.includes('/promotion') || location.pathname.includes('/purchase') || location.pathname.includes('/searchInvoice') ;
   const activeSidebarForBuy = location.pathname.includes('/purchase/buyIn') 
   return (
-<<<<<<< HEAD
-
-
-    <div className='w-full flex h-[100vh] '>
-      <div className='w-[240px] overflow-y-scroll flex-none bg-[#5D5FEF]'>
-        <SidebarLeft></SidebarLeft>
-      </div>
-
-
-      <div className='flex-auto border'>
-        <div className='h-[95%] flex justify-center'><Outlet /></div>
-=======
     <div className='w-full flex h-[100vh]'>
       <div className='w-[240px] overflow-y-scroll flex-none bg-[#5D5FEF]'>
         <SidebarLeft />
@@ -38,7 +26,6 @@ const Public = () => {
 
       <div className='flex-auto border'>
         <div className='h-[95%] flex justify-center w-full'><Outlet/></div>
->>>>>>> FE_Giang
       </div>
 
       {!hideSidebarRight && (
@@ -55,10 +42,5 @@ const Public = () => {
     </div>
   )
 }
-<<<<<<< HEAD
-// border-[#5D5FEF]
-export default Public
-=======
 
 export default Public
->>>>>>> FE_Giang

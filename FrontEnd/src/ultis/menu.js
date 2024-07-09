@@ -67,39 +67,18 @@ export const sidebarMenu = [
     //     icons: <CiGift size={24} color="white" />
     // },
     {
-<<<<<<< HEAD
-        path: 'searchInvoice',
-        text: 'Search Invoice',
-        icons: <LiaFileInvoiceDollarSolid size={24} color="white" />
-    },
-    {
-        path: 'promotion',
-        text: 'Promotion',
-        icons: <CiGift size={24} color="white" />
-    },
-    {
-        path: 'purchase',
-        text:'Purchase',
-        icons: <TbArrowsExchange2 size={24} color="white"/>,
-      
-    },
-    {
-        path: '/login',
-        text:'Log out',
-        icons: <TbLogout2 size={24} color="white"/>
 
-=======
         path: 'purchase/buyIn',
         text:'Purchase',
         icons: <TbArrowsExchange2 size={24} color="white"/>,
       
->>>>>>> FE_Giang
+
     },
    
-    // {
-    //     path: '/login',
-    //     text: 'Log out',
-    //     icons: <TbLogout2 size={24} color="white" />
-    // },
+    {
+        path: '/login',
+        text: 'Log out',
+        icons: <TbLogout2 size={24} color="white" />
+    },
 
 ]
