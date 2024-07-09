@@ -53,7 +53,6 @@ public class SellOrderService : ISellOrderService
         var customer =
             (Customer)(await _customerService.GetEntityByPhoneAsync(requestSellOrder.CustomerPhoneNumber)).Data!;
         var sellOrder = _mapper.Map<SellOrder>(requestSellOrder);
-        var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
         sellOrder.Customer = customer;
         //fetch order details
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
@@ -415,6 +414,11 @@ public class SellOrderService : ISellOrderService
         var sellOrderDetails = sellOrder.SellOrderDetails.ToList();
         foreach (var sellOrderDetail in sellOrderDetails)
         {
+            var product = sellOrderDetail.Product;
+            if (product.CategoryId == ProductConstants.WholesaleGoldCategory)
+            {
+                await _productService.UpdateWholesaleGoldQuantity(product, -sellOrderDetail.Quantity);
+            }
             await _productService.UpdateProductStatusAsync(sellOrderDetail.ProductId, ProductConstants.ActiveStatus);
             await _unitOfWork.SellOrderDetailRepository.DeleteAsync(sellOrderDetail);
         }

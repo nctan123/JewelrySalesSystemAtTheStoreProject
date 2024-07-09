@@ -66,10 +66,10 @@ public class SellOrderController : ControllerBase
         //check if this is just an update, not create new order
         if (requestSellOrder.Id is not null)
         {
-            var targetOrder = await _sellOrderService.MapOrderAsync(requestSellOrder);
+            var orderWithUpdatedData = await _sellOrderService.MapOrderAsync(requestSellOrder);
             await _sellOrderService.RemoveAllSellOrderDetails(requestSellOrder.Id.Value);
-            var result = await _sellOrderService.UpdateOrderAsync(targetOrder.Id, targetOrder);
-            await _productService.UpdateAllProductStatusAsync(targetOrder, ProductConstants.InactiveStatus);
+            var result = await _sellOrderService.UpdateOrderAsync(orderWithUpdatedData.Id, orderWithUpdatedData);
+            await _productService.UpdateAllProductStatusAsync(orderWithUpdatedData, ProductConstants.InactiveStatus);
             return Ok(_mapper.Map<ResponseUpdateSellOrderWithSpecialPromotion>((SellOrder)result.Data!));
         }
 

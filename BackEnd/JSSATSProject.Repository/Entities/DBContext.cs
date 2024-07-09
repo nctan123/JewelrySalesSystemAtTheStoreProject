@@ -598,7 +598,7 @@ public partial class DBContext : DbContext
 
         modelBuilder.Entity<Payment>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Payment__3213E83F345B704A");
+            entity.HasKey(e => e.Id).HasName("PK__Payment__3213E83F31C006AD");
 
             entity.ToTable("Payment");
 
@@ -606,26 +606,30 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Amount)
                 .HasColumnType("decimal(15, 2)")
                 .HasColumnName("amount");
+            entity.Property(e => e.BuyorderId).HasColumnName("buyorder_id");
             entity.Property(e => e.CreateDate)
                 .HasColumnType("datetime")
                 .HasColumnName("create_date");
             entity.Property(e => e.CustomerId).HasColumnName("customer_id");
-            entity.Property(e => e.OrderId).HasColumnName("order_id");
+            entity.Property(e => e.SellorderId).HasColumnName("sellorder_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasDefaultValue("pending")
                 .HasColumnName("status");
 
+            entity.HasOne(d => d.Buyorder).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.BuyorderId)
+                .HasConstraintName("FK_Payment_BuyOrder");
+
             entity.HasOne(d => d.Customer).WithMany(p => p.Payments)
                 .HasForeignKey(d => d.CustomerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Payment__custome__37703C52");
+                .HasConstraintName("FK__Payment__custome__4C6B5938");
 
-            entity.HasOne(d => d.Order).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.OrderId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Payment__order_i__3864608B");
+            entity.HasOne(d => d.Sellorder).WithMany(p => p.Payments)
+                .HasForeignKey(d => d.SellorderId)
+                .HasConstraintName("FK__Payment__order_i__4D5F7D71");
         });
 
         modelBuilder.Entity<PaymentDetail>(entity =>

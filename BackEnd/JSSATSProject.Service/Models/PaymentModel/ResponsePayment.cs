@@ -4,8 +4,12 @@ public class ResponsePayment
 {
     public int Id { get; set; }
 
-    public int OrderId { get; set; }
-    public string OrderCode { get; set; }
+    public int? SellOrderId { get; set; }
+
+    public int? BuyOrderId { get; set; }
+    public string? SellOrderCode { get; set; }
+
+    public string? BuyOrderCode { get; set; }
 
     public string CustomerPhone { get; set; }
 

@@ -9,19 +9,23 @@ public partial class Payment
 {
     public int Id { get; set; }
 
-    public int OrderId { get; set; }
+    public int? SellorderId { get; set; }
 
     public int CustomerId { get; set; }
 
     public DateTime CreateDate { get; set; }
 
-    public decimal Amount { get; set; }
+    public decimal? Amount { get; set; }
 
     public string Status { get; set; }
 
+    public int? BuyorderId { get; set; }
+
+    public virtual BuyOrder Buyorder { get; set; }
+
     public virtual Customer Customer { get; set; }
 
-    public virtual SellOrder Order { get; set; }
-
     public virtual ICollection<PaymentDetail> PaymentDetails { get; set; } = new List<PaymentDetail>();
+
+    public virtual SellOrder Sellorder { get; set; }
 }

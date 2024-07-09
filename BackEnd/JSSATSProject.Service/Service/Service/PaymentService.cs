@@ -107,10 +107,11 @@ public class PaymentService : IPaymentService
         }
     }
 
+    //fix this
     public async Task<int> GetOrderIdByPaymentIdAsync(int id)
     {
         var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-        return payment.OrderId;
+        return payment.SellorderId.GetValueOrDefault();
     }
     public async Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate)
     {

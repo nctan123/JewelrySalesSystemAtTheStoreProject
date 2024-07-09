@@ -129,7 +129,14 @@ public class SellOrderDetailService : ISellOrderDetailService
             var productId = item.Key;
             var quantity = item.Value;
             var product = await _productService.GetEntityByCodeAsync(productId);
-            product.Status = ProductConstants.InactiveStatus;
+            if (product.CategoryId == ProductConstants.WholesaleGoldCategory)
+            {
+                await _productService.UpdateWholesaleGoldQuantity(product, quantity);
+            }
+            else
+            {
+                product.Status = ProductConstants.InactiveStatus;
+            }
             int? promotionId = null;
 
             productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
@@ -142,7 +149,7 @@ public class SellOrderDetailService : ISellOrderDetailService
             {
                 ProductId = product.Id,
                 Quantity = quantity,
-                UnitPrice = quantity * basePrice,
+                UnitPrice = basePrice,
                 OrderId = sellOrderId,
                 PromotionId = promotionId is not null ? Convert.ToInt32(promotionId) : null,
                 Promotion = promotion
