@@ -73,66 +73,106 @@ const Cs_Complete = () => {
 
 
 
-
+  function calculateTotalPromotionValue(item) {
+    return item.sellOrderDetails.reduce((total, orderDetail) => {
+      return total + (orderDetail.unitPrice * orderDetail.promotionRate);
+    }, 0);
+  }
   return (<>
     <div>
-      <div className='my-0 mx-auto'>
-        <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[76vh]'>
-          {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => {
-            return (
-              <div className='shadow-md shadow-gray-600 pt-[10px] rounded-t-2xl w-[90%] h-[28em] bg-[#e9ddc26d] mt-[20px]'>
-                <div className='flex flex-col justify-between px-[15px] text-black font-thin'>
-                  <div className='flex justify-between'>
-                  <span className='font-mono bg-gray-300 rounded px-1'>{item.paymentMethod}</span>
-                  <span className='flex justify-end font-bold'><FormatDate isoString={currentTime} /></span>
-                  </div>
-                  <div className='flex'>
-                    <span>Code:</span>
-                    <input className='bg-[#e9ddc200] text-center' value={item.id} readOnly />
-                  </div>
+      <form className="max-w-md mx-auto">
+        <div className="relative">
+          <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+            <svg
+              className="w-4 h-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 20"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+              />
+            </svg>
+          </div>
+          <input
+            type="search"
+            id="default-search"
+            className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Search Item, ID in here..."
+            required
+            // value={searchTerm}
+            // onChange={handleSearch}
+          />
+        </div>
+      </form>
+      <div className='my-0 mx-auto mt-2'>
+        <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[78vh]'>
+          {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => (
+            <div key={index} className='shadow-md shadow-gray-600 pt-[10px] rounded-2xl w-[93%] h-[29em] bg-[#ffff] mb-[20px]'>
+              <div className='flex flex-col justify-between px-[15px] text-black font-thin'>
+                <span className='flex justify-end font-thin italic'><FormatDate isoString={item.createDate} /></span>
+              </div>
+              <div className='text-[15px]'>
+                <div className='flex px-[15px] gap-3 '>
+                  <span className='font-serif'>Code:</span>
+                  <span className='font-thin'>{item.code}</span>
+                  <span className='font-serif'>-</span>
+                  <span className='font-thin'>{item.id}</span>
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
-                  <input hidden className='bg-[#e9ddc200] text-center' value={item.id} readOnly />
+                  <input hidden className='bg-[#e9ddc200] text-center font-thin' value={item.customerId} readOnly />
                 </div>
                 <div className='flex justify-start px-[15px] text-black'>
-                  <p className='font-light w-full'>Customer Name: </p>
-                  <span className='w-full flex justify-center font-serif'>{item.customerName}</span>
+                  <p className='font-serif w-full'>Customer Name: </p>
+                  <span className='w-full flex justify-center font-thin'>{item.customerName}</span>
                 </div>
                 <div className='flex  px-[15px] text-black'>
-                  <p className='w-[260px] font-light '>Staff Name:</p>
-                  <span className='w-full flex font-serif'>{item.staffName}</span>
-                </div>
-                <div className='grid grid-cols-3 border-x-0 border-t-0 border mx-[10px] border-b-black pb-[2px]'>
-                  <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
-                  <div className='col-start-3 ml-6 flex justify-start'>Price</div>
-                </div>
-                <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
-                  {item.sellOrderDetails.map((orderDetail, index) => (
-                      <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                      <div className='col-start-1 col-span-2 flex pl-[5px] items-center'>{orderDetail.productId}<span className='text-red-500 px-2 text-sm'>x{orderDetail.quantity}</span> </div>
-                      <div className='col-start-3  flex justify-start'>{orderDetail.unitPrice}</div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className='border border-x-0 border-b-0 mx-[15px] border-t-black py-2 flex justify-between'>
-                  <div className='font-bold'>PAYMENT</div>
-                </div>
-
-                <div className='bg-[#87A89E] h-[50px] grid grid-cols-2 '>
-                  <input value={formatPrice(item.finalAmount) + '.đ'} readOnly className='mx-[15px] w-fit bg-[#87A89E] flex items-center font-bold text-lg' />
-                  <div className='col-start-2 flex justify-end items-center mr-[15px]'>
-                    <button type='button' onClick={handleComplete()} className=" m-0 border border-[#ffffff] bg-[#f3d92c] text-black px-4 py-1 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Success</button>
-                  </div>
-                </div>
-                <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
-                  {item.description}
+                  <p className='w-[260px] font-serif '>Staff Name:</p>
+                  <span className='w-full flex font-thin'>{item.staffName}</span>
                 </div>
               </div>
-            )
-          })}
+              <div className='grid grid-cols-3 border-x-0 font-extralight italic border-t-0 border mx-[10px] border-b-black pb-[2px]'>
+                <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
+                <div className='col-start-3 ml-6 flex justify-start'>Price</div>
+              </div>
+              <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
+                {item.sellOrderDetails.map((orderDetail, index) => (
+                  <div key={index} className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
+                    <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
+                    <div className='col-start-3 gap-1 flex justify-end text-[12px]'>
+                      <span>{formatPrice(orderDetail.unitPrice - orderDetail.unitPrice * orderDetail.promotionRate)}</span>
+                      <span className='text-red-500 flex justify-center text-[12px]'>{' x '}{orderDetail.quantity}</span>
+                    </div>
+                    <span className='text-[12px]'>(-{formatPrice(orderDetail.unitPrice * orderDetail.promotionRate)})</span>
+                  </div>
+                ))}
+              </div>
+              <div className='mx-[15px] flex justify-between'>
+                <div className='font-bold'>Total</div>
+                <span className='font-semibold'>{formatPrice(item.finalAmount)}</span>
+              </div>
+              <div className='mx-[15px] border-t-black flex justify-between'>
+                <div className='font-thin italic'>Discount Promotion</div>
+                <span className='font-thin'>{formatPrice(calculateTotalPromotionValue(item))}</span>
+              </div>
+              <div className='mx-[15px] border-t-black flex justify-between pb-2'>
+                <div className='font-thin italic'>Discount Rate</div>
+                <span className='font-thin'>{item.specialDiscountRate}</span>
+              </div>
+              <div className=' flex justify-around'>
+                <button type='button' className="m-0 py-2 border border-[#ffffff] bg-[#c0a52c] text-white px-10 rounded-md">Success</button>
+              </div>
+              <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
+                {item.description}
+              </div>
+            </div>
+          ))}
         </div>
-
       </div>
       <ReactPaginate
         onPageChange={handlePageClick}
@@ -146,12 +186,11 @@ const Cs_Complete = () => {
         nextClassName="mx-1"
         nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
         breakLabel="..."
-        breakClassName="mx-1 "
+        breakClassName="mx-1"
         breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
         containerClassName="flex justify-center items-center space-x-4"
         activeClassName="bg-blue-500 text-white rounded-xl"
         renderOnZeroPageCount={null}
-        // className="bg-black flex justify-center items-center"
         previousLabel={
           <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
             <AiFillLeftCircle />
@@ -164,6 +203,7 @@ const Cs_Complete = () => {
         }
       />
     </div>
+  );
 
   </>)
 }
