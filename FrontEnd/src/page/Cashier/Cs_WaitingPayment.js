@@ -183,7 +183,7 @@ const Cs_WaitingPayment = () => {
     event.preventDefault();
     let data = {
       sellOrderId: item.id,
-      buyOrderId:null,
+      buyOrderId: null,
       customerId: item.customerId,
       createDate: currentTime,
       amount: item.finalAmount,
@@ -201,7 +201,7 @@ const Cs_WaitingPayment = () => {
 
       const paymentID = res.data.data.id;
       const item1 = res.data.data;
-      console.log('item1',item1)
+      console.log('item1', item1)
       console.log("Payment ID received:", paymentID);
 
       toast.success('Create Invoice Successful');
@@ -381,7 +381,7 @@ const Cs_WaitingPayment = () => {
     // event.preventDefault();
     let data = {
       paymentId: item.id,
-      sellOrderId: item.sellorderId,
+      OrderId: item.sellorderId,
       paymentMethodId: ChosePayMethodID,
       customerId: item.customerId,
       createDate: createDate,
