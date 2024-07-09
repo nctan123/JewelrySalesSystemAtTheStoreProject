@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
-export default function Revenue() {
+export default function P1() {
     const [todayRevenue, setTodayRevenue] = useState(null);
     const [yesterdayRevenue, setYesterdayRevenue] = useState(null);
     const [thisWeekRevenue, setThisWeekRevenue] = useState(null);
@@ -184,6 +184,7 @@ export default function Revenue() {
                 >
                     Week
                 </button>
+
             </div>
 
             {error && <p className="text-red-500">{error}</p>}

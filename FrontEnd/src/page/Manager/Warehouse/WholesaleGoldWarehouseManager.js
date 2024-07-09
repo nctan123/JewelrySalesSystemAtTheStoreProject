@@ -7,14 +7,14 @@ import Modal from 'react-modal';
 import { CiViewList } from "react-icons/ci";
 import { toast } from 'react-toastify';
 
-const RetailGoldManager = () => {
+const WholesaleGoldWarehouseManager = () => {
     const scrollRef = useRef(null);
     const [isYesNoOpen, setIsYesNoOpen] = useState(false);
 
     const [listProduct, setListProduct] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedRetailGold, setSelectedRetailGold] = useState(null);
+    const [selectedWholesaleGold, setSelectedWholesaleGold] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [stalls, setStalls] = useState([]);
@@ -28,7 +28,6 @@ const RetailGoldManager = () => {
             scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }, [currentPage]);
-
 
     useEffect(() => {
         if (searchQuery) {
@@ -78,7 +77,7 @@ const RetailGoldManager = () => {
             });
             if (res && res.data && res.data.data) {
                 const details = res.data.data[0];
-                setSelectedRetailGold(details);
+                setSelectedWholesaleGold(details);
                 // console.log('>>> check ressss', res)
                 setIsModalOpen(true); // Open modal when staff details are fetched
             }
@@ -95,10 +94,10 @@ const RetailGoldManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.put(
-                `https://jssatsproject.azurewebsites.net/api/Product/UpdateStallProduct?id=${selectedRetailGold.id}`,
+                `https://jssatsproject.azurewebsites.net/api/Product/UpdateStallProduct?id=${selectedWholesaleGold.id}`,
                 {
-                    ...selectedRetailGold,
-                    stallsId: selectedRetailGold.stalls.id
+                    ...selectedWholesaleGold,
+                    stallsId: selectedWholesaleGold.stalls.id
                 },
                 {
                     headers: {
@@ -106,12 +105,13 @@ const RetailGoldManager = () => {
                     }
                 }
             );
-            console.log('... check update product', selectedRetailGold)
+            console.log('... check update product', selectedWholesaleGold)
             if (res.status === 200) {
                 setIsModalOpen(false);
                 setIsYesNoOpen(false);// Close the modal yes no
                 toast.success('Update successful !')
                 getProduct(); // Refresh the product list
+
             }
         } catch (error) {
             console.error('Error updating product:', error);
@@ -127,7 +127,7 @@ const RetailGoldManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=5&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=true`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -185,7 +185,7 @@ const RetailGoldManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=5&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=6&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=true`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -217,7 +217,7 @@ const RetailGoldManager = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setSelectedRetailGold(null);
+        setSelectedWholesaleGold(null);
     };
     const formatUpper = (str) => {
         if (!str) return '';
@@ -230,7 +230,7 @@ const RetailGoldManager = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of retail gold</h1>
+                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of wholesale gold</h1>
                 <div className="flex justify-between mb-4">
                     <div className="flex items-center ml-2">
                         <label className="block mb-1 mr-2">Page Size:</label>
@@ -263,7 +263,7 @@ const RetailGoldManager = () => {
                         <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
                             <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
                                 <th className="py-3 pl-3 rounded-l-lg"></th>
-                                <th className='py-3 pl-3'>Category</th>
+                                <th className='py-3 pl-3' >Category</th>
                                 <th>Code</th>
                                 <th >Name</th>
                                 <th className="pl-7"> Img</th>
@@ -284,12 +284,7 @@ const RetailGoldManager = () => {
                                     <td >{item.categoryName}</td>
                                     <td> {item.code} </td>
                                     <td>{item.name}</td>
-                                    {/* <td > <img src={logo} className="w-20 h-20" /> </td> */}
-                                    <td>
-                                        {' '}
-                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
-                                        {/* {item.img} */}
-                                    </td>
+                                    <td > <img src={logo} className="w-20 h-20" /> </td>
                                     <td >{formatCurrency(item.productValue)}</td>
                                     <td >
                                         {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}
@@ -339,20 +334,20 @@ const RetailGoldManager = () => {
                     overlayClassName="fixed inset-0 z-30 bg-black bg-opacity-50 flex justify-center items-center"
                 >
 
-                    {selectedRetailGold && (
+                    {selectedWholesaleGold && (
                         <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
                             <div className="bg-white rounded-lg p-8 max-w-md w-full">
-                                <h2 className="text-xl text-center text-blue-600 font-bold mb-4">{selectedRetailGold.name}</h2>
+                                <h2 className="text-xl text-center text-blue-600 font-bold mb-4">{selectedWholesaleGold.name}</h2>
 
                                 {/* <p><strong>ID:</strong> {selectedDiamond.id}</p> */}
-                                <p className="text-sm text-gray-700 mb-2"><strong>ID:</strong> {selectedRetailGold.id}</p>
-                                <p className="text-sm text-gray-700 mb-2"><strong>Code:</strong> {selectedRetailGold.code}</p>
-                                <p className="text-sm text-gray-700 mb-2"><strong>Category:</strong>{selectedRetailGold.category}</p>
-                                <p className="text-sm text-gray-700 mb-2"><strong>Material:</strong> {selectedRetailGold.materialName}</p>
-                                <p className="text-sm text-gray-700 mb-2"><strong>Material Weight:</strong> {selectedRetailGold.materialWeight}</p>
+                                <p className="text-sm text-gray-700 mb-2"><strong>ID:</strong> {selectedWholesaleGold.id}</p>
+                                <p className="text-sm text-gray-700 mb-2"><strong>Code:</strong> {selectedWholesaleGold.code}</p>
+                                <p className="text-sm text-gray-700 mb-2"><strong>Category:</strong>{selectedWholesaleGold.category}</p>
+                                <p className="text-sm text-gray-700 mb-2"><strong>Material:</strong> {selectedWholesaleGold.materialName}</p>
+                                <p className="text-sm text-gray-700 mb-2"><strong>Material Weight:</strong> {selectedWholesaleGold.materialWeight}</p>
 
-                                <p className="text-sm text-gray-700 mb-2"><strong>Price Rate: </strong>{selectedRetailGold.priceRate}</p>
-                                <h1 ><strong>Price:</strong> {formatCurrency(selectedRetailGold.productValue)}</h1>
+                                <p className="text-sm text-gray-700 mb-2"><strong>Price Rate: </strong>{selectedWholesaleGold.priceRate}</p>
+                                <h1 ><strong>Price:</strong> {formatCurrency(selectedWholesaleGold.productValue)}</h1>
                                 <form className="mt-4">
                                     <div className="mb-2">
                                         <label className="block text-sm font-medium text-gray-700">
@@ -360,10 +355,10 @@ const RetailGoldManager = () => {
                                         </label>
                                         <select
                                             name="stallsId"
-                                            value={selectedRetailGold?.stalls?.id ?? ''}
+                                            value={selectedWholesaleGold?.stalls?.id ?? ''}
                                             onChange={(e) => {
                                                 const value = e.target.value === 'null' ? null : e.target.value;
-                                                setSelectedRetailGold((prevSelectedProduct) => ({
+                                                setSelectedWholesaleGold((prevSelectedProduct) => ({
                                                     ...prevSelectedProduct,
                                                     stalls: {
                                                         id: value
@@ -373,7 +368,7 @@ const RetailGoldManager = () => {
                                             className="px-3 py-2 border border-gray-300 rounded-md w-full"
                                         >
                                             <option value="" disabled selected>
-                                                {selectedRetailGold.stalls ? selectedRetailGold.stalls.name : 'null'}
+                                                {selectedWholesaleGold.stalls ? selectedWholesaleGold.stalls.name : 'null'}
                                             </option>
                                             {stalls.map((stall) => (
                                                 <option key={stall.id} value={stall.id}>
@@ -436,4 +431,4 @@ const RetailGoldManager = () => {
     )
 }
 
-export default RetailGoldManager
+export default WholesaleGoldWarehouseManager

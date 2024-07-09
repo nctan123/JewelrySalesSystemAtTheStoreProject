@@ -54,14 +54,22 @@ const path = {
 
 
     // manager
-
+    WAREHOUSEMANAGER: 'warehouseManager',
+    DIAMONDWAREHOUSE: 'diamondWarehouse',
+    JEWELRYWAREHOUSE: 'jewelryWarehouse',
+    WHOLESALEGOLDWAREHOUSE: 'wholesalegoldWarehouse',
+    RETAILGOLDWAREHOUSE: 'rgoldWarehouse',
     PRODUCTMANAGER: 'productManager',
     DIAMONDMANAGER: 'diamond',
     RETAILGOLDMANAGER: 'rgold',
     PROMOTIONMANAGER: 'Promotionmanager',
     CUSTOMERMANA: 'customerMana',
     PRODUCTMANA: 'productMana',
-    STALL: 'Stall'
+    STALL: 'Stall',
+    PRICE: 'price',
+    MATERIAL: 'material',
+    SPECIALDISCOUNT: 'specialDiscount',
+    PAYMENT: 'Payment'
     // end manager
 
 

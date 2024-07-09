@@ -10,6 +10,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { CiViewList } from "react-icons/ci";
 
 const ReturnPolicy = () => {
+    const [isYesNoOpen, setIsYesNoOpen] = useState(false);
     const [originalListPolicy, setOriginalListPolicy] = useState([]);
     const [listPolicy, setListPolicy] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,11 +18,24 @@ const ReturnPolicy = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [newPolicy, setNewPolicy] = useState({ description: '', effectiveDate: '', status: 'active' });
-    const policysPerPage = 10;
+
+    const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
+
+    const [searchQuery, setSearchQuery] = useState('');
+    const [totalPages, setTotalPages] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const policyPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
+    const [ascending, setAscending] = useState(true);
+    const [errors, setErrors] = useState({});
+
 
     useEffect(() => {
+
+
         getPolicy();
-    }, []);
+
+
+    }, [pageSize, currentPage, searchQuery, ascending]);
 
     const getPolicy = async () => {
         try {
@@ -29,18 +43,20 @@ const ReturnPolicy = () => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const res = await axios.get('https://jssatsproject.azurewebsites.net/api/ReturnBuyBackPolicy/GetAll', {
+            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/ReturnBuyBackPolicy/getall?pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
+            console.log('... check policy', res);
             if (res && res.data && res.data.data) {
                 const policys = res.data.data;
                 setOriginalListPolicy(policys);
                 setListPolicy(policys);
+
             }
         } catch (error) {
-            console.error('Error fetching policies:', error);
+            console.error('Error fetching policys:', error);
             if (error.response) {
                 console.error('Error response:', error.response.data);
             } else if (error.request) {
@@ -87,7 +103,18 @@ const ReturnPolicy = () => {
     const handleDetailClick = (policy) => {
         setSelectedPolicy(policy);
     };
+    const validateForm = () => {
+        let tempErrors = {};
+        let today = new Date();
+        if (!newPolicy.description) tempErrors.description = 'Description is required';
+        if (!newPolicy.effectiveDate) tempErrors.effectiveDate = 'effectiveDate is required';
+        else if (newPolicy.effectiveDate < today) {
+            tempErrors.effectiveDate = 'Effective Date must be greater than or equal to Today';
+        }
 
+        setErrors(tempErrors);
+        return Object.keys(tempErrors).length === 0;
+    };
     const handleCreatePolicy = async () => {
         // Validate input
 
@@ -113,6 +140,7 @@ const ReturnPolicy = () => {
                 setOriginalListPolicy([...listPolicy, res.data]);
                 setListPolicy([...listPolicy, res.data]);
                 setIsCreateModalOpen(false);
+                setIsYesNoOpen(false)
                 setNewPolicy({ description: '', effectiveDate: '', status: 'active' });
                 toast.success("Policy created successfully");
 
@@ -139,6 +167,10 @@ const ReturnPolicy = () => {
         const newlinePosition = value.indexOf('\n');
         return newlinePosition !== -1 ? value.substring(newlinePosition + 1) : '';
     }
+    const handleSort = () => {
+        setAscending(!ascending); // Toggle ascending state
+        setCurrentPage(1); // Reset to first page when sorting changes
+    };
 
     const formatEffectiveDate = (date) => {
         if (!date) return '';  // Check if date is undefined or null
@@ -149,37 +181,92 @@ const ReturnPolicy = () => {
             return 'Invalid Date';
         }
     }
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
+        setCurrentPage(1);
+    };
 
-    const indexOfLastPolicy = currentPage * policysPerPage;
-    const indexOfFirstPolicy = indexOfLastPolicy - policysPerPage;
-    const currentPolicys = listPolicy.slice(indexOfFirstPolicy, indexOfLastPolicy);
+    const handleSearch = () => {
+        let filteredPolicys = originalListPolicy;
 
-    const totalPages = Math.ceil(listPolicy.length / policysPerPage);
-    const placeholders = Array.from({ length: policysPerPage - currentPolicys.length });
+        if (searchQuery) {
+            filteredPolicys = filteredPolicys.filter((policy) =>
+                policy.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+
+        setListPolicy(filteredPolicys);
+        setSearchQuery('')
+    };
+    const handleYesNo = () => {
+        if (!validateForm()) return;
+        setIsYesNoOpen(true);
+    };
+    const placeholders = Array.from({ length: pageSize - listPolicy.length });
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline">Return Buy Back Policy List</h1>
-
-                <div className="w-[1200px] overflow-hidden">
-                    <div className='float-left pl-4'>
-                        <button className=' bg-blue-600' onClick={() => setIsCreateModalOpen(true)}>Add new buy back policy</button>
+                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4">Return Buy Back Policy List</h1>
+                <div className="flex justify-between items-center">
+                    <div className="ml-2">
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            onClick={() => setIsCreateModalOpen(true)}
+                        >
+                            Add new buy back policy
+                        </button>
                     </div>
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center">
+                            <label className="block mr-2">Page Size:</label>
+                            <select
+                                value={pageSize}
+                                onChange={(e) => {
+                                    setPageSize(parseInt(e.target.value));
+                                    setCurrentPage(1); // Reset to first page when page size changes
+                                }}
+                                className="px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                {policyPerPageOptions.map((size) => (
+                                    <option key={size} value={size}>{size}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="relative w-[400px]">
+                            <input
+                                type="text"
+                                placeholder="Search by name or description"
+                                value={searchQuery1}
+                                // onChange={handleSearchChange}
+                                className="px-3 py-2 border border-gray-300 rounded-md w-full"
+                            />
+                            <IoIosSearch
+                                className="absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-gray-500"
+                            // onClick={handleSetQuery}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="w-[1200px] overflow-hidden">
+
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
                         <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
                             <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className="py-3 pl-3 rounded-l-lg">Policy ID</th>
+                                <th className="py-3 pl-3 rounded-l-lg"></th>
                                 <th >Name</th>
-                                <th >Effective Date</th>
-                                <th className=" text-center">Status</th>
+                                <th className="cursor-pointer " onClick={handleSort}>
+                                    <span>Effective Date</span>
+                                    <span className=' text-sm mx-2'>{ascending ? '▲' : '▼'}</span>
+                                </th>
+                                <th className=" text-center py-3">Status</th>
                                 <th className=" rounded-r-lg ">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {currentPolicys.map((item, index) => (
+                            {listPolicy.map((item, index) => (
                                 <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3  py-4 text-black">{item.id}</td>
+                                    <td className="rounded-l-lg pl-3 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td >{getNamefromDescription(item.description)}</td>
                                     <td >{formatEffectiveDate(item.effectiveDate)}</td>
                                     <td className="text-center">
@@ -198,8 +285,10 @@ const ReturnPolicy = () => {
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
+
                                 </tr>
                             ))}
+
                         </tbody>
                     </table>
                 </div>
@@ -308,6 +397,8 @@ const ReturnPolicy = () => {
                                 onChange={(e) => setNewPolicy({ ...newPolicy, description: e.target.value })}
                                 className="border border-gray-300 rounded-md py-2 px-4 w-full"
                             />
+                            {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
+
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700">Effective Date</label>
@@ -317,22 +408,14 @@ const ReturnPolicy = () => {
                                 onChange={(e) => setNewPolicy({ ...newPolicy, effectiveDate: e.target.value })}
                                 className="border border-gray-300 rounded-md py-2 px-4 w-full"
                             />
+                            {errors.effectiveDate && <span className="text-red-500 text-sm">{errors.effectiveDate}</span>}
+
                         </div>
-                        <div className="mb-4">
-                            <label className="block text-gray-700">Status</label>
-                            <select
-                                value={newPolicy.status}
-                                onChange={(e) => setNewPolicy({ ...newPolicy, status: e.target.value })}
-                                className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                            >
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                            </select>
-                        </div>
+
                         <div className="flex justify-between">
                             <button
                                 className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
-                                onClick={handleCreatePolicy}
+                                onClick={handleYesNo}
                             >
                                 Create
                             </button>
@@ -343,6 +426,33 @@ const ReturnPolicy = () => {
                                 Cancel
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+            {isYesNoOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                    <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                        <h2 className="text-2xl font-bold text-black mb-4">Confilm to update</h2>
+                        <p>Are you sure to update this product's stall</p>
+
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+                                onClick={handleCreatePolicy}
+                            >
+                                Yes
+                            </button>
+                            <button
+                                type="button"
+                                className="mr-2 ml-0 px-4 py-2 bg-red-500 text-white rounded-md"
+                                onClick={() => setIsYesNoOpen(false)}
+                            >
+                                No
+                            </button>
+                        </div>
+
+
                     </div>
                 </div>
             )}

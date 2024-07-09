@@ -24,7 +24,6 @@ const Sildebar = () => {
 
     const handleLogOut = () => {
         localStorage.clear();
-        toast.success('Sign out successfully!');
     };
 
     return (

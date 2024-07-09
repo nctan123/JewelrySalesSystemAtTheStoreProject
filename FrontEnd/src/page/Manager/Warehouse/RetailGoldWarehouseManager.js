@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 import { CiViewList } from "react-icons/ci";
 import { toast } from 'react-toastify';
 
-const RetailGoldManager = () => {
+const RetailGoldWarehouseManager = () => {
     const scrollRef = useRef(null);
     const [isYesNoOpen, setIsYesNoOpen] = useState(false);
 
@@ -127,7 +127,7 @@ const RetailGoldManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=5&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=5&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=true`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -185,7 +185,7 @@ const RetailGoldManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=5&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=5&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=true`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -284,12 +284,7 @@ const RetailGoldManager = () => {
                                     <td >{item.categoryName}</td>
                                     <td> {item.code} </td>
                                     <td>{item.name}</td>
-                                    {/* <td > <img src={logo} className="w-20 h-20" /> </td> */}
-                                    <td>
-                                        {' '}
-                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
-                                        {/* {item.img} */}
-                                    </td>
+                                    <td > <img src={logo} className="w-20 h-20" /> </td>
                                     <td >{formatCurrency(item.productValue)}</td>
                                     <td >
                                         {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}
@@ -436,4 +431,4 @@ const RetailGoldManager = () => {
     )
 }
 
-export default RetailGoldManager
+export default RetailGoldWarehouseManager
