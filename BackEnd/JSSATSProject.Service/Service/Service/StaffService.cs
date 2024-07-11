@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
@@ -36,7 +37,7 @@ public class StaffService : IStaffService
         };
     }
 
-    public async Task<ResponseModel> GetAllAsync(DateTime startDate, DateTime endDate, int pageIndex, int pageSize,
+    public async Task<ResponseModel> GetAllSellerAsync(DateTime startDate, DateTime endDate, int pageIndex, int pageSize,
     string sortBy, bool ascending)
     {
         try
@@ -81,6 +82,7 @@ public class StaffService : IStaffService
 
             // Fetch staff entities with SellOrders and BuyOrders included, apply filter, sorting, and pagination
             var entities = await _unitOfWork.StaffRepository.GetAsync(
+                filter: s => s.Account.Role.Name == RoleConstants.Seller,
                 orderBy: orderBy,
                 pageIndex: pageIndex,
                 pageSize: pageSize,
@@ -137,26 +139,29 @@ public class StaffService : IStaffService
 
 
 
-    public async Task<ResponseModel> SearchAsync(string nameSearch, DateTime startDate, DateTime endDate, int pageIndex,
-    int pageSize)
+    public async Task<ResponseModel> SearchSellerAsync(string nameSearch, DateTime startDate, DateTime endDate, int pageIndex, int pageSize)
     {
-        // Define filter based on name search
-        Expression<Func<Staff, bool>> filter = null;
+        // Define filter based on role name
+        Expression<Func<Staff, bool>> filter = staff => staff.Account.Role.Name == RoleConstants.Seller;
+
+        // Add name search filter if provided
         if (!string.IsNullOrEmpty(nameSearch))
+        {
             filter = staff =>
-                staff.Firstname.Contains(nameSearch) ||
-                staff.Lastname.Contains(nameSearch);
+                staff.Account.Role.Name == RoleConstants.Seller &&
+                (staff.Firstname.Contains(nameSearch) || staff.Lastname.Contains(nameSearch));
+        }
 
         // Define ordering by total sell orders count
         Func<IQueryable<Staff>, IOrderedQueryable<Staff>> orderBy = q => q.OrderByDescending(s => s.SellOrders.Count);
 
         // Fetch staff entities with SellOrders and BuyOrders included, apply filter, sorting, and pagination
         var staffEntities = await _unitOfWork.StaffRepository.GetAsync(
-            filter,
-            orderBy,
+            filter: filter,
+            orderBy: orderBy,
             pageIndex: pageIndex,
             pageSize: pageSize,
-            includeProperties: "SellOrders,BuyOrders");
+            includeProperties: "SellOrders,BuyOrders,Account.Role");
 
         // Map entities to response model
         var responseList = staffEntities.Select(entity =>
@@ -323,12 +328,12 @@ public class StaffService : IStaffService
             Gender = staff.Gender,
             Status = staff.Status,
             TotalRevenue = staff.SellOrders
-                .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == "completed")
+                .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
                 .Sum(so => so.TotalAmount),
             TotalSellOrder = staff.SellOrders
-                .Count(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == "completed"),
+                .Count(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus),
             TotalBuyOrder = staff.BuyOrders
-                .Count(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == "completed")
+                .Count(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == OrderConstants.CompletedStatus)
         };
 
         return new ResponseModel
@@ -337,7 +342,7 @@ public class StaffService : IStaffService
         };
     }
 
-    public async Task<ResponseModel> GetSellOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize)
+    public async Task<ResponseModel> GetSellOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -359,10 +364,13 @@ public class StaffService : IStaffService
                 };
             }
 
-            var totalCount = staffEntity.SellOrders.Count();
+            var filteredOrders = staffEntity.SellOrders
+                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate && order.Status == OrderConstants.CompletedStatus);
+
+            var totalCount = filteredOrders.Count();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            var paginatedOrders = staffEntity.SellOrders
+            var paginatedOrders = filteredOrders
                 .OrderByDescending(order => order.CreateDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -404,11 +412,10 @@ public class StaffService : IStaffService
         }
     }
 
-    public async Task<ResponseModel> GetBuyOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize)
+    public async Task<ResponseModel> GetBuyOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
     {
         try
         {
-            // Fetch the staff by ID and include BuyOrders and related properties
             var staffEntity = (await _unitOfWork.StaffRepository.GetAsync(
                     s => s.Id == staffId,
                     includeProperties:
@@ -428,23 +435,29 @@ public class StaffService : IStaffService
                 };
             }
 
-            // Get the total count of buy orders
-            var totalCount = staffEntity.BuyOrders.Count();
+            var filteredOrders = staffEntity.BuyOrders
+                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate && order.Status == OrderConstants.CompletedStatus);
+
+            var totalCount = filteredOrders.Count();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            // Paginate the buy orders
-            var buyOrders = staffEntity.BuyOrders
+            var paginatedOrders = filteredOrders
                 .OrderByDescending(order => order.CreateDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
-                .Select(order =>
-                {
-                    var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
-                    responseBuyOrder.BuyOrderDetails =
-                        _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
-                    return responseBuyOrder;
-                })
                 .ToList();
+
+            var buyOrders = new List<ResponseBuyOrder>();
+            foreach (var order in paginatedOrders)
+            {
+                var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
+
+                // Map buy order details
+                responseBuyOrder.BuyOrderDetails =
+                    _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
+
+                buyOrders.Add(responseBuyOrder);
+            }
 
             return new ResponseModel
             {
@@ -478,7 +491,7 @@ public class StaffService : IStaffService
         return finalPrice;
     }
 
-    public async Task<ResponseModel> SearchSellOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize)
+    public async Task<ResponseModel> SearchSellOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -501,13 +514,24 @@ public class StaffService : IStaffService
                 };
             }
 
-            var sellOrders = staffEntity.SellOrders.Where(s => s.Code.Contains(orderCode)).ToList();
+            var sellOrders = staffEntity.SellOrders
+                .Where(order => order.Code.Contains(orderCode) &&
+                                order.CreateDate >= startDate &&
+                                order.CreateDate <= endDate &&
+                                order.Status == OrderConstants.CompletedStatus)
+                .ToList();
+
             var totalCount = sellOrders.Count;
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            // Process each sell order asynchronously
+            var paginatedOrders = sellOrders
+                .OrderByDescending(order => order.CreateDate)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
             var responseSellOrders = new List<ResponseSellOrder>();
-            foreach (var order in sellOrders)
+            foreach (var order in paginatedOrders)
             {
                 var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
 
@@ -542,7 +566,7 @@ public class StaffService : IStaffService
         }
     }
 
-    public async Task<ResponseModel> SearchBuyOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize)
+    public async Task<ResponseModel> SearchBuyOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -565,27 +589,39 @@ public class StaffService : IStaffService
                 };
             }
 
-            var buyOrders = staffEntity.BuyOrders.Where(b => b.Code.Contains(orderCode)).ToList();
+            var buyOrders = staffEntity.BuyOrders
+                .Where(order => order.Code.Contains(orderCode) &&
+                                order.CreateDate >= startDate &&
+                                order.CreateDate <= endDate &&
+                                order.Status == OrderConstants.CompletedStatus)
+                .ToList();
+
             var totalCount = buyOrders.Count;
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            var paginatedBuyOrders = buyOrders
+            var paginatedOrders = buyOrders
                 .OrderByDescending(order => order.CreateDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
-                .Select(order =>
-                {
-                    var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
-                    responseBuyOrder.BuyOrderDetails = _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
-                    return responseBuyOrder;
-                })
                 .ToList();
+
+            var responseBuyOrders = new List<ResponseBuyOrder>();
+            foreach (var order in paginatedOrders)
+            {
+                var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
+
+                // Map buy order details
+                responseBuyOrder.BuyOrderDetails =
+                    _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
+
+                responseBuyOrders.Add(responseBuyOrder);
+            }
 
             return new ResponseModel
             {
                 TotalPages = totalPages,
                 TotalElements = totalCount,
-                Data = paginatedBuyOrders,
+                Data = responseBuyOrders,
                 MessageError = ""
             };
         }
@@ -600,6 +636,18 @@ public class StaffService : IStaffService
                 TotalElements = 0
             };
         }
+    }
+
+    public async Task<ResponseModel> GetByIdAsync(int Id)
+    {
+        var response =  await _unitOfWork.StaffRepository.GetByIDAsync(Id);
+        return new ResponseModel
+        {
+         
+            Data = response,
+         
+        };
+
     }
 
 }

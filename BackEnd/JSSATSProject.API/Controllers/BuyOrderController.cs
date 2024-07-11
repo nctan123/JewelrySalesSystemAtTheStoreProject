@@ -5,6 +5,7 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
@@ -17,14 +18,16 @@ public class BuyOrderController : ControllerBase
     private readonly ICustomerService _customerService;
     private readonly IMapper _mapper;
     private readonly ISellOrderService _sellOrderService;
+    private readonly IBuyOrderDetailService _buyOrderDetailService;
 
     public BuyOrderController(IMapper mapper, ISellOrderService sellOrderService, IBuyOrderService buyOrderService,
-        ICustomerService customerService)
+        ICustomerService customerService, IBuyOrderDetailService buyOrderDetailService)
     {
         _mapper = mapper;
         _sellOrderService = sellOrderService;
         _buyOrderService = buyOrderService;
         _customerService = customerService;
+        _buyOrderDetailService = buyOrderDetailService;
     }
 
     [HttpGet]
@@ -147,5 +150,29 @@ public class BuyOrderController : ControllerBase
     {
         var result = await _buyOrderService.GetByIdAsync(Id);
         return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("SumTotalAmountOrderByDateTime")]
+    public async Task<IActionResult> SumTotalAmountOrderAsync(DateTime startDate, DateTime endDate)
+    {
+        var responseModel = await _buyOrderService.SumTotalAmountOrderByDateTimeAsync(startDate, endDate);
+        return Ok(responseModel);
+    }
+
+    [HttpGet]
+    [Route("CountOrderByDateTime")]
+    public async Task<IActionResult> CountOrderByDatetimeAsync(DateTime startDate, DateTime endDate)
+    {
+        var responseModel = await _buyOrderService.CountOrderByDateTimeAsync(startDate, endDate);
+        return Ok(responseModel);
+    }
+
+    [HttpGet]
+    [Route("CountProductsSoldByCategory")]
+    public async Task<IActionResult> CountProductsSoldByCategoryAsync(DateTime startDate, DateTime endDate)
+    {
+        var responseModel = await _buyOrderDetailService.CountProductsSoldByCategoryAsync(startDate, endDate);
+        return Ok(responseModel);
     }
 }

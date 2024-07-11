@@ -390,4 +390,34 @@ public class BuyOrderService : IBuyOrderService
 
         return newCode;
     }
+
+    public async Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
+    {
+        Expression<Func<BuyOrder, bool>> filter = order =>
+            order.CreateDate >= startDate && order.CreateDate <= endDate &&
+            order.Status.Equals(OrderConstants.CompletedStatus);
+
+        var sum = await _unitOfWork.BuyOrderRepository.SumAsync(filter, order => order.TotalAmount);
+
+        return new ResponseModel
+        {
+            Data = sum,
+            MessageError = sum == 0 ? "Not Found" : null
+        };
+    }
+
+    public async Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
+    {
+        Expression<Func<BuyOrder, bool>> filter = order =>
+            order.CreateDate >= startDate && order.CreateDate <= endDate &&
+            order.Status.Equals(OrderConstants.CompletedStatus);
+
+        var count = await _unitOfWork.BuyOrderRepository.CountAsync(filter);
+
+        return new ResponseModel
+        {
+            Data = count,
+            MessageError = count == 0 ? "Not Found" : null
+        };
+    }
 }

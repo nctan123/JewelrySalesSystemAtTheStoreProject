@@ -31,4 +31,8 @@ public interface IBuyOrderService
 
     Task<ResponseModel> SearchByCriteriaAsync(List<string> statusList, string customerPhone, bool ascending,
         int pageIndex, int pageSize);
+
+    public Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate);
+
+    public Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate);
 }
