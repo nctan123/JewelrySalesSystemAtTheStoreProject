@@ -43,6 +43,7 @@ public class VnPayLibrary
         var paymentId = orderInfoParts.Length > 2 ? orderInfoParts[2] : string.Empty;
         var orderId = orderInfoParts.Length > 2 ? orderInfoParts[0] : string.Empty;
         var paymentMethodId = orderInfoParts.Length > 2 ? orderInfoParts[3] : string.Empty;
+        var ReturnUrl = orderInfoParts.Length > 2 ? orderInfoParts[4] : string.Empty;
 
         if (vnpResponseCode == "00" && vnpTransactionStatus == "00")
         {
@@ -58,6 +59,7 @@ public class VnPayLibrary
                 VnPayResponseCode = vnpResponseCode,
                 PaymentMethodId = paymentMethodId,
                 VnPayTranStatus = vnpTransactionStatus,
+                ReturnUrl = ReturnUrl,
                 Message = "The transaction was successfully completed. Thank you for using our service."
             };
         }
@@ -75,6 +77,7 @@ public class VnPayLibrary
                 VnPayResponseCode = vnpResponseCode,
                 PaymentMethodId = paymentMethodId,
                 VnPayTranStatus = vnpTransactionStatus,
+                ReturnUrl = ReturnUrl,
                 Message = $"An error occurred during processing. Error code: {vnpResponseCode}"
             };
         }

@@ -76,10 +76,42 @@ public class BuyOrderService : IBuyOrderService
         return result;
     }
 
-    public Task<ResponseModel> GetByIdAsync(int id)
+    public async Task<ResponseModel> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        // Fetch the entities with the required related properties
+        var entities = await _unitOfWork.BuyOrderRepository.GetAsync(
+            filter: q => q.Id == id,
+            includeProperties:
+            "BuyOrderDetails,Customer,Staff," +
+            "BuyOrderDetails.PurchasePriceRatio,BuyOrderDetails.Material,BuyOrderDetails.CategoryType"
+        );
+
+        // Get the first matching entity
+        var entity = entities.FirstOrDefault();
+
+        // If entity is not found, return an error message
+        if (entity == null)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "BuyOrder not found"
+            };
+        }
+
+        // Map the entity to the response model
+        var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(entity);
+        responseBuyOrder.BuyOrderDetails = _mapper.Map<List<ResponseBuyOrderDetail>>(entity.BuyOrderDetails);
+
+        // Return the response model
+        return new ResponseModel
+        {
+            Data = responseBuyOrder,
+            MessageError = ""
+        };
     }
+
+
 
     public async Task<ResponseModel> CreateAsync(BuyOrder entity)
     {

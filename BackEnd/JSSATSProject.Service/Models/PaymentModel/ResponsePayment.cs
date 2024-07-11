@@ -4,9 +4,9 @@ public class ResponsePayment
 {
     public int Id { get; set; }
 
-    public int? SellOrderId { get; set; }
+    public int? SellorderId { get; set; }
 
-    public int? BuyOrderId { get; set; }
+    public int? BuyorderId { get; set; }
     public string? SellOrderCode { get; set; }
 
     public string? BuyOrderCode { get; set; }
@@ -14,6 +14,8 @@ public class ResponsePayment
     public string CustomerPhone { get; set; }
 
     public string CustomerName { get; set; }
+
+    public int CustomerId { get; set; }
 
     public DateTime CreateDate { get; set; }
 

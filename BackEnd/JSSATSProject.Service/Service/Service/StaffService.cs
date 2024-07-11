@@ -4,6 +4,10 @@ using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
+using JSSATSProject.Service.Models.BuyOrderDetailModel;
+using JSSATSProject.Service.Models.BuyOrderModel;
+using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Service.IService;
 
@@ -294,7 +298,7 @@ public class StaffService : IStaffService
         };
     }
 
-    public async Task<ResponseModel> GetByIdAsync(int id, DateTime startDate, DateTime endDate)
+    public async Task<ResponseModel> GetStaffSymmaryAsync(int id, DateTime startDate, DateTime endDate)
     {
         var staff = (await _unitOfWork.StaffRepository.GetAsync(
             filter: s => s.Id == id,
@@ -307,7 +311,6 @@ public class StaffService : IStaffService
                 Data = null
             };
         }
-
         var responseStaff = new ResponseStaff
         {
             Id = staff.Id,
@@ -325,13 +328,7 @@ public class StaffService : IStaffService
             TotalSellOrder = staff.SellOrders
                 .Count(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == "completed"),
             TotalBuyOrder = staff.BuyOrders
-                .Count(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == "completed"),
-            BuyOrders = staff.BuyOrders
-                .Where(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate)
-                .ToList(),
-            SellOrders = staff.SellOrders
-                .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate)
-                .ToList()
+                .Count(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == "completed")
         };
 
         return new ResponseModel
@@ -340,7 +337,269 @@ public class StaffService : IStaffService
         };
     }
 
+    public async Task<ResponseModel> GetSellOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize)
+    {
+        try
+        {
+            var staffEntity = (await _unitOfWork.StaffRepository.GetAsync(
+                    s => s.Id == staffId,
+                    includeProperties:
+                    "SellOrders,SellOrders.SellOrderDetails,SellOrders.SpecialDiscountRequest," +
+                    "SellOrders.Payments.PaymentDetails.PaymentMethod,SellOrders.SellOrderDetails.Product,SellOrders.SellOrderDetails.Promotion"))
+                .FirstOrDefault();
 
-    
+            if (staffEntity == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found",
+                    TotalPages = 0,
+                    TotalElements = 0
+                };
+            }
+
+            var totalCount = staffEntity.SellOrders.Count();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var paginatedOrders = staffEntity.SellOrders
+                .OrderByDescending(order => order.CreateDate)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            var sellOrders = new List<ResponseSellOrder>();
+            foreach (var order in paginatedOrders)
+            {
+                var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
+
+                // Calculate final price
+                responseSellOrder.FinalAmount = await GetFinalPriceAsync(order);
+
+                // Map sell order details
+                responseSellOrder.SellOrderDetails =
+                    _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
+
+                sellOrders.Add(responseSellOrder);
+            }
+
+            return new ResponseModel
+            {
+                TotalPages = totalPages,
+                TotalElements = totalCount,
+                Data = sellOrders,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = $"An error occurred: {ex.Message}",
+                TotalPages = 0,
+                TotalElements = 0
+            };
+        }
+    }
+
+    public async Task<ResponseModel> GetBuyOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize)
+    {
+        try
+        {
+            // Fetch the staff by ID and include BuyOrders and related properties
+            var staffEntity = (await _unitOfWork.StaffRepository.GetAsync(
+                    s => s.Id == staffId,
+                    includeProperties:
+                    "BuyOrders,BuyOrders.BuyOrderDetails," +
+                    "BuyOrders.BuyOrderDetails.PurchasePriceRatio," +
+                    "BuyOrders.BuyOrderDetails.Material,BuyOrders.BuyOrderDetails.CategoryType"))
+                .FirstOrDefault();
+
+            if (staffEntity == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found",
+                    TotalPages = 0,
+                    TotalElements = 0
+                };
+            }
+
+            // Get the total count of buy orders
+            var totalCount = staffEntity.BuyOrders.Count();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // Paginate the buy orders
+            var buyOrders = staffEntity.BuyOrders
+                .OrderByDescending(order => order.CreateDate)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .Select(order =>
+                {
+                    var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
+                    responseBuyOrder.BuyOrderDetails =
+                        _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
+                    return responseBuyOrder;
+                })
+                .ToList();
+
+            return new ResponseModel
+            {
+                TotalPages = totalPages,
+                TotalElements = totalCount,
+                Data = buyOrders,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = $"An error occurred: {ex.Message}",
+                TotalPages = 0,
+                TotalElements = 0
+            };
+        }
+    }
+
+    public async Task<decimal> GetFinalPriceAsync(SellOrder sellOrder)
+    {
+        var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
+        var discountPoint = sellOrder.DiscountPoint;
+        var specialDiscountRequest = sellOrder.SpecialDiscountRequest;
+        var specialDiscountRate = (specialDiscountRequest?.DiscountRate).GetValueOrDefault(0);
+        if (specialDiscountRequest?.Status == SpecialDiscountRequestConstants.RejectedStatus) specialDiscountRate = 0;
+        decimal finalPrice = (sellOrder!.TotalAmount - discountPoint * pointRate) * (1 - specialDiscountRate);
+        return finalPrice;
+    }
+
+    public async Task<ResponseModel> SearchSellOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize)
+    {
+        try
+        {
+            var staff = await _unitOfWork.StaffRepository.GetAsync(
+                s => s.Id == staffId,
+                includeProperties:
+                    "SellOrders,SellOrders.SellOrderDetails,SellOrders.SpecialDiscountRequest," +
+                    "SellOrders.Payments.PaymentDetails.PaymentMethod,SellOrders.SellOrderDetails.Product,SellOrders.SellOrderDetails.Promotion");
+
+            var staffEntity = staff.FirstOrDefault();
+
+            if (staffEntity == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found",
+                    TotalPages = 0,
+                    TotalElements = 0
+                };
+            }
+
+            var sellOrders = staffEntity.SellOrders.Where(s => s.Code.Contains(orderCode)).ToList();
+            var totalCount = sellOrders.Count;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // Process each sell order asynchronously
+            var responseSellOrders = new List<ResponseSellOrder>();
+            foreach (var order in sellOrders)
+            {
+                var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
+
+                // Calculate final price
+                responseSellOrder.FinalAmount = await GetFinalPriceAsync(order);
+
+                // Map sell order details
+                responseSellOrder.SellOrderDetails =
+                    _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
+
+                responseSellOrders.Add(responseSellOrder);
+            }
+
+            return new ResponseModel
+            {
+                TotalPages = totalPages,
+                TotalElements = totalCount,
+                Data = responseSellOrders,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = $"An error occurred: {ex.Message}",
+                TotalPages = 0,
+                TotalElements = 0
+            };
+        }
+    }
+
+    public async Task<ResponseModel> SearchBuyOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize)
+    {
+        try
+        {
+            var staff = await _unitOfWork.StaffRepository.GetAsync(
+                s => s.Id == staffId,
+                includeProperties: "BuyOrders,BuyOrders.BuyOrderDetails," +
+                                   "BuyOrders.BuyOrderDetails.PurchasePriceRatio," +
+                                   "BuyOrders.BuyOrderDetails.Material,BuyOrders.BuyOrderDetails.CategoryType");
+
+            var staffEntity = staff.FirstOrDefault();
+
+            if (staffEntity == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Staff not found",
+                    TotalPages = 0,
+                    TotalElements = 0
+                };
+            }
+
+            var buyOrders = staffEntity.BuyOrders.Where(b => b.Code.Contains(orderCode)).ToList();
+            var totalCount = buyOrders.Count;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            var paginatedBuyOrders = buyOrders
+                .OrderByDescending(order => order.CreateDate)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .Select(order =>
+                {
+                    var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
+                    responseBuyOrder.BuyOrderDetails = _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
+                    return responseBuyOrder;
+                })
+                .ToList();
+
+            return new ResponseModel
+            {
+                TotalPages = totalPages,
+                TotalElements = totalCount,
+                Data = paginatedBuyOrders,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = $"An error occurred: {ex.Message}",
+                TotalPages = 0,
+                TotalElements = 0
+            };
+        }
+    }
 
 }

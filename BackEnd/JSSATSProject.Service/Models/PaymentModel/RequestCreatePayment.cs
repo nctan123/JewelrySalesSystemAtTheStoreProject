@@ -11,4 +11,5 @@ public class RequestCreatePayment
     
     [Range(0, (double)decimal.MaxValue)]
     public decimal Amount { get; set; }
+  
 }

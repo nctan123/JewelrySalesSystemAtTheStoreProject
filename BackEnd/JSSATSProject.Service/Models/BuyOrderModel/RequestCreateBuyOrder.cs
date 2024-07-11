@@ -1,3 +1,4 @@
+using JSSATSProject.Repository.CustomValidators;
 using System.ComponentModel.DataAnnotations;
 
 namespace JSSATSProject.Service.Models.BuyOrderModel;
@@ -5,7 +6,7 @@ namespace JSSATSProject.Service.Models.BuyOrderModel;
 public class RequestCreateBuyOrder
 {
     [Required]
-    [Phone]
+    [VietnamesePhone(ErrorMessage = "{0} must be a valid Vietnamese phone number.")]
     public required string CustomerPhoneNumber { get; set; }
     [Required]
     public required int StaffId { get; set; }

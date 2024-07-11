@@ -40,8 +40,8 @@ public class VnPayService : IVnPayService
         pay.AddRequestData("vnp_IpAddr", pay.GetIpAddress(context));
         pay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
         pay.AddRequestData("vnp_OrderInfo",
-            $"{(model.OrderId)} {model.Amount} {model.PaymentId} {model.PaymentMethodId}");
-        pay.AddRequestData("vnp_ReturnUrl", urlCallBack);
+            $"{(model.OrderId)} {model.Amount} {model.PaymentId} {model.PaymentMethodId} {model.ReturnUrl}");
+        pay.AddRequestData("vnp_ReturnUrl", model.ReturnUrl);
         pay.AddRequestData("vnp_TxnRef", tick);
 
         pay.AddRequestData("vnp_OrderType", "Buy");
@@ -55,8 +55,6 @@ public class VnPayService : IVnPayService
     {
         var pay = new VnPayLibrary();
         var response = pay.GetFullResponseData(collections, _configuration["Vnpay:HashSecret"]);
-
-
         return response;
     }
 }

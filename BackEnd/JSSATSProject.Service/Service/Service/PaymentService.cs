@@ -63,14 +63,36 @@ public class PaymentService : IPaymentService
 
     public async Task<ResponseModel> GetByIdAsync(int id)
     {
-        var entity = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+        // Fetch payment entities with the required related properties
+        var entities = await _unitOfWork.PaymentRepository.GetAsync(
+            filter: p => p.Id == id,
+            includeProperties: "Sellorder,Buyorder,PaymentDetails,Customer,PaymentDetails.PaymentMethod"
+        );
+
+        // Get the first matching entity (or null if none found)
+        var entity = entities.FirstOrDefault();
+
+        // If entity is not found, return an error message
+        if (entity == null)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Payment not found"
+            };
+        }
+
+        // Map the entity to the response model
         var response = _mapper.Map<ResponsePayment>(entity);
+
+        // Return the response model
         return new ResponseModel
         {
             Data = response,
             MessageError = ""
         };
     }
+
 
     public async Task<ResponseModel> UpdatePaymentAsync(int paymentId, RequestUpdatePayment requestPayment)
     {
@@ -110,14 +132,14 @@ public class PaymentService : IPaymentService
     public async Task<int?> GetSellOrderIdByPaymentIdAsync(int id)
     {
         var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-        if (payment.SellorderId == null) return 0;
+        if (payment.SellorderId == null) return null;
         return payment.SellorderId;
     }
 
     public async Task<int?> GetBuyOrderIdByPaymentIdAsync(int id)
     {
         var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-        if (payment.BuyorderId == null) return 0;
+        if (payment.BuyorderId == null) return null;
         return payment.BuyorderId;
     }
 

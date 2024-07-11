@@ -22,7 +22,7 @@ public partial class BuyOrder
     public string Code { get; set; }
 
     public virtual ICollection<BuyOrderDetail> BuyOrderDetails { get; set; } = new List<BuyOrderDetail>();
-
+    [JsonIgnore]
     public virtual Customer Customer { get; set; }
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

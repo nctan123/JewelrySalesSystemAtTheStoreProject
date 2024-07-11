@@ -1,5 +1,7 @@
-﻿using JSSATSProject.Service.Models.PointModel;
+﻿using Azure;
+using JSSATSProject.Service.Models.PointModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
@@ -9,10 +11,12 @@ namespace JSSATSProject.API.Controllers;
 public class PointController : ControllerBase
 {
     private readonly IPointService _pointService;
+    private readonly ISellOrderService _sellOrderService;
 
-    public PointController(IPointService pointService)
+    public PointController(IPointService pointService, ISellOrderService sellOrderService)
     {
         _pointService = pointService;
+        _sellOrderService = sellOrderService;
     }
 
     [HttpGet]
@@ -42,10 +46,14 @@ public class PointController : ControllerBase
 
     [HttpPut]
     [Route("UpdatePoint")]
-    public async Task<IActionResult> UpdatePointAsync(int pointId, [FromBody] RequestUpdatePoint requestPoint)
+    public async Task<IActionResult> UpdatePointAsync(int orderId)
     {
-        var response = await _pointService.UpdatePointAsync(pointId, requestPoint);
-        return Ok(response);
+        var sellorder = await _sellOrderService.GetEntityByIdAsync(orderId);
+        var discountPoint = sellorder.DiscountPoint;
+        var customerPhone = sellorder.Customer.Phone;
+        var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
+        await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
+        return Ok();
     }
 
     [HttpPost]
@@ -56,4 +64,5 @@ public class PointController : ControllerBase
             requestGetPointForOrder.CustomerPhoneNumber, requestGetPointForOrder.TotalOrderPrice);
         return Ok(response);
     }
+
 }

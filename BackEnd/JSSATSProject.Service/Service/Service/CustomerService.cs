@@ -211,8 +211,8 @@ public class CustomerService : ICustomerService
                     c => c.Phone.Equals(phoneNumber),
                     includeProperties:
                     "SellOrders,SellOrders.SellOrderDetails,SellOrders.Staff," +
-                    "SellOrders.SpecialDiscountRequest," +
-                    "SellOrders.SellOrderDetails.Product"))
+                    "SellOrders.SpecialDiscountRequest,SellOrders.Payments.PaymentDetails.PaymentMethod," +
+                    "SellOrders.SellOrderDetails.Product," + "SellOrders.SellOrderDetails.Promotion"))
                 .FirstOrDefault();
 
             if (customerEntity == null)
@@ -303,6 +303,7 @@ public class CustomerService : ICustomerService
 
             // Paginate the payments
             var payments = customerEntity.Payments
+                .Where(p => p.SellorderId != null)
                 .OrderByDescending(payment => payment.CreateDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -476,23 +477,34 @@ public class CustomerService : ICustomerService
         var totalCount = sellOrders.Count;
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-        var paginatedSellOrders = sellOrders
+        // Paginate the sell orders
+        var paginatedOrders = sellOrders
             .OrderByDescending(order => order.CreateDate)
             .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
-            .Select(order =>
-            {
-                var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
-                responseSellOrder.SellOrderDetails = _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
-                return responseSellOrder;
-            })
             .ToList();
+
+        // Process each sell order asynchronously
+        var responseSellOrders = new List<ResponseSellOrder>();
+        foreach (var order in paginatedOrders)
+        {
+            var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
+
+            // Calculate final price
+            responseSellOrder.FinalAmount = await GetFinalPriceAsync(order);
+
+            // Map sell order details
+            responseSellOrder.SellOrderDetails =
+                _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
+
+            responseSellOrders.Add(responseSellOrder);
+        }
 
         return new ResponseModel
         {
             TotalPages = totalPages,
             TotalElements = totalCount,
-            Data = paginatedSellOrders,
+            Data = responseSellOrders,
             MessageError = ""
         };
     }

@@ -1,5 +1,6 @@
 ﻿using JSSATSProject.Service.Models.StaffModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
@@ -67,14 +68,46 @@ public class StaffController : ControllerBase
     }
 
     [HttpGet]
-    [Route("GetById")]
-    public async Task<IActionResult> GetById([FromQuery] int id, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+    [Route("GetStaffSymmary")]
+    public async Task<IActionResult> GetStaffSymmary([FromQuery] int id, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
     {
-        var response = await _staffService.GetByIdAsync(id, startDate, endDate);
+        var response = await _staffService.GetStaffSymmaryAsync(id, startDate, endDate);
         if (response.Data == null)
         {
             return NotFound(response.MessageError);
         }
         return Ok(response);
+    }
+
+    [HttpGet]
+    [Route("GetSellOrderByStaffId")]
+    public async Task<IActionResult> GetSellOrdersByStaffIdAsync(int id, int pageIndex, int pageSize)
+    {
+        var responseModel = await _staffService.GetSellOrdersByStaffIdAsync(id, pageIndex, pageSize);
+        return Ok(responseModel);
+    }
+
+    [HttpGet]
+    [Route("GetBuyOrdersStaffId")]
+    public async Task<IActionResult> GetBuyOrdersStaffIdAsync(int id, int pageIndex, int pageSize)
+    {
+        var responseModel = await _staffService.GetBuyOrdersByStaffIdAsync(id, pageIndex, pageSize);
+        return Ok(responseModel);
+    }
+
+    [HttpGet]
+    [Route("SearchSellOrders")]
+    public async Task<IActionResult> SearchSellOrders(int id, string orderCode, int pageIndex = 1, int pageSize = 10)
+    {
+        var result = await _staffService.SearchSellOrdersByStaffIdAsync(id, orderCode, pageIndex, pageSize);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("SearchBuyOrders")]
+    public async Task<IActionResult> SearchBuyOrders(int id, string orderCode, int pageIndex = 1, int pageSize = 10)
+    {
+        var result = await _staffService.SearchBuyOrdersByStaffIdAsync(id, orderCode, pageIndex, pageSize);
+        return Ok(result);
     }
 }

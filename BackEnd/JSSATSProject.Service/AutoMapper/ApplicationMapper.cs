@@ -59,6 +59,10 @@ public class ApplicationMapper : Profile
             .ForMember(dest => dest.CustomerName,
                 opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
             .ForMember(dest => dest.CustomerPhoneNumber, opt => opt.MapFrom(src => src.Customer.Phone))
+            .ForMember(dest => dest.PaymentMethod, opt => opt.MapFrom(src => src.Payments
+                                                                                .SelectMany(p => p.PaymentDetails)
+                                                                                .Select(pd => pd.PaymentMethod.Name)
+                                                                                 .FirstOrDefault()))
             .ReverseMap()
             .ForMember(dest => dest.BuyOrderDetails, opt => opt.Ignore())
             ;
@@ -66,6 +70,7 @@ public class ApplicationMapper : Profile
         //BuyOrderDetail
         CreateMap<BuyOrderDetail, ResponseBuyOrderDetail>()
             .ForMember(dest => dest.CategoryType, opt => opt.MapFrom(src => src.CategoryType.Name))
+            .ForMember(dest => dest.CaregoryId, opt => opt.MapFrom(src => src.CategoryType.Id))
             .ForMember(dest => dest.MaterialName, opt => opt.MapFrom(src => src.Material.Name))
             .ForMember(dest => dest.PurchasePriceRatio, opt => opt.MapFrom(src => src.PurchasePriceRatio.Percentage))
             .ReverseMap();
@@ -143,6 +148,9 @@ public class ApplicationMapper : Profile
                                                                                 .SelectMany(p => p.PaymentDetails)
                                                                                 .Select(pd => pd.PaymentMethod.Name)
                                                                                  .FirstOrDefault()))
+            .ForMember(dest => dest.PaymentId, opt => opt.MapFrom(src => src.Payments
+                                                                     .Select(p => p.Id)
+                                                                     .FirstOrDefault()))
             .ReverseMap();
 
         CreateMap<SellOrderDetail, ResponseSellOrderDetails>()
@@ -167,6 +175,7 @@ public class ApplicationMapper : Profile
                 .ForMember(dest => dest.BuyOrderCode,opt => opt.MapFrom(src => src.Buyorder.Code))
                 .ForMember(dest => dest.CustomerName, opt => opt.MapFrom(src => string.Join(" ", src.Customer.Firstname, src.Customer.Lastname)))
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.Phone))
+                .ForMember(dest => dest.CustomerId,opt => opt.MapFrom(src => src.Customer.Id))
                 .ReverseMap();
 
         //Point

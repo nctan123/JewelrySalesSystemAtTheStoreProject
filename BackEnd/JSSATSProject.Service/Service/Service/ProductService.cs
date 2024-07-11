@@ -86,23 +86,24 @@ public class ProductService : IProductService
                  or ProductConstants.WholesaleGoldCategory
                 )
         {
-            //not all product has diamond (retail gold, wholesale gold,...)
-            if (diamond is not null)
-                diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
-                    diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors,
-                    closestDate);
-
             //except diamond category, all the rest product categories has material 
             var productMaterial = correspondingProduct.ProductMaterials!.First();
             var closestPriceList = productMaterial.Material.MaterialPriceLists
                 .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
                 .First();
 
+            if (correspondingProduct.CategoryId is ProductConstants.WholesaleGoldCategory)
+                return closestPriceList.SellPrice * priceRate;
+
+            //not all product has diamond (retail gold, wholesale gold,...)
+            if (diamond is not null)
+                diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
+                    diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors,
+                    closestDate);
+
             var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
             totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
-            if (correspondingProduct.CategoryId != ProductConstants.RetailGoldCategory &&
-                correspondingProduct.CategoryId != ProductConstants.WholesaleGoldCategory)
-                totalPrice *= priceRate;
+            totalPrice *= priceRate;
         }
 
         return Math.Ceiling(totalPrice);
@@ -145,28 +146,22 @@ public class ProductService : IProductService
                     closestDate);
 
             //except diamond category, all the rest product categories has material 
-            var productMaterial = correspondingProduct.ProductMaterials!.First();
+            var productMaterial = correspondingProduct.ProductMaterials.First();
             var closestPriceList = productMaterial.Material.MaterialPriceLists
                 .OrderByDescending(m => m.EffectiveDate)
                 .First();
 
             var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
             totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
-
-            //just apply price rate for diamonds and jewelry
-            if (correspondingProduct.CategoryId != ProductConstants.RetailGoldCategory &&
-                correspondingProduct.CategoryId != ProductConstants.WholesaleGoldCategory)
-                totalPrice *= priceRate;
+            totalPrice *= priceRate;
         }
         else if (correspondingProduct.CategoryId is ProductConstants.WholesaleGoldCategory)
         {
-            var productMaterial = correspondingProduct.ProductMaterials!.First();
+            var productMaterial = correspondingProduct.ProductMaterials.First();
             var closestPriceList = productMaterial.Material.MaterialPriceLists
                 .OrderBy(m => Math.Abs((m.EffectiveDate - DateTime.Today).TotalDays))
                 .First();
-
-            var materialPrice = quantity * productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
-            totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
+            totalPrice = quantity * closestPriceList.SellPrice * priceRate;
         }
 
         return Math.Ceiling(totalPrice);

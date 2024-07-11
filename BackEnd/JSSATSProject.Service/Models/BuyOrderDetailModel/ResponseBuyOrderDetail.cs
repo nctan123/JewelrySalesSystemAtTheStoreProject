@@ -5,9 +5,8 @@ public class ResponseBuyOrderDetail
     public int Id { get; set; }
 
     public int? BuyOrderId { get; set; }
-
     public string? ProductName { get; set; }
-    
+    public int CaregoryId { get; set; }
     public string? CategoryType { get; set; } 
 
     // public string? CategoryName { get; set; } //

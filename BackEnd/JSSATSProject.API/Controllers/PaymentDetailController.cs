@@ -68,24 +68,18 @@ public class PaymentDetailController : ControllerBase
 
 
         // Update Status SellOrder
-        var updatesellorderstatus = new UpdateSellOrderStatus()
-        {
-            Status = OrderConstants.ProcessingStatus
-        };
 
-        var updatebuyorderstatus = new RequestUpdateBuyOrderStatus()
-        {
-            NewStatus = OrderConstants.CompletedStatus
-        };
-
-
-        //update Order
         var sellorderId = await _paymentService.GetSellOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
         var buyorderId = await _paymentService.GetBuyOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
 
         if (sellorderId != null)
         {
             //sellorder
+            var updatesellorderstatus = new UpdateSellOrderStatus()
+            {
+                Status = OrderConstants.ProcessingStatus
+            };
+
             await _sellOrderService.UpdateStatusAsync(sellorderId.Value, updatesellorderstatus);
 
             //Create Guarantee
@@ -118,6 +112,11 @@ public class PaymentDetailController : ControllerBase
         else
         {
             //buyorder
+            var updatebuyorderstatus = new RequestUpdateBuyOrderStatus()
+            {
+                NewStatus = OrderConstants.CompletedStatus
+            };
+
             await _buyOrderService.UpdateAsync(buyorderId.Value, updatebuyorderstatus);
         }
 

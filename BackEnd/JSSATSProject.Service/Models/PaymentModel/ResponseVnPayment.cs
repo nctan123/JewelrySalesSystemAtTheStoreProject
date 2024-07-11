@@ -13,5 +13,6 @@ public class ResponseVnPayment
     public string VnPayResponseCode { get; set; }
     public string PaymentMethodId { get; set; }
     public string VnPayTranStatus { get; set; }
-    public string Message { get; set; } 
+    public string Message { get; set; }
+    public string ReturnUrl { get; set; }
 }

@@ -27,7 +27,4 @@ public class ResponseStaff
 
     public int TotalBuyOrder { get; set; }
 
-    public  ICollection<BuyOrder> BuyOrders { get; set; }
-
-    public ICollection<SellOrder> SellOrders { get; set; }
 }

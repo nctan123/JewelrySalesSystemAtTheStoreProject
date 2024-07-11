@@ -24,6 +24,7 @@ public class Program
         var services = builder.Services;
 
         services.AddHttpContextAccessor();
+        services.AddHttpClient();
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {

@@ -1,6 +1,8 @@
 ﻿using System.Net;
+using Azure;
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
@@ -10,10 +12,12 @@ namespace JSSATSProject.API.Controllers;
 public class GuaranteeController : ControllerBase
 {
     private readonly IGuaranteeService _guaranteeService;
+    private readonly ISellOrderDetailService _sellOrderDetailsService;
 
-    public GuaranteeController(IGuaranteeService guaranteeService)
+    public GuaranteeController(IGuaranteeService guaranteeService, ISellOrderDetailService sellOrderDetailsService)
     {
         _guaranteeService = guaranteeService;
+        _sellOrderDetailsService = sellOrderDetailsService;
     }
 
     [HttpGet]
@@ -71,4 +75,14 @@ public class GuaranteeController : ControllerBase
             }
         );
     }
+
+    [HttpPost]
+    [Route("CreateGuarantee")]
+    public async Task<IActionResult> CreateAsync(int orderId)
+    {
+        var products = await _sellOrderDetailsService.GetProductFromSellOrderDetailAsync(orderId);
+        await _guaranteeService.CreateGuaranteeAsync(products);
+        return Ok();
+    }
+
 }
