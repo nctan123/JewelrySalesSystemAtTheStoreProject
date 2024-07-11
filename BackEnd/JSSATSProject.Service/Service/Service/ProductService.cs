@@ -19,7 +19,8 @@ public class ProductService : IProductService
     private readonly IMapper _mapper;
     private readonly AzureBlobStorage _blobService;
 
-    public ProductService(UnitOfWork unitOfWork, IMapper mapper, AzureBlobStorage blobService, IDiamondPriceListService diamondPriceListService)
+    public ProductService(UnitOfWork unitOfWork, IMapper mapper, AzureBlobStorage blobService,
+        IDiamondPriceListService diamondPriceListService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -40,7 +41,8 @@ public class ProductService : IProductService
         var entity = _mapper.Map<Product>(requestProduct);
         entity.Img = imageUrl;
 
-        var productCategoryTypeId = await _unitOfWork.ProductCategoryRepository.GetTypeIdByCategoryIdAsync(requestProduct.CategoryId);
+        var productCategoryTypeId =
+            await _unitOfWork.ProductCategoryRepository.GetTypeIdByCategoryIdAsync(requestProduct.CategoryId);
         var newCode = await GenerateUniqueCodeAsync(productCategoryTypeId);
 
         entity.Code = newCode;
@@ -66,8 +68,6 @@ public class ProductService : IProductService
         var productionCost = correspondingProduct.ProductionCost.GetValueOrDefault();
         var diamondsOfProduct = correspondingProduct.ProductDiamonds;
         var diamond = diamondsOfProduct?.FirstOrDefault()?.Diamond;
-        var timeStamp = DateTime.Now;
-        var closestDate = await _diamondPriceListService.GetClosestPriceEffectiveDate(timeStamp);
         var totalFactors = diamond is null
             ? 1
             : (diamond.Fluorescence.PriceRate * diamond.Shape.PriceRate *
@@ -77,8 +77,8 @@ public class ProductService : IProductService
         {
             diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                 diamond.ClarityId,
-                diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, closestDate);
-            totalPrice = priceRate * diamondPrice;
+                diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, DateTime.Now);
+            totalPrice = (productionCost + diamondPrice) * priceRate ;
         }
         else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
                  or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
@@ -94,12 +94,12 @@ public class ProductService : IProductService
 
             if (correspondingProduct.CategoryId is ProductConstants.WholesaleGoldCategory)
                 return closestPriceList.SellPrice * priceRate;
-                    
+
             //not all product has diamond (retail gold, wholesale gold,...)
             if (diamond is not null)
                 diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                     diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors,
-                    closestDate);
+                    DateTime.Now);
 
             var materialPrice = productMaterial.Weight.GetValueOrDefault() * closestPriceList.SellPrice;
             totalPrice = diamondPrice + materialPrice + gemCost + materialCost + productionCost;
@@ -120,8 +120,6 @@ public class ProductService : IProductService
         var productionCost = correspondingProduct.ProductionCost.GetValueOrDefault();
         var diamondsOfProduct = correspondingProduct.ProductDiamonds;
         var diamond = diamondsOfProduct?.FirstOrDefault()?.Diamond;
-        var timeStamp = DateTime.Now;
-        var closestDate = await _diamondPriceListService.GetClosestPriceEffectiveDate(timeStamp);
         var totalFactors = diamond is null
             ? 1
             : (diamond.Fluorescence.PriceRate * diamond.Shape.PriceRate *
@@ -131,8 +129,8 @@ public class ProductService : IProductService
         {
             diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                 diamond.ClarityId,
-                diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, closestDate);
-            totalPrice = priceRate * diamondPrice;
+                diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, DateTime.Now);
+            totalPrice = (productionCost + diamondPrice) * priceRate ;
         }
         else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
                  or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
@@ -143,7 +141,7 @@ public class ProductService : IProductService
             if (diamond is not null)
                 diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                     diamond.ClarityId, diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors,
-                    closestDate);
+                    DateTime.Now);
 
             //except diamond category, all the rest product categories has material 
             var productMaterial = correspondingProduct.ProductMaterials.First();
@@ -276,7 +274,8 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
+    public async Task<ResponseModel> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10,
+        bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
@@ -305,7 +304,8 @@ public class ProductService : IProductService
         {
             var responseProduct = _mapper.Map<ResponseProduct>(entity);
             responseProduct.ProductValue = await CalculateProductPrice(entity);
-            var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+            var promotion =
+                await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
             if (promotion is not null)
             {
                 responseProduct.PromotionId = promotion.Id;
@@ -318,8 +318,12 @@ public class ProductService : IProductService
         // Always sort by Status descending first, then apply sorting based on the ascending parameter
         responseList = responseList
             .OrderBy(rp => rp.Status)
-            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.ProductValue) : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
-            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.Name) : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
+            .ThenBy(ascending
+                ? (Func<ResponseProduct, object>)(rp => rp.ProductValue)
+                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
+            .ThenBy(ascending
+                ? (Func<ResponseProduct, object>)(rp => rp.Name)
+                : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
             .ToList();
 
         // Apply pagination
@@ -338,7 +342,8 @@ public class ProductService : IProductService
         return result;
     }
 
-    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
+    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1,
+        int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
@@ -355,11 +360,15 @@ public class ProductService : IProductService
         {
             if (includeNullStalls)
             {
-                filter = p => p.CategoryId == categoryId && p.Stalls == null && (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
+                filter = p =>
+                    p.CategoryId == categoryId && p.Stalls == null &&
+                    (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
             }
             else
             {
-                filter = p => p.CategoryId == categoryId && p.Stalls != null && (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
+                filter = p =>
+                    p.CategoryId == categoryId && p.Stalls != null &&
+                    (p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
             }
         }
 
@@ -380,7 +389,8 @@ public class ProductService : IProductService
         {
             var responseProduct = _mapper.Map<ResponseProduct>(entity);
             responseProduct.ProductValue = await CalculateProductPrice(entity);
-            var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+            var promotion =
+                await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
             if (promotion != null)
             {
                 responseProduct.PromotionId = promotion.Id;
@@ -393,8 +403,12 @@ public class ProductService : IProductService
         // Sort the response list based on the ascending parameter
         responseList = responseList
             .OrderBy(rp => rp.Status)
-            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.ProductValue) : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
-            .ThenBy(ascending ? (Func<ResponseProduct, object>)(rp => rp.Name) : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
+            .ThenBy(ascending
+                ? (Func<ResponseProduct, object>)(rp => rp.ProductValue)
+                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
+            .ThenBy(ascending
+                ? (Func<ResponseProduct, object>)(rp => rp.Name)
+                : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
             .ToList();
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);
@@ -473,12 +487,13 @@ public class ProductService : IProductService
                 prefix = ProductConstants.DIAPrefix;
                 break;
         }
+
         string newCode;
         do
         {
             newCode = prefix + CustomLibrary.RandomNumber(3);
-        }
-        while (await _unitOfWork.Context.Products.AnyAsync(so => so.Code == newCode));
+        } while (await _unitOfWork.Context.Products.AnyAsync(so => so.Code == newCode));
+
         return newCode;
     }
 

@@ -22,11 +22,19 @@ public class DiamondPriceListRepository : GenericRepository<DiamondPriceList>
         return matchesDiamondPriceObject!.Price;
     }
 
-    public async Task<DateTime> GetClosestPriceEffectiveDate(DateTime timeStamp)
+    public async Task<DateTime> GetClosestPriceEffectiveDate(int cutId, int clarityId, int colorId, int caratId, int originId, DateTime timeStamp)
     {
-        var entity = await context.DiamondPriceLists.OrderByDescending(d => d.EffectiveDate)
-            .Where(d => d.EffectiveDate <= timeStamp)
-            .FirstAsync();
+        var entity = await context.DiamondPriceLists
+            .Where(d => 
+                        d.CutId == cutId
+                        && d.CaratId == caratId
+                        && d.ClarityId == clarityId
+                        && d.ColorId == colorId
+                        && d.OriginId == originId
+                        && d.EffectiveDate <= timeStamp
+                        )
+                            .OrderByDescending(d => d.EffectiveDate)
+                            .FirstAsync();
         return entity.EffectiveDate;
     }
 }

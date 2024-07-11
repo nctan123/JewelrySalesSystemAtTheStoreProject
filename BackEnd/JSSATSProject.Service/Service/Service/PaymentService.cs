@@ -129,19 +129,12 @@ public class PaymentService : IPaymentService
         }
     }
 
-<<<<<<< HEAD
-    //fix this
-    public async Task<int> GetOrderIdByPaymentIdAsync(int id)
-    {
-        var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
-        return payment.SellorderId.GetValueOrDefault();
-=======
+
     public async Task<int?> GetSellOrderIdByPaymentIdAsync(int id)
     {
         var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
         if (payment.SellorderId == null) return null;
         return payment.SellorderId;
->>>>>>> 2e804d530f879861fbe744c2597f606c7c00456e
     }
 
     public async Task<int?> GetBuyOrderIdByPaymentIdAsync(int id)

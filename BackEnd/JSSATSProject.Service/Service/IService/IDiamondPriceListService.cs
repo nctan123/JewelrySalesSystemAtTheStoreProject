@@ -13,7 +13,6 @@ public interface IDiamondPriceListService
         RequestUpdateDiamondPriceList requestDiamondPriceList);
 
     public Task<decimal> FindPriceBy4CAndOriginAndFactors(int cutId, int clarityId, int colorId, int caratId,
-        int originId, decimal totalFactors, DateTime timeStamp);
-
-    public Task<DateTime> GetClosestPriceEffectiveDate(DateTime timeStamp);
+        int originId, decimal totalFactors, DateTime maxEffectiveDay);
+    
 }

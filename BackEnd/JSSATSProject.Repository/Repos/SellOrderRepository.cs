@@ -51,4 +51,54 @@ public class SellOrderRepository : GenericRepository<SellOrder>
             .FirstOrDefaultAsync();
         return result;
     }
+
+    public async Task<Dictionary<DateTime, int>> GetOrdersByDateRange(DateTime startDate, DateTime endDate)
+    {
+        var result = new Dictionary<DateTime, int>();
+        var ordersCountByDate = await context.SellOrders
+            .Where(c => c.CreateDate >= startDate && c.CreateDate <= endDate)
+            .GroupBy(c => c.CreateDate)
+            .Select(g => new { Date = g.Key.Date, Count = g.Count() })
+            .ToListAsync();
+
+        foreach (var sellOrders in ordersCountByDate)
+        {
+            var key = sellOrders.Date.Date;
+            if (result.ContainsKey(key))
+            {
+                result[key] += 1;
+            }
+            else
+            {
+                result.Add(sellOrders.Date, sellOrders.Count);
+            }
+        }
+
+        return result;
+    }
+
+    public async Task<Dictionary<DateTime, decimal>> GetTotalAmountByDateRange(DateTime startDate, DateTime endDate)
+    {
+        var result = new Dictionary<DateTime, decimal>();
+        var ordersCountByDate = await context.SellOrders
+            .Where(c => c.CreateDate >= startDate && c.CreateDate <= endDate)
+            .GroupBy(c => c.CreateDate)
+            .Select(g => new { g.Key.Date, Total = g.Select(g => g.TotalAmount).Sum() })
+            .ToListAsync();
+
+        foreach (var sellOrders in ordersCountByDate)
+        {
+            var key = sellOrders.Date.Date;
+            if (result.ContainsKey(key))
+            {
+                result[key] += 1;
+            }
+            else
+            {
+                result.Add(sellOrders.Date, sellOrders.Total);
+            }
+        }
+
+        return result;
+    }
 }

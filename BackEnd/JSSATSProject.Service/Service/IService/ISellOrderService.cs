@@ -34,4 +34,6 @@ public interface ISellOrderService
 
     public Task<decimal> GetFinalPriceAsync(SellOrder sellOrder);
 
+    Task<Dictionary<DateTime, int>> GetOrdersByDateRange(DateTime startDate, DateTime endDate);
+    Task<Dictionary<DateTime, decimal>> GetTotalAmountByDateRange(DateTime startDate, DateTime endDate);
 }

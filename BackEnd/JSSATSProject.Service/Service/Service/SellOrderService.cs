@@ -92,6 +92,19 @@ public class SellOrderService : ISellOrderService
         return finalPrice;
     }
 
+    public Task<Dictionary<DateTime, int>> GetOrdersByDateRange(DateTime startDate, DateTime endDate)
+    {
+        var result = _unitOfWork.SellOrderRepository.GetOrdersByDateRange(startDate, endDate);
+        return result;
+    }
+
+    public Task<Dictionary<DateTime, decimal>> GetTotalAmountByDateRange(DateTime startDate, DateTime endDate)
+    {
+        var result = _unitOfWork.SellOrderRepository.GetTotalAmountByDateRange(startDate, endDate);
+        return result;
+
+    }
+
     public async Task<ResponseModel> GetAllAsync(List<string> statusList, bool ascending = true, int pageIndex = 1,
         int pageSize = 10)
     {

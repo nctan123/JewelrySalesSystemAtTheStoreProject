@@ -56,6 +56,7 @@ public class CustomerService : ICustomerService
             MessageError = ""
         };
     }
+
     public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
     {
         var entities = await _unitOfWork.CustomerRepository.GetAsync(
@@ -282,7 +283,8 @@ public class CustomerService : ICustomerService
             // Fetch the customer by phone number
             var customer = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
-                includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Sellorder,Payments.Buyorder");
+                includeProperties:
+                "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Sellorder,Payments.Buyorder");
 
             var customerEntity = customer.FirstOrDefault();
 
@@ -368,7 +370,7 @@ public class CustomerService : ICustomerService
             {
                 var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
                 responseBuyOrder.BuyOrderDetails =
-                _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
+                    _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
                 return responseBuyOrder;
             })
             .ToList();
@@ -395,7 +397,8 @@ public class CustomerService : ICustomerService
         }
 
         var completedSellOrders = customer.SellOrders.Where(o => o.Status == OrderConstants.CompletedStatus).ToList();
-        var otherSellOrders = customer.SellOrders.Where(o => o.Status != OrderConstants.CompletedStatus && o.Status != OrderConstants.CanceledStatus).ToList();
+        var otherSellOrders = customer.SellOrders.Where(o =>
+            o.Status != OrderConstants.CompletedStatus && o.Status != OrderConstants.CanceledStatus).ToList();
 
         decimal completedSellOrderSum = 0;
         foreach (var sellOrder in completedSellOrders)
@@ -410,10 +413,14 @@ public class CustomerService : ICustomerService
         }
 
         var completedBuyOrders = customer.BuyOrders.Where(o => o.Status == OrderConstants.CompletedStatus).ToList();
-        var otherBuyOrders = customer.BuyOrders.Where(o => o.Status != OrderConstants.CompletedStatus && o.Status != OrderConstants.CanceledStatus).ToList();
+        var otherBuyOrders = customer.BuyOrders.Where(o =>
+            o.Status != OrderConstants.CompletedStatus && o.Status != OrderConstants.CanceledStatus).ToList();
 
-        var completedPayments = customer.Payments.Where(p => p.Status == PaymentConstants.CompletedStatus && p.SellorderId != null).ToList();
-        var pendingPayments = customer.Payments.Where(p => p.Status != PaymentConstants.CompletedStatus && p.Status != PaymentConstants.CanceledStatus && p.SellorderId != null).ToList();
+        var completedPayments = customer.Payments
+            .Where(p => p.Status == PaymentConstants.CompletedStatus && p.SellorderId != null).ToList();
+        var pendingPayments = customer.Payments.Where(p =>
+            p.Status != PaymentConstants.CompletedStatus && p.Status != PaymentConstants.CanceledStatus &&
+            p.SellorderId != null).ToList();
 
         var orderSummary = new ResponseCustomerSummary
         {
@@ -513,7 +520,8 @@ public class CustomerService : ICustomerService
     {
         var customer = await _unitOfWork.CustomerRepository.GetAsync(
             c => c.Phone.Equals(phone),
-            includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Sellorder,Payments.Buyorder");
+            includeProperties:
+            "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Sellorder,Payments.Buyorder");
 
         var customerEntity = customer.FirstOrDefault();
 
@@ -599,4 +607,9 @@ public class CustomerService : ICustomerService
         };
     }
 
+    public async Task<Dictionary<DateTime, int>> GetCustomersByDateRange(DateTime startDate, DateTime endDate)
+    {
+        var result = await _unitOfWork.CustomerRepository.GetCustomersByDateRangeAsync(startDate, endDate);
+        return result;
+    }
 }
