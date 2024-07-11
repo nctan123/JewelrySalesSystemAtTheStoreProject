@@ -111,7 +111,9 @@ public class SpecialDiscountRequestController : ControllerBase
             var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
             var newspecialdiscount = new UpdateSpecialDiscountRequest
             {
-                Status = "used"
+                DiscountRate = sellorder.SpecialDiscountRequest?.DiscountRate ?? 0,
+                Status = "used",
+                ApprovedBy = sellorder.SpecialDiscountRequest.ApprovedBy ?? 0
             };
             await _specialdiscountrequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
         }

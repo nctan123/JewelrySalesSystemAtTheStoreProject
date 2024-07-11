@@ -47,7 +47,7 @@ public class BuyOrderService : IBuyOrderService
             filter,
             includeProperties:
             "BuyOrderDetails,Customer,Staff," +
-            "BuyOrderDetails.PurchasePriceRatio,BuyOrderDetails.Material,BuyOrderDetails.CategoryType",
+            "BuyOrderDetails.PurchasePriceRatio,BuyOrderDetails.Material,BuyOrderDetails.CategoryType,Payments.PaymentDetails.PaymentMethod",
             orderBy: ascending
                 ? q => q.OrderBy(p => p.CreateDate)
                 : q => q.OrderByDescending(p => p.CreateDate),
@@ -83,7 +83,8 @@ public class BuyOrderService : IBuyOrderService
             filter: q => q.Id == id,
             includeProperties:
             "BuyOrderDetails,Customer,Staff," +
-            "BuyOrderDetails.PurchasePriceRatio,BuyOrderDetails.Material,BuyOrderDetails.CategoryType"
+            "BuyOrderDetails.PurchasePriceRatio,BuyOrderDetails.Material,BuyOrderDetails.CategoryType," +
+            "Payments.PaymentDetails.PaymentMethod"
         );
 
         // Get the first matching entity

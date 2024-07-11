@@ -9,6 +9,8 @@ public class ResponseBuyOrder
 
     public string Code { get; set; }
 
+    public int CustomerId { get; set; } 
+
     public required string CustomerName { get; set; } 
 
     public required string CustomerPhoneNumber { get; set; } 
