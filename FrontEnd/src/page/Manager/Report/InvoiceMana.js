@@ -10,12 +10,13 @@ const InvoiceMana = () => {
     const [listSellOrder, setListSellOrder] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
+
     const [selectedOrder, setSelectedOrder] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const sellOrderPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
-    const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
     const [ascending, setAscending] = useState(true);
 
     useEffect(() => {
@@ -326,10 +327,6 @@ const InvoiceMana = () => {
                         </div>
                     )}
                 </Modal>
-
-
-
-
 
             </div>
         </div>

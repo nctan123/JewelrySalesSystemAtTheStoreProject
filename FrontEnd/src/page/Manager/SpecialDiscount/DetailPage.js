@@ -3,7 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-
+import { MdFace } from "react-icons/md";
+import { MdFace4 } from "react-icons/md";
 const DetailPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -82,9 +83,6 @@ const DetailPage = () => {
 
     return (
         <div className='min-h-screen bg-white mx-5 pt-5 rounded relative'>
-
-
-
 
             <div className="grid grid-cols-2 gap-4">
                 {/* Sell Order Details */}

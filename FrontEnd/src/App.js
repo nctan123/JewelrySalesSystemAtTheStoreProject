@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
 
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex,Buy ,Warranty, BuyOut} from './page/Seller';
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty, BuyOut } from './page/Seller';
 
 import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess, Cs_WaitingPayment } from './page/Cashier';
 
@@ -57,6 +57,7 @@ import SpecialDiscountRequest from './page/Manager/SpecialDiscount/SpecialDiscou
 import DetailPage from './page/Manager/SpecialDiscount/DetailPage';
 import Payment from './page/Manager/Report/Payment';
 import CustomerDetail from './page/Manager/Manage/CustomerDetail';
+import PaymentReturn from './page/Cashier/PaymentReturn';
 function App() {
   // test redux có hoạt động không
   // const {test,homeData} = useSelector(state => state.app)
@@ -145,15 +146,16 @@ function App() {
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
               <Route path={path.BUY} element={<Buy />} />
-              <Route path={path.BUYOUT} element={<BuyOut/>}/>
+              <Route path={path.BUYOUT} element={<BuyOut />} />
             </Route>
           </Route>
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
             <Route path={path.CS_ORDER} element={<Cs_Order />}>
-              <Route path={path.CS_WAITINGPAYMENT} element={<Cs_WaitingPayment />} />  
+              <Route path={path.CS_WAITINGPAYMENT} element={<Cs_WaitingPayment />} />
               <Route path={path.CS_ONPROCESS} element={<Cs_OnProcess />} />
               <Route path={path.CS_COMPLETE} element={<Cs_Complete />} />
+              <Route path={"payment-return"} element={<PaymentReturn />} />
             </Route>
             <Route path={path.CS_REVENUE} element={<Cs_Revenue />} />
           </Route>

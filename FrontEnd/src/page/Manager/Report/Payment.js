@@ -218,7 +218,7 @@ const Payment = () => {
                             {listPayment.map((item, index) => (
                                 <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
                                     <td className="rounded-l-lg pr-3 pl-5 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
-                                    <td >{item.orderCode}</td>
+                                    <td >{item.sellOrderCode || item.buyOrderCode || 'null'}</td>
 
                                     <td >{item.customerName}</td>
                                     <td >{item.customerPhone}</td>
