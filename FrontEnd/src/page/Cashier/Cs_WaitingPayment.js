@@ -12,6 +12,8 @@ import { AiFillLeftCircle, AiFillRightCircle } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const FormatDate = ({ isoString }) => {
   // Cs_WaitingPayment
@@ -27,7 +29,7 @@ const Cs_WaitingPayment = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
   const [listInvoice, setlistInvoice] = useState([]); // list full invoice
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [IdOrder, setIdOrder] = useState('')
+  const [IdOrder, setIdOrder] = useState('');
   const [isPaymentCompleted, setIsPaymentCompleted] = useState(false);
   const [isPaymentCompletedDefault, setIsPaymentCompletedDefault] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState([]);
@@ -39,94 +41,8 @@ const Cs_WaitingPayment = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isPaymentSuccessful, setIsPaymentSuccessful] = useState(false);
 
-  const handleChange = (event) => {
-    const selectedMethod = paymentMethod.find(
-      (method) => method.name === event.target.value
-    );
-    console.log(selectedMethod.id)
-    if (selectedMethod) {
-      setChosePayMethod(selectedMethod.name);
-      setChosePayMethodID(selectedMethod.id);
-    }
-  };
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-  const handlePageClick = event => {
-    getInvoice(event.selected + 1);
-  };
-  useEffect(() => {
-    getInvoice(1);
-    console.log(listInvoice)
-  }, []);
-
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value.trim();
-    setSearchTerm(searchTerm);
-    if (searchTerm === '') {
-      getInvoice(1);
-    } else {
-      getWaitingSearch(searchTerm, 1);
-    }
-  };
-  const getWaitingSearch = async (phone, page) => {
-    try {
-      const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=waiting%20for%20customer%20payment&customerPhone=${phone}&ascending=true&pageIndex=${page}&pageSize=10`
-      );
-      if (res.data && res.data.data) {
-        setlistInvoice(res.data.data);
-        setTotalProduct(res.data.totalElements);
-        setTotalPage(res.data.totalPages);
-      }
-    } catch (error) {
-      console.error('Error fetching customers:', error);
-      toast.error('Failed to fetch customers');
-    }
-  };
-  const getCompletedSearch = async (phone) => {
-    try {
-      const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=completed&customerPhone=${phone}&ascending=true&pageIndex=1&pageSize=10`
-      );
-      console.log('search completed:', res.data.data)
-      // if (res.data && res.data.data) {
-      //   showBill(res.data.data[0]);
-      // }
-    } catch (error) {
-      console.error('Error fetching customers:', error);
-      toast.error('Failed to fetch customers');
-    }
-  };
-  const getInvoice = async (page) => {
-    try {
-      let res = await fetchStatusInvoice('waiting for customer payment', page);
-      if (res?.data?.data) {
-        setlistInvoice(res.data.data);
-        setTotalProduct(res.data.totalElements);
-        setTotalPage(res.data.totalPages);
-      }
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-    }
-  };
-  useEffect(() => {
-    getPayMentMethod();
-  }, []);
-  const getPayMentMethod = async () => {
-    let res = await fetchPaymentMethod();
-    if (res && res.data && res.data.data) {
-      setPaymentMethod(res.data.data)
-    }
-  };
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setcreateDate(new Date());
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const [externalTransactionCode, setexternalTransactionCode] = useState('');
+  const [CallBack, setCallBack] = useState('');
 
   function updateDisplay(value) {
     let currentValue = document.getElementById('display').value;
@@ -169,6 +85,111 @@ const Cs_WaitingPayment = () => {
       document.getElementById('display').value = "Invalid Input";
     }
   }
+  const handleChange = (event) => {
+    const selectedMethod = paymentMethod.find(
+      (method) => method.name === event.target.value
+    );
+    if (selectedMethod) {
+      setChosePayMethod(selectedMethod.name);
+      setChosePayMethodID(selectedMethod.id);
+    }
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handlePageClick = (event) => {
+    getInvoice(event.selected + 1);
+  };
+
+  const pollingInterval = 5000; // Thời gian polling, ví dụ mỗi 5 giây
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    getInvoice(currentPage);
+    const interval = setInterval(() => {
+      getInvoice(currentPage);
+    }, pollingInterval);
+
+    // Cleanup function để clear interval khi component unmount
+    return () => clearInterval(interval);
+  }, [currentPage]);
+
+  const getInvoice = async (page) => {
+    try {
+      let res = await fetchStatusInvoice('waiting for customer payment', page);
+      if (res?.data?.data) {
+        setlistInvoice(res.data.data);
+        setTotalProduct(res.data.totalElements);
+        setTotalPage(res.data.totalPages);
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.trim();
+    setSearchTerm(searchTerm);
+    if (searchTerm === '') {
+      getInvoice(1);
+    } else {
+      getWaitingSearch(searchTerm, 1);
+    }
+  };
+
+  const getWaitingSearch = async (phone, page) => {
+    try {
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=waiting%20for%20customer%20payment&customerPhone=${phone}&ascending=true&pageIndex=${page}&pageSize=10`
+      );
+      if (res.data && res.data.data) {
+        setlistInvoice(res.data.data);
+        setTotalProduct(res.data.totalElements);
+        setTotalPage(res.data.totalPages);
+      }
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      toast.error('Failed to fetch customers');
+    }
+  };
+
+  const getCompletedSearch = async (phone) => {
+    try {
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=completed&customerPhone=${phone}&ascending=true&pageIndex=1&pageSize=10`
+      );
+      console.log('search completed:', res.data.data);
+      // if (res.data && res.data.data) {
+      //   showBill(res.data.data[0]);
+      // }
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      toast.error('Failed to fetch customers');
+    }
+  };
+
+  useEffect(() => {
+    getPayMentMethod();
+  }, []);
+
+  const getPayMentMethod = async () => {
+    let res = await fetchPaymentMethod();
+    if (res && res.data && res.data.data) {
+      setPaymentMethod(res.data.data);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setcreateDate(new Date().toISOString());
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const formatPrice = (value) => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
@@ -177,78 +198,129 @@ const Cs_WaitingPayment = () => {
     }).format(value);
   };
 
-  const [createDate, setcreateDate] = useState(new Date().toISOString())
+  const [createDate, setcreateDate] = useState(new Date().toISOString());
 
   const handleSubmitOrder = async (item, event) => {
     event.preventDefault();
+    const paymentId = item.paymentId
+    if (paymentId === 0) {
+      let data = {
+        sellOrderId: item.id,
+        buyOrderId: null,
+        customerId: item.customerId,
+        createDate: currentTime,
+        amount: item.finalAmount
+      };
+      console.log('Submitting order with data:', data, item.customerPhoneNumber);
+
+      try {
+        // Simulate a possible error for testing
+        if (!data.sellOrderId || !data.customerId || !data.createDate || !data.amount) {
+          throw new Error('Missing required fields in order data');
+        }
+
+        let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment', data);
+        console.log('Response from payment API:', res);
+
+        const item1 = res.data.data;
+        console.log('item1', item1);
+
+        toast.success('Create Invoice Successful');
+        setIsPaymentCompleted(true);
+        setIsPaymentCompletedDefault(false);
+        //thêm api 
+        if (ChosePayMethodID === 3) {
+          handleCompleteCash(item1, item.customerPhoneNumber);
+        } else if (ChosePayMethodID === 4) {
+          handleCompleteVnPay(item1);
+        }
+        // setPaymentID(paymentID);
+      } catch (error) {
+        toast.error('Fail');
+        console.error('Error during payment process:', error);
+
+        // Additional logging for detailed error information
+        if (error.response) {
+          // Server responded with a status other than 200 range
+          console.error('Error response data:', error.response.data);
+          console.error('Error response status:', error.response.status);
+          console.error('Error response headers:', error.response.headers);
+        } else if (error.request) {
+          // Request was made but no response was received
+          console.error('Error request data:', error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.error('Error message:', error.message);
+        }
+        console.error('Error config:', error.config);
+      }
+    } else {
+      let res = await axios.get('https://jssatsproject.azurewebsites.net/api/Payment/GetById?id=379');
+      console.log('Đã có payment id', res.data.data);
+      if (ChosePayMethodID === 3) {
+        handleCompleteCash(res.data.data, item.customerPhoneNumber);
+      } else if (ChosePayMethodID === 4) {
+        handleCompleteVnPay(res.data.data);
+      }
+    }
+
+  };
+  const [redirectUrl, setRedirectUrl] = useState(null);
+
+  const handleCompleteVnPay = async (item) => {
     let data = {
-      sellOrderId: item.id,
-      buyOrderId: null,
+      paymentId: item.id,
+      orderId: item.sellorderId,
+      paymentMethodId: ChosePayMethodID,
       customerId: item.customerId,
-      createDate: currentTime,
-      amount: item.finalAmount,
+      createDate: createDate,
+      amount: item.amount,
+      returnUrl: 'http://localhost:3000/cs_public/payment-result'
     };
-    console.log("Submitting order with data:", data, item.customerPhoneNumber);
+    console.log('VNPay request', data);
 
     try {
-      // Simulate a possible error for testing
-      if (!data.sellOrderId || !data.customerId || !data.createDate || !data.amount) {
-        throw new Error("Missing required fields in order data");
-      }
-
-      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment', data);
-      console.log("Response from payment API:", res);
-
-      const paymentID = res.data.data.id;
-      const item1 = res.data.data;
-      console.log('item1', item1)
-      console.log("Payment ID received:", paymentID);
-
-      toast.success('Create Invoice Successful');
-      setIsPaymentCompleted(true);
-      setIsPaymentCompletedDefault(false);
-      if (ChosePayMethodID === 3) {
-        handleCompleteCash(item1, item.customerPhoneNumber);
-      } else if (ChosePayMethodID === 4) {
-        handleCompleteVnPay(item1);
-      }
-      // setPaymentID(paymentID);
+      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/VnPay/createpaymentUrl', data);
+      console.log(res.data);
+      toast.success('Successful');
+      // Automatically redirect to the returned URL
+      window.location.href = res.data
     } catch (error) {
-      toast.error('Fail');
-      console.error('Error during payment process:', error);
-
-      // Additional logging for detailed error information
-      if (error.response) {
-        // Server responded with a status other than 200 range
-        console.error("Error response data:", error.response.data);
-        console.error("Error response status:", error.response.status);
-        console.error("Error response headers:", error.response.headers);
-      } else if (error.request) {
-        // Request was made but no response was received
-        console.error("Error request data:", error.request);
-      } else {
-        // Something happened in setting up the request that triggered an Error
-        console.error("Error message:", error.message);
-      }
-      console.error("Error config:", error.config);
+      toast.error('Fail VNPay');
+      console.error('Error invoice:', error);
     }
   };
 
-  const [externalTransactionCode, setexternalTransactionCode] = useState('')
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      const currentUrl = window.location.href;
+      setRedirectUrl(currentUrl);
+      console.log('Redirect URL:', currentUrl);
+    };
+
+    // Listen for changes in the window location
+    window.addEventListener('popstate', handleLocationChange);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+    };
+  }, []);
+
   const handleCompleteCash = async (item, phone) => {
-    // event.preventDefault();
     let data = {
       paymentId: item.id,
       paymentMethodId: ChosePayMethodID,
       amount: item.amount,
       externalTransactionCode: externalTransactionCode,
-      status: 'completed',
+      status: 'completed'
     };
 
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data);
       toast.success('Cash payment successful');
-      getCompletedSearch(phone)
+      getCompletedSearch(phone);
     } catch (error) {
       toast.error('Fail');
       console.error('Error invoice:', error);
@@ -377,28 +449,11 @@ const Cs_WaitingPayment = () => {
     });
   };
 
-  const handleCompleteVnPay = async (item) => {
-    // event.preventDefault();
-    let data = {
-      paymentId: item.id,
-      OrderId: item.sellorderId,
-      paymentMethodId: ChosePayMethodID,
-      customerId: item.customerId,
-      createDate: createDate,
-      amount: item.amount,
-    };
-    console.log('VNPay request', data);
-    try {
-      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/VnPay/createpaymentUrl', data);
-      console.log(res.data);
-      toast.success('Successful');
-      // Automatically redirect to the returned URL
-      window.location.href = res.data;
-    } catch (error) {
-      toast.error('Fail');
-      console.error('Error invoice:', error);
-    }
-  };
+
+
+
+
+
 
   const handleCancle = async (id) => {
     confirmAlert({
@@ -493,6 +548,35 @@ const Cs_WaitingPayment = () => {
                     <span className='font-thin'>{item.code}</span>
                     <span className='font-serif'>-</span>
                     <span className='font-thin'>{item.id}</span>
+                    <div className="group relative w-fit">
+      <Link to="/cs_public/cs_bill" className="m-0 p-0 w-fit bg-white text-black">
+        <svg
+          stroke-linejoin="round"
+          stroke-linecap="round"
+          stroke="currentColor"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          height="15"
+          width="15"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-fit hover:scale-125 duration-200 hover:bg-white"
+          fill="none"
+        >
+          <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+          <path d="M8 9h8"></path>
+          <path d="M8 13h6"></path>
+          <path
+            d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"
+          ></path>
+        </svg>
+      </Link>
+      <span
+        className="absolute -top-7 left-[95%] -translate-x-[1%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100"
+      >
+        Bill
+      </span>
+    </div>
+
                   </div>
                   <div className='flex justify-start px-[15px] text-black'>
                     <input hidden className='bg-[#e9ddc200] text-center font-thin' value={item.customerId} readOnly />
@@ -546,7 +630,7 @@ const Cs_WaitingPayment = () => {
                           <div className='bg-[#fff] my-[70px] mx-auto rounded-md w-[100%] shadow-[#b6b0b0] shadow-md'>
                             <form className="p-4 md:p-5 relative">
                               <div className=" flex items-center justify-end md:p-0 rounded-t">
-                                <a className='absolute right-0 cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
+                                <a className='absolute right-3 cursor-pointer text-black text-[24px] py-0' onClick={close}>&times;</a>
                               </div>
                               <div className="grid gap-4 grid-cols-2">
                                 <div className='row-start-1 col-start-1 h-[100px]'>
@@ -665,7 +749,8 @@ const Cs_WaitingPayment = () => {
 
       </div>
       <ReactPaginate
-        onPageChange={handlePageClick}
+        //  onPageChange={handlePageClick} 
+        onPageChange={(e) => setCurrentPage(e.selected + 1)}
         pageRangeDisplayed={3}
         marginPagesDisplayed={2}
         pageCount={totalPage}
@@ -678,7 +763,7 @@ const Cs_WaitingPayment = () => {
         breakLabel="..."
         breakClassName="mx-1 "
         breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-        containerClassName="flex justify-center items-center space-x-4"
+        containerClassName="flex justify-center items-center space-x-4 h-[10px]"
         activeClassName="bg-blue-500 text-white rounded-xl"
         renderOnZeroPageCount={null}
         // className="bg-black flex justify-center items-center"

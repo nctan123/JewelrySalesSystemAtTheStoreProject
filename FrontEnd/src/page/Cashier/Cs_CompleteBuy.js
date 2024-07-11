@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { fetchPaymentMethod, fetchStatusInvoice } from '../../apis/jewelryService'
+import { fetchPaymentMethod, fetchStatusBuyInvoice, fetchStatusInvoice } from '../../apis/jewelryService'
 import Popup from 'reactjs-popup';
 import QRCode from "react-qr-code";
 import SignatureCanvas from 'react-signature-canvas'
@@ -22,7 +22,7 @@ const FormatDate = ({ isoString }) => {
     </div>
   );
 };
-const Cs_Complete = () => {
+const Cs_CompleteBuy = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
   const [listInvoice, setlistInvoice] = useState([]); // list full invoice
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,7 +44,7 @@ const Cs_Complete = () => {
 
   const getInvoice = async (page) => {
     try {
-      let res = await fetchStatusInvoice('completed', page);
+      let res = await fetchStatusBuyInvoice('completed', page);
       if (res?.data?.data) {
         setlistInvoice(res.data.data);
         setTotalProduct(res.data.totalElements);
@@ -112,70 +112,66 @@ const Cs_Complete = () => {
         </div>
       </form>
       <div className='my-0 mx-auto mt-2'>
-        <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[78vh]'>
-          {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => (
-            <div key={index} className='shadow-md shadow-gray-600 pt-[10px] rounded-2xl w-[93%] h-[29em] bg-[#ffff] mb-[20px]'>
-                <div className='flex justify-between px-[15px] text-black font-thin'>
-                <span className='px-2 bg-[#23aa32] rounded-md text-[#fff]'>{item.paymentMethod}</span>
-                <span className='flex justify-end font-thin italic'><FormatDate isoString={item.createDate} /></span>
-              </div>
-              <div className='text-[15px]'>
-                <div className='flex px-[15px] gap-3 '>
-                  <span className='font-serif'>Code:</span>
-                  <span className='font-thin'>{item.code}</span>
-                  <span className='font-serif'>-</span>
-                  <span className='font-thin'>{item.id}</span>
+                <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[78vh]'>
+                    {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => {
+                        return (
+                            <div className='shadow-md shadow-gray-600 pt-[10px] rounded-2xl w-[93%] h-[23em] bg-[#ffff] mb-[20px]'>
+                                <div className='flex flex-col justify-between px-[15px] text-black font-thin'>
+                                    <span className='flex justify-end font-thin italic'><FormatDate isoString={item.createDate} /></span>
+                                </div>
+                                <div className='text-[15px]'>
+                                    <div className='flex px-[15px] gap-3 '>
+                                        <span className='font-serif'>Code:</span>
+                                        <span className='font-thin'>{item.code}</span>
+                                        <span className='font-serif'>-</span>
+                                        <span className='font-thin'>{item.id}</span>
+                                    </div>
+                                    <div className='flex justify-start px-[15px] text-black'>
+                                        <input hidden className='bg-[#e9ddc200] text-center font-thin' value={item.customerId} readOnly />
+                                    </div>
+                                    <div className='flex justify-start px-[15px] text-black'>
+                                        <p className='font-serif w-full'>Customer Name: </p>
+                                        <span className='w-full flex justify-center font-thin'>{item.customerName}</span>
+                                    </div>
+                                    <div className='flex  px-[15px] text-black'>
+                                        <p className='w-[260px] font-serif '>Staff Name:</p>
+                                        <span className='w-full flex font-thin'>{item.staffName}</span>
+                                    </div>
+                                </div>
+                                <div className='grid grid-cols-3 border-x-0 font-extralight italic border-t-0 border mx-[10px] border-b-black pb-[2px]'>
+                                    <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
+                                    <div className='col-start-3 ml-6 flex justify-start'>Price</div>
+                                </div>
+                                <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
+                                    {item.buyOrderDetails.map((orderDetail, index) => (
+                                        <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
+                                            <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
+                                            <div className='col-start-3 gap-1 flex justify-end text-[12px]'>
+                                                <span>{formatPrice(orderDetail.unitPrice)}</span>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className='border border-x-0 border-b-0 mx-[15px] border-t-black pt-2 flex justify-between'>
+                                    <div className='font-bold'>Total</div>
+                                    <span className='font-semibold'>{formatPrice(item.totalAmount)}</span>
+                                </div>
+
+
+
+                                <div className=' flex justify-around'>
+                                    <button  type='button' className="m-0 py-2 border border-[#ffffff] bg-[#36b86c] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#bd5f4f7e] active:bg-[#ffff] focus:outline-none">Completed</button>                                   
+                                </div>
+                                <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
+                                    {item.description}
+                                </div>
+                            </div>
+                        )
+                    })}
                 </div>
-                <div className='flex justify-start px-[15px] text-black'>
-                  <input hidden className='bg-[#e9ddc200] text-center font-thin' value={item.customerId} readOnly />
-                </div>
-                <div className='flex justify-start px-[15px] text-black'>
-                  <p className='font-serif w-full'>Customer Name: </p>
-                  <span className='w-full flex justify-center font-thin'>{item.customerName}</span>
-                </div>
-                <div className='flex  px-[15px] text-black'>
-                  <p className='w-[260px] font-serif '>Staff Name:</p>
-                  <span className='w-full flex font-thin'>{item.staffName}</span>
-                </div>
-              </div>
-              <div className='grid grid-cols-3 border-x-0 font-extralight italic border-t-0 border mx-[10px] border-b-black pb-[2px]'>
-                <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
-                <div className='col-start-3 ml-6 flex justify-start'>Price</div>
-              </div>
-              <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
-                {item.sellOrderDetails.map((orderDetail, index) => (
-                  <div key={index} className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
-                    <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
-                    <div className='col-start-3 gap-1 flex justify-end text-[12px]'>
-                      <span>{formatPrice(orderDetail.unitPrice - orderDetail.unitPrice * orderDetail.promotionRate)}</span>
-                      <span className='text-red-500 flex justify-center text-[12px]'>{' x '}{orderDetail.quantity}</span>
-                    </div>
-                    <span className='text-[12px]'>(-{formatPrice(orderDetail.unitPrice * orderDetail.promotionRate)})</span>
-                  </div>
-                ))}
-              </div>
-              <div className='mx-[15px] flex justify-between'>
-                <div className='font-bold'>Total</div>
-                <span className='font-semibold'>{formatPrice(item.finalAmount)}</span>
-              </div>
-              <div className='mx-[15px] border-t-black flex justify-between'>
-                <div className='font-thin italic'>Discount Promotion</div>
-                <span className='font-thin'>{formatPrice(calculateTotalPromotionValue(item))}</span>
-              </div>
-              <div className='mx-[15px] border-t-black flex justify-between pb-2'>
-                <div className='font-thin italic'>Discount Rate</div>
-                <span className='font-thin'>{item.specialDiscountRate}</span>
-              </div>
-              <div className=' flex justify-around'>
-                <button type='button' className="m-0 py-2 border border-[#ffffff] bg-[#c0a52c] text-white px-10 rounded-md">Success</button>
-              </div>
-              <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
-                {item.description}
-              </div>
+
             </div>
-          ))}
-        </div>
-      </div>
       <ReactPaginate
          onPageChange={handlePageClick}
          pageRangeDisplayed={3}
@@ -211,4 +207,4 @@ const Cs_Complete = () => {
   </>)
 }
 
-export default Cs_Complete
+export default Cs_CompleteBuy

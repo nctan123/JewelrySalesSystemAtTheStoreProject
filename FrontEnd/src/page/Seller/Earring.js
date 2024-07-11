@@ -146,7 +146,7 @@ const Ring = () => {
           />
         </div>
       </form>
-      <div className='h-[80vh] overflow-y-auto mt-3 flex-col justify-center mx-auto'>
+      <div className='h-[79vh] overflow-y-auto mt-3 flex-col justify-center mx-auto'>
         <div className='grid grid-cols-4 mt-1 w-fit space-x-2 mx-auto'>
           {listRing && listRing.length > 0 &&
             listRing.filter(item => item.categoryId === 2).map((item, index) => {
@@ -327,21 +327,21 @@ const Ring = () => {
         </Modal>
       </div>
       <ReactPaginate
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
-        pageCount={totalPage}
-        pageClassName="mx-1"
-        pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
-        previousClassName="mx-1"
-        previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-        nextClassName="mx-1"
-        nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-        breakLabel="..."
-        breakClassName="mx-1 "
-        breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-        containerClassName="flex justify-center items-center space-x-4"
-        activeClassName="bg-blue-500 text-white rounded-xl"
+         onPageChange={handlePageClick}
+         pageRangeDisplayed={3}
+         marginPagesDisplayed={2}
+         pageCount={totalPage}
+         pageClassName="mx-1"
+         pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
+         previousClassName="mx-1"
+         previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+         nextClassName="mx-1"
+         nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+         breakLabel="..."
+         breakClassName="mx-1 "
+         breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
+         containerClassName="flex justify-center items-center space-x-4 h-[36px]"
+         activeClassName="bg-blue-500 text-white rounded-xl"
         renderOnZeroPageCount={null}
         // className="bg-black flex justify-center items-center"
         previousLabel={

@@ -27,10 +27,14 @@ const path = {
 
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
-    CS_REVENUE: 'cs_revenue',
+    CS_REVENUE: 'cs_bill',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
     CS_WAITINGPAYMENT: 'cs_waitingPayment',
+    CS_BUYPRODUCT:'cs_buyProduct',
+    CS_ONPROCESSBUY: 'cs_onprocessBuy',
+    CS_COMPLETEBUY: 'cs_completeBuy',
+    PAYMENTRESULT: 'payment-result',
 // ADMIN
     DASHBOARD: 'Dashboard',
     MANAGE: 'Manage',

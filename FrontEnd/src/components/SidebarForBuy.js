@@ -67,7 +67,7 @@ const SidebarForBuy = () => {
   const handleSubmitNonCompany = async () => {
     const data = {
       customerPhoneNumber,
-      staffId:4,
+      staffId:localStorage.getItem('staffId'),
       productName,
       diamondGradingCode,
       materialId,
@@ -109,7 +109,7 @@ const SidebarForBuy = () => {
     const data = {
       customerPhoneNumber,
       createDate: new Date().toISOString(),
-      staffId: 4, // Update this ID based on your logic
+      staffId: localStorage.getItem('staffId'), // Update this ID based on your logic
       description,
       productCodesAndQuantity,
       productCodesAndEstimatePrices,

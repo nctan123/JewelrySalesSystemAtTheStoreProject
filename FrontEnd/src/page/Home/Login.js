@@ -50,7 +50,7 @@ export default function LoginToStore() {
             navigate('/manager');
             break;
           case 'cashier':
-            navigate('/cs_public');
+            navigate('/cs_public/cs_order/cs_waitingPayment');
             break;
           // Add more cases for other roles if needed
           default:
