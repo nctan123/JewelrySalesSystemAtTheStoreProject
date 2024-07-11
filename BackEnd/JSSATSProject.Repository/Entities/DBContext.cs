@@ -361,7 +361,6 @@ public partial class DBContext : DbContext
 
             entity.ToTable("Diamond");
 
-            entity.HasIndex(e => e.DiamondGradingCode, "UQ__Diamond__357D4CF994BB6B22").IsUnique();
 
             entity.HasIndex(e => e.Code, "UQ__Diamond__357D4CF976C883B6").IsUnique();
 

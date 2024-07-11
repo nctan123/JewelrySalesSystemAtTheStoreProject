@@ -1,5 +1,6 @@
 using JSSATSProject.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace JSSATSProject.Repository.Repos;
 
@@ -27,5 +28,15 @@ public class BuyOrderRepository : GenericRepository<BuyOrder>
             .Include(b => b.BuyOrderDetails)
             .Include(b => b.Staff)
             .FirstAsync();
+    }
+
+    public async Task<decimal> SumAsync(Expression<Func<BuyOrder, bool>> filter,
+        Expression<Func<BuyOrder, decimal>> selector)
+    {
+        IQueryable<BuyOrder> query = dbSet;
+
+        if (filter != null) query = query.Where(filter);
+
+        return await query.SumAsync(selector);
     }
 }

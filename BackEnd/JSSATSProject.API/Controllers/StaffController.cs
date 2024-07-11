@@ -24,7 +24,7 @@ public class StaffController : ControllerBase
         try
         {
             var responseModel =
-                await _staffService.GetAllAsync(startDate, endDate, pageIndex, pageSize, sortBy, ascending);
+                await _staffService.GetAllSellerAsync(startDate, endDate, pageIndex, pageSize, sortBy, ascending);
             return Ok(responseModel);
         }
         catch (Exception ex)
@@ -38,7 +38,7 @@ public class StaffController : ControllerBase
     public async Task<IActionResult> SearchAsync([FromQuery] string nameSearch, [FromQuery] DateTime startDate,
         [FromQuery] DateTime endDate, [FromQuery] int pageIndex, [FromQuery] int pageSize)
     {
-        var responseModel = await _staffService.SearchAsync(nameSearch, startDate, endDate, pageIndex, pageSize);
+        var responseModel = await _staffService.SearchSellerAsync(nameSearch, startDate, endDate, pageIndex, pageSize);
         return Ok(responseModel);
     }
 
@@ -81,33 +81,41 @@ public class StaffController : ControllerBase
 
     [HttpGet]
     [Route("GetSellOrderByStaffId")]
-    public async Task<IActionResult> GetSellOrdersByStaffIdAsync(int id, int pageIndex, int pageSize)
+    public async Task<IActionResult> GetSellOrdersByStaffIdAsync(int id, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
     {
-        var responseModel = await _staffService.GetSellOrdersByStaffIdAsync(id, pageIndex, pageSize);
+        var responseModel = await _staffService.GetSellOrdersByStaffIdAsync(id, pageIndex, pageSize,startDate,endDate);
         return Ok(responseModel);
     }
 
     [HttpGet]
     [Route("GetBuyOrdersStaffId")]
-    public async Task<IActionResult> GetBuyOrdersStaffIdAsync(int id, int pageIndex, int pageSize)
+    public async Task<IActionResult> GetBuyOrdersStaffIdAsync(int id, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
     {
-        var responseModel = await _staffService.GetBuyOrdersByStaffIdAsync(id, pageIndex, pageSize);
+        var responseModel = await _staffService.GetBuyOrdersByStaffIdAsync(id, pageIndex, pageSize, startDate, endDate);
         return Ok(responseModel);
     }
 
     [HttpGet]
     [Route("SearchSellOrders")]
-    public async Task<IActionResult> SearchSellOrders(int id, string orderCode, int pageIndex = 1, int pageSize = 10)
+    public async Task<IActionResult> SearchSellOrders(int id, string orderCode, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
     {
-        var result = await _staffService.SearchSellOrdersByStaffIdAsync(id, orderCode, pageIndex, pageSize);
+        var result = await _staffService.SearchSellOrdersByStaffIdAsync(id, orderCode, pageIndex, pageSize, startDate, endDate);
         return Ok(result);
     }
 
     [HttpGet]
     [Route("SearchBuyOrders")]
-    public async Task<IActionResult> SearchBuyOrders(int id, string orderCode, int pageIndex = 1, int pageSize = 10)
+    public async Task<IActionResult> SearchBuyOrders(int id, string orderCode, int pageIndex , int pageSize , DateTime startDate, DateTime endDate)
     {
-        var result = await _staffService.SearchBuyOrdersByStaffIdAsync(id, orderCode, pageIndex, pageSize);
+        var result = await _staffService.SearchBuyOrdersByStaffIdAsync(id, orderCode, pageIndex, pageSize, startDate, endDate);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("GetById")]
+    public async Task<IActionResult> GetByIdOrders(int id)
+    {
+        var result = await _staffService.GetByIdAsync(id);
         return Ok(result);
     }
 }
