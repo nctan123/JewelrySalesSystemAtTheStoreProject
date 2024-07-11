@@ -14,8 +14,8 @@ export const sidebarMenuCashier = [
         icons: <BsCashCoin size={24} color="white" />
     },
     {
-        path: 'cs_revenue',
-        text: 'Revenue',
+        path: 'cs_bill',
+        text: 'Bill For Invoice',
         icons: <GiReceiveMoney size={24} color="white" />
     },
     {

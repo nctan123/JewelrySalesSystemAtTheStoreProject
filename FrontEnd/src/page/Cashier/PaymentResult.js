@@ -19,7 +19,7 @@ const PaymentResult = () => {
           paymentId: paymentId,
           paymentMethodId: 4,
           amount: amount/100,
-          externalTransactionCode: null,
+          externalTransactionCode: '',
           status: status
         };
     
@@ -39,11 +39,26 @@ const PaymentResult = () => {
     const CreateGuarantee  = async () => {
         await axios.post('https://jssatsproject.azurewebsites.net/api/Guarantee/CreateGuarantee', orderId);
     }
+    // const UpdateSpecialDiscount = async () => {
+    //     await axios.put('https://jssatsproject.azurewebsites.net/api/SpecialDiscountRequest/UpdateBySellOrder', orderId);
+    // }
     const UpdateSpecialDiscount = async () => {
-        await axios.put('https://jssatsproject.azurewebsites.net/api/SpecialDiscountRequest/UpdateBySellOrder', orderId);
+        try {
+            await axios.put('https://jssatsproject.azurewebsites.net/api/SpecialDiscountRequest/UpdateBySellOrder', {
+                orderId: orderId
+            });
+        } catch (error) {
+            console.error('Error updating special discount:', error);
+        }
     }
     const UpdatePoint = async () => {
-        await axios.put('https://jssatsproject.azurewebsites.net/api/Point/UpdatePoint', orderId);
+        try {
+            await axios.put('https://jssatsproject.azurewebsites.net/api/Point/UpdatePoint', {
+                orderId: orderId
+            });
+        } catch (error) {
+            console.error('Error updating special discount:', error);
+        }
     }
     useEffect(() => {
 
@@ -51,7 +66,7 @@ const PaymentResult = () => {
             setMessage('Payment successful!');
             toast.success('Payment successful!');
             CreatePaymentDetail('completed')
-            UpdatePayment('')
+            UpdatePayment('completed')
             CreateGuarantee()
             UpdateSpecialDiscount()
             UpdatePoint()
@@ -60,7 +75,7 @@ const PaymentResult = () => {
             setMessage(`Payment failed. Error code: ${vnp_ResponseCode}`);
             toast.error(`Payment failed. Error code: ${vnp_ResponseCode}`);
             CreatePaymentDetail('fail')
-            UpdatePayment('')
+            UpdatePayment('fail')
         }
     }, [location]);
 

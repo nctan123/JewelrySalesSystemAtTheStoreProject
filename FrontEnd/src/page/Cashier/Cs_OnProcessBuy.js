@@ -54,17 +54,20 @@ const Cs_OnProcessBuy = () => {
     const handlePageClick = event => {
         getInvoice(event.selected + 1);
     };
-    const pollingInterval = 5000; // Thời gian polling, ví dụ mỗi 30 giây
+    const pollingInterval = 5000; // Thời gian polling, ví dụ mỗi 5 giây
+
+    const [currentPage, setCurrentPage] = useState(1);
+
     useEffect(() => {
-        getInvoice(1);
+        getInvoice(currentPage);
         const interval = setInterval(() => {
-          getInvoice(1);
+            getInvoice(currentPage);
         }, pollingInterval);
-    
+
         // Cleanup function để clear interval khi component unmount
         return () => clearInterval(interval);
-      }, []);
-    
+    }, [currentPage]);
+
 
     const handleSearch = (event) => {
         const searchTerm = event.target.value.trim();
@@ -187,14 +190,11 @@ const Cs_OnProcessBuy = () => {
 
     const handleSubmitOrder = async (item, event) => {
         event.preventDefault();
-        const res = await axios.get(
-            `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${item.customerPhoneNumber}&pageIndex=1&pageSize=10`
-          );
-       console.log(res.data.data[0].id)
+
         let data = {
             sellOrderId: null,
             buyOrderId: item.id,
-            customerId: res.data.data[0].id,
+            customerId: item.customerId,
             createDate: currentTime,
             amount: item.totalAmount,
         };
@@ -240,7 +240,7 @@ const Cs_OnProcessBuy = () => {
     };
 
     const [externalTransactionCode, setexternalTransactionCode] = useState('')
-   
+
     const handleCompleteCash = async (item, phone) => {
         // event.preventDefault();
         let data = {
@@ -633,8 +633,7 @@ const Cs_OnProcessBuy = () => {
 
             </div>
             <ReactPaginate
-                onPageChange={handlePageClick}
-                pageRangeDisplayed={3}
+                onPageChange={(e) => setCurrentPage(e.selected + 1)} pageRangeDisplayed={3}
                 marginPagesDisplayed={2}
                 pageCount={totalPage}
                 pageClassName="mx-1"

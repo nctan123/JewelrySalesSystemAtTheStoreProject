@@ -40,6 +40,79 @@ const SidebarRight = () => {
   const CusPoint = useSelector(state => state.cart.CusPoint);
   const Rate = useSelector(state => state.cart.Rate);
 
+  
+  const handleSubmitOrder = async (isDraft = false) => {
+    // Create a new object for ProductCodesAndPromotionIds with 0 values replaced by null
+    const adjustedProductCodesAndPromotionIds = Object.fromEntries(
+      Object.entries(productCodesAndPromotionIds).map(([key, value]) => [key, value === 0 ? null : value])
+    );
+
+    // Remove entries with null values
+    const filteredProductCodesAndPromotionIds = Object.fromEntries(
+      Object.entries(adjustedProductCodesAndPromotionIds).filter(([_, value]) => value !== null)
+    );
+
+    const data = {
+      id: IdTemPo,
+      customerPhoneNumber,
+      staffId: localStorage.getItem('staffId'), // Replace with actual staffId if needed
+      createDate: new Date().toISOString(),
+      description,
+      discountPoint: point,
+      productCodesAndQuantity,
+      productCodesAndPromotionIds: Object.keys(filteredProductCodesAndPromotionIds).length === 0 ? null : filteredProductCodesAndPromotionIds,
+      isSpecialDiscountRequested: parseFloat(specialDiscountRate) !== 0,
+      specialDiscountRate,
+      specialDiscountRequestId: null,
+      discountRejectedReason: '',
+      specialDiscountRequestStatus: null,
+    };
+    console.log(data);
+
+    if (!productCodesAndQuantity || Object.keys(productCodesAndQuantity).length === 0) {
+      toast.error('No Product');
+      return;
+    }
+
+    try {
+      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder', data);
+      if (!isDraft) {
+        await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${res.data.id}`, {
+          status: 'waiting for customer payment',
+          createDate: new Date().toISOString(),
+        });
+      }
+      if (res.status === 201 || res.status === 200) {        
+        dispatch(deleteCustomer());
+        dispatch(deleteProductAll());
+        setDescription('');
+        setSpecialDiscountRate('0');
+        setCustomerPhoneNumber()
+        setTotalInvoice(0);
+        setpoint(0)
+        toast.success('Success');
+        // Update the invoice list immediately
+        getListOrder(1);
+        getResponseManager(1)
+      } else {
+        toast.error('Add Fail');
+        console.error('Unexpected response:', res);
+      }
+    }  catch (error) {
+      console.error('Error adding invoice:', error);
+      if (error.response) {
+        console.error('Error response:', error.response);
+        console.error('Error response data:', error.response.data);
+        toast.error(`Add Fail: ${error.response.data.message || 'Unknown error'}`);
+      } else if (error.request) {
+        console.error('Error request:', error.request);
+        toast.error('Add Fail: No response received from server');
+      } else {
+        console.error('Error message:', error.message);
+        toast.error(`Add Fail: ${error.message}`);
+      }
+    }
+  };
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date().toISOString());
@@ -118,14 +191,6 @@ const SidebarRight = () => {
     // Cleanup function để clear interval khi component unmount
     return () => clearInterval(interval);
   }, []);
-  const handleCheckboxClick = id => {
-    setCheckedItems(prev => ({
-      ...prev,
-      [id]: true,
-    }));
-    toast.warning('Sent Special Discount');
-  };
-
   const formatNumber = price => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
@@ -168,77 +233,6 @@ const SidebarRight = () => {
     }
   };
 
-  const handleSubmitOrder = async (isDraft = false) => {
-    // Create a new object for ProductCodesAndPromotionIds with 0 values replaced by null
-    const adjustedProductCodesAndPromotionIds = Object.fromEntries(
-      Object.entries(productCodesAndPromotionIds).map(([key, value]) => [key, value === 0 ? null : value])
-    );
-
-    // Remove entries with null values
-    const filteredProductCodesAndPromotionIds = Object.fromEntries(
-      Object.entries(adjustedProductCodesAndPromotionIds).filter(([_, value]) => value !== null)
-    );
-
-    const data = {
-      id: IdTemPo,
-      customerPhoneNumber,
-      staffId: localStorage.getItem('staffId'), // Replace with actual staffId if needed
-      createDate: new Date().toISOString(),
-      description,
-      discountPoint: point,
-      productCodesAndQuantity,
-      productCodesAndPromotionIds: Object.keys(filteredProductCodesAndPromotionIds).length === 0 ? null : filteredProductCodesAndPromotionIds,
-      isSpecialDiscountRequested: parseFloat(specialDiscountRate) !== 0,
-      specialDiscountRate,
-      specialDiscountRequestId: null,
-      discountRejectedReason: '',
-      specialDiscountRequestStatus: null,
-    };
-    console.log(data);
-
-    if (!productCodesAndQuantity || Object.keys(productCodesAndQuantity).length === 0) {
-      toast.error('No Product');
-      return;
-    }
-
-    try {
-      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder', data);
-      if (!isDraft) {
-        await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${res.data.id}`, {
-          status: 'waiting for customer payment',
-          createDate: new Date().toISOString(),
-        });
-      }
-      if (res.status === 201 || res.status === 200) {
-        toast.success('Success');
-        dispatch(deleteCustomer());
-        dispatch(deleteProductAll());
-        setDescription('');
-        setSpecialDiscountRate('0');
-        setTotalInvoice(0);
-        setpoint(0)
-        // Update the invoice list immediately
-        getListOrder(1);
-        getResponseManager(1)
-      } else {
-        toast.error('Add Fail');
-        console.error('Unexpected response:', res);
-      }
-    } catch (error) {
-      console.error('Error adding invoice:', error);
-
-      if (error.response) {
-        console.error('Error response:', error.response);
-        toast.error(`Add Fail: ${error.response.data.message || 'Unknown error'}`);
-      } else if (error.request) {
-        console.error('Error request:', error.request);
-        toast.error('Add Fail: No response received from server');
-      } else {
-        console.error('Error message:', error.message);
-        toast.error(`Add Fail: ${error.message}`);
-      }
-    }
-  };
 
 
 
@@ -255,7 +249,6 @@ const SidebarRight = () => {
       }
     }
   };
-
   const handleRequestToScreen = async (event, phone, listsellorder, id, rate) => {
     console.log('rate',rate)
     event.preventDefault();
@@ -636,6 +629,7 @@ const SidebarRight = () => {
             <input
               className="w-20 h-full text-center rounded-md outline-none text-sm text-red font-semibold"
               type="number"
+              step='0.01'
               min="0"
               max="1"
               value={specialDiscountRate}
@@ -676,8 +670,8 @@ const SidebarRight = () => {
         <button type='submit'
           onClick={() => {
             handleSubmitOrder();
-            dispatch(deleteCustomer());
-            dispatch(deleteProductAll());
+            // dispatch(deleteCustomer());
+            // dispatch(deleteProductAll());
           }} class="m-0 relative cursor-pointer opacity-90 hover:opacity-100 transition-opacity p-[2px] bg-black rounded-[16px] bg-gradient-to-t from-[#5d5fef6b] to-[#7b7deb] active:scale-95">
           <span class="w-full h-full flex items-center gap-2 px-8 py-3 text-white rounded-[14px] bg-gradient-to-t from-[#5D5FEF] to-[#5D5FEF]">
             <FaFileInvoiceDollar /> Invoice

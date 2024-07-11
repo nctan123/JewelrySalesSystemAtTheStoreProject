@@ -206,7 +206,7 @@ const Cs_Process = () => {
         </div>
       </div>
       <ReactPaginate
-         onPageChange={handlePageClick}
+        onPageChange={handlePageClick}
          pageRangeDisplayed={3}
          marginPagesDisplayed={2}
          pageCount={totalPage}
