@@ -13,4 +13,6 @@ public class RequestCreateVnPayment
     public DateTime CreateDate { get; set; }
     [Range(0, (double)decimal.MaxValue)]
     public decimal Amount { get; set; }
+
+    public string ReturnUrl { get; set; }
 }

@@ -18,4 +18,11 @@ public interface ICustomerService
     public Task<ResponseModel> GetSellOrdersByPhoneAsync(string phoneNumber, int pageIndex, int pageSize);
     public Task<ResponseModel> GetPaymentsByPhoneAsync(string phoneNumber, int pageIndex, int pageSize);
     public Task<ResponseModel> GetBuyOrdersByPhoneAsync(string phoneNumber, int pageIndex, int pageSize);
+    public Task<ResponseModel> GetCustomerSummaryAsync(int customerId);
+
+    public Task<ResponseModel> SearchSellOrdersAsync(string phone, string orderCode, int pageIndex, int pageSize);
+
+    public Task<ResponseModel> SearchPaymentsAsync(string phone, string orderCode, int pageIndex, int pageSize);
+
+    public Task<ResponseModel> SearchBuyOrdersAsync(string phone, string orderCode, int pageIndex, int pageSize);
 }

@@ -15,6 +15,8 @@ public class ResponsePayment
 
     public string CustomerName { get; set; }
 
+    public int CustomerId { get; set; }
+
     public DateTime CreateDate { get; set; }
 
     public decimal Amount { get; set; }

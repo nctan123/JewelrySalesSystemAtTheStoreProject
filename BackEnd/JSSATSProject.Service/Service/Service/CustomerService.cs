@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
@@ -12,6 +13,7 @@ using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -118,7 +120,8 @@ public class CustomerService : ICustomerService
             Phone = entity.Phone,
             Email = entity.Email,
             Gender = entity.Gender,
-            Address = entity.Address
+            Address = entity.Address,
+            Point = entity.Point
         }).ToList();
 
         // Return the mapped response
@@ -201,52 +204,76 @@ public class CustomerService : ICustomerService
 
     public async Task<ResponseModel> GetSellOrdersByPhoneAsync(string phoneNumber, int pageIndex, int pageSize)
     {
-        // Fetch the customer by phone number
-        var customerEntity = (await _unitOfWork.CustomerRepository.GetAsync(
-                c => c.Phone.Equals(phoneNumber),
-                includeProperties:
-                "SellOrders,SellOrders.SellOrderDetails,SellOrders.Staff," +
-                "SellOrders.SpecialDiscountRequest," +
-                "SellOrders.SellOrderDetails.Product"))
-            .FirstOrDefault();
-
-        if (customerEntity == null)
+        try
         {
+            // Fetch the customer by phone number
+            var customerEntity = (await _unitOfWork.CustomerRepository.GetAsync(
+                    c => c.Phone.Equals(phoneNumber),
+                    includeProperties:
+                    "SellOrders,SellOrders.SellOrderDetails,SellOrders.Staff," +
+                    "SellOrders.SpecialDiscountRequest,SellOrders.Payments.PaymentDetails.PaymentMethod," +
+                    "SellOrders.SellOrderDetails.Product," + "SellOrders.SellOrderDetails.Promotion"))
+                .FirstOrDefault();
+
+            if (customerEntity == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "Customer not found",
+                    TotalPages = 0,
+                    TotalElements = 0
+                };
+            }
+
+            // Get the total count of sell orders
+            var totalCount = customerEntity.SellOrders.Count();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // Paginate the sell orders
+            var paginatedOrders = customerEntity.SellOrders
+                .OrderByDescending(order => order.CreateDate)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            // Process each sell order asynchronously
+            var sellOrders = new List<ResponseSellOrder>();
+            foreach (var order in paginatedOrders)
+            {
+                var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
+
+                // Calculate final price
+                responseSellOrder.FinalAmount = await GetFinalPriceAsync(order);
+
+                // Map sell order details
+                responseSellOrder.SellOrderDetails =
+                    _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
+
+                sellOrders.Add(responseSellOrder);
+            }
+
+            return new ResponseModel
+            {
+                TotalPages = totalPages,
+                TotalElements = totalCount,
+                Data = sellOrders,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception (consider using a logging framework)
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "Customer not found",
+                MessageError = $"An error occurred: {ex.Message}",
                 TotalPages = 0,
                 TotalElements = 0
             };
         }
-
-        // Get the total count of sell orders
-        var totalCount = customerEntity.SellOrders.Count();
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-        // Paginate the sell orders
-        var sellOrders = customerEntity.SellOrders
-            .OrderByDescending(order => order.CreateDate)
-            .Skip((pageIndex - 1) * pageSize)
-            .Take(pageSize)
-            .Select(order =>
-                {
-                    var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
-                    responseSellOrder.SellOrderDetails =
-                        _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
-                    return responseSellOrder;
-                })
-            .ToList();
-
-        return new ResponseModel
-        {
-            TotalPages = totalPages,
-            TotalElements = totalCount,
-            Data = sellOrders,
-            MessageError = ""
-        };
     }
+
 
     public async Task<ResponseModel> GetPaymentsByPhoneAsync(string phoneNumber, int pageIndex, int pageSize)
     {
@@ -255,7 +282,7 @@ public class CustomerService : ICustomerService
             // Fetch the customer by phone number
             var customer = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
-                includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Order");
+                includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Sellorder,Payments.Buyorder");
 
             var customerEntity = customer.FirstOrDefault();
 
@@ -276,6 +303,7 @@ public class CustomerService : ICustomerService
 
             // Paginate the payments
             var payments = customerEntity.Payments
+                .Where(p => p.SellorderId != null)
                 .OrderByDescending(payment => payment.CreateDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
@@ -354,5 +382,221 @@ public class CustomerService : ICustomerService
         };
     }
 
+    public async Task<ResponseModel> GetCustomerSummaryAsync(int customerId)
+    {
+        var customer = await _unitOfWork.CustomerRepository.GetEntityByIdAsync(customerId);
+
+        if (customer == null)
+        {
+            return new ResponseModel
+            {
+                MessageError = "Customer not found."
+            };
+        }
+
+        var completedSellOrders = customer.SellOrders.Where(o => o.Status == OrderConstants.CompletedStatus).ToList();
+        var otherSellOrders = customer.SellOrders.Where(o => o.Status != OrderConstants.CompletedStatus && o.Status != OrderConstants.CanceledStatus).ToList();
+
+        decimal completedSellOrderSum = 0;
+        foreach (var sellOrder in completedSellOrders)
+        {
+            completedSellOrderSum += await GetFinalPriceAsync(sellOrder);
+        }
+
+        decimal otherSellOrderSum = 0;
+        foreach (var sellOrder in otherSellOrders)
+        {
+            otherSellOrderSum += await GetFinalPriceAsync(sellOrder);
+        }
+
+        var completedBuyOrders = customer.BuyOrders.Where(o => o.Status == OrderConstants.CompletedStatus).ToList();
+        var otherBuyOrders = customer.BuyOrders.Where(o => o.Status != OrderConstants.CompletedStatus && o.Status != OrderConstants.CanceledStatus).ToList();
+
+        var completedPayments = customer.Payments.Where(p => p.Status == PaymentConstants.CompletedStatus && p.SellorderId != null).ToList();
+        var pendingPayments = customer.Payments.Where(p => p.Status != PaymentConstants.CompletedStatus && p.Status != PaymentConstants.CanceledStatus && p.SellorderId != null).ToList();
+
+        var orderSummary = new ResponseCustomerSummary
+        {
+            CustomerPhone = customer.Phone,
+            // Buy Orders
+            BuyOrderCompletedCount = completedBuyOrders.Count,
+            BuyOrderCompletedSum = completedBuyOrders.Sum(o => o.TotalAmount),
+            BuyOrderOtherCount = otherBuyOrders.Count,
+            BuyOrderOtherSum = otherBuyOrders.Sum(o => o.TotalAmount),
+            // Sell Orders
+            SellOrderCompletedCount = completedSellOrders.Count,
+            SellOrderCompletedSum = completedSellOrderSum,
+            SellOrderOtherCount = otherSellOrders.Count,
+            SellOrderOtherSum = otherSellOrderSum,
+            // Payments
+            PaymentCompletedCount = completedPayments.Count,
+            PaymentCompletedSum = completedPayments.Sum(p => p.Amount),
+            PaymentPendingCount = pendingPayments.Count,
+            PaymentPendingSum = pendingPayments.Sum(p => p.Amount)
+        };
+
+        return new ResponseModel
+        {
+            Data = orderSummary
+        };
+    }
+
+
+    public async Task<decimal> GetFinalPriceAsync(SellOrder sellOrder)
+    {
+        var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
+        var discountPoint = sellOrder.DiscountPoint;
+        var specialDiscountRequest = sellOrder.SpecialDiscountRequest;
+        var specialDiscountRate = (specialDiscountRequest?.DiscountRate).GetValueOrDefault(0);
+        if (specialDiscountRequest?.Status == SpecialDiscountRequestConstants.RejectedStatus) specialDiscountRate = 0;
+        decimal finalPrice = (sellOrder!.TotalAmount - discountPoint * pointRate) * (1 - specialDiscountRate);
+        return finalPrice;
+    }
+
+    public async Task<ResponseModel> SearchSellOrdersAsync(string phone, string orderCode, int pageIndex, int pageSize)
+    {
+        var customer = await _unitOfWork.CustomerRepository.GetAsync(
+            c => c.Phone.Equals(phone),
+            includeProperties: "SellOrders,SellOrders.SellOrderDetails,SellOrders.Staff," +
+                               "SellOrders.SpecialDiscountRequest,SellOrders.SellOrderDetails.Product");
+
+        var customerEntity = customer.FirstOrDefault();
+
+        if (customerEntity == null)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Customer not found",
+                TotalPages = 0,
+                TotalElements = 0
+            };
+        }
+
+        var sellOrders = customerEntity.SellOrders.Where(s => s.Code.Contains(orderCode)).ToList();
+        var totalCount = sellOrders.Count;
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        // Paginate the sell orders
+        var paginatedOrders = sellOrders
+            .OrderByDescending(order => order.CreateDate)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        // Process each sell order asynchronously
+        var responseSellOrders = new List<ResponseSellOrder>();
+        foreach (var order in paginatedOrders)
+        {
+            var responseSellOrder = _mapper.Map<ResponseSellOrder>(order);
+
+            // Calculate final price
+            responseSellOrder.FinalAmount = await GetFinalPriceAsync(order);
+
+            // Map sell order details
+            responseSellOrder.SellOrderDetails =
+                _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
+
+            responseSellOrders.Add(responseSellOrder);
+        }
+
+        return new ResponseModel
+        {
+            TotalPages = totalPages,
+            TotalElements = totalCount,
+            Data = responseSellOrders,
+            MessageError = ""
+        };
+    }
+
+    public async Task<ResponseModel> SearchPaymentsAsync(string phone, string orderCode, int pageIndex, int pageSize)
+    {
+        var customer = await _unitOfWork.CustomerRepository.GetAsync(
+            c => c.Phone.Equals(phone),
+            includeProperties: "Payments,Payments.PaymentDetails,Payments.PaymentDetails.PaymentMethod,Payments.Sellorder,Payments.Buyorder");
+
+        var customerEntity = customer.FirstOrDefault();
+
+        if (customerEntity == null)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Customer not found",
+                TotalPages = 0,
+                TotalElements = 0
+            };
+        }
+
+        var paymentsQuery = customerEntity.Payments
+            .Where(p => (p.Sellorder != null && p.Sellorder.Code.Contains(orderCode)) ||
+                        (p.Buyorder != null && p.Buyorder.Code.Contains(orderCode)));
+
+        // Get total count before pagination
+        var totalCount = paymentsQuery.Count();
+
+        // Paginate the filtered payments
+        var paginatedPayments = paymentsQuery
+            .OrderByDescending(payment => payment.CreateDate)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .Select(payment => _mapper.Map<ResponsePayment>(payment))
+            .ToList();
+
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        return new ResponseModel
+        {
+            TotalPages = totalPages,
+            TotalElements = totalCount,
+            Data = paginatedPayments,
+            MessageError = ""
+        };
+    }
+
+    public async Task<ResponseModel> SearchBuyOrdersAsync(string phone, string orderCode, int pageIndex, int pageSize)
+    {
+        var customer = await _unitOfWork.CustomerRepository.GetAsync(
+            c => c.Phone.Equals(phone),
+            includeProperties: "BuyOrders,BuyOrders.BuyOrderDetails,BuyOrders.Staff," +
+                               "BuyOrders.BuyOrderDetails.PurchasePriceRatio,BuyOrders.BuyOrderDetails.Material,BuyOrders.BuyOrderDetails.CategoryType");
+
+        var customerEntity = customer.FirstOrDefault();
+
+        if (customerEntity == null)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Customer not found",
+                TotalPages = 0,
+                TotalElements = 0
+            };
+        }
+
+        var buyOrders = customerEntity.BuyOrders.Where(b => b.Code.Contains(orderCode)).ToList();
+        var totalCount = buyOrders.Count;
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        var paginatedBuyOrders = buyOrders
+            .OrderByDescending(order => order.CreateDate)
+            .Skip((pageIndex - 1) * pageSize)
+            .Take(pageSize)
+            .Select(order =>
+            {
+                var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
+                responseBuyOrder.BuyOrderDetails = _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
+                return responseBuyOrder;
+            })
+            .ToList();
+
+        return new ResponseModel
+        {
+            TotalPages = totalPages,
+            TotalElements = totalCount,
+            Data = paginatedBuyOrders,
+            MessageError = ""
+        };
+    }
 
 }

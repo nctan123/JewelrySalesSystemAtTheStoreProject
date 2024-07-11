@@ -9,9 +9,11 @@ public class ResponseBuyOrder
 
     public string Code { get; set; }
 
+    public int CustomerId { get; set; } 
+
     public required string CustomerName { get; set; } 
 
-    public required int CustomerPhoneNumber { get; set; } 
+    public required string CustomerPhoneNumber { get; set; } 
 
     public required int StaffId { get; set; }
 
@@ -28,4 +30,6 @@ public class ResponseBuyOrder
 
     public virtual ICollection<ResponseBuyOrderDetail> BuyOrderDetails { get; set; } =
         new List<ResponseBuyOrderDetail>();
+
+    public string PaymentMethod { get; set; }
 }

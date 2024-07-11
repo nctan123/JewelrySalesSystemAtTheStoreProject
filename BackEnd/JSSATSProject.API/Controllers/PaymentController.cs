@@ -1,4 +1,5 @@
 ﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentModel;
@@ -21,11 +22,15 @@ public class PaymentController : ControllerBase
     private readonly ISellOrderService _sellOrderService;
     private readonly ISpecialDiscountRequestService _specialDiscountRequestService;
     private readonly IVnPayService _vnPayService;
+    private readonly IBuyOrderService _buyOrderService;
+
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public PaymentController(IPaymentService paymentService, IVnPayService vnPayService,
         IPaymentDetailService paymentDetailService, ISellOrderService sellOrderService,
         IGuaranteeService guaranteeService, ISellOrderDetailService sellOrderDetailService,
-        IPointService pointService, ISpecialDiscountRequestService specialDiscountRequestService)
+        IPointService pointService, ISpecialDiscountRequestService specialDiscountRequestService,
+        IBuyOrderService buyOrderService, IHttpClientFactory httpClientFactory)
     {
         _paymentService = paymentService;
         _vnPayService = vnPayService;
@@ -35,6 +40,8 @@ public class PaymentController : ControllerBase
         _sellOrderDetailService = sellOrderDetailService;
         _pointService = pointService;
         _specialDiscountRequestService = specialDiscountRequestService;
+        _buyOrderService = buyOrderService;
+        _httpClientFactory = httpClientFactory;
     }
 
     [HttpGet]
@@ -73,11 +80,27 @@ public class PaymentController : ControllerBase
             var updatesellorderstatus = new UpdateSellOrderStatus()
             {
                 Status = OrderConstants.CanceledStatus,
-                //Description = "Cancelled Payment"
             };
-            //update sellorder
-            var orderId = await _paymentService.GetOrderIdByPaymentIdAsync(id);
-            await _sellOrderService.UpdateStatusAsync(orderId, updatesellorderstatus);
+
+            var updatebuyorderstatus = new RequestUpdateBuyOrderStatus() { 
+                NewStatus = OrderConstants.CanceledStatus
+            };
+
+            
+            //update Order
+            var sellorderId = await _paymentService.GetSellOrderIdByPaymentIdAsync(id);
+            var buyorderId = await _paymentService.GetBuyOrderIdByPaymentIdAsync(id); 
+
+            if(sellorderId != null)
+            {
+                //sellorder
+                await _sellOrderService.UpdateStatusAsync(sellorderId.Value, updatesellorderstatus);
+            }
+            else
+            {
+                //buyorder
+                await _buyOrderService.UpdateAsync(buyorderId.Value, updatebuyorderstatus);
+            }
 
             
         }
@@ -85,94 +108,65 @@ public class PaymentController : ControllerBase
         return Ok(response);
     }
 
-    [HttpGet]
-    [Route("callback")]
-    public async Task<IActionResult> PaymentCallback()
-    {
-        var response = _vnPayService.PaymentExecute(Request.Query);
-        // VnPay
-        //Create PaymenDetail
-        //Update Status Payment
-        //Update Status SellOrdwer
-        try
-        {
-            //Status_PaymentDetail == failed 
-            if (response.VnPayResponseCode != "00" || response.VnPayTranStatus != "00")
-            {
-                var order = await _sellOrderService.GetEntityByIdAsync(Convert.ToInt32(response.OrderId));
-                var paymentDetail = new RequestCreatePaymentDetail
-                {
-                    PaymentId = Convert.ToInt32(response.PaymentId),
-                    PaymentMethodId = Convert.ToInt32(response.PaymentMethodId),
-                    Amount = order.TotalAmount,
-                    ExternalTransactionCode = response.TransactionId,
-                    Status = "failed"
-                };
-                await _paymentDetailService.CreatePaymentDetailAsync(paymentDetail);
-            }
-            //Status_PaymentDetail == completed
-            else
-            {
-                var order = await _sellOrderService.GetEntityByIdAsync(Convert.ToInt32(response.OrderId));
-                var paymentDetail = new RequestCreatePaymentDetail
-                {
-                    PaymentId = Convert.ToInt32(response.PaymentId),
-                    PaymentMethodId = Convert.ToInt32(response.PaymentMethodId),
-                    Amount = order.TotalAmount,
-                    ExternalTransactionCode = response.TransactionId,
-                    Status = "completed"
-                };
-                await _paymentDetailService.CreatePaymentDetailAsync(paymentDetail);
+    //[HttpGet]
+    //[Route("callback")]
+    //public async Task PaymentCallback()
+    //{
+    //    var response = _vnPayService.PaymentExecute(Request.Query);
 
-                //Update Status Payment
-                var payment = new RequestUpdatePayment
-                {
-                    Status = "completed"
-                };
-                await _paymentService.UpdatePaymentAsync(Convert.ToInt32(response.PaymentId), payment);
-                //Update Status SellOrder
-                var updatesellsrderstatus = new UpdateSellOrderStatus
-                {
-                    Status = OrderConstants.ProcessingStatus
+    //    var order = await _sellOrderService.GetEntityByIdAsync(Convert.ToInt32(response.OrderId));
+    //    var paymentDetail = new RequestCreatePaymentDetail
+    //    {
+    //        PaymentId = Convert.ToInt32(response.PaymentId),
+    //        PaymentMethodId = Convert.ToInt32(response.PaymentMethodId),
+    //        Amount = order.TotalAmount,
+    //        ExternalTransactionCode = response.TransactionId,
+    //        Status = (response.VnPayResponseCode != "00" || response.VnPayTranStatus != "00") ? "failed" : "completed"
+    //    };
 
-                };
-                await _sellOrderService.UpdateStatusAsync(Convert.ToInt32(response.OrderId), updatesellsrderstatus);
-            }
+    //    await _paymentDetailService.CreatePaymentDetailAsync(paymentDetail);
 
-            //Create Guarantee
-            var products =
-                await _sellOrderDetailService.GetProductFromSellOrderDetailAsync(Convert.ToInt32(response.OrderId));
-            await _guaranteeService.CreateGuaranteeAsync(products);
+    //    if (response.VnPayResponseCode == "00" && response.VnPayTranStatus == "00")
+    //    {
+    //        // Update Status Payment
+    //        var payment = new RequestUpdatePayment
+    //        {
+    //            Status = "completed"
+    //        };
+    //        await _paymentService.UpdatePaymentAsync(Convert.ToInt32(response.PaymentId), payment);
 
-            //Update Point
-            var sellorder = await _sellOrderService.GetEntityByIdAsync(Convert.ToInt32(response.OrderId));
-            var discountPoint = sellorder.DiscountPoint;
-            var customerPhone = sellorder.Customer.Phone;
-            var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
-            //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
-            await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
+    //        // Update Status SellOrder
+    //        var updatesellorderstatus = new UpdateSellOrderStatus
+    //        {
+    //            Status = OrderConstants.ProcessingStatus
+    //        };
+    //        await _sellOrderService.UpdateStatusAsync(Convert.ToInt32(response.OrderId), updatesellorderstatus);
 
-            //Update SpecialDiscount
-            var specialDiscount = sellorder.SpecialDiscountRequestId;
-            if (specialDiscount != null)
-            {
-                var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
-                var newspecialdiscount = new UpdateSpecialDiscountRequest
-                {
-                    Status = "used"
-                };
-                await _specialDiscountRequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
-            }
+    //        // Create Guarantee
+    //        var products = await _sellOrderDetailService.GetProductFromSellOrderDetailAsync(Convert.ToInt32(response.OrderId));
+    //        await _guaranteeService.CreateGuaranteeAsync(products);
 
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            // Log the exception here
-            return StatusCode(StatusCodes.Status500InternalServerError, $"Internal server error: {ex.Message}");
-        }
+    //        // Update Point
+    //        var sellorder = await _sellOrderService.GetEntityByIdAsync(Convert.ToInt32(response.OrderId));
+    //        var discountPoint = sellorder.DiscountPoint;
+    //        var customerPhone = sellorder.Customer.Phone;
+    //        var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
+    //        await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
 
-    }
+    //        // Update SpecialDiscount
+    //        var specialDiscount = sellorder.SpecialDiscountRequestId;
+    //        if (specialDiscount != null)
+    //        {
+    //            var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
+    //            var newspecialdiscount = new UpdateSpecialDiscountRequest
+    //            {
+    //                Status = "used"
+    //            };
+    //            await _specialDiscountRequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
+    //        }
+    //    }
+    //}
+
 
     [HttpGet]
     [Route("GetTotalAllPayMent")]
@@ -181,5 +175,7 @@ public class PaymentController : ControllerBase
         var totalCount = await _paymentService.GetTotalAllPayMentAsync(startDate, endDate);
             return Ok(totalCount);
     }
+
+   
 
 }

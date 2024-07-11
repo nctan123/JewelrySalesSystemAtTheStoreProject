@@ -89,5 +89,37 @@ public class CustomerController : ControllerBase
         return Ok(responseModel);
     }
 
+    [HttpGet]
+    [Route("GetCustomerSummary")]
+    public async Task<IActionResult> GetCustomerSummaryAsync(int customerId)
+    {
+        var responseModel = await _customerService.GetCustomerSummaryAsync(customerId);
+        return Ok(responseModel);
+    }
+
+    [HttpGet]
+    [Route("SearchSellOrders")]
+    public async Task<IActionResult> SearchSellOrders(string phone, string orderCode, int pageIndex = 1, int pageSize = 10)
+    {
+        var result = await _customerService.SearchSellOrdersAsync(phone, orderCode, pageIndex, pageSize);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("SearchPayments")]
+    public async Task<IActionResult> SearchPayments(string phone, string orderCode, int pageIndex = 1, int pageSize = 10)
+    {
+        var result = await _customerService.SearchPaymentsAsync(phone, orderCode, pageIndex, pageSize);
+        return Ok(result);
+    }
+
+    [HttpGet]
+    [Route("SearchBuyOrders")]
+    public async Task<IActionResult> SearchBuyOrders(string phone, string orderCode, int pageIndex = 1, int pageSize = 10)
+    {
+        var result = await _customerService.SearchBuyOrdersAsync(phone, orderCode, pageIndex, pageSize);
+        return Ok(result);
+    }
+
 
 }

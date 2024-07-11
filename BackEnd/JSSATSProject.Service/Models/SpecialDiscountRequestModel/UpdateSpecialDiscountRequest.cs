@@ -6,7 +6,7 @@ public class UpdateSpecialDiscountRequest
 {
     public decimal DiscountRate { get; set; }
 
-    [StatusValidator("approved", "rejected")]
+    [StatusValidator("approved", "rejected", "used")]
     public required string Status { get; set; }
     public int? ApprovedBy { get; set; }
 }

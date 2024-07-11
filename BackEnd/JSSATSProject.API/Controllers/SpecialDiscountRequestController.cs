@@ -1,9 +1,12 @@
-﻿using JSSATSProject.Repository.ConstantsContainer;
+﻿using Azure;
+using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.CustomLib;
+using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
@@ -95,5 +98,25 @@ public class SpecialDiscountRequestController : ControllerBase
         var responseModel =
             await _specialdiscountrequestService.SearchAsync(searchTerm, ascending, pageIndex, pageSize);
         return Ok(responseModel);
+    }
+
+    [HttpPut]
+    [Route("UpdateBySellOrder")]
+    public async Task<IActionResult> UpdateBySellOrderAsync(int orderId)
+    {
+        var sellorder = await _sellOrderService.GetEntityByIdAsync(orderId);
+        var specialDiscount = sellorder.SpecialDiscountRequestId;
+        if (specialDiscount != null)
+        {
+            var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
+            var newspecialdiscount = new UpdateSpecialDiscountRequest
+            {
+                DiscountRate = sellorder.SpecialDiscountRequest?.DiscountRate ?? 0,
+                Status = "used",
+                ApprovedBy = sellorder.SpecialDiscountRequest.ApprovedBy ?? 0
+            };
+            await _specialdiscountrequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
+        }
+        return Ok();
     }
 }

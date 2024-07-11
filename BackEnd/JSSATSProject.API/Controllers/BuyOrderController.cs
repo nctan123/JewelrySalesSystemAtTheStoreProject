@@ -132,7 +132,7 @@ public class BuyOrderController : ControllerBase
         return Ok(result);
     }
 
-    //new
+
     [HttpPut]
     [Route("UpdateStatus")]
     public async Task<IActionResult> UpdateStatus(int orderId, [FromBody]RequestUpdateBuyOrderStatus buyOrder)
@@ -140,5 +140,12 @@ public class BuyOrderController : ControllerBase
         var result = await _buyOrderService.UpdateAsync(orderId, buyOrder);
         return Ok(result);
     }
-    //end
+
+    [HttpGet]
+    [Route("GetById")]
+    public async Task<IActionResult> GetById(int Id)
+    {
+        var result = await _buyOrderService.GetByIdAsync(Id);
+        return Ok(result);
+    }
 }

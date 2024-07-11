@@ -44,7 +44,7 @@ public class PaymentService : IPaymentService
             orderBy: orderBy,
             pageIndex: pageIndex,
             pageSize: pageSize,
-            includeProperties: "Order,PaymentDetails,Customer,PaymentDetails.PaymentMethod");
+            includeProperties: "Sellorder,Buyorder,PaymentDetails,Customer,PaymentDetails.PaymentMethod");
 
         // Map entities to response model
         var responseList = _mapper.Map<List<ResponsePayment>>(entities.ToList());
@@ -63,14 +63,36 @@ public class PaymentService : IPaymentService
 
     public async Task<ResponseModel> GetByIdAsync(int id)
     {
-        var entity = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+        // Fetch payment entities with the required related properties
+        var entities = await _unitOfWork.PaymentRepository.GetAsync(
+            filter: p => p.Id == id,
+            includeProperties: "Sellorder,Buyorder,PaymentDetails,Customer,PaymentDetails.PaymentMethod"
+        );
+
+        // Get the first matching entity (or null if none found)
+        var entity = entities.FirstOrDefault();
+
+        // If entity is not found, return an error message
+        if (entity == null)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Payment not found"
+            };
+        }
+
+        // Map the entity to the response model
         var response = _mapper.Map<ResponsePayment>(entity);
+
+        // Return the response model
         return new ResponseModel
         {
             Data = response,
             MessageError = ""
         };
     }
+
 
     public async Task<ResponseModel> UpdatePaymentAsync(int paymentId, RequestUpdatePayment requestPayment)
     {
@@ -107,28 +129,45 @@ public class PaymentService : IPaymentService
         }
     }
 
+<<<<<<< HEAD
     //fix this
     public async Task<int> GetOrderIdByPaymentIdAsync(int id)
     {
         var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
         return payment.SellorderId.GetValueOrDefault();
+=======
+    public async Task<int?> GetSellOrderIdByPaymentIdAsync(int id)
+    {
+        var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+        if (payment.SellorderId == null) return null;
+        return payment.SellorderId;
+>>>>>>> 2e804d530f879861fbe744c2597f606c7c00456e
     }
+
+    public async Task<int?> GetBuyOrderIdByPaymentIdAsync(int id)
+    {
+        var payment = await _unitOfWork.PaymentRepository.GetByIDAsync(id);
+        if (payment.BuyorderId == null) return null;
+        return payment.BuyorderId;
+    }
+
     public async Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate)
     {
-        // Define the filter expression
+    
         Expression<Func<Payment, bool>> filter = payment =>
             payment.Status == PaymentConstants.CompletedStatus &&
+            payment.SellorderId != null &&
             payment.Amount > 0 &&
             payment.CreateDate >= startDate &&
             payment.CreateDate <= endDate;
 
-        // Fetch payments within the specified date range
+    
         var payments = await _unitOfWork.PaymentRepository.GetAsync(
             filter,
             includeProperties: "PaymentDetails.PaymentMethod"
             );
 
-        // Group payment details by PaymentMethod and calculate the total amount
+   
         var paymentMethodTotalSums = payments
             .SelectMany(payment => payment.PaymentDetails)
             .Where(pd => pd.Status == PaymentConstants.CompletedStatus)
@@ -140,10 +179,10 @@ public class PaymentService : IPaymentService
             })
             .ToList();
 
-        // Initialize result list
+
         var result = new List<Dictionary<string, object>>();
 
-        // Add payment method totals to result
+      
         foreach (var paymentMethodSum in paymentMethodTotalSums)
         {
             result.Add(new Dictionary<string, object>
