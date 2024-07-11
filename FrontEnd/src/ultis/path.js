@@ -31,6 +31,10 @@ const path = {
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
     CS_WAITINGPAYMENT: 'cs_waitingPayment',
+    CS_BUYPRODUCT:'cs_buyProduct',
+    CS_ONPROCESSBUY: 'cs_onprocessBuy',
+    CS_COMPLETEBUY: 'cs_completeBuy',
+    PAYMENTRESULT: 'payment-result',
 // ADMIN
     DASHBOARD: 'Dashboard',
     MANAGE: 'Manage',

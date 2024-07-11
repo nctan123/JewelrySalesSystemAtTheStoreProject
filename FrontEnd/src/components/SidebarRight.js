@@ -78,6 +78,8 @@ const SidebarRight = () => {
       console.log("Special Discount Rate:", specialDiscountRate);
 
       const invoiceTotal = (totalValue - totalDiscount - point) * (1 - specialDiscountRate);
+      // const invoiceTotal = totalValue 
+
       console.log("Calculated Total Invoice:", invoiceTotal);
       setTotalInvoice(invoiceTotal);
     };
@@ -105,10 +107,17 @@ const SidebarRight = () => {
   useEffect(() => {
     getListOrder(1);
   }, []);
+
+  const pollingInterval = 5000; // Thời gian polling, ví dụ mỗi 30 giây
   useEffect(() => {
     getResponseManager(1);
-  }, []);
+    const interval = setInterval(() => {
+      getResponseManager(1);
+    }, pollingInterval);
 
+    // Cleanup function để clear interval khi component unmount
+    return () => clearInterval(interval);
+  }, []);
   const handleCheckboxClick = id => {
     setCheckedItems(prev => ({
       ...prev,
@@ -173,7 +182,7 @@ const SidebarRight = () => {
     const data = {
       id: IdTemPo,
       customerPhoneNumber,
-      staffId: 4, // Replace with actual staffId if needed
+      staffId: localStorage.getItem('staffId'), // Replace with actual staffId if needed
       createDate: new Date().toISOString(),
       description,
       discountPoint: point,
@@ -248,6 +257,7 @@ const SidebarRight = () => {
   };
 
   const handleRequestToScreen = async (event, phone, listsellorder, id, rate) => {
+    console.log('rate',rate)
     event.preventDefault();
     try {
       const res = await axios.get(
@@ -317,7 +327,7 @@ const SidebarRight = () => {
                                 {formatPrice(item.finalAmount)}
                               </td>
                               <td class="flex py-4 gap-1 items-center justify-center">
-                                <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
+                                <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id,item.specialDiscountRate)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
                                 <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
                                   {close => (
                                     <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>

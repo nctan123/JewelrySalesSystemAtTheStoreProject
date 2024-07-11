@@ -23,7 +23,7 @@ const Cs_Public = () => {
 
 
       <div className='flex-auto border bg-[#b9a6a663] '>
-        <div className='h-[90%] flex justify-start'><Outlet /></div>
+        <div className='h-[100%] flex justify-start'><Outlet /></div>
 
       </div>
 

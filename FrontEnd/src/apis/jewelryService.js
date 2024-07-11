@@ -32,6 +32,9 @@ const fetchAllDiamond = (page) => {
 const fetchStatusInvoice = (st,page) => {
     return axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getall?statusList=${st}&ascending=true&pageIndex=${page}&pageSize=10`);
 }
+const fetchStatusBuyInvoice = (st,page) => {
+    return axios.get(`https://jssatsproject.azurewebsites.net/api/Buyorder/getall?statusList=${st}&ascending=true&pageIndex=${page}&pageSize=10`);
+}
 const fetchDoubleStatusInvoice = (st1,st2,page) => {
     return axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getall?statusList=${st1}&statusList=${st2}&ascending=true&pageIndex=${page}&pageSize=10`);
 }
@@ -53,6 +56,6 @@ const fetchAllProduct = () => {
 const fetchPaymentMethod = () =>{
     return axios.get("https://jssatsproject.azurewebsites.net/api/PaymentMethod/Getall");
 }
-export {fetchDoubleStatusInvoice,fetchStatusInvoice,fetchPaymentMethod,fetchAllProduct,fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond};
+export {fetchStatusBuyInvoice,fetchDoubleStatusInvoice,fetchStatusInvoice,fetchPaymentMethod,fetchAllProduct,fetchAllDiamondTest,fetchAllReGold,fetchAllWhGold,fetchAllRing,fetchAllEarring,fetchAllNecklace,fetchAllBangles,fetchAllPromotion,fetchAllInvoice,fetchAllCustomer,loginApi,fetchAllDiamond};
 
 

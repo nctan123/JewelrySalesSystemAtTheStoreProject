@@ -144,7 +144,8 @@ const Cs_Process = () => {
         <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[78vh]'>
           {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => (
             <div key={index} className='shadow-md shadow-gray-600 pt-[10px] rounded-2xl w-[93%] h-[29em] bg-[#ffff] mb-[20px]'>
-              <div className='flex flex-col justify-between px-[15px] text-black font-thin'>
+              <div className='flex justify-between px-[15px] text-black font-thin'>
+                <span className='px-2 bg-[#e7ac2c] rounded-md text-[#fff]'>{item.paymentMethod}</span>
                 <span className='flex justify-end font-thin italic'><FormatDate isoString={item.createDate} /></span>
               </div>
               <div className='text-[15px]'>
@@ -205,22 +206,23 @@ const Cs_Process = () => {
         </div>
       </div>
       <ReactPaginate
-        onPageChange={handlePageClick}
-        pageRangeDisplayed={3}
-        marginPagesDisplayed={2}
-        pageCount={totalPage}
-        pageClassName="mx-1"
-        pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
-        previousClassName="mx-1"
-        previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-        nextClassName="mx-1"
-        nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-        breakLabel="..."
-        breakClassName="mx-1"
-        breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-        containerClassName="flex justify-center items-center space-x-4"
-        activeClassName="bg-blue-500 text-white rounded-xl"
+         onPageChange={handlePageClick}
+         pageRangeDisplayed={3}
+         marginPagesDisplayed={2}
+         pageCount={totalPage}
+         pageClassName="mx-1"
+         pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
+         previousClassName="mx-1"
+         previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+         nextClassName="mx-1"
+         nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+         breakLabel="..."
+         breakClassName="mx-1 "
+         breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
+         containerClassName="flex justify-center items-center space-x-4 h-[10px]"
+         activeClassName="bg-blue-500 text-white rounded-xl"
         renderOnZeroPageCount={null}
+        // className="bg-black flex justify-center items-center"
         previousLabel={
           <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
             <AiFillLeftCircle />

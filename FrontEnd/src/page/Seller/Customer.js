@@ -125,7 +125,7 @@ const Customer = () => {
   }
   return (
     <>
-      <div className="h-[70px] mt-5 mb-2 w-full">
+      <div className="h-[67px] mt-5 mb-2 w-full">
         <form className="max-w-md mx-auto">
           <div className="relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
