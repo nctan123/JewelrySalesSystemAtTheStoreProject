@@ -4,9 +4,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 
 
-import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty, BuyOut } from './page/Seller';
+import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty, BuyOut, OnprocessSeller, CompleteSeller, Bill } from './page/Seller';
 
-import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess, Cs_WaitingPayment, Cs_BuyProduct, Cs_OnProcessBuy, Cs_CompleteBuy, PaymentResult } from './page/Cashier';
+import { Cs_Public, Cs_Complete, Cs_Revenue, Cs_OnProcess, Cs_WaitingPayment, Cs_BuyProduct, Cs_OnProcessBuy, Cs_CompleteBuy, PaymentResult, Cs_Bill } from './page/Cashier';
 
 import Login from './page/Home/Login';
 import Admin from './page/Admin/Admin';
@@ -147,7 +147,10 @@ function App() {
             </Route>
             <Route path={path.WHOLESALEGOLD} element={<WholesaleGold />} />
             <Route path={path.RETAILGOLD} element={<RetailGold />} />
-            <Route path={path.SEARCHINVOICE} element={<SearchInvoice />} />
+            <Route path={path.SEARCHINVOICE} element={<SearchInvoice />} >
+              <Route path={path.ONPROCESS} element={<OnprocessSeller />} />
+              <Route path={path.COMPLETED} element={<CompleteSeller />} />
+            </Route>
             <Route path={path.PROMOTION} element={<Promotion />} />
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
               <Route path={path.BUY} element={<Buy />} />
@@ -167,8 +170,10 @@ function App() {
               <Route path={path.CS_ONPROCESSBUY} element={<Cs_OnProcessBuy />} />
               <Route path={path.CS_COMPLETEBUY} element={<Cs_CompleteBuy />} />
             </Route>
-            <Route path={path.CS_REVENUE} element={<Cs_Revenue />} />
+            {/* <Route path='cs_bill/:id' element={<Cs_Bill />} /> */}
           </Route>
+          <Route path='cs_bill/:id' element={<Cs_Bill />} />
+          <Route path='bill/:id' element={<Bill />} />
         </Routes>
       </div>
 

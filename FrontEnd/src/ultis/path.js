@@ -19,15 +19,16 @@ const path = {
     SEARCHINVOICE: 'searchinvoice',
     PROMOTION: 'promotion',
     RETURN_EX: 'purchase',
-
-
+    ONPROCESS: 'onprocessSeller',
+    COMPLETED: 'completedSeller',
     BUY:'buyIn',
     BUYOUT: 'buyOut',
+    BILL: 'bill',
 // Cashier
 
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
-    CS_REVENUE: 'cs_bill',
+    CS_BILL: 'cs_bill',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
     CS_WAITINGPAYMENT: 'cs_waitingPayment',

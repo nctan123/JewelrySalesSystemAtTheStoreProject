@@ -545,7 +545,9 @@ const Cs_WaitingPayment = () => {
                     <span className='font-serif'>-</span>
                     <span className='font-thin'>{item.id}</span>
                     <div className="group relative w-fit">
-                      <Link to="/cs_public/cs_bill" className="m-0 p-0 w-fit bg-white text-black">
+
+                      <Link to={`/cs_bill/${item.id}`} className="m-0 p-0 w-fit bg-white text-black">
+
                         <svg
                           stroke-linejoin="round"
                           stroke-linecap="round"
