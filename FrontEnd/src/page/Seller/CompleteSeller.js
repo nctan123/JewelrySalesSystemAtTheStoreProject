@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 
-import { fetchStatusInvoice } from '../../apis/jewelryService'
+import { fetchPaymentMethod, fetchStatusInvoice } from '../../apis/jewelryService'
 import Popup from 'reactjs-popup';
 import QRCode from "react-qr-code";
 import SignatureCanvas from 'react-signature-canvas'
@@ -13,6 +13,7 @@ import { AiFillLeftCircle, AiFillRightCircle } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 import { Link, useNavigate } from 'react-router-dom';
 const FormatDate = ({ isoString }) => {
+  // Cs_WaitingPayment
   const parsedDate = parseISO(isoString);
   const formattedDate = format(parsedDate, 'HH:mm yyyy-MM-dd');
   return (
@@ -21,43 +22,42 @@ const FormatDate = ({ isoString }) => {
     </div>
   );
 };
-
-const Cs_Process = () => {
+const CompleteSeller = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
-  const [listInvoice, setListInvoice] = useState([]); // list full invoice
+  const [listInvoice, setlistInvoice] = useState([]); // list full invoice
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [IdOrder, setIdOrder] = useState('');
+  const [IdOrder, setIdOrder] = useState('')
   const [ChosePayMethodID, setChosePayMethodID] = useState(3);
   const [PaymentID, setPaymentID] = useState();
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
-  const [searchTerm, setSearchTerm] = useState('');
 
-  const handlePageClick = (event) => {
+
+  const handlePageClick = event => {
     getInvoice(event.selected + 1);
   };
 
   useEffect(() => {
     getInvoice(1);
+    console.log(listInvoice)
   }, []);
 
   const getInvoice = async (page) => {
     try {
-      let res = await fetchStatusInvoice('processing', page);
+      let res = await fetchStatusInvoice('completed', page);
       if (res?.data?.data) {
-        setListInvoice(res.data.data);
+        setlistInvoice(res.data.data);
         setTotalProduct(res.data.totalElements);
         setTotalPage(res.data.totalPages);
       }
     } catch (error) {
       console.error('Error fetching orders:', error);
-
     }
   };
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCreateDate(new Date());
+      setcreateDate(new Date());
     }, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -66,49 +66,20 @@ const Cs_Process = () => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
 
-  const [createDate, setCreateDate] = useState(new Date().toISOString());
+  const [createDate, setcreateDate] = useState(new Date().toISOString())
 
-  const handleComplete = async (id) => {
-    await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
-      status: 'completed',
-    });
-  };
+  const handleComplete = () => {
+    
+  }
 
 
-  const handleSearch = (event) => {
-    const searchTerm = event.target.value.trim();
-    setSearchTerm(searchTerm);
-    if (searchTerm === '') {
-      getInvoice(1);
-    } else {
-      getWaitingSearch(searchTerm, 1);
-    }
-  };
-
-  const getWaitingSearch = async (phone, page) => {
-    try {
-      const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=processing&customerPhone=${phone}&ascending=true&pageIndex=${page}&pageSize=10`
-      );
-      if (res.data && res.data.data) {
-        console.log('Search Results:', res.data.data); // Check the search results here
-        setListInvoice(res.data.data);
-        setTotalProduct(res.data.totalElements);
-        setTotalPage(res.data.totalPages);
-      }
-    } catch (error) {
-      console.error('Error fetching customers:', error);
-      toast.error('Failed to fetch customers');
-    }
-  };
 
   function calculateTotalPromotionValue(item) {
     return item.sellOrderDetails.reduce((total, orderDetail) => {
       return total + (orderDetail.unitPrice * orderDetail.promotionRate);
     }, 0);
   }
-
-  return (
+  return (<>
     <div>
       <form className="max-w-md mx-auto">
         <div className="relative">
@@ -135,8 +106,8 @@ const Cs_Process = () => {
             className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search Item, ID in here..."
             required
-            value={searchTerm}
-            onChange={handleSearch}
+            // value={searchTerm}
+            // onChange={handleSearch}
           />
         </div>
       </form>
@@ -144,8 +115,8 @@ const Cs_Process = () => {
         <div className='grid grid-cols-4 w-full px-10 overflow-y-auto h-[78vh]'>
           {listInvoice && listInvoice.length > 0 && listInvoice.map((item, index) => (
             <div key={index} className='shadow-md shadow-gray-600 pt-[10px] rounded-2xl w-[93%] h-[29em] bg-[#ffff] mb-[20px]'>
-              <div className='flex justify-between px-[15px] text-black font-thin'>
-                <span className='px-2 bg-[#e7ac2c] rounded-md text-[#fff]'>{item.paymentMethod}</span>
+                <div className='flex justify-between px-[15px] text-black font-thin'>
+                <span className='px-2 bg-[#23aa32] rounded-md text-[#fff]'>{item.paymentMethod}</span>
                 <span className='flex justify-end font-thin italic'><FormatDate isoString={item.createDate} /></span>
               </div>
               <div className='text-[15px]'>
@@ -155,7 +126,7 @@ const Cs_Process = () => {
                   <span className='font-serif'>-</span>
                   <span className='font-thin'>{item.id}</span>
                   <div className="group relative w-fit">
-                      <Link to={`/cs_bill/${item.id}`} className="m-0 p-0 w-fit bg-white text-black">
+                      <Link to={`/bill/${item.id}`} className="m-0 p-0 w-fit bg-white text-black">
                         <svg
                           stroke-linejoin="round"
                           stroke-linecap="round"
@@ -224,7 +195,7 @@ const Cs_Process = () => {
                 <span className='font-thin'>{item.specialDiscountRate}</span>
               </div>
               <div className=' flex justify-around'>
-                <button type='button' className="m-0 py-2 border border-[#ffffff] bg-[#469086] text-white px-10 rounded-md  ">Pay Succsess</button>
+                <button type='button' className="m-0 py-2 border border-[#ffffff] bg-[#c0a52c] text-white px-10 rounded-md">Success</button>
               </div>
               <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
                 {item.description}
@@ -234,7 +205,7 @@ const Cs_Process = () => {
         </div>
       </div>
       <ReactPaginate
-        onPageChange={handlePageClick}
+         onPageChange={handlePageClick}
          pageRangeDisplayed={3}
          marginPagesDisplayed={2}
          pageCount={totalPage}
@@ -263,7 +234,9 @@ const Cs_Process = () => {
         }
       />
     </div>
-  );
-};
 
-export default Cs_Process;
+
+  </>)
+}
+
+export default CompleteSeller

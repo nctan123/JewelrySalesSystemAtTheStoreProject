@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 import QRCode from "react-qr-code";
 import SignatureCanvas from 'react-signature-canvas'
 import abc from '../../assets/logo.png'
-const Cs_Revenue = () => {
+import { Link, useParams } from 'react-router-dom';
+const Cs_Bill = () => {
+  const { id } = useParams();
   const [ListRing, setListRing] = useState({});
   const [Cus, setCus] = useState('');
   function formatDate(dateString) {
@@ -17,7 +19,7 @@ const Cs_Revenue = () => {
     return `Day ${day} Month ${month} Years ${year}`;
   }
   useEffect(() => {
-    getRing(1);
+    getRing(id);
     console.log(ListRing)
     console.log(Cus)
   }, []);
@@ -28,10 +30,10 @@ const Cs_Revenue = () => {
       minimumFractionDigits: 0
     }).format(value);
   };
-  const getRing = async () => {
+  const getRing = async (id) => {
     try {
       const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/sellorder/getbyid?id=1093`
+        `https://jssatsproject.azurewebsites.net/api/sellorder/getbyid?id=${id}`
       );
       const cus = await axios.get(
         `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${res.data.data[0].customerPhoneNumber}&pageIndex=1&pageSize=10`
@@ -50,12 +52,13 @@ const Cs_Revenue = () => {
   return (<>
     {ListRing &&
       (
-        <div className=' h-[100vh] bg-white flex w-[70%] justify-center items-center overflow-y-auto'>
-          <div className="mx-auto pt-6 p-3 bg-white w-[100%] h-[100%] flex flex-col">
-            <div className="header text-center mb-8 flex items-center gap-3 border border-black">
-              <div className='w-[200px] h-[200px]'>
+        <div className='flex justify-center'>
+        <div className=' h-[100vh] bg-white flex w-[60%] border border-black justify-center items-center overflow-y-auto my-3'>
+          <div className="mx-auto pt-3 p-3 bg-white w-[100%] h-[100%] flex flex-col">
+            <div className="header text-center mb-3 flex items-center gap-3 border border-black">
+              <Link to = '/cs_public/cs_order/cs_waitingPayment' className='w-[200px] h-[200px]'>
                 <img src={abc} alt="PNJ logo" className="w-fit object-cover h-fit mx-auto p-2" />
-              </div>
+              </Link>
               <div className='text-start'>
                 <h1 className="text-xl font-bold mb-2">FPT GOLD, SILVER AND GEMSTONE JOINT STOCK COMPANY</h1>
                 <p className="text-sm mb-1">Address: Lot E2a-7, Street D1, D. D1, Long Thanh My, Thu Duc City, Ho Chi Minh 700000</p>
@@ -65,7 +68,7 @@ const Cs_Revenue = () => {
                 <p className="text-sm mb-1">PhoneNumber:<span className='font-bold ml-2'>028.35118006</span></p>
               </div>
             </div>
-            <div className="bill border border-black p-4 mb-6">
+            <div className="bill border border-black p-4 mb-3">
               <div className="flex mb-4">
                 <div className='h-auto ml-4 mr-6 my-auto max-w-[100px] w-full'>
                   <QRCode
@@ -177,14 +180,17 @@ const Cs_Revenue = () => {
                     }} />
                 </div>
               </div>
+              <div className='text-center '>
               <p className="text-sm mb-1">(Need to check and compare when making, delivering, and receiving invoices)</p>
               <p className="text-sm">Code Invoice: {ListRing.code}</p>
+              </div>
             </div>
           </div>
+        </div>
         </div>
       )
     }
   </>);
 }
 
-export default Cs_Revenue;
+export default Cs_Bill;

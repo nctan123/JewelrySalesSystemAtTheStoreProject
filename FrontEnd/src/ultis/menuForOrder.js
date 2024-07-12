@@ -10,9 +10,9 @@ export const menuOrder = [
         text: 'Processing',
         // icons: <GiCrystalEarrings size={24} color="white" />,
     },
-    {
-        path: 'cs_complete',
-        text: 'Complete',
-        // icons: <GiDiamondRing size={24} color="white" />,
-    },
+    // {
+    //     path: 'cs_complete',
+    //     text: 'Complete',
+    //     // icons: <GiDiamondRing size={24} color="white" />,
+    // },
 ]

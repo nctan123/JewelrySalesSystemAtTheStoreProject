@@ -22,7 +22,7 @@ const FormatDate = ({ isoString }) => {
   );
 };
 
-const Cs_Process = () => {
+const OnprocessSeller = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
   const [listInvoice, setListInvoice] = useState([]); // list full invoice
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,14 +32,7 @@ const Cs_Process = () => {
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const handlePageClick = (event) => {
-    getInvoice(event.selected + 1);
-  };
-
-  useEffect(() => {
-    getInvoice(1);
-  }, []);
+ 
 
   const getInvoice = async (page) => {
     try {
@@ -72,8 +65,23 @@ const Cs_Process = () => {
     await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${id}`, {
       status: 'completed',
     });
-  };
+    toast.success('Complete the order')
+    getInvoice(1)
 
+  };
+  const pollingInterval = 5000; // Thời gian polling, ví dụ mỗi 5 giây
+
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    getInvoice(currentPage);
+    const interval = setInterval(() => {
+      getInvoice(currentPage);
+    }, pollingInterval);
+
+    // Cleanup function để clear interval khi component unmount
+    return () => clearInterval(interval);
+  }, [currentPage]);
 
   const handleSearch = (event) => {
     const searchTerm = event.target.value.trim();
@@ -155,7 +163,7 @@ const Cs_Process = () => {
                   <span className='font-serif'>-</span>
                   <span className='font-thin'>{item.id}</span>
                   <div className="group relative w-fit">
-                      <Link to={`/cs_bill/${item.id}`} className="m-0 p-0 w-fit bg-white text-black">
+                      <Link to={`/bill/${item.id}`} className="m-0 p-0 w-fit bg-white text-black">
                         <svg
                           stroke-linejoin="round"
                           stroke-linecap="round"
@@ -224,7 +232,7 @@ const Cs_Process = () => {
                 <span className='font-thin'>{item.specialDiscountRate}</span>
               </div>
               <div className=' flex justify-around'>
-                <button type='button' className="m-0 py-2 border border-[#ffffff] bg-[#469086] text-white px-10 rounded-md  ">Pay Succsess</button>
+                <button type='button' onClick={() => handleComplete(item.id)} className="m-0 py-2 border border-[#ffffff] bg-[#469086] text-white px-10 rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">Completed</button>
               </div>
               <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
                 {item.description}
@@ -234,7 +242,7 @@ const Cs_Process = () => {
         </div>
       </div>
       <ReactPaginate
-        onPageChange={handlePageClick}
+           onPageChange={(e) => setCurrentPage(e.selected + 1)}
          pageRangeDisplayed={3}
          marginPagesDisplayed={2}
          pageCount={totalPage}
@@ -266,4 +274,5 @@ const Cs_Process = () => {
   );
 };
 
-export default Cs_Process;
+export default OnprocessSeller;
+ 

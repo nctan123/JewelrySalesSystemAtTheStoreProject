@@ -13,11 +13,11 @@ export const sidebarMenuCashier = [
         text: 'Buy Product',
         icons: <BsCashCoin size={24} color="white" />
     },
-    {
-        path: 'cs_bill',
-        text: 'Bill For Invoice',
-        icons: <GiReceiveMoney size={24} color="white" />
-    },
+    // {
+    //     path: 'cs_bill',
+    //     text: 'Bill For Invoice',
+    //     icons: <GiReceiveMoney size={24} color="white" />
+    // },
     {
         path: '/login',
         text: 'Log out',
