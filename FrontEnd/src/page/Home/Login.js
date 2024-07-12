@@ -41,13 +41,13 @@ export default function LoginToStore() {
         // Determine user role and redirect or show appropriate UI
         switch (user.role) {
           case 'admin':
-            navigate('/admin');
+            navigate('/admin/Dashboard');
             break;
           case 'seller':
             navigate('/public');
             break;
           case 'manager':
-            navigate('/manager');
+            navigate('/manager/Dashboard');
             break;
           case 'cashier':
             navigate('/cs_public/cs_order/cs_waitingPayment');

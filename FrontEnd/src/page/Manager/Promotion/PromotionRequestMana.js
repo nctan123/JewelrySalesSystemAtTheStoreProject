@@ -455,8 +455,12 @@ const PromotionRequestMana = () => {
                   name="discountRate"
                   value={newPromotion.discountRate}
                   onChange={handleInputChange}
+                  step="0.01" // Bước nhảy là 0.01 để cho phép nhập số thập phân
+                  min="0" // Giá trị nhỏ nhất là 0
+                  max="1" // Giá trị lớn nhất là 1
                   className="mt-1 px-3 py-2 border border-gray-300 rounded-md w-full focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                 />
+
                 {errors.discountRate && <span className="text-red-500 text-sm">{errors.discountRate}</span>}
               </div>
 

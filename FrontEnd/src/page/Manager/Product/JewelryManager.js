@@ -125,7 +125,7 @@ const JewelryManager = () => {
                 setIsModalOpen(false);
                 setIsYesNoOpen(false);// Close the modal yes no
                 toast.success('Update successful !')
-                getProduct(); // Refresh the product list
+                getProduct(selectedCategory); // Refresh the product list
             }
         } catch (error) {
             console.error('Error updating product:', error);

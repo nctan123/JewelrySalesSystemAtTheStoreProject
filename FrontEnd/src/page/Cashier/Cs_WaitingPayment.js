@@ -451,10 +451,6 @@ const Cs_WaitingPayment = () => {
 
 
 
-
-
-
-
   const handleCancle = async (id) => {
     confirmAlert({
       customUI: ({ onClose }) => {
@@ -549,33 +545,33 @@ const Cs_WaitingPayment = () => {
                     <span className='font-serif'>-</span>
                     <span className='font-thin'>{item.id}</span>
                     <div className="group relative w-fit">
-      <Link to="/cs_public/cs_bill" className="m-0 p-0 w-fit bg-white text-black">
-        <svg
-          stroke-linejoin="round"
-          stroke-linecap="round"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          height="15"
-          width="15"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-fit hover:scale-125 duration-200 hover:bg-white"
-          fill="none"
-        >
-          <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
-          <path d="M8 9h8"></path>
-          <path d="M8 13h6"></path>
-          <path
-            d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"
-          ></path>
-        </svg>
-      </Link>
-      <span
-        className="absolute -top-7 left-[95%] -translate-x-[1%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100"
-      >
-        Bill
-      </span>
-    </div>
+                      <Link to="/cs_public/cs_bill" className="m-0 p-0 w-fit bg-white text-black">
+                        <svg
+                          stroke-linejoin="round"
+                          stroke-linecap="round"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          height="15"
+                          width="15"
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-fit hover:scale-125 duration-200 hover:bg-white"
+                          fill="none"
+                        >
+                          <path fill="none" d="M0 0h24v24H0z" stroke="none"></path>
+                          <path d="M8 9h8"></path>
+                          <path d="M8 13h6"></path>
+                          <path
+                            d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12z"
+                          ></path>
+                        </svg>
+                      </Link>
+                      <span
+                        className="absolute -top-7 left-[95%] -translate-x-[1%] z-20 origin-left scale-0 px-3 rounded-lg border border-gray-300 bg-white py-2 text-sm font-bold shadow-md transition-all duration-300 ease-in-out group-hover:scale-100"
+                      >
+                        Bill
+                      </span>
+                    </div>
 
                   </div>
                   <div className='flex justify-start px-[15px] text-black'>

@@ -15,9 +15,9 @@ import { MdContactMail } from "react-icons/md";//mail
 import { RiAwardLine } from "react-icons/ri";//point
 import { IoIosSearch } from "react-icons/io";
 import { MdFace, MdFace4, MdPlace } from 'react-icons/md';
-import vnPayLogo from '../../../assets/vnpay.jpg'
 import { PiGenderFemaleBold, PiGenderMaleBold } from "react-icons/pi";
 import { FaMoneyBillWave } from "react-icons/fa"; // cash
+import vnPayLogo from '../../../assets/vnpay.jpg'
 const CustomerDetail = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -742,7 +742,7 @@ const CustomerDetail = () => {
                 className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1000px] mx-auto"
                 overlayClassName="fixed inset-0 z-30 bg-black bg-opacity-50 flex justify-center items-center"
             >
-                {selectedSellOrder && (
+                {/* {selectedSellOrder && (
                     <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
                         <div className="bg-white rounded-lg p-8 w-full max-w-[1000px]">
                             <h1 className='text-blue-800 text-center font-bold text-3xl mb-4'>Sell Order Detail ({selectedSellOrder.sellOrderDetails ? selectedSellOrder.sellOrderDetails.length : 0})</h1>
@@ -773,9 +773,6 @@ const CustomerDetail = () => {
                                             'null'
                                         )}
                                     </p>
-                                    {/* <p className="mb-4">
-                                        <strong>Quantity Of Products:</strong> {selectedSellOrder.sellOrderDetails ? selectedSellOrder.sellOrderDetails.length : 0}
-                                    </p> */}
                                 </div>
                                 <div className="shadow-xl p-4 rounded-lg">
                                     <p className="mb-4">
@@ -855,8 +852,238 @@ const CustomerDetail = () => {
                             </button>
                         </div>
                     </div>
-                )}
-                {selectedBuyOrder && (
+                )} */}
+                {selectedSellOrder
+                    ? (
+                        <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
+                            <div className="bg-white rounded-lg p-8 w-full max-w-[1000px]">
+                                <h1 className='text-blue-800 text-center font-bold text-3xl mb-4'>Sell Order Detail ({selectedSellOrder.sellOrderDetails ? selectedSellOrder.sellOrderDetails.length : 0})</h1>
+                                <div className="grid grid-cols-2 gap-4 ml-4 mb-4 mx-6">
+                                    <div className="shadow-xl p-4 rounded-lg">
+                                        <p className="mb-4">
+                                            <strong>Code:</strong> {selectedSellOrder.code}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Total Value:</strong> {formatCurrency(selectedSellOrder.finalAmount)}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Time:</strong> {formatDateTime(selectedSellOrder.createDate)}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Special Discount Rate:</strong> {selectedSellOrder.specialDiscountRate}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Special Discount Status:</strong> {selectedSellOrder.specialDiscountStatus || 'null'}
+                                        </p>
+                                        <p className="mb-4 flex items-center">
+                                            <strong className="mr-2">Payment Method:</strong>{selectedSellOrder.paymentMethod}
+                                            {selectedSellOrder.paymentMethod === 'VnPay' ? (
+                                                <img src={vnPayLogo} alt="VNPay Logo" className="w-5 h-auto mx-2" />
+                                            ) : selectedSellOrder.paymentMethod === 'Cash' ? (
+                                                <FaMoneyBillWave className="text-green-500 text-2xl mx-2" />
+                                            ) : (
+                                                'null'
+                                            )}
+                                        </p>
+                                        {/* <p className="mb-4">
+                                        <strong>Quantity Of Products:</strong> {selectedSellOrder.sellOrderDetails ? selectedSellOrder.sellOrderDetails.length : 0}
+                                    </p> */}
+                                    </div>
+                                    <div className="shadow-xl p-4 rounded-lg">
+                                        <p className="mb-4">
+                                            <strong>Customer:</strong> {selectedSellOrder.customerName}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Phone:</strong> {selectedSellOrder.customerPhoneNumber}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Seller:</strong> {selectedSellOrder.staffName}
+                                        </p>
+                                        <p className="mb-4 mr-4">
+                                            <strong>Description:</strong> {selectedSellOrder.description || 'null'}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Status:</strong>
+                                            {selectedSellOrder.status === 'completed' ? (
+                                                <span className="text-green-500 bg-green-100 font-bold p-1 px-2 mx-2 rounded-xl">COMPLETED</span>
+                                            ) : selectedSellOrder.status === 'cancelled' ? (
+                                                <span className="text-red-500 bg-red-100 font-bold p-1 px-2 mx-2 rounded-xl">CANCELLED</span>
+                                            ) : selectedSellOrder.status === 'processing' ? (
+                                                <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 mx-2 rounded-xl">PROCESSING</span>
+                                            ) : selectedSellOrder.status === 'draft' ? (
+                                                <span className="text-black bg-gray-100 font-bold p-1 px-7 mx-2 rounded-xl">DRAFT</span>
+                                            ) : (
+                                                <span className="relative group text-blue-500 bg-blue-100 font-bold p-1 px-2 mx-2 rounded-xl">
+                                                    {selectedSellOrder.status}
+                                                </span>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="overflow-x-auto overflow-y-auto max-h-52">
+                                    <table className="font-inter w-full table-auto text-left">
+                                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white sticky top-0">
+                                            <tr className="whitespace-nowrap text-xl font-bold">
+                                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                                                <th className="py-3">Code</th>
+                                                <th>Name</th>
+                                                <th className='text-center'>Quantity</th>
+                                                <th className='text-center'>Promotion</th>
+                                                <th>Unit Price</th>
+                                                <th className="rounded-r-lg">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {selectedSellOrder.sellOrderDetails && selectedSellOrder.sellOrderDetails.map((item, index) => (
+                                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black font-bold">{index + 1}</td>
+                                                    <td>{item.productCode}</td>
+                                                    <td>{item.productName}</td>
+                                                    <td className='text-center'>{item.quantity}</td>
+                                                    <td className='text-center'>{item.promotionRate || 0}</td>
+                                                    <td>{formatCurrency(item.unitPrice)}</td>
+                                                    <td className="rounded-r-lg">
+                                                        {item.status === 'delivered' ? (
+                                                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">Delivered</span>
+                                                        ) : item.status === 'cancelled' ? (
+                                                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">Cancelled</span>
+                                                        ) : item.status === 'awaiting' ? (
+                                                            <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 rounded-xl">Awaiting</span>
+                                                        ) : <span className="font-bold p-1 px-2 rounded-xl">{item.status}</span>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <button
+                                    onClick={closeModal}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-md mr-2"
+                                    style={{ width: '5rem' }}
+                                >
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    )
+                    : selectedBuyOrder
+                        ? (
+                            <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
+                                <div className="bg-white rounded-lg p-8 w-full max-w-[1000px]">
+                                    <h1 className='text-blue-800 text-center font-bold text-3xl mb-4'>Buy Order Detail ({selectedBuyOrder.buyOrderDetails ? selectedBuyOrder.buyOrderDetails.length : 0})</h1>
+                                    <div className="grid grid-cols-2 gap-4 ml-4 mb-4 mx-6">
+                                        <div className="shadow-xl p-4 rounded-lg">
+                                            <p className="mb-4">
+                                                <strong>Code:</strong> {selectedBuyOrder.code}
+                                            </p>
+                                            <p className="mb-4">
+                                                <strong>Total Value:</strong> {formatCurrency(selectedBuyOrder.totalAmount)}
+                                            </p>
+                                            <p className="mb-4">
+                                                <strong>Time:</strong> {formatDateTime(selectedBuyOrder.createDate)}
+                                            </p>
+                                            <p className="mb-4 flex items-center">
+                                                <strong className="mr-2">Payment Method:</strong>{selectedBuyOrder.paymentMethod}
+                                                {selectedBuyOrder.paymentMethod === 'VnPay' ? (
+                                                    <img src={vnPayLogo} alt="VNPay Logo" className="w-5 h-auto mx-2" />
+                                                ) : selectedBuyOrder.paymentMethod === 'Cash' ? (
+                                                    <FaMoneyBillWave className="text-green-500 text-2xl mx-2" />
+                                                ) : (
+                                                    'null'
+                                                )}
+                                            </p>
+                                        </div>
+                                        <div className="shadow-xl p-4 rounded-lg">
+                                            <p className="mb-4">
+                                                <strong>Customer:</strong> {selectedBuyOrder.customerName}
+                                            </p>
+                                            <p className="mb-4">
+                                                <strong>Phone:</strong> {selectedBuyOrder.customerPhoneNumber}
+                                            </p>
+                                            <p className="mb-4">
+                                                <strong>Seller:</strong> {selectedBuyOrder.staffName}
+                                            </p>
+                                            <p className="mb-4 mr-4">
+                                                <strong>Description:</strong> {selectedBuyOrder.description || 'null'}
+                                            </p>
+                                            <p className="mb-4">
+                                                <strong>Status:</strong>
+                                                {selectedBuyOrder.status === 'completed' ? (
+                                                    <span className="text-green-500 bg-green-100 font-bold p-1 px-2 mx-2 rounded-xl">COMPLETED</span>
+                                                ) : selectedBuyOrder.status === 'cancelled' ? (
+                                                    <span className="text-red-500 bg-red-100 font-bold p-1 px-2 mx-2 rounded-xl">CANCELLED</span>
+                                                ) : selectedBuyOrder.status === 'processing' ? (
+                                                    <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 mx-2 rounded-xl">PROCESSING</span>
+                                                ) : selectedBuyOrder.status === 'draft' ? (
+                                                    <span className="text-black bg-gray-100 font-bold p-1 px-7 mx-2 rounded-xl">DRAFT</span>
+                                                ) : (
+                                                    <span className="relative group text-blue-500 bg-blue-100 font-bold p-1 px-2 mx-2 rounded-xl">
+                                                        {selectedBuyOrder.status}
+                                                    </span>
+                                                )}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="overflow-x-auto overflow-y-auto max-h-52">
+                                        <table className="font-inter w-full table-auto text-left">
+                                            <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white sticky top-0">
+                                                <tr className="whitespace-nowrap text-xl font-bold">
+                                                    <th className="py-3 pl-3 rounded-l-lg" title="Column 1"></th>
+                                                    <th className="py-3" title="Category">Cat.</th>
+                                                    <th className="py-3" title="Name">Name</th>
+                                                    <th className='text-center' title="Material Name">Mat. Name</th>
+                                                    <th className='text-center'>Quantity</th>
+                                                    <th className='text-center' title="Diamond Grading Code">DGC</th>
+                                                    <th title="Value">Value</th>
+                                                    <th className="rounded-r-lg" title="Purchase Price Ratio">PP Ratio</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {selectedBuyOrder.buyOrderDetails && selectedBuyOrder.buyOrderDetails.map((item, index) => (
+                                                    <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                                        <td className="rounded-l-lg pr-3 pl-5 py-4 text-black font-bold">{index + 1}</td>
+                                                        <td>{item.categoryType}</td>
+                                                        <td>{item.productName}</td>
+                                                        <td className='text-center'>{item.materialName}</td>
+                                                        <td className='  text-center'>
+                                                            <span className='text-center'>{item.materialWeight || 0}</span>
+                                                            {item.caregoryId === '7'
+                                                                ? <span className=' ml-2'>carat</span>
+                                                                : item.caregoryId === '6' || item.caregoryId === '5'
+                                                                    ? <span className='ml-2 '>grams</span>
+                                                                    : <span className=' ml-2'>piece</span>
+                                                            }
+                                                        </td>
+
+
+                                                        <td className='text-center'>{item.diamondGradingCode || 'null'}</td>
+                                                        <td>{formatCurrency(item.unitPrice)}</td>
+                                                        <td className="rounded-r-lg text-center">
+                                                            {item.purchasePriceRatio}
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <button
+                                        onClick={closeModal}
+                                        className="px-4 py-2 bg-blue-500 text-white rounded-md mr-2"
+                                        style={{ width: '5rem' }}
+                                    >
+                                        Close
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                        : ''
+                }
+                {/* {selectedBuyOrder && (
                     <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
                         <div className="bg-white rounded-lg p-8 w-full max-w-[1000px]">
                             <h1 className='text-blue-800 text-center font-bold text-3xl mb-4'>Buy Order Detail ({selectedBuyOrder.buyOrderDetails ? selectedBuyOrder.buyOrderDetails.length : 0})</h1>
@@ -957,7 +1184,7 @@ const CustomerDetail = () => {
                             </button>
                         </div>
                     </div>
-                )}
+                )} */}
             </Modal>
         </>
 

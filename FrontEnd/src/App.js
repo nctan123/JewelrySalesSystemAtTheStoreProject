@@ -58,6 +58,7 @@ import DetailPage from './page/Manager/SpecialDiscount/DetailPage';
 import Payment from './page/Manager/Report/Payment';
 import CustomerDetail from './page/Manager/Manage/CustomerDetail';
 import PaymentReturn from './page/Cashier/PaymentReturn';
+import CreateProduct from './page/Manager/Product/CreateProduct';
 function App() {
   // test redux có hoạt động không
   // const {test,homeData} = useSelector(state => state.app)
@@ -103,7 +104,9 @@ function App() {
             <Route path={path.MANAGER} element={<Dashboard />} />
             <Route path={path.PRICE} element={<Price />} />
             <Route path={path.MATERIAL} element={<Material />} />
+
             <Route path={path.DIAMONDMANAGER} element={<DiamondManager />} />
+            <Route path={'createProduct'} element={<CreateProduct />} />
             <Route path={path.JEWELRY} element={<JewelryManager />} />
             <Route path={path.RETAILGOLDMANAGER} element={<RetailGoldManager />} />
             <Route path={path.WHOLESALEGOLD} element={<WholesaleGoldManager />} />

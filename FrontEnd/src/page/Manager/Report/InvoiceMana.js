@@ -4,6 +4,9 @@ import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
 import Modal from 'react-modal';
 import { CiViewList } from "react-icons/ci";
+import { FaMoneyBillWave } from "react-icons/fa"; // cash
+import vnPayLogo from '../../../assets/vnpay.jpg'
+
 const InvoiceMana = () => {
     const scrollRef = useRef(null);
 
@@ -37,20 +40,20 @@ const InvoiceMana = () => {
         }
     }, [pageSize, currentPage, searchQuery, ascending]);
 
-    const handleDetailClick = async (code) => {
+    const handleDetailClick = async (id) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error("No token found");
             }
-            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/buyorder/checkOrder?orderCode=${code}`, {
+            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getbyid?id=${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            // console.log('check detail click', res)
+            // console.log('check detail clickcccc', res.data.data[0])
             if (res && res.data) {
-                const details = res.data;
+                const details = res.data.data[0];
                 // console.log('check detail click', res.data.data[0].sellOrderDetails)
                 setSelectedOrder(details);
                 setIsModalOpen(true); // Open modal when staff details are fetched
@@ -228,7 +231,7 @@ const InvoiceMana = () => {
                                     <td >{item.customerPhoneNumber}</td>
                                     <td >{formatDateTime(item.createDate)}</td>
                                     <td className=''>{formatCurrency(item.finalAmount)}</td>
-                                    <td className="text-3xl text-[#000099] pl-2"><CiViewList onClick={() => handleDetailClick(item.code)} /></td>
+                                    <td className="text-3xl text-[#000099] pl-2"><CiViewList onClick={() => handleDetailClick(item.id)} /></td>
                                 </tr>
                             ))}
                             {placeholders.map((_, index) => (
@@ -265,60 +268,116 @@ const InvoiceMana = () => {
                     isOpen={isModalOpen}
                     onRequestClose={closeModal}
                     contentLabel="Product Details"
-                    className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1100px] mx-auto"
+                    className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1000px] mx-auto"
                     overlayClassName="fixed inset-0 z-30 bg-black bg-opacity-50 flex justify-center items-center"
                 >
                     {selectedOrder && (
                         <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
-                            <div className="bg-white rounded-lg p-8 w-full max-w-[1100px]">
-                                <p className="mb-4">
-                                    <strong>Code:</strong> {selectedOrder.code}
-                                </p>
-                                <p className="mb-4">
-                                    <strong>Customer:</strong> {selectedOrder.customerName}
-                                </p>
-                                <p className="mb-4">
-                                    <strong>Phone:</strong> {selectedOrder.customerPhoneNumber}
-                                </p>
-                                <p className="mb-4">
-                                    <strong>Total Value:</strong> {formatCurrency(selectedOrder.totalValue)}
-                                </p>
-                                <p className="mb-4">
-                                    <strong>Time:</strong> {formatDateTime(selectedOrder.createDate)}
-                                </p>
-                                <p className="mb-4">
-                                    <strong>List product sold:</strong>
-                                </p>
-                                <div className="overflow-x-auto">
-                                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left ">
-                                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                                            <tr className="whitespace-nowrap text-xl font-bold text-center text-[#212B36]">
-                                                <th className="py-3 pl-3 rounded-l-lg  ">Code</th>
-                                                <th className="">Name</th>
-                                                <th className="">Quantity</th>
-                                                <th className="">Price in Order</th>
-                                                <th className="">Buy Price</th>
-                                                <th className="rounded-r-lg ">Reason</th>
+                            <div className="bg-white rounded-lg p-8 w-full max-w-[1000px]">
+                                <h1 className='text-blue-800 text-center font-bold text-3xl mb-4'>Sell Order Detail ({selectedOrder.sellOrderDetails ? selectedOrder.sellOrderDetails.length : 0})</h1>
+                                <div className="grid grid-cols-2 gap-4 ml-4 mb-4 mx-6">
+                                    <div className="shadow-xl p-4 rounded-lg">
+                                        <p className="mb-4">
+                                            <strong>Code:</strong> {selectedOrder.code}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Total Value:</strong> {formatCurrency(selectedOrder.finalAmount)}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Time:</strong> {formatDateTime(selectedOrder.createDate)}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Special Discount Rate:</strong> {selectedOrder.specialDiscountRate}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Special Discount Status:</strong> {selectedOrder.specialDiscountStatus || 'null'}
+                                        </p>
+                                        <p className="mb-4 flex items-center">
+                                            <strong className="mr-2">Payment Method:</strong>{selectedOrder.paymentMethod}
+                                            {selectedOrder.paymentMethod === 'VnPay' ? (
+                                                <img src={vnPayLogo} alt="VNPay Logo" className="w-5 h-auto mx-2" />
+                                            ) : selectedOrder.paymentMethod === 'Cash' ? (
+                                                <FaMoneyBillWave className="text-green-500 text-2xl mx-2" />
+                                            ) : (
+                                                'null'
+                                            )}
+                                        </p>
+                                        {/* <p className="mb-4">
+                                        <strong>Quantity Of Products:</strong> {selectedOrder.sellOrderDetails ? selectedOrder.sellOrderDetails.length : 0}
+                                    </p> */}
+                                    </div>
+                                    <div className="shadow-xl p-4 rounded-lg">
+                                        <p className="mb-4">
+                                            <strong>Customer:</strong> {selectedOrder.customerName}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Phone:</strong> {selectedOrder.customerPhoneNumber}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Seller:</strong> {selectedOrder.staffName}
+                                        </p>
+                                        <p className="mb-4 mr-4">
+                                            <strong>Description:</strong> {selectedOrder.description || 'null'}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Status:</strong>
+                                            {selectedOrder.status === 'completed' ? (
+                                                <span className="text-green-500 bg-green-100 font-bold p-1 px-2 mx-2 rounded-xl">COMPLETED</span>
+                                            ) : selectedOrder.status === 'cancelled' ? (
+                                                <span className="text-red-500 bg-red-100 font-bold p-1 px-2 mx-2 rounded-xl">CANCELLED</span>
+                                            ) : selectedOrder.status === 'processing' ? (
+                                                <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 mx-2 rounded-xl">PROCESSING</span>
+                                            ) : selectedOrder.status === 'draft' ? (
+                                                <span className="text-black bg-gray-100 font-bold p-1 px-7 mx-2 rounded-xl">DRAFT</span>
+                                            ) : (
+                                                <span className="relative group text-blue-500 bg-blue-100 font-bold p-1 px-2 mx-2 rounded-xl">
+                                                    {selectedOrder.status}
+                                                </span>
+                                            )}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="overflow-x-auto overflow-y-auto max-h-52">
+                                    <table className="font-inter w-full table-auto text-left">
+                                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white sticky top-0">
+                                            <tr className="whitespace-nowrap text-xl font-bold">
+                                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                                                <th className="py-3">Code</th>
+                                                <th>Name</th>
+                                                <th className='text-center'>Quantity</th>
+                                                <th className='text-center'>Promotion</th>
+                                                <th>Unit Price</th>
+                                                <th className="rounded-r-lg">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {selectedOrder.products && selectedOrder.products.map((item, index) => (
-                                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                                    <td className="rounded-l-lg pl-3 py-4 border-x border-gray-300">{item.code}</td>
-                                                    <td className="border-x border-gray-300 pl-2">{item.name}</td>
-                                                    <td className="border-x border-gray-300 text-center">{item.quantity}</td>
-                                                    <td className="border-x border-gray-300 text-right pr-2">{formatCurrency(item.priceInOrder)}</td>
-                                                    <td className="border-x border-gray-300 text-right pr-2 pl-6">{formatCurrency(item.estimateBuyPrice)}</td>
-                                                    <td className="rounded-r-lg border-x border-gray-300 pl-2">{item.reasonForEstimateBuyPrice}</td>
+                                            {selectedOrder.sellOrderDetails && selectedOrder.sellOrderDetails.map((item, index) => (
+                                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black font-bold">{index + 1}</td>
+                                                    <td>{item.productCode}</td>
+                                                    <td>{item.productName}</td>
+                                                    <td className='text-center'>{item.quantity}</td>
+                                                    <td className='text-center'>{item.promotionRate || 0}</td>
+                                                    <td>{formatCurrency(item.unitPrice)}</td>
+                                                    <td className="rounded-r-lg">
+                                                        {item.status === 'delivered' ? (
+                                                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">Delivered</span>
+                                                        ) : item.status === 'cancelled' ? (
+                                                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">Cancelled</span>
+                                                        ) : item.status === 'awaiting' ? (
+                                                            <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 rounded-xl">Awaiting</span>
+                                                        ) : <span className="font-bold p-1 px-2 rounded-xl">{item.status}</span>
+                                                        }
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
                                     </table>
-
                                 </div>
+
                                 <button
                                     onClick={closeModal}
-                                    className="px-4 py-2 bg-gray-500 text-white rounded-md mr-2"
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-md mr-2"
                                     style={{ width: '5rem' }}
                                 >
                                     Close
