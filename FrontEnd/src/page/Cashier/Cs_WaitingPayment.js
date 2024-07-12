@@ -378,7 +378,6 @@ const Cs_WaitingPayment = () => {
   };
 
   const handleCompleteVnPay = async (item) => {
-    // event.preventDefault();
     let data = {
       paymentId: item.id,
       OrderId: item.sellorderId,
@@ -386,8 +385,10 @@ const Cs_WaitingPayment = () => {
       customerId: item.customerId,
       createDate: createDate,
       amount: item.amount,
+      returnUrl: 'http://localhost:3000/cs_public/cs_order/payment-return' // Replace with your actual return URL
     };
     console.log('VNPay request', data);
+
     try {
       let res = await axios.post('https://jssatsproject.azurewebsites.net/api/VnPay/createpaymentUrl', data);
       console.log(res.data);
@@ -395,7 +396,7 @@ const Cs_WaitingPayment = () => {
       // Automatically redirect to the returned URL
       window.location.href = res.data;
     } catch (error) {
-      toast.error('Fail');
+      toast.error('Fail handleCompleteVnPay');
       console.error('Error invoice:', error);
     }
   };

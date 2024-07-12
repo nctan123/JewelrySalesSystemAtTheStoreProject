@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
 export default function P1() {
@@ -108,6 +108,9 @@ export default function P1() {
 
         setView('day');
     };
+    useEffect(() => {
+        handleDayClick()
+    }, []);
     const handleWeekClick = () => {
         const today = new Date();
 

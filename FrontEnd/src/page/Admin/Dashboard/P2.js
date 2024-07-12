@@ -51,10 +51,14 @@ const P2 = () => {
             });
 
             fetchData(startDate, endDate);
-        } else {
-            alert('Please enter both start date and end date.');
         }
+        // else {
+        //     alert('Please enter both start date and end date.');
+        // }
     };
+    useEffect(() => {
+        handleCalculateDates();
+    }, [startDate, endDate]);
 
     const fetchData = async (startDate, endDate) => {
         // Format startDate to 00:00
@@ -270,8 +274,8 @@ const P2 = () => {
 
     return (
         <div className="flex justify-center items-center flex-col space-y-4 border border-gray-300 shadow-lg my-4  rounded-md">
-            <div className="flex items-center space-x-2 ml-auto pr-2">
-                <div className="flex flex-col space-y-2">
+            <div className="flex items-center space-x-2 ml-auto pr-4 pt-4">
+                {/* <div className="flex flex-col space-y-2">
                     <select
                         value={selectedRange}
                         onChange={handleRangeChange}
@@ -280,7 +284,7 @@ const P2 = () => {
                         <option value="week">Day</option>
                         <option value="month">Month</option>
                     </select>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col space-y-2">
                     <input
@@ -298,35 +302,13 @@ const P2 = () => {
                         onChange={(e) => setEndDate(e.target.value)}
                     />
                 </div>
-                <button
+                {/* <button
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded"
                     onClick={handleCalculateDates}
                 >
                     Calculate
-                </button>
+                </button> */}
             </div>
-
-            {/* <div className="w-full flex space-x-4">
-                <div className="flex-1 border border-gray-300 shadow-lg">
-                    <ResponsiveContainer width="100%" height={400}>
-                        <LineChart data={datesInRange} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="date" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Line type="monotone" dataKey="revenue" stroke="#8884d8" activeDot={{ r: 8 }} />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="flex-1 border border-gray-300 shadow-lg">
-                    <div>
-                        <ReactApexChart options={options} series={chartData.series} type="donut" height={400} />
-                        <ReactApexChart options={options2} series={chartData2.series} type="donut" height={400} />
-                    </div>
-                </div>
-
-            </div> */}
 
             <div className="w-full flex space-x-4 p-2">
                 <div className="w-2/3">
