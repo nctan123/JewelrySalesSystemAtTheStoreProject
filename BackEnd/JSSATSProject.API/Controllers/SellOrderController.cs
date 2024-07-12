@@ -1,10 +1,13 @@
-﻿using AutoMapper;
+﻿using System.ComponentModel.DataAnnotations;
+using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
+using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
@@ -17,14 +20,17 @@ public class SellOrderController : ControllerBase
     private readonly IPointService _pointService;
     private readonly ISellOrderService _sellOrderService;
     private readonly ISpecialDiscountRequestService _specialDiscountRequestService;
+    private readonly IProductService _productService;
 
     public SellOrderController(ISellOrderService sellOrderService,
-        ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper, IPointService pointService)
+        ISpecialDiscountRequestService specialDiscountRequestService, IMapper mapper, IPointService pointService,
+        IProductService productService)
     {
         _sellOrderService = sellOrderService;
         _specialDiscountRequestService = specialDiscountRequestService;
         _mapper = mapper;
         _pointService = pointService;
+        _productService = productService;
     }
 
     [HttpGet]
@@ -49,12 +55,23 @@ public class SellOrderController : ControllerBase
     [Route("CreateOrder")]
     public async Task<IActionResult> CreateAsync([FromBody] RequestCreateSellOrder requestSellOrder)
     {
+        if (!ModelState.IsValid) return Problem(statusCode: 400, detail: ModelState.ToString());
         var updatedOrder = new ResponseModel();
         var customerPhoneNumber = requestSellOrder.CustomerPhoneNumber;
         var staffId = requestSellOrder.StaffId;
         var createDate = requestSellOrder.CreateDate;
         ResponseModel specialDiscountModel;
         ResponseUpdateSellOrderWithSpecialPromotion response;
+
+        //check if this is just an update, not create new order
+        if (requestSellOrder.Id is not null)
+        {
+            var targetOrder = await _sellOrderService.MapOrderAsync(requestSellOrder);
+            await _sellOrderService.RemoveAllSellOrderDetails(requestSellOrder.Id.Value);
+            var result = await _sellOrderService.UpdateOrderAsync(targetOrder.Id, targetOrder);
+            await _productService.UpdateAllProductStatusAsync(targetOrder, ProductConstants.InactiveStatus);
+            return Ok(_mapper.Map<ResponseUpdateSellOrderWithSpecialPromotion>((SellOrder)result.Data!));
+        }
 
         //create truoc ti update lai special promotion sau
         var currentOrder = (SellOrder)(await _sellOrderService.CreateOrderAsync(requestSellOrder)).Data!;
@@ -86,7 +103,6 @@ public class SellOrderController : ControllerBase
             response = _mapper.Map<ResponseUpdateSellOrderWithSpecialPromotion>(currentOrder);
         }
 
-        //if no exception occurs
         await _pointService.DecreaseCustomerAvailablePointAsync(customerPhoneNumber, requestSellOrder.DiscountPoint);
 
         return Ok(response);
@@ -125,7 +141,7 @@ public class SellOrderController : ControllerBase
         bool ascending, int pageIndex, [FromQuery] int pageSize)
     {
         var responseModel =
-            await _sellOrderService.SearchByCriteriaAsync(statusList, customerPhone, ascending, pageIndex, pageSize);
+            await _sellOrderService.SearchByAsync(statusList, customerPhone, ascending, pageIndex, pageSize);
         return Ok(responseModel);
     }
 }

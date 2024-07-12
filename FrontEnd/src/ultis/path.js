@@ -19,18 +19,25 @@ const path = {
     SEARCHINVOICE: 'searchinvoice',
     PROMOTION: 'promotion',
     RETURN_EX: 'purchase',
+    ONPROCESS: 'onprocessSeller',
+    COMPLETED: 'completedSeller',
+    BUY:'buyIn',
+    BUYOUT: 'buyOut',
+    BILL: 'bill',
+// Cashier
 
-    BUY: 'buy',
-    WARRANTY: 'warranty',
-    // Cashier
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
-    CS_REVENUE: 'cs_revenue',
+    CS_BILL: 'cs_bill',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
-    // ADMIN
+    CS_WAITINGPAYMENT: 'cs_waitingPayment',
+    CS_BUYPRODUCT:'cs_buyProduct',
+    CS_ONPROCESSBUY: 'cs_onprocessBuy',
+    CS_COMPLETEBUY: 'cs_completeBuy',
+    PAYMENTRESULT: 'payment-result',
+// ADMIN
     DASHBOARD: 'Dashboard',
-
     MANAGE: 'Manage',
     CUSTOMERADMIN: 'customeradmin',
     PRODUCTADMIN: 'productadmin',
@@ -54,14 +61,22 @@ const path = {
 
 
     // manager
-
+    WAREHOUSEMANAGER: 'warehouseManager',
+    DIAMONDWAREHOUSE: 'diamondWarehouse',
+    JEWELRYWAREHOUSE: 'jewelryWarehouse',
+    WHOLESALEGOLDWAREHOUSE: 'wholesalegoldWarehouse',
+    RETAILGOLDWAREHOUSE: 'rgoldWarehouse',
     PRODUCTMANAGER: 'productManager',
     DIAMONDMANAGER: 'diamond',
     RETAILGOLDMANAGER: 'rgold',
     PROMOTIONMANAGER: 'Promotionmanager',
     CUSTOMERMANA: 'customerMana',
     PRODUCTMANA: 'productMana',
-    STALL: 'Stall'
+    STALL: 'Stall',
+    PRICE: 'price',
+    MATERIAL: 'material',
+    SPECIALDISCOUNT: 'specialDiscount',
+    PAYMENT: 'Payment'
     // end manager
 
 

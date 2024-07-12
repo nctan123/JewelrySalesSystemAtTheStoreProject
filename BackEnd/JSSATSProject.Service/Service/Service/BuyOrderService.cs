@@ -1,11 +1,15 @@
 using System.Linq.Expressions;
+using System.Text;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.BuyOrderDetailModel;
 using JSSATSProject.Service.Models.BuyOrderModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -77,9 +81,10 @@ public class BuyOrderService : IBuyOrderService
         throw new NotImplementedException();
     }
 
-
     public async Task<ResponseModel> CreateAsync(BuyOrder entity)
     {
+        entity.Code = await GenerateUniqueCodeAsync();
+        entity.CreateDate = CustomLibrary.NowInVietnamTime();
         await _unitOfWork.BuyOrderRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
 
@@ -98,6 +103,50 @@ public class BuyOrderService : IBuyOrderService
             if (buyOrder != null)
             {
                 buyOrder = entity;
+                await _unitOfWork.BuyOrderRepository.UpdateAsync(buyOrder);
+
+                return new ResponseModel
+                {
+                    Data = buyOrder,
+                    MessageError = ""
+                };
+            }
+
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Not Found"
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
+        }
+    }
+
+    public async Task<ResponseModel> UpdateAsync(int buyOrderId, RequestUpdateBuyOrderStatus entity)
+    {
+        try
+        {
+            var buyOrder = await _unitOfWork.BuyOrderRepository.GetEntityAsync(buyOrderId);
+            if (buyOrder != null)
+            {
+                buyOrder.Status = entity.NewStatus;
+                //delete buy order details if order is cancelled
+                if (entity.NewStatus == OrderConstants.CanceledStatus)
+                {
+                    var buyOrderDetails = buyOrder.BuyOrderDetails.ToList();
+                    foreach (var buyOrderDetail in buyOrderDetails)
+                    {
+                        await _unitOfWork.BuyOrderDetailRepository.DeleteAsync(buyOrderDetail);
+                    }
+                }
+
                 await _unitOfWork.BuyOrderRepository.UpdateAsync(buyOrder);
 
                 return new ResponseModel
@@ -169,20 +218,68 @@ public class BuyOrderService : IBuyOrderService
             var quantity = product.Value;
             requestCreateBuyOrder.ProductCodesAndEstimatePrices.TryGetValue(productCode, out var price);
             var productObj = await _productService.GetEntityByCodeAsync(productCode);
-            var diamond = productObj.ProductDiamonds.First().Diamond;
-            var diamondGradingCode = diamond.DiamondGradingCode;
+            var diamond = productObj.ProductDiamonds.FirstOrDefault()?.Diamond;
+            var diamondGradingCode = diamond?.DiamondGradingCode;
             var purchasePriceRatioId =
-                (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(productObj.Category.TypeId)).Id;
+                (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(productObj.Category.TypeId, "company sold"))
+                ?.Id;
 
             //in-company buy orders
             var orderDetail = new BuyOrderDetail
             {
+                Quantity = quantity,
                 BuyOrderId = buyOrderId,
                 CategoryTypeId = productObj.Category.TypeId,
                 DiamondGradingCode = diamondGradingCode,
                 PurchasePriceRatioId = purchasePriceRatioId,
                 MaterialId = productObj.ProductMaterials.First().Material.Id,
                 MaterialWeight = productObj.ProductMaterials.First().Weight,
+                UnitPrice = price
+            };
+            result.Add(orderDetail);
+        }
+
+        return result;
+    }
+
+    public async Task<ICollection<BuyOrderDetail>> CreateOrderDetails(
+        RequestCreateNonCompanyBuyOrder requestCreateBuyOrder,
+        int buyOrderId)
+    {
+        var products = requestCreateBuyOrder.Products;
+        var result = new List<BuyOrderDetail>();
+        foreach (var product in products)
+        {
+            var categoryTypeId = product.CategoryTypeId;
+            var materialId = product.MaterialId;
+            var materialWeight = product.MaterialWeight;
+            var diamondGradingCode = product.DiamondGradingCode;
+            var quantity = product.Quantity!.Value;
+            int? purchasePriceRatioId = null;
+            decimal price = product.BuyPrice;
+
+            if (categoryTypeId is ProductConstants.RetailGoldCategoryType or ProductConstants.WholesaleGoldCategoryType)
+            {
+                price = quantity * await _productService.CalculateMaterialBuyPrice(materialId, materialWeight);
+            }
+            else
+            {
+                purchasePriceRatioId =
+                    (await _unitOfWork.PurchasePriceRatioRepository.GetEntity(product.CategoryTypeId,
+                        "non-company sold"))?.Id;
+            }
+
+            //in-company buy orders
+            var orderDetail = new BuyOrderDetail
+            {
+                BuyOrderId = buyOrderId,
+                ProductName = product.ProductName,
+                Quantity = quantity,
+                CategoryTypeId = product.CategoryTypeId,
+                DiamondGradingCode = diamondGradingCode,
+                PurchasePriceRatioId = purchasePriceRatioId,
+                MaterialId = materialId,
+                MaterialWeight = materialWeight,
                 UnitPrice = price
             };
             result.Add(orderDetail);
@@ -246,5 +343,17 @@ public class BuyOrderService : IBuyOrderService
     public async Task<BuyOrder?> GetEntityByCodeAsync(string code)
     {
         return await _unitOfWork.BuyOrderRepository.GetByCodeAsync(code);
+    }
+
+    private async Task<string> GenerateUniqueCodeAsync()
+    {
+        string newCode;
+        do
+        {
+            var prefix = OrderConstants.BuyOrderCodePrefix;
+            newCode = prefix + CustomLibrary.RandomString(14 - prefix.Length);
+        } while (await _unitOfWork.Context.BuyOrders.AnyAsync(so => so.Code == newCode));
+
+        return newCode;
     }
 }

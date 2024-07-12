@@ -20,7 +20,9 @@ import { LiaGiftsSolid } from "react-icons/lia";
 import { VscGitPullRequestGoToChanges } from "react-icons/vsc";//request
 import { GiGoldNuggets } from "react-icons/gi";//point
 import { GrDocumentStore } from "react-icons/gr";
+import { MdOutlinePayments } from "react-icons/md";// payment
 const iconAdmin = {
+    MdOutlinePayments,
     GrDocumentStore,
     FaChartSimple,
     TbReportSearch,

@@ -4,7 +4,7 @@ import axios from 'axios';
 import Chart from 'react-apexcharts';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-const TooltipChart = () => {
+const P3 = () => {
     const [year, setYear] = useState(new Date().getFullYear());
     const [dates, setDates] = useState([]);
     const [values, setValues] = useState([]);
@@ -142,21 +142,23 @@ const TooltipChart = () => {
     return (
         <div className='border border-gray-300 shadow-lg my-4 rounded-md '>
             <div class="flex justify-end ">
-                <strong className='m-3'>Select: </strong>
+                <strong className='m-3'>Select Year: </strong>
                 <input
                     type="number"
                     value={year}
-                    className=' my-3'
+                    className='my-3'
                     onChange={handleChange}
                     min="2000"
                     max="2050"
+                    onKeyDown={(e) => {
+                        // Allow only numeric keys, backspace, delete, arrow keys
+                        if (!/[\d\b]|Arrow(?:Up|Down)/.test(e.key)) {
+                            e.preventDefault();
+                        }
+                    }}
                 />
-                {/* {loadingApi && (
-                    <FontAwesomeIcon
-                        icon={faSpinner}
-                        className='fa-spin-pulse fa-spin-reverse fa-1.5x me-2 m-3 '
-                    />
-                )} */}
+
+
 
             </div>
             <div className='flex justify-center'>
@@ -174,4 +176,4 @@ const TooltipChart = () => {
     );
 };
 
-export default TooltipChart;
+export default P3;

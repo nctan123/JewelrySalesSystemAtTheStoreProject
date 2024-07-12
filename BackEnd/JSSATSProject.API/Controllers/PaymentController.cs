@@ -2,6 +2,7 @@
 using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.PaymentDetailModel;
 using JSSATSProject.Service.Models.PaymentModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Mvc;
@@ -38,9 +39,9 @@ public class PaymentController : ControllerBase
 
     [HttpGet]
     [Route("GetAll")]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllAsync(int pageIndex, int pageSize)
     {
-        var responseModel = await _paymentService.GetAllAsync();
+        var responseModel = await _paymentService.GetAllAsync(pageIndex, pageSize);
         return Ok(responseModel);
     }
 
@@ -69,14 +70,16 @@ public class PaymentController : ControllerBase
 
         if (requestPayment.Status.Equals("cancelled"))
         {
-            var updatesellorderstatus = new UpdateSellOrderStatus
+            var updatesellorderstatus = new UpdateSellOrderStatus()
             {
                 Status = OrderConstants.CanceledStatus,
                 //Description = "Cancelled Payment"
             };
+            //update sellorder
             var orderId = await _paymentService.GetOrderIdByPaymentIdAsync(id);
-
             await _sellOrderService.UpdateStatusAsync(orderId, updatesellorderstatus);
+
+            
         }
 
         return Ok(response);
@@ -94,7 +97,7 @@ public class PaymentController : ControllerBase
         try
         {
             //Status_PaymentDetail == failed 
-            if (Convert.ToInt32(response.TransactionId) == 0)
+            if (Convert.ToInt32(response.VnPayResponseCode).ToString() != "00")
             {
                 var order = await _sellOrderService.GetEntityByIdAsync(Convert.ToInt32(response.OrderId));
                 var paymentDetail = new RequestCreatePaymentDetail
@@ -146,7 +149,7 @@ public class PaymentController : ControllerBase
             var discountPoint = sellorder.DiscountPoint;
             var customerPhone = sellorder.Customer.Phone;
             var sellorderAmount = sellorder.TotalAmount;
-            await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
+            //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
             await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
 
             //Update SpecialDiscount
@@ -170,4 +173,13 @@ public class PaymentController : ControllerBase
         }
 
     }
+
+    [HttpGet]
+    [Route("GetTotal")]
+    public async Task<IActionResult> GetTotalAsync(int paymentMethod, DateTime startDate, DateTime endDate)
+    {
+            var totalCount = await _paymentService.GetTotal(paymentMethod, startDate, endDate);
+            return Ok(totalCount);
+    }
+
 }

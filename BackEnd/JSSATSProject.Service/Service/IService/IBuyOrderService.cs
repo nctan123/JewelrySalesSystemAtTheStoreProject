@@ -12,6 +12,8 @@ public interface IBuyOrderService
     public Task<ResponseModel> CreateAsync(BuyOrder entity);
 
     public Task<ResponseModel> UpdateAsync(int buyOrderId, BuyOrder entity);
+    
+    public Task<ResponseModel> UpdateAsync(int buyOrderId, RequestUpdateBuyOrderStatus entity);
 
     public decimal GetPrice(string targetProductCode, Dictionary<string, int> productCodesAndQuantity,
         Dictionary<string, int> productCodesAndEstimatePrices);
@@ -20,6 +22,9 @@ public interface IBuyOrderService
         Dictionary<string, decimal> productCodesAndEstimatePrices);
 
     public Task<ICollection<BuyOrderDetail>> CreateOrderDetails(RequestCreateBuyOrder requestCreateBuyOrder,
+        int buyOrderId);
+
+    public Task<ICollection<BuyOrderDetail>> CreateOrderDetails(RequestCreateNonCompanyBuyOrder requestCreateBuyOrder,
         int buyOrderId);
 
     Task<int?> CountAsync(Expression<Func<BuyOrder, bool>> filter);

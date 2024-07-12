@@ -45,8 +45,12 @@ public class ReturnBuyBackPolicyService : IReturnBuyBackPolicyService
 
             var response = _mapper.Map<List<ResponseReturnBuyBackPolicy>>(entities);
 
+            var totalCount = await _unitOfWork.ReturnBuyBackPolicyRepository.CountAsync();
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
             return new ResponseModel
             {
+                TotalPages = totalPages,
+                TotalElements = totalCount,
                 Data = response,
                 MessageError = ""
             };

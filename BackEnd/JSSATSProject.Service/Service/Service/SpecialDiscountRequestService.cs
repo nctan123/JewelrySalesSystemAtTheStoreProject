@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Repository.Enums;
 using JSSATSProject.Service.Models;
@@ -30,6 +31,7 @@ public class SpecialDiscountRequestService : ISpecialDiscountRequestService
     public async Task<ResponseModel> CreateAsync(CreateSpecialDiscountRequest specialdiscountRequest)
     {
         var entity = _mapper.Map<SpecialDiscountRequest>(specialdiscountRequest);
+        entity.CreatedAt = CustomLibrary.NowInVietnamTime();
         entity.Staff = await _unitOfWork.StaffRepository.GetByIDAsync(specialdiscountRequest.StaffId);
         entity.Customer =
             (Customer)(await _customerService.GetEntityByPhoneAsync(specialdiscountRequest.CustomerPhoneNumber)).Data!;

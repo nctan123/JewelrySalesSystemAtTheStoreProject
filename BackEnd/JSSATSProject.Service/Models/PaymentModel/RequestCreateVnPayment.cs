@@ -1,4 +1,6 @@
-﻿namespace JSSATSProject.Service.Models.PaymentModel;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace JSSATSProject.Service.Models.PaymentModel;
 
 public class RequestCreateVnPayment
 {
@@ -9,5 +11,6 @@ public class RequestCreateVnPayment
     public int CustomerId { get; set; }
 
     public DateTime CreateDate { get; set; }
+    [Range(0, (double)decimal.MaxValue)]
     public decimal Amount { get; set; }
 }

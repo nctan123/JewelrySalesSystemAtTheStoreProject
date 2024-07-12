@@ -9,4 +9,5 @@ public interface IAccountService
     public Task<ResponseModel> GetByUsernameAndPassword(string username, string password);
     public Task<ResponseModel> GetAllAsync(int pageIndex = 1, int pageSize = 10, int? roleId = null);
     public Task<int> CountAsync(Expression<Func<Account, bool>> filter = null);
+    public Task<ResponseModel> SearchAsync(int pageIndex = 1, int pageSize = 10, int? roleId = null, string searchTerm = null);
 }

@@ -1,8 +1,9 @@
-namespace JSSATSProject.Service.Models.OrderModel;
+namespace JSSATSProject.Service.Models.SellOrderModel;
 
 public class UpdateSellOrderStatus
 {
     public string? Status { get; set; }
 
-    //public string? Description { get; set; }
+    public DateTime CreateDate { get; set; }
+
 }

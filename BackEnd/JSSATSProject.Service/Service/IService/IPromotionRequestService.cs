@@ -12,4 +12,6 @@ public interface IPromotionRequestService
         UpdatePromotionRequest promotionRequest);
 
     public Task<ResponseModel> SearchAsync(string searchTerm, int pageIndex, int pageSize);
+
+    public Task<ResponseModel> GetByIdAsync(int id);
 }

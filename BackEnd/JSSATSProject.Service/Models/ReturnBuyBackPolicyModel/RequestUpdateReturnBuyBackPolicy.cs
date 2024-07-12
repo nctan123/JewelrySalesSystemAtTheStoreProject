@@ -1,4 +1,6 @@
-﻿namespace JSSATSProject.Service.Models.ReturnBuyBackPolicyModel;
+﻿using JSSATSProject.Repository.CustomValidators;
+
+namespace JSSATSProject.Service.Models.ReturnBuyBackPolicyModel;
 
 public class RequestUpdateReturnBuyBackPolicy
 {
@@ -6,5 +8,6 @@ public class RequestUpdateReturnBuyBackPolicy
 
     public DateTime EffectiveDate { get; set; }
 
+    [StatusValidator("active", "inactive")]
     public string? Status { get; set; }
 }

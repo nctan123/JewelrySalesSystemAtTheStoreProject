@@ -1,6 +1,9 @@
-﻿namespace JSSATSProject.Service.Models.PromotionRequestModel;
+﻿using JSSATSProject.Repository.CustomValidators;
+using JSSATSProject.Repository.CustomValidors;
 
-public class CreatePromotionRequest
+namespace JSSATSProject.Service.Models.PromotionRequestModel;
+[DateRange]
+public class CreatePromotionRequest : IDateRange
 {
     public int ManagerId { get; set; }
 

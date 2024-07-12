@@ -21,5 +21,5 @@ public class ResponseSellOrderDetails
     [JsonIgnore]
     public virtual Product Product { get; set; }
 
-    public int? PromotionId { get; set; }
+    public decimal? PromotionRate { get; set; }
 }

@@ -1,6 +1,9 @@
-﻿namespace JSSATSProject.Service.Models.PromotionModel;
+﻿using JSSATSProject.Repository.CustomValidators;
+using JSSATSProject.Repository.CustomValidors;
 
-public class RequestUpdatePromotion
+namespace JSSATSProject.Service.Models.PromotionModel;
+[DateRange]
+public class RequestUpdatePromotion : IDateRange
 {
     public string Name { get; set; } = null!;
 
@@ -12,5 +15,6 @@ public class RequestUpdatePromotion
 
     public DateTime EndDate { get; set; }
 
+    [StatusValidator("active", "inactive")]
     public string? Status { get; set; }
 }

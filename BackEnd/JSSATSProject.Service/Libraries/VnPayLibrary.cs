@@ -16,40 +16,68 @@ public class VnPayLibrary
         var vnPay = new VnPayLibrary();
 
         foreach (var (key, value) in collection)
+        {
             if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
+            {
                 vnPay.AddResponseData(key, value);
+            }
+        }
 
-        //var orderId = Convert.ToInt64(vnPay.GetResponseData("vnp_TxnRef"));
         var vnPayTranId = Convert.ToInt64(vnPay.GetResponseData("vnp_TransactionNo"));
+        var vnpTransactionStatus = vnPay.GetResponseData("vnp_TransactionStatus");
         var vnpResponseCode = vnPay.GetResponseData("vnp_ResponseCode");
         var vnpSecureHash = collection.FirstOrDefault(k => k.Key == "vnp_SecureHash").Value;
         var orderInfo = vnPay.GetResponseData("vnp_OrderInfo");
         var checkSignature = vnPay.ValidateSignature(vnpSecureHash, hashSecret);
 
         if (!checkSignature)
+        {
             return new ResponseVnPayment
             {
-                Success = false
+                Success = false,
+                Message = "Invalid signature."
             };
+        }
 
-        // Assuming orderInfo is formatted as "OrderId Amount PaymentId"
         var orderInfoParts = orderInfo.Split(' ');
         var paymentId = orderInfoParts.Length > 2 ? orderInfoParts[2] : string.Empty;
         var orderId = orderInfoParts.Length > 2 ? orderInfoParts[0] : string.Empty;
-        var paymentmethodId = orderInfoParts.Length > 2 ? orderInfoParts[3] : string.Empty;
+        var paymentMethodId = orderInfoParts.Length > 2 ? orderInfoParts[3] : string.Empty;
 
-        return new ResponseVnPayment
+        if (vnpResponseCode == "00" && vnpTransactionStatus == "00")
         {
-            Success = true,
-            PaymentMethod = "VnPay",
-            OrderDescription = orderInfo,
-            OrderId = orderId,
-            PaymentId = paymentId,
-            TransactionId = vnPayTranId.ToString(),
-            Token = vnpSecureHash,
-            VnPayResponseCode = vnpResponseCode,
-            PaymentMethodId = paymentmethodId
-        };
+            return new ResponseVnPayment
+            {
+                Success = true,
+                PaymentMethod = "VnPay",
+                OrderDescription = orderInfo,
+                OrderId = orderId,
+                PaymentId = paymentId,
+                TransactionId = vnPayTranId.ToString(),
+                Token = vnpSecureHash,
+                VnPayResponseCode = vnpResponseCode,
+                PaymentMethodId = paymentMethodId,
+                VnPayTranStatus = vnpTransactionStatus,
+                Message = "The transaction was successfully completed. Thank you for using our service."
+            };
+        }
+        else
+        {
+            return new ResponseVnPayment
+            {
+                Success = false,
+                PaymentMethod = "VnPay",
+                OrderDescription = orderInfo,
+                OrderId = orderId,
+                PaymentId = paymentId,
+                TransactionId = vnPayTranId.ToString(),
+                Token = vnpSecureHash,
+                VnPayResponseCode = vnpResponseCode,
+                PaymentMethodId = paymentMethodId,
+                VnPayTranStatus = vnpTransactionStatus,
+                Message = $"An error occurred during processing. Error code: {vnpResponseCode}"
+            };
+        }
     }
 
     public string GetIpAddress(HttpContext context)

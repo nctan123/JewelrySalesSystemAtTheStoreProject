@@ -1,25 +1,8 @@
 ﻿namespace JSSATSProject.Service.Models.PaymentModel;
 
+
 public class ResponseVnPayment
-{
-    public ResponseVnPayment(bool success, string paymentMethod, string orderDescription, string orderId,
-        string paymentId, string transactionId, string token, string vnPayResponseCode, string paymentMethodId)
-    {
-        Success = success;
-        PaymentMethod = paymentMethod;
-        OrderDescription = orderDescription;
-        OrderId = orderId;
-        PaymentId = paymentId;
-        TransactionId = transactionId;
-        Token = token;
-        VnPayResponseCode = vnPayResponseCode;
-        PaymentMethodId = paymentMethodId;
-    }
-
-    public ResponseVnPayment()
-    {
-    }
-
+{ 
     public bool Success { get; set; }
     public string PaymentMethod { get; set; }
     public string OrderDescription { get; set; }
@@ -28,8 +11,7 @@ public class ResponseVnPayment
     public string TransactionId { get; set; }
     public string Token { get; set; }
     public string VnPayResponseCode { get; set; }
-
     public string PaymentMethodId { get; set; }
-
-    // You can add other methods as needed
+    public string VnPayTranStatus { get; set; }
+    public string Message { get; set; } 
 }

@@ -48,32 +48,63 @@ public class PromotionService : IPromotionService
 
     public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize, bool ascending)
     {
-        Expression<Func<Promotion, bool>> filter = pc => pc.Status == "active" || pc.Status == "inactive";
+        // Define sorting logic based on the ascending parameter
+        Func<IQueryable<Promotion>, IOrderedQueryable<Promotion>> orderBy = q =>
+            ascending
+                ? q.OrderBy(pc => pc.StartDate).ThenBy(pc => pc.EndDate)
+                : q.OrderByDescending(pc => pc.StartDate).ThenByDescending(pc => pc.EndDate);
 
+        // Define the filter as null if no specific filtering is needed
+        Expression<Func<Promotion, bool>> filter = null;
 
-        Func<IQueryable<Promotion>, IOrderedQueryable<Promotion>> orderBy = q => q
-            .OrderByDescending(pc => pc.Status == "active")
-            .ThenByDescending(pc => pc.EndDate);
+        // Get the total count of promotions
+        var totalCount = await _unitOfWork.PromotionRepository.CountAsync(filter);
 
-
+        // Get paginated and sorted promotions
         var entities = await _unitOfWork.PromotionRepository.GetAsync(
             filter,
-            ascending
-                ? q => q.OrderBy(pc => pc.StartDate).ThenBy(pc => pc.EndDate)
-                : q => q.OrderByDescending(pc => pc.StartDate).ThenByDescending(pc => pc.EndDate),
-            "Categories",
+            orderBy,
+            includeProperties: "Categories",
             pageIndex,
             pageSize
         );
 
+        // Calculate total pages
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        // Map entities to response model
         var response = _mapper.Map<List<ResponsePromotion>>(entities);
+
+        // Return response model
+        return new ResponseModel
+        {
+            TotalPages = totalPages,
+            TotalElements = totalCount,
+            Data = response,
+            MessageError = string.Empty // or a meaningful error message if needed
+        };
+    }
+
+    public async Task<ResponseModel> GetByIdAsync(int promotionId)
+    {
+        // Define the filter to select promotions with the given promotionId and "active" or "inactive" status
+        Expression<Func<Promotion, bool>> filter = pc =>
+            pc.Id == promotionId;
+
+
+        var entities = await _unitOfWork.PromotionRepository.GetAsync(
+            filter,
+            includeProperties: "Categories"
+        );
+
+        var response = _mapper.Map<List<ResponsePromotion>>(entities);
+
         return new ResponseModel
         {
             Data = response,
             MessageError = ""
         };
     }
-
 
     public async Task<ResponseModel> UpdatePromotionAsync(int promotionId, RequestUpdatePromotion requestPromotion)
     {

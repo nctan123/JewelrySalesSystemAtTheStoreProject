@@ -22,12 +22,37 @@ const { GrDocumentStore,
     VscGitPullRequestGoToChanges,
     GiGoldNuggets,
     GiReceiveMoney, GiEmeraldNecklace, GiCrystalEarrings, GiDiamondRing, GiNecklaceDisplay, AiOutlineGold,
-    LiaMoneyBillWaveSolid, LiaCircleNotchSolid, IoDiamondOutline, PiDiamondsFourLight } = IconManager
+    LiaMoneyBillWaveSolid, LiaCircleNotchSolid, IoDiamondOutline, PiDiamondsFourLight, MdWarehouse, MdOutlinePriceChange, FaMoneyBillTrendUp, TbBasketDiscount, GiStoneBlock, MdOutlinePayments } = IconManager
 
 export const sidebarMenuManager = [
+    {
+        path: 'Dashboard',
+        text: 'Dashboard',
+        iconAdmin: <FaChartSimple size={24} color="#000055" />
+    },
+    {
+        // path: 'materialPrice',
 
+        text: 'Material Price',
+        iconAdmin: <MdOutlinePriceChange size={24} color="#000055" />,
+        iconAdmin2: <IoMdArrowDropdown size={24} color="#000055" />,
+        iconAdmin3: <IoMdArrowDropup size={24} color="#000055" />,
+        subMenu: [
+            {
+                path: 'price',
+                text: 'Price',
+                iconAdmin: <FaMoneyBillTrendUp size={24} color="#000055" />,
+            },
+            {
+                path: 'material',
+                text: 'Material',
+                iconAdmin: <GiStoneBlock size={24} color="#000055" />,
+            },
+        ]
+    },
     {
         // path: 'productManager',
+
         text: 'Product',
         iconAdmin: <GiStonePile size={24} color="#000055" />,
         iconAdmin2: <IoMdArrowDropdown size={24} color="#000055" />,
@@ -56,10 +81,36 @@ export const sidebarMenuManager = [
         ]
     },
     {
-        path: 'Dashboard',
-        text: 'Dashboard',
-        iconAdmin: <FaChartSimple size={24} color="#000055" />
+        // path: 'warehouseManager',
+
+        text: 'Warehouse',
+        iconAdmin: <MdWarehouse size={24} color="#000055" />,
+        iconAdmin2: <IoMdArrowDropdown size={24} color="#000055" />,
+        iconAdmin3: <IoMdArrowDropup size={24} color="#000055" />,
+        subMenu: [
+            {
+                path: 'diamondWarehouse',
+                text: 'Diamond',
+                iconAdmin: <IoDiamondOutline size={24} color="#000055" />,
+            },
+            {
+                path: 'jewelryWarehouse',
+                text: 'Jewelry',
+                iconAdmin: <GiDiamondRing size={24} color="#000055" />,
+            },
+            {
+                path: 'rgoldWarehouse',
+                text: 'Retail Gold',
+                iconAdmin: <PiDiamondsFourLight size={24} color="#000055" />,
+            },
+            {
+                path: 'wholesalegoldWarehouse',
+                text: 'Wholesale Gold',
+                iconAdmin: <AiOutlineGold size={24} color="#000055" />,
+            },
+        ]
     },
+
     {
         // path: 'Report',
         text: 'Report',
@@ -73,9 +124,9 @@ export const sidebarMenuManager = [
                 iconAdmin: <TbFileInvoice size={24} color="#000055" />
             },
             {
-                path: 'ProductSold',
-                text: 'Product sold',
-                iconAdmin: <LiaFileInvoiceDollarSolid size={24} color="#000055" />
+                path: 'Payment',
+                text: ' Payment',
+                iconAdmin: <MdOutlinePayments size={24} color="#000055" />
             },
             {
                 path: 'Employee',
@@ -139,6 +190,11 @@ export const sidebarMenuManager = [
                 iconAdmin: <VscGitPullRequestGoToChanges size={24} color="#000055" />
             }
         ],
+    },
+    {
+        path: 'specialDiscount',
+        text: 'Special Discount',
+        iconAdmin: <TbBasketDiscount size={24} color="#000055" />
     },
     {
         path: 'ReturnPolicy',

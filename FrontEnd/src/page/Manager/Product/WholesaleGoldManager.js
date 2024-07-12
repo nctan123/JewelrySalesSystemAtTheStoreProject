@@ -1,23 +1,67 @@
-
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import clsx from 'clsx'
 import { IoIosSearch } from "react-icons/io";
 import logo from '../../../assets/img/seller/ReGold.png'
 import axios from "axios";
 import Modal from 'react-modal';
 import { CiViewList } from "react-icons/ci";
+import { toast } from 'react-toastify';
 
 const WholesaleGoldManager = () => {
-    const [originalListProduct, setOriginalListProduct] = useState([]);
+    const scrollRef = useRef(null);
+    const [isYesNoOpen, setIsYesNoOpen] = useState(false);
+
     const [listProduct, setListProduct] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedWholesaleGold, setSelectedWholesaleGold] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const ProductsPerPage = 10;
+    const [totalPages, setTotalPages] = useState(1);
+    const [stalls, setStalls] = useState([]);
+    const [pageSize, setPageSize] = useState(10);
+    const productPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
+    const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
+    const [ascending, setAscending] = useState(true);
 
     useEffect(() => {
-        getProduct();
+        if (scrollRef.current) {
+            scrollRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, [currentPage]);
+
+    useEffect(() => {
+        if (searchQuery) {
+
+            handleSearch();
+
+        } else {
+
+            getProduct();
+
+        }
+    }, [pageSize, currentPage, searchQuery, ascending]);
+
+    useEffect(() => {
+        const fetchStalls = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+                const response = await axios.get('https://jssatsproject.azurewebsites.net/api/stall/getall', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                if (response.data && response.data.data) {
+                    setStalls(response.data.data);
+                }
+            } catch (error) {
+                console.error('Error fetching stalls:', error);
+            }
+        };
+
+        fetchStalls();
     }, []);
 
     const handleDetailClick = async (id) => {
@@ -34,7 +78,7 @@ const WholesaleGoldManager = () => {
             if (res && res.data && res.data.data) {
                 const details = res.data.data[0];
                 setSelectedWholesaleGold(details);
-                console.log('>>> check ressss', res)
+                // console.log('>>> check ressss', res)
                 setIsModalOpen(true); // Open modal when staff details are fetched
             }
 
@@ -43,26 +87,61 @@ const WholesaleGoldManager = () => {
         }
     };
 
+    const handleUpdateProduct = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const res = await axios.put(
+                `https://jssatsproject.azurewebsites.net/api/Product/UpdateStallProduct?id=${selectedWholesaleGold.id}`,
+                {
+                    ...selectedWholesaleGold,
+                    stallsId: selectedWholesaleGold.stalls.id
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            console.log('... check update product', selectedWholesaleGold)
+            if (res.status === 200) {
+                setIsModalOpen(false);
+                setIsYesNoOpen(false);// Close the modal yes no
+                toast.success('Update successful !')
+                getProduct(); // Refresh the product list
+
+            }
+        } catch (error) {
+            console.error('Error updating product:', error);
+        }
+    };
+
+
+
     const getProduct = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
-                throw new Error("No token found");
+                throw new Error('No token found');
             }
-            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/product/getall`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
+            const res = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
-            });
-            console.log('... check staff', res);
+            );
             if (res && res.data && res.data.data) {
                 const allProducts = res.data.data;
-                const diamondProducts = allProducts.filter(product => product.category === 'Wholesale gold');
-                setListProduct(diamondProducts);
-                setOriginalListProduct(diamondProducts);
+                setListProduct(allProducts);
+                console.log('>>> check resss', res.data.data)
+                setTotalPages(res.data.totalPages);
             }
         } catch (error) {
-            console.error('Error fetching staffs:', error);
+            console.error('Error fetching products:', error);
             if (error.response) {
                 console.error('Error response:', error.response.data);
             } else if (error.request) {
@@ -71,6 +150,11 @@ const WholesaleGoldManager = () => {
                 console.error('Error message:', error.message);
             }
         }
+    };
+
+    const handleSort = () => {
+        setAscending(!ascending); // Toggle ascending state
+        setCurrentPage(1); // Reset to first page when sorting changes
     };
 
     const formatCurrency = (value) => {
@@ -86,61 +170,107 @@ const WholesaleGoldManager = () => {
     };
 
     const handleSearchChange = (e) => {
-        setSearchQuery(e.target.value);
-        setCurrentPage(1);
+        setSearchQuery1(e.target.value);
     };
+    const handleSetQuery = async () => {
+        setSearchQuery(searchQuery1)
+        setCurrentPage(1);
+    }
 
-    const handleSearch = () => {
-        let filteredProduct = originalListProduct;
 
-        if (searchQuery) {
-            filteredProduct = filteredProduct.filter((product) =>
-                product.code.toLowerCase().includes(searchQuery.toLowerCase())
+    const handleSearch = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const res = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=6&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
+            if (res && res.data && res.data.data) {
+                const searchedProducts = res.data.data;
+                setListProduct(searchedProducts);
+                setTotalPages(res.data.totalPages);
+                console.log('>>> check search', res)
+            }
+            else {
+                setListProduct([]);
+                setTotalPages(0);
+            }
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+            } else {
+                console.error('Error message:', error.message);
+            }
         }
-
-        setListProduct(filteredProduct);
-        setSearchQuery('')
+        // setSearchQuery1('');
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedWholesaleGold(null);
     };
-
-    const indexOfLastProduct = currentPage * ProductsPerPage;
-    const indexOfFirstProduct = indexOfLastProduct - ProductsPerPage;
-    const currentProducts = listProduct.slice(indexOfFirstProduct, indexOfLastProduct);
-
-    const totalPages = Math.ceil(listProduct.length / ProductsPerPage);
-    const placeholders = Array.from({ length: ProductsPerPage - currentProducts.length });
-
+    const formatUpper = (str) => {
+        if (!str) return '';
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+    const handleYesNo = () => {
+        setIsYesNoOpen(true);
+    };
+    const placeholders = Array.from({ length: pageSize - listProduct.length });
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 className="text-3xl font-bold text-center text-blue-800 mb-4 underline">List of wholesale gold</h1>
-                <div className="flex mb-4">
-                    <div className="relative">
+                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of wholesale gold</h1>
+                <div className="flex justify-between mb-4">
+                    <div className="flex items-center ml-2">
+                        <label className="block mb-1 mr-2">Page Size:</label>
+                        <select
+                            value={pageSize}
+                            onChange={(e) => {
+                                setPageSize(parseInt(e.target.value));
+                                setCurrentPage(1); // Reset to first page when page size changes
+                            }}
+                            className="px-3 py-2 border border-gray-300 rounded-md"
+                        >
+                            {productPerPageOptions.map((size) => (
+                                <option key={size} value={size}>{size}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="relative w-[400px]">
                         <input
                             type="text"
-                            placeholder="Search by code"
-                            value={searchQuery}
+                            placeholder="Search  and name"
+                            value={searchQuery1}
                             onChange={handleSearchChange}
-                            className="px-3 py-2 border border-gray-300 rounded-md w-[400px]"
+                            className="px-3 py-2 border border-gray-300 rounded-md w-full"
                         />
-                        <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSearch} />
+                        <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
                     </div>
                 </div>
                 <div className="w-[1200px] overflow-hidden ">
                     <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
                         <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
                             <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className="py-3 pl-3 rounded-l-lg">ID</th>
-                                <th >Category</th>
+                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                                <th className='py-3 pl-3' >Category</th>
                                 <th>Code</th>
                                 <th >Name</th>
                                 <th className="pl-7"> Img</th>
-                                <th>Price</th>
+                                <th className="cursor-pointer " onClick={handleSort}>
+                                    <span>Price</span>
+                                    <span className=' text-sm mx-2'>{ascending ? '▲' : '▼'}</span>
+                                </th>
                                 <th>Stall</th>
                                 <th>Status</th>
                                 <th className=" rounded-r-lg ">Action</th>
@@ -148,21 +278,25 @@ const WholesaleGoldManager = () => {
                         </thead>
 
                         <tbody >
-                            {currentProducts.map((item, index) => (
+                            {listProduct.map((item, index) => (
                                 <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3  py-4 text-black">{item.id}</td>
-                                    <td >{item.category}</td>
+                                    <td className="rounded-l-lg pl-3 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                    <td >{item.categoryName}</td>
                                     <td> {item.code} </td>
                                     <td>{item.name}</td>
-                                    <td > <img src={logo} className="w-20 h-20" /> </td>
+                                    <td>
+                                        {' '}
+                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
+                                        {/* {item.img} */}
+                                    </td>
                                     <td >{formatCurrency(item.productValue)}</td>
                                     <td >
                                         {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}
                                     </td>
-                                    <td> {item.status} </td>
+                                    <td> {item.status === 'active'
+                                        ? (<span className="text-green-500">Active</span>)
+                                        : <span className="text-red-500">Inactive</span>} </td>
                                     <td className="text-3xl text-[#000099] pl-4"><CiViewList onClick={() => handleDetailClick(item.code)} /></td>
-
-
                                 </tr>
                             ))}
                             {placeholders.map((_, index) => (
@@ -175,7 +309,6 @@ const WholesaleGoldManager = () => {
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
-
                                     <td className="text-sm font-normal text-[#637381] py-4">-</td>
                                 </tr>
                             ))}
@@ -219,13 +352,84 @@ const WholesaleGoldManager = () => {
 
                                 <p className="text-sm text-gray-700 mb-2"><strong>Price Rate: </strong>{selectedWholesaleGold.priceRate}</p>
                                 <h1 ><strong>Price:</strong> {formatCurrency(selectedWholesaleGold.productValue)}</h1>
-                                <div className='flex'>
-                                    <button onClick={closeModal} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded" style={{ width: '5rem' }}>Close</button>
+                                <form className="mt-4">
+                                    <div className="mb-2">
+                                        <label className="block text-sm font-medium text-gray-700">
+                                            Stall
+                                        </label>
+                                        <select
+                                            name="stallsId"
+                                            value={selectedWholesaleGold?.stalls?.id ?? ''}
+                                            onChange={(e) => {
+                                                const value = e.target.value === 'null' ? null : e.target.value;
+                                                setSelectedWholesaleGold((prevSelectedProduct) => ({
+                                                    ...prevSelectedProduct,
+                                                    stalls: {
+                                                        id: value
+                                                    }
+                                                }));
+                                            }}
+                                            className="px-3 py-2 border border-gray-300 rounded-md w-full"
+                                        >
+                                            <option value="" disabled selected>
+                                                {selectedWholesaleGold.stalls ? selectedWholesaleGold.stalls.name : 'null'}
+                                            </option>
+                                            {stalls.map((stall) => (
+                                                <option key={stall.id} value={stall.id}>
+                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                </option>
+                                            ))}
+                                            <option value="null">Null</option>
+                                        </select>
+                                    </div>
+                                </form>
+                                <div className="flex">
+                                    <button
+                                        onClick={handleYesNo}
+                                        className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+                                        style={{ width: '5rem' }}
+                                    >
+                                        Save
+                                    </button>
+                                    <button
+                                        onClick={closeModal}
+                                        className="mr-2 ml-0 px-4 py-2 bg-gray-500 text-white rounded-md"
+                                        style={{ width: '5rem' }}
+                                    >
+                                        Close
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     )}
                 </Modal>
+                {isYesNoOpen && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                        <div className="bg-white rounded-lg p-8 max-w-md w-full">
+                            <h2 className="text-2xl font-bold text-black mb-4">Confilm to update</h2>
+                            <p>Are you sure to update this product's stall</p>
+
+                            <div className="flex justify-end">
+                                <button
+                                    type="button"
+                                    className="mr-2 px-4 py-2 bg-blue-500 text-white rounded-md"
+                                    onClick={handleUpdateProduct}
+                                >
+                                    Yes
+                                </button>
+                                <button
+                                    type="button"
+                                    className="mr-2 ml-0 px-4 py-2 bg-red-500 text-white rounded-md"
+                                    onClick={() => setIsYesNoOpen(false)}
+                                >
+                                    No
+                                </button>
+                            </div>
+
+
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )

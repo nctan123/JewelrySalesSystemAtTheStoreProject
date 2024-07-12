@@ -65,4 +65,16 @@ public class StaffController : ControllerBase
         var responseModel = await _staffService.GetTop6ByDateAsync(startDate, endDate);
         return Ok(responseModel);
     }
+
+    [HttpGet]
+    [Route("GetById")]
+    public async Task<IActionResult> GetById([FromQuery] int id, [FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+    {
+        var response = await _staffService.GetByIdAsync(id, startDate, endDate);
+        if (response.Data == null)
+        {
+            return NotFound(response.MessageError);
+        }
+        return Ok(response);
+    }
 }

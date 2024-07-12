@@ -2,12 +2,17 @@
 using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
+using JSSATSProject.Repository.Repos;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.OrderModel;
+using JSSATSProject.Service.Models.PointModel;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
+using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -17,16 +22,18 @@ public class SellOrderService : ISellOrderService
     private readonly IMapper _mapper;
     private readonly IProductService _productService;
     private readonly ISellOrderDetailService _sellOrderDetailService;
+    private readonly IPointService _pointService;
     private readonly UnitOfWork _unitOfWork;
 
     public SellOrderService(UnitOfWork unitOfWork, IMapper mapper, ICustomerService customerService,
-        ISellOrderDetailService sellOrderDetailService, IProductService productService)
+        ISellOrderDetailService sellOrderDetailService, IProductService productService, IPointService pointService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _customerService = customerService;
         _sellOrderDetailService = sellOrderDetailService;
         _productService = productService;
+        _pointService = pointService;
     }
 
     public async Task<int> CountAsync(Expression<Func<SellOrder, bool>> filter = null)
@@ -52,14 +59,22 @@ public class SellOrderService : ISellOrderService
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
             requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
         sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
-        var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) -
-                          sellOrder.DiscountPoint * pointRate;
+        var totalAmount = sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion.DiscountRate).GetValueOrDefault()) * s!.UnitPrice * s.Quantity) -
+                           sellOrder.DiscountPoint * pointRate;
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
 
+        // CreateCode
+        sellOrder.Code = await GenerateUniqueCodeAsync();
+
+        // SetDateTime
+        DateTime vnTime = CustomLibrary.NowInVietnamTime();
+        sellOrder.CreateDate = vnTime;
+
         await _unitOfWork.SellOrderRepository.InsertAsync(sellOrder);
         await _unitOfWork.SaveAsync();
+        
 
         return new ResponseModel
         {
@@ -86,7 +101,8 @@ public class SellOrderService : ISellOrderService
             // Filter based on the status list
             filter,
             includeProperties:
-            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest",
+            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product," +
+            "SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod,SellOrderDetails.Promotion",
             orderBy: ascending
                 ? q => q.OrderBy(p => p.CreateDate)
                 : q => q.OrderByDescending(p => p.CreateDate),
@@ -119,12 +135,22 @@ public class SellOrderService : ISellOrderService
     {
         var entities = await _unitOfWork.SellOrderRepository.GetAsync(
             so => so.Id == id,
-            includeProperties: "SellOrderDetails,Staff,Customer,Payments");
-        var response = _mapper.Map<List<ResponseSellOrder>>(entities);
+            includeProperties: "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod");
+        // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
+
+        // Map entities to response models
+        var responseSellOrders = new List<ResponseSellOrder>();
+        foreach (var sellOrder in entities)
+        {
+            var responseSellOrder = _mapper.Map<ResponseSellOrder>(sellOrder);
+            responseSellOrder.SellOrderDetails =
+                _mapper.Map<List<ResponseSellOrderDetails>>(sellOrder.SellOrderDetails);
+            responseSellOrders.Add(responseSellOrder);
+        }
 
         return new ResponseModel
         {
-            Data = response,
+            Data = responseSellOrders,
             MessageError = ""
         };
     }
@@ -179,11 +205,24 @@ public class SellOrderService : ISellOrderService
             if (order != null)
             {
                 _mapper.Map(requestSellOrder, order);
-
+                DateTime vnTime = CustomLibrary.NowInVietnamTime();
+                order.CreateDate = vnTime;
                 await _unitOfWork.SellOrderRepository.UpdateAsync(order);
                 //neu update status = cancelled
-                if (order.Status.Equals(OrderConstants.CanceledStatus))
+                if (order.Status.Equals(OrderConstants.CanceledStatus)) 
+                {
                     await _sellOrderDetailService.UpdateAllOrderDetailsStatus(order, OrderConstants.CanceledStatus);
+
+                    //update point 
+                    var pointId =  order.Customer.Point.Id;
+
+                    var updatepoint = new RequestUpdatePoint
+                    {
+                        AvailablePoint = order.DiscountPoint
+                    };
+                    await _pointService.UpdatePointAsync(pointId, updatepoint);
+
+                }
                 else if (order.Status.Equals(OrderConstants.CompletedStatus))
                     await _sellOrderDetailService.UpdateAllOrderDetailsStatus(order,
                         SellOrderDetailsConstants.Delivered);
@@ -285,7 +324,7 @@ public class SellOrderService : ISellOrderService
         };
     }
 
-    public async Task<ResponseModel> SearchByCriteriaAsync(List<string> statusList, string customerPhone,
+    public async Task<ResponseModel> SearchByAsync(List<string> statusList, string customerPhone,
         bool ascending = true, int pageIndex = 1, int pageSize = 10)
     {
         // Validate the input
@@ -324,5 +363,84 @@ public class SellOrderService : ISellOrderService
             Data = result,
             MessageError = ""
         };
+    }
+
+    private async Task<string> GenerateUniqueCodeAsync()
+    {
+        string newCode;
+        do
+        {
+            var prefix = OrderConstants.SellOrderCodePrefix;
+            newCode = prefix + CustomLibrary.RandomString(14 - prefix.Length);
+        }
+        while (await _unitOfWork.Context.SellOrders.AnyAsync(so => so.Code == newCode));
+        return newCode;
+    }
+
+    public async Task<SellOrder> MapOrderAsync(RequestCreateSellOrder requestSellOrder)
+    {
+        var customer =
+            (Customer)(await _customerService.GetEntityByPhoneAsync(requestSellOrder.CustomerPhoneNumber)).Data!;
+        var sellOrder = _mapper.Map<SellOrder>(requestSellOrder);
+        var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
+        sellOrder.Customer = customer;
+        //fetch order details
+        sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
+            requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
+        sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
+        var totalAmount = sellOrder.SellOrderDetails.Sum(s => s.UnitPrice * s.Quantity) -
+                          sellOrder.DiscountPoint * pointRate;
+        sellOrder.TotalAmount = totalAmount;
+        sellOrder.Description = requestSellOrder.Description;
+        return sellOrder;
+    }
+
+    public async Task RemoveAllSellOrderDetails(int id)
+    {
+        var sellOrder = await GetEntityByIdAsync(id);
+        var sellOrderDetails = sellOrder.SellOrderDetails.ToList();
+        foreach (var sellOrderDetail in sellOrderDetails)
+        {
+            await _productService.UpdateProductStatusAsync(sellOrderDetail.ProductId, ProductConstants.ActiveStatus);
+            await _unitOfWork.SellOrderDetailRepository.DeleteAsync(sellOrderDetail);
+        }
+    }
+    public async Task<ResponseModel> UpdateOrderAsync(int orderId, SellOrder targetOrder)
+    {
+        try
+        {
+            var order = await _unitOfWork.SellOrderRepository.GetByIDAsync(orderId);
+            if (targetOrder != null)
+            {
+                order.Customer = targetOrder.Customer;
+                order.SellOrderDetails = targetOrder.SellOrderDetails;
+                order.DiscountPoint = targetOrder.DiscountPoint;
+                order.TotalAmount = targetOrder.TotalAmount;
+                order.Description = targetOrder.Description;
+
+                await _unitOfWork.SellOrderRepository.UpdateAsync(order);
+
+                return new ResponseModel
+                {
+                    Data = order,
+                    MessageError = ""
+                };
+            }
+
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Not Found"
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the customer: " + ex.Message
+            };
+        }
     }
 }

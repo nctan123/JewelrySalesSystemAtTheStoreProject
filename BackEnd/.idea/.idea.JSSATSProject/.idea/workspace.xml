@@ -149,6 +149,10 @@
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy4.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy4.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
       <method v="2" />
     </configuration>
+    <configuration name="JSSATSProject.API: jssatsproject - Web Deploy5" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
+      <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Web Deploy5.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Web Deploy5.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
+      <method v="2" />
+    </configuration>
     <configuration name="JSSATSProject.API: jssatsproject - Zip Deploy" type="DotNetMsBuildPublish" factoryName="Publish to IIS">
       <riderPublish configuration="Release" platform="Any CPU" publish_profile="jssatsproject - Zip Deploy.pubxml" pubxml_path="$PROJECT_DIR$/JSSATSProject.API/Properties/PublishProfiles/jssatsproject - Zip Deploy.pubxml" user_name="$jssatsproject" uuid_high="4025013645801440837" uuid_low="-8466960821384590180" />
       <method v="2" />

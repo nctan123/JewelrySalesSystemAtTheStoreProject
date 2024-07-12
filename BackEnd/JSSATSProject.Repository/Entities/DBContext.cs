@@ -193,6 +193,11 @@ public partial class DBContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("product_name");
 
+            //-------------------------------------------------------------------------------
+            entity.Property(e => e.Quantity).HasColumnName("quantity")
+                .IsRequired()
+                .HasColumnType("int");
+            
             entity.HasOne(d => d.BuyOrder).WithMany(p => p.BuyOrderDetails)
                 .HasForeignKey(d => d.BuyOrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -356,6 +361,8 @@ public partial class DBContext : DbContext
 
             entity.ToTable("Diamond");
 
+            entity.HasIndex(e => e.DiamondGradingCode, "UQ__Diamond__357D4CF994BB6B22").IsUnique();
+
             entity.HasIndex(e => e.Code, "UQ__Diamond__357D4CF976C883B6").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
@@ -369,9 +376,9 @@ public partial class DBContext : DbContext
             entity.Property(e => e.ColorId).HasColumnName("color_id");
             entity.Property(e => e.CutId).HasColumnName("cut_id");
             entity.Property(e => e.DiamondGradingCode)
-               .HasMaxLength(50)
-               .IsUnicode(false)
-               .HasColumnName("diamond_grading_code");
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("diamond_grading_code");
             entity.Property(e => e.FluorescenceId).HasColumnName("fluorescence_id");
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -387,10 +394,6 @@ public partial class DBContext : DbContext
                 .HasDefaultValue("active")
                 .HasColumnName("status");
             entity.Property(e => e.SymmetryId).HasColumnName("symmetry_id");
-            entity.Property(e => e.DiamondGradingCode)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("diamond_grading_code");
 
             entity.HasOne(d => d.Carat).WithMany(p => p.Diamonds)
                 .HasForeignKey(d => d.CaratId)
@@ -437,6 +440,7 @@ public partial class DBContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Diamond__symmetr__2FCF1A8A");
         });
+
 
         modelBuilder.Entity<DiamondPriceList>(entity =>
         {
@@ -748,7 +752,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValue("active")
+                 .HasDefaultValue("active")
                 .HasColumnName("status");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
@@ -1010,7 +1014,7 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
                 .IsUnicode(false)
-                .HasDefaultValue("active")
+                .HasDefaultValue("inactive")
                 .HasColumnName("status");
         });
 

@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using AutoMapper;
 using JSSATSProject.Repository;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PromotionRequestModel;
@@ -22,6 +23,8 @@ public class PromotionRequestService : IPromotionRequestService
     public async Task<ResponseModel> CreatePromotionRequestAsync(CreatePromotionRequest promotionRequest)
     {
         var entity = _mapper.Map<PromotionRequest>(promotionRequest);
+
+        entity.CreatedAt = CustomLibrary.NowInVietnamTime();
 
         if (promotionRequest.CategoriIds.Any())
         {
@@ -144,4 +147,22 @@ public class PromotionRequestService : IPromotionRequestService
             MessageError = ""
         };
     }
+
+    public async Task<ResponseModel> GetByIdAsync(int id)
+    {
+        var entities = await _unitOfWork.PromotionRequestRepository.GetAsync(
+            filter: pr => pr.RequestId == id,
+            includeProperties: "ApprovedByNavigation,Manager,Categories"
+        );
+
+        var response = _mapper.Map<List<ResponsePromotionRequest>>(entities);
+
+
+        return new ResponseModel
+        {
+            Data = response
+        };
+    }
+
+
 }

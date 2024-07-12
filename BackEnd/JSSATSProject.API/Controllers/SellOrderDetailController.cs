@@ -60,9 +60,9 @@ public class SellOrderDetailController : ControllerBase
 
     [HttpGet]
     [Route("GetProductSold")]
-    public async Task<IActionResult> GetProductSoldAsync(bool ascending, int pageIndex)
+    public async Task<IActionResult> GetProductSoldAsync(bool ascending, int pageIndex, int pageSize)
     {
-        var responseModel = await _sellorderdetailService.GetProductSoldAsync(ascending, pageIndex, 10);
+        var responseModel = await _sellorderdetailService.GetProductSoldAsync(ascending, pageIndex, pageSize);
         return Ok(responseModel);
     }
 }

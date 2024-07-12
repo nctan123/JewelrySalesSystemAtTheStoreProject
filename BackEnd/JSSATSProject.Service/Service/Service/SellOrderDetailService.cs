@@ -7,6 +7,7 @@ using JSSATSProject.Service.Models.OrderDetail;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Models.SellOrderDetailsModel;
 using JSSATSProject.Service.Service.IService;
+using System.Linq.Expressions;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -125,18 +126,28 @@ public class SellOrderDetailService : ISellOrderDetailService
         var result = new List<SellOrderDetail>();
         foreach (var item in productCodesAndQuantity)
         {
-            var product = await _productService.GetEntityByCodeAsync(item.Key);
-            product.Status = "inactive";
+            var productId = item.Key;
+            var quantity = item.Value;
+            var product = await _productService.GetEntityByCodeAsync(productId);
+            product.Status = ProductConstants.InactiveStatus;
             int? promotionId = null;
+
             productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
+        
+            var basePrice = await _productService.CalculateProductPrice(product, item.Value);
+            Promotion? promotion = null;
+            if (promotionId is not null) promotion = await _unitOfWork.PromotionRepository.GetByIDAsync(promotionId.Value);
+
             var sellOrderDetails = new SellOrderDetail
             {
                 ProductId = product.Id,
                 Quantity = item.Value,
+                UnitPrice = basePrice,
+                OrderId = sellOrderId,
                 PromotionId = promotionId is not null ? Convert.ToInt32(promotionId) : null,
-                UnitPrice = await _productService.CalculateProductPrice(product, item.Value),
-                OrderId = sellOrderId
+                Promotion = promotion
             };
+
             result.Add(sellOrderDetails);
         }
 
@@ -227,47 +238,54 @@ public class SellOrderDetailService : ISellOrderDetailService
 
     public async Task<ResponseModel> GetProductSoldAsync(bool ascending, int pageIndex, int pageSize)
     {
-        try
+        // Define the filter for SellOrderDetail
+        Expression<Func<SellOrderDetail, bool>> filter = sod => sod.Status.Equals(SellOrderDetailsConstants.Delivered);
+
+        // Get sell order details with the specified filter and ordering
+        var sellOrderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+            filter,
+            includeProperties: "Product, Guarantees, Promotion, Order",
+            orderBy: q => ascending
+                ? q.OrderBy(e => e.Product.Name).ThenBy(e => e.UnitPrice)
+                : q.OrderByDescending(e => e.Product.Name).ThenByDescending(e => e.UnitPrice),
+            pageIndex: pageIndex,
+            pageSize: pageSize
+        );
+
+        // Prepare the response products list
+        var responseProducts = new List<ResponseProductSold>();
+        foreach (var sellOrderDetail in sellOrderDetails)
         {
-            var sellOrderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
-                sod => sod.Status.Equals(SellOrderDetailsConstants.Delivered),
-                includeProperties: "Product, Guarantees, Promotion, Order",
-                orderBy: q => ascending
-                    ? q.OrderBy(e => e.Product.Name).ThenBy(e => e.UnitPrice)
-                    : q.OrderByDescending(e => e.Product.Name).ThenByDescending(e => e.UnitPrice),
-                pageIndex: pageIndex,
-                pageSize: pageSize
-            );
+            var guaranteeCode = sellOrderDetail.Guarantees != null && sellOrderDetail.Guarantees.Any()
+                ? string.Join(", ", sellOrderDetail.Guarantees.Select(g => g.Code))
+                : "Unknown";
 
-            var responseProducts = new List<ResponseProductSold>();
-            foreach (var sellOrderDetail in sellOrderDetails)
+            var responseProduct = new ResponseProductSold
             {
-                var responseProduct = new ResponseProductSold
-                {
-                    SellOrderCode = sellOrderDetail.Order.Code,
-                    ProductName = sellOrderDetail.Product.Name,
-                    UnitPrice = sellOrderDetail.UnitPrice,
-                    Quantity = sellOrderDetail.Quantity,
-                    PromotionRate = sellOrderDetail.Promotion?.DiscountRate ?? 0
-                    ///GuaranteeCode = sellOrderDetail.GuaranteeCode ?? "Unknown" 
-                };
-
-                responseProducts.Add(responseProduct);
-            }
-
-            var responseModel = new ResponseModel
-            {
-                Data = responseProducts
+                SellOrderCode = sellOrderDetail.Order.Code,
+                ProductName = sellOrderDetail.Product.Name,
+                UnitPrice = sellOrderDetail.UnitPrice,
+                Quantity = sellOrderDetail.Quantity,
+                PromotionRate = sellOrderDetail.Promotion?.DiscountRate ?? 0,
+                GuaranteeCode = guaranteeCode
             };
 
-            return responseModel;
+            responseProducts.Add(responseProduct);
         }
-        catch (Exception ex)
+
+        // Get the total count using the same filter
+        var totalCount = await _unitOfWork.SellOrderDetailRepository.CountAsync(filter);
+        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+        // Prepare the response model
+        var responseModel = new ResponseModel
         {
-            // Bắt ngoại lệ và ghi log
-            Console.WriteLine($"Lỗi trong GetProductSoldAsync: {ex.Message}");
-            throw; // Ném lại ngoại lệ để xử lý ở lớp gọi
-        }
+            Data = responseProducts,
+            TotalElements = totalCount,
+            TotalPages = totalPages,
+        };
+
+        return responseModel;
     }
 
     public async Task<ResponseModel> UpdateStatusAsync(int orderdetailId, string newStatus,

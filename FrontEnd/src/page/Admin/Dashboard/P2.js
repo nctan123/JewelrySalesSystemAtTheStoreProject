@@ -5,7 +5,7 @@ import moment from 'moment'; // Import moment.js for date manipulation
 import axios from 'axios';
 import ReactApexChart from 'react-apexcharts';
 
-const TestChart = () => {
+const P2 = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [datesInRange, setDatesInRange] = useState([]);
@@ -51,14 +51,38 @@ const TestChart = () => {
             });
 
             fetchData(startDate, endDate);
-        } else {
-            alert('Please enter both start date and end date.');
         }
+        // else {
+        //     alert('Please enter both start date and end date.');
+        // }
     };
+    useEffect(() => {
+        handleCalculateDates();
+    }, [startDate, endDate]);
 
     const fetchData = async (startDate, endDate) => {
+        // Format startDate to 00:00
+        const formattedStartDate = new Date(startDate);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(endDate);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        // const endDateString = formattedEndDate.toISOString().slice(0, 19); // Remove milliseconds and timezone
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
         try {
-            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/Staff/getTop6ByMonth?startDate=${startDate}&endDate=${endDate}`);
+            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/Staff/getTop6ByMonth?startDate=${startDateString}&endDate=${endDateString}`);
             if (response.data && response.data.data) {
                 const seriesData = response.data.data.map(item => item.TotalRevenue);
                 const labelsData = response.data.data.map(item => item.Firstname);
@@ -72,9 +96,30 @@ const TestChart = () => {
             console.error('Error fetching data:', error);
         }
     };
+
     const fetchData2 = async (startDate, endDate) => {
+        // Format startDate to 00:00
+        const formattedStartDate = new Date(startDate);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(endDate);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
         try {
-            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDate}&endDate=${endDate}`);
+            const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`);
             if (response.data && response.data.data) {
                 const seriesData = response.data.data.map(item => item.Quantity);
                 const labelsData = response.data.data.map(item => item.Category);
@@ -87,6 +132,7 @@ const TestChart = () => {
             console.error('Error fetching data:', error);
         }
     };
+
 
     useEffect(() => {
         fetchData(startDate, endDate);
@@ -228,8 +274,8 @@ const TestChart = () => {
 
     return (
         <div className="flex justify-center items-center flex-col space-y-4 border border-gray-300 shadow-lg my-4  rounded-md">
-            <div className="flex items-center space-x-2 ml-auto pr-2">
-                <div className="flex flex-col space-y-2">
+            <div className="flex items-center space-x-2 ml-auto pr-4 pt-4">
+                {/* <div className="flex flex-col space-y-2">
                     <select
                         value={selectedRange}
                         onChange={handleRangeChange}
@@ -238,7 +284,7 @@ const TestChart = () => {
                         <option value="week">Day</option>
                         <option value="month">Month</option>
                     </select>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col space-y-2">
                     <input
@@ -256,35 +302,13 @@ const TestChart = () => {
                         onChange={(e) => setEndDate(e.target.value)}
                     />
                 </div>
-                <button
+                {/* <button
                     className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded"
                     onClick={handleCalculateDates}
                 >
                     Calculate
-                </button>
+                </button> */}
             </div>
-
-            {/* <div className="w-full flex space-x-4">
-                <div className="flex-1 border border-gray-300 shadow-lg">
-                    <ResponsiveContainer width="100%" height={400}>
-                        <LineChart data={datesInRange} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis dataKey="date" />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            <Line type="monotone" dataKey="revenue" stroke="#8884d8" activeDot={{ r: 8 }} />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
-                <div className="flex-1 border border-gray-300 shadow-lg">
-                    <div>
-                        <ReactApexChart options={options} series={chartData.series} type="donut" height={400} />
-                        <ReactApexChart options={options2} series={chartData2.series} type="donut" height={400} />
-                    </div>
-                </div>
-
-            </div> */}
 
             <div className="w-full flex space-x-4 p-2">
                 <div className="w-2/3">
@@ -319,4 +343,4 @@ const TestChart = () => {
     );
 };
 
-export default TestChart;
+export default P2;

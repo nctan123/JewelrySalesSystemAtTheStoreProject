@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Models.ProductModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.EntityFrameworkCore;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -114,6 +116,7 @@ public class GuaranteeService : IGuaranteeService
         foreach (var product in products)
         {
             var guaranteeMonths = GetGuaranteeMonths(product.CategoryId);
+            var newCode = await GenerateUniqueCodeAsync();
 
             if (guaranteeMonths > 0)
             {
@@ -123,7 +126,8 @@ public class GuaranteeService : IGuaranteeService
                     Description = "Use the free service provided during the warranty period",
                     EffectiveDate = DateTime.UtcNow.Date,
                     ExpiredDate = DateTime.UtcNow.Date.AddMonths(guaranteeMonths),
-                    SellorderdetailId = product.SellOrderDetailId
+                    SellorderdetailId = product.SellOrderDetailId,
+                    Code = newCode
                 };
 
                 await _unitOfWork.GuaranteeRepository.InsertAsync(guarantee);
@@ -131,7 +135,6 @@ public class GuaranteeService : IGuaranteeService
         }
 
         await _unitOfWork.SaveAsync();
-
 
         return new ResponseModel
         {
@@ -145,17 +148,31 @@ public class GuaranteeService : IGuaranteeService
         switch (categoryId)
         {
             case ProductConstants.RingCategory:
-                return GuaranteeContants.RING_MONTHS;
+                return GuaranteeConstants.RING_MONTHS;
             case ProductConstants.EarringsCategory:
-                return GuaranteeContants.EARRINGS_MONTHS;
+                return GuaranteeConstants.EARRINGS_MONTHS;
             case ProductConstants.BraceletCategory:
-                return GuaranteeContants.BRACELET_MONTHS;
+                return GuaranteeConstants.BRACELET_MONTHS;
             case ProductConstants.NecklaceCategory:
-                return GuaranteeContants.NECKLACE_MONTHS;
+                return GuaranteeConstants.NECKLACE_MONTHS;
             case ProductConstants.DiamondsCategory:
-                return GuaranteeContants.DIAMONDS_MONTHS;
+                return GuaranteeConstants.DIAMONDS_MONTHS;
             default:
                 return 0;
         }
     }
+
+    public async Task<string> GenerateUniqueCodeAsync()
+    {
+        string newCode;
+        do
+        {
+            var prefix = GuaranteeConstants.GuaranteePrefix;
+            newCode = prefix + CustomLibrary.RandomString(14 - prefix.Length);
+        }
+        while (await _unitOfWork.Context.Guarantees.AnyAsync(so => so.Code == newCode));
+        return newCode;
+    }
+
+
 }

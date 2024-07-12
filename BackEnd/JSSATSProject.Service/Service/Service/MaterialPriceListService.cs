@@ -35,35 +35,96 @@ public class MaterialPriceListService : IMaterialPriceListService
 
     public async Task<ResponseModel> GetAllAsync(DateTime? effectiveDate, int page = 1, int pageSize = 10)
     {
-        Expression<Func<MaterialPriceList, bool>> filter = null;
-
-        if (effectiveDate.HasValue)
+        try
         {
-            var date = effectiveDate.Value.Date;
-            filter = x => x.EffectiveDate.Date == date;
+            if (effectiveDate.HasValue)
+            {
+                var targetDateTime = effectiveDate.Value;
+
+                // Step 1: Find the largest EffectiveDate <= targetDateTime
+                var maxEffectiveDate = await _unitOfWork.MaterialPriceListRepository
+                    .GetAsync(
+                        filter: x => x.EffectiveDate <= targetDateTime,
+                        orderBy: x => x.OrderByDescending(e => e.EffectiveDate),
+                        pageIndex: 1,
+                        pageSize: 1
+                    )
+                    .ContinueWith(task => task.Result.FirstOrDefault()?.EffectiveDate);
+
+                if (maxEffectiveDate == null)
+                {
+                    // No records found
+                    return new ResponseModel
+                    {
+                        TotalPages = 0,
+                        TotalElements = 0,
+                        Data = new List<ResponseMaterialPriceList>(),
+                        MessageError = "No records found.",
+                    };
+                }
+
+                // Step 2: Retrieve all records with the found EffectiveDate
+                Expression<Func<MaterialPriceList, bool>> filter = x => x.EffectiveDate == maxEffectiveDate;
+                var entities = await _unitOfWork.MaterialPriceListRepository.GetAsync(
+                    filter: filter,
+                    orderBy: x => x.OrderBy(e => e.EffectiveDate),
+                    pageIndex: page,
+                    pageSize: pageSize
+                );
+
+                var totalCount = await _unitOfWork.MaterialPriceListRepository.CountAsync(filter);
+                var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+                // Map the results to the response model
+                var response = _mapper.Map<List<ResponseMaterialPriceList>>(entities);
+
+                return new ResponseModel
+                {
+                    TotalPages = totalPages,
+                    TotalElements = totalCount,
+                    Data = response,
+                    MessageError = "",
+                };
+            }
+            else
+            {
+                // Handle the case where effectiveDate is null
+                var entities = await _unitOfWork.MaterialPriceListRepository.GetAsync(
+                    orderBy: x => x.OrderBy(e => e.EffectiveDate),
+                    pageIndex: page,
+                    pageSize: pageSize
+                );
+
+                var totalCount = await _unitOfWork.MaterialPriceListRepository.CountAsync(null);
+                var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+                var response = _mapper.Map<List<ResponseMaterialPriceList>>(entities);
+
+                return new ResponseModel
+                {
+                    TotalPages = totalPages,
+                    TotalElements = totalCount,
+                    Data = response,
+                    MessageError = "",
+                };
+            }
         }
-
-        var entities = await _unitOfWork.MaterialPriceListRepository.GetAsync(
-            filter: filter,
-            orderBy: x => x.OrderBy(e => e.EffectiveDate),
-        pageIndex: page,
-        pageSize: pageSize
-        );
-
-        var totalCount = await _unitOfWork.MaterialPriceListRepository.CountAsync(filter);
-        var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
-
-        var response = _mapper.Map<List<ResponseMaterialPriceList>>(entities);
-
-        return new ResponseModel
+        catch (Exception ex)
         {
-            TotalPages = totalPages,
-            TotalElements = totalCount,
-            Data = response,
-            MessageError = "",
-           
-        };
+            return new ResponseModel
+            {
+                TotalPages = 0,
+                TotalElements = 0,
+                Data = new List<ResponseMaterialPriceList>(),
+                MessageError = $"An error occurred: {ex.Message}",
+            };
+        }
     }
+
+
+
+
+
 
     public async Task<ResponseModel> GetByIdAsync(int id)
     {

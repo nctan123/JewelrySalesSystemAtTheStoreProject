@@ -16,10 +16,6 @@ export default function LoginToStore() {
 
   const navigate = useNavigate();
 
-  const handleBackClick = () => {
-    navigate('/');
-  };
-
   const handleLogin = async () => {
     if (!username || !password) {
       toast.error('Username/Password is required!!!');
@@ -45,16 +41,16 @@ export default function LoginToStore() {
         // Determine user role and redirect or show appropriate UI
         switch (user.role) {
           case 'admin':
-            navigate('/admin');
+            navigate('/admin/Dashboard');
             break;
           case 'seller':
             navigate('/public');
             break;
           case 'manager':
-            navigate('/manager');
+            navigate('/manager/Dashboard');
             break;
           case 'cashier':
-            navigate('/cs_public');
+            navigate('/cs_public/cs_order/cs_waitingPayment');
             break;
           // Add more cases for other roles if needed
           default:

@@ -2,8 +2,6 @@
 
 public class RequestCreateDiamond
 {
-    public string Code { get; set; } = null!;
-    public string Name { get; set; } = null!;
     public int OriginId { get; set; }
 
     public int ShapeId { get; set; }
@@ -22,5 +20,5 @@ public class RequestCreateDiamond
 
     public int CaratId { get; set; }
 
-    public string? Status { get; set; }
+    public string DiamondGradingCode { get; set; }
 }

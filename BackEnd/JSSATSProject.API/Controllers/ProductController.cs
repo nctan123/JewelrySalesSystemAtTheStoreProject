@@ -26,27 +26,34 @@ public class ProductController : ControllerBase
 
     [HttpPost]
     [Route("CreateProduct")]
-    public async Task<IActionResult> CreateAsync([FromBody] RequestCreateProduct requestProduct)
+    public async Task<IActionResult> CreateProduct([FromForm] RequestCreateProduct requestProduct)
     {
-        var responseModel = await _productService.CreateProductAsync(requestProduct);
-        return Ok(responseModel);
+        try
+        {
+            var response = await _productService.CreateProductAsync(requestProduct);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            // Return a generic error response
+            return StatusCode(500, "Internal server error. Please try again later.");
+        }
     }
 
     [HttpPut]
-    [Route("UpdateProduct")]
+    [Route("UpdateStallProduct")]
     public async Task<IActionResult> UpdateProductAsync(int id, [FromBody] RequestUpdateProduct requestProduct)
     {
-        var response = await _productService.UpdateProductAsync(id, requestProduct);
+        var response = await _productService.UpdateStallProductAsync(id, requestProduct);
         return Ok(response);
     }
 
     [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllAsync([FromQuery] int categoryId, [FromQuery] int pageIndex = 1,
-        [FromQuery] int pageSize = 10, [FromQuery] bool ascending = true)
+    public async Task<IActionResult> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
         try
         {
-            var responseModel = await _productService.GetAllAsync(categoryId, pageIndex, pageSize, ascending);
+            var responseModel = await _productService.GetAllAsync(categoryId, pageIndex, pageSize, ascending, includeNullStalls);
             return Ok(responseModel);
         }
         catch (Exception ex)
@@ -57,9 +64,9 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("Search")]
-    public async Task<IActionResult> Search(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10)
+    public async Task<IActionResult> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
-        var responseModel = await _productService.SearchProductsAsync(categoryId, searchTerm, pageIndex, pageSize);
+        var responseModel = await _productService.SearchProductsAsync(categoryId, searchTerm, pageIndex, pageSize, ascending, includeNullStalls);
         return Ok(responseModel);
     }
 }

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
-export default function Revenue() {
+export default function P1() {
     const [todayRevenue, setTodayRevenue] = useState(null);
     const [yesterdayRevenue, setYesterdayRevenue] = useState(null);
     const [thisWeekRevenue, setThisWeekRevenue] = useState(null);
@@ -26,8 +26,26 @@ export default function Revenue() {
     const [error, setError] = useState(null);
 
     const getRevenue = async (start, end, setData) => {
+        const formattedStartDate = new Date(start);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(end);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${start}&endDate=${end}`);
+            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -38,8 +56,26 @@ export default function Revenue() {
         }
     };
     const getNewCustomer = async (start, end, setData) => {
+        const formattedStartDate = new Date(start);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(end);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/Customer/CountNewCustomer?startDate=${start}&endDate=${end}`);
+            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/Customer/CountNewCustomer?startDate=${startDateString}&endDate=${endDateString}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -50,8 +86,26 @@ export default function Revenue() {
         }
     };
     const getQuantityOrder = async (start, end, setData) => {
+        const formattedStartDate = new Date(start);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(end);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/CountOrderByDateTime?startDate=${start}&endDate=${end}`);
+            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/CountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -62,8 +116,26 @@ export default function Revenue() {
         }
     };
     const getQuantityProduct = async (start, end, setData) => {
+        const formattedStartDate = new Date(start);
+        formattedStartDate.setHours(0, 0, 0, 0);
+        formattedStartDate.setHours(formattedStartDate.getHours() + 7); // Add 7 hours
+        let startDateString;
+        if (!isNaN(formattedStartDate.getTime())) {
+            startDateString = formattedStartDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
+
+        // Format endDate to 23:59
+        const formattedEndDate = new Date(end);
+        formattedEndDate.setHours(23, 59, 59, 999);
+        formattedEndDate.setHours(formattedEndDate.getHours() + 7); // Add 7 hours
+        let endDateString;
+        if (!isNaN(formattedEndDate.getTime())) {
+            endDateString = formattedEndDate.toISOString().slice(0, 19);;
+            // console.log("endDateString (ISO 8601):", endDateString);
+        }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${start}&endDate=${end}`);
+            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -108,6 +180,9 @@ export default function Revenue() {
 
         setView('day');
     };
+    useEffect(() => {
+        handleDayClick()
+    }, []);
     const handleWeekClick = () => {
         const today = new Date();
 
@@ -184,6 +259,7 @@ export default function Revenue() {
                 >
                     Week
                 </button>
+
             </div>
 
             {error && <p className="text-red-500">{error}</p>}

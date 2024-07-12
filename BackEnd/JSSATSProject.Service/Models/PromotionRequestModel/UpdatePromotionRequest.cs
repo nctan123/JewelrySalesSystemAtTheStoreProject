@@ -1,4 +1,6 @@
-﻿namespace JSSATSProject.Service.Models.PromotionRequestModel;
+﻿using JSSATSProject.Repository.CustomValidators;
+
+namespace JSSATSProject.Service.Models.PromotionRequestModel;
 
 public class UpdatePromotionRequest
 {
@@ -9,6 +11,8 @@ public class UpdatePromotionRequest
     public DateTime StartDate { get; set; }
 
     public DateTime EndDate { get; set; }
+
+    [StatusValidator("approved", "rejected")]
     public string Status { get; set; }
     public int? ApprovedBy { get; set; }
 }

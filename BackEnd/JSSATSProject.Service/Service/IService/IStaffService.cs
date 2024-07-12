@@ -18,4 +18,6 @@ public interface IStaffService
         int pageSize);
 
     public Task<int?> CountAsync(Expression<Func<Staff, bool>> filter);
+
+    public Task<ResponseModel> GetByIdAsync(int id, DateTime startDate, DateTime endDate);
 }

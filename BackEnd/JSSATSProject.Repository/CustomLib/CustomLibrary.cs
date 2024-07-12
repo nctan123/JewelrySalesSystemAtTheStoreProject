@@ -10,4 +10,23 @@ public static class CustomLibrary
         return new string(Enumerable.Repeat(chars, length)
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
+
+    public static string RandomNumber(int length)
+    {
+        const string chars = "0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+    }
+    
+    private static readonly TimeZoneInfo VietnamTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
+    public static DateTime NowInVietnamTime()
+    {
+        return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, VietnamTimeZone);
+    }
+
+    public static DateTime ConvertToVietnamTime(DateTime utcDateTime)
+    {
+        return TimeZoneInfo.ConvertTimeFromUtc(utcDateTime, VietnamTimeZone);
+    }
 }
