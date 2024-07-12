@@ -13,14 +13,15 @@ public class DiamondPriceListService : IDiamondPriceListService
     private readonly DiamondPriceCacheManager _diamondPriceCacheManager;
     private readonly IMapper _mapper;
     private readonly UnitOfWork _unitOfWork;
-
+    private readonly DiamondPriceCacheManager _cache;
 
     public DiamondPriceListService(UnitOfWork unitOfWork, IMapper mapper,
-        DiamondPriceCacheManager diamondPriceCacheManager)
+        DiamondPriceCacheManager diamondPriceCacheManager, DiamondPriceCacheManager cache)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
         _diamondPriceCacheManager = diamondPriceCacheManager;
+        _cache = cache;
     }
 
     public async Task<ResponseModel> CreateDiamondPriceListAsync(
@@ -29,6 +30,9 @@ public class DiamondPriceListService : IDiamondPriceListService
         var entity = _mapper.Map<DiamondPriceList>(requestDiamondPriceList);
         await _unitOfWork.DiamondPriceListRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
+        _cache.SetValue(
+            (entity.CutId, entity.ClarityId, entity.ColorId, entity.CaratId, entity.OriginId, entity.EffectiveDate),
+            entity.Price);
         return new ResponseModel
         {
             Data = entity,
@@ -97,7 +101,7 @@ public class DiamondPriceListService : IDiamondPriceListService
     public async Task<decimal> FindPriceBy4CAndOriginAndFactors(int cutId, int clarityId, int colorId, int caratId,
         int originId, decimal totalFactor, DateTime maxEffectiveDay)
     {
-        var key = (cutId, clarityId, colorId, caratId, originId, maxEffectiveDay);
+        var key = (cutId, clarityId, colorId, caratId, originId, effectiveDate: maxEffectiveDay);
         if (_diamondPriceCacheManager.TryGetValue(key, out var cachedPrice))
             return cachedPrice;
 

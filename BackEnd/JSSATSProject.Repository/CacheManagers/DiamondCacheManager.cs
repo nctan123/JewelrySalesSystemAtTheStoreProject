@@ -3,28 +3,27 @@
 public class DiamondPriceCacheManager
 {
     private readonly
-        Dictionary<(int cutId, int clarityId, int colorId, int caratId, int originId, DateTime maxEffectiveDay),
-            decimal> _cache = new();
+        Dictionary<(int cutId, int clarityId, int colorId, int caratId, int originId, DateTime effectiveDate), decimal> _cache = new();
 
     public bool TryGetValue(
-        (int cutId, int clarityId, int colorId, int caratId, int originId, DateTime maxEffectiveDay) key,
+        (int cutId, int clarityId, int colorId, int caratId, int originId, DateTime effectiveDate) key,
         out decimal value)
     {
-        var closestEffectiveDate = GetLastedEffectiveDate(key.cutId, key.clarityId, key.colorId, key.caratId,
-            key.originId, key.maxEffectiveDay);
+        var closestEffectiveDate = GetLastedEffectiveDateOf4CKey(key.cutId, key.clarityId, key.colorId, key.caratId,
+            key.originId, key.effectiveDate);
         if (closestEffectiveDate.HasValue)
-            key.maxEffectiveDay = closestEffectiveDate.Value;
+            key.effectiveDate = closestEffectiveDate.Value;
         return _cache.TryGetValue(key, out value);
     }
 
     public void SetValue(
-        (int cutId, int clarityId, int colorId, int caratId, int originId, DateTime maxEffectiveDay) key,
+        (int cutId, int clarityId, int colorId, int caratId, int originId, DateTime effectiveDate) key,
         decimal value)
     {
-        var closestEffectiveDate = GetLastedEffectiveDate(key.cutId, key.clarityId, key.colorId, key.caratId,
-            key.originId, key.maxEffectiveDay);
+        var closestEffectiveDate = GetLastedEffectiveDateOf4CKey(key.cutId, key.clarityId, key.colorId, key.caratId,
+            key.originId, key.effectiveDate);
         if (closestEffectiveDate.HasValue)
-            key.maxEffectiveDay = closestEffectiveDate.Value;
+            key.effectiveDate = closestEffectiveDate.Value;
         _cache[key] = value;
     }
 
@@ -33,8 +32,8 @@ public class DiamondPriceCacheManager
         _cache.Clear();
     }
 
-    public DateTime? GetLastedEffectiveDate(int cutId, int clarityId, int colorId, int caratId, int originId,
-        DateTime timeStamp)
+    public DateTime? GetLastedEffectiveDateOf4CKey(int cutId, int clarityId, int colorId, int caratId, int originId,
+        DateTime timeStamp) 
     {
         if (_cache.Count == 0) return null;
         DateTime result = _cache.Keys
@@ -44,10 +43,10 @@ public class DiamondPriceCacheManager
                 && c.colorId == colorId
                 && c.cutId == cutId
                 && c.originId == originId
-                && c.maxEffectiveDay <= timeStamp
+                && c.effectiveDate <= timeStamp
             )
-            .OrderByDescending(c => c.maxEffectiveDay)
-            .Select(c => c.maxEffectiveDay)
+            .OrderByDescending(c => c.effectiveDate)
+            .Select(c => c.effectiveDate)
             .FirstOrDefault();
         return result;
     }
