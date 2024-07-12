@@ -128,7 +128,9 @@ const StaffMana = () => {
             });
 
             if (res && res.data && res.data.data) {
-                setSelectedStaff(res.data.data[0]);
+                setSelectedStaff(res.data.data);
+                // console.log('>>.> check detail staff', res)
+
             }
 
         } catch (error) {

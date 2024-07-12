@@ -271,7 +271,7 @@ const DiamondManager = () => {
                     <div className="relative w-[400px]">
                         <input
                             type="text"
-                            placeholder="Search by product code"
+                            placeholder="Search "
                             value={searchQuery1}
                             onChange={handleSearchChange}
                             className="px-3 py-2 border border-gray-300 rounded-md w-full"
@@ -309,7 +309,7 @@ const DiamondManager = () => {
                         <div className="relative w-[400px]">
                             <input
                                 type="text"
-                                placeholder="Search by product code"
+                                placeholder="Search "
                                 value={searchQuery1}
                                 onChange={handleSearchChange}
                                 className="px-3 py-2 border border-gray-300 rounded-md w-full"

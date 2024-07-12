@@ -128,7 +128,7 @@ const Staff = () => {
             });
 
             if (res && res.data && res.data.data) {
-                setSelectedStaff(res.data.data[0]);
+                setSelectedStaff(res.data.data);
             }
 
         } catch (error) {
@@ -149,7 +149,7 @@ const Staff = () => {
             });
 
             if (res && res.data && res.data.data) {
-                setSelectedStaff(res.data.data[0]);
+                setSelectedStaff(res.data.data);
             }
 
         } catch (error) {

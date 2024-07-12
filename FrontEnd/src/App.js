@@ -87,7 +87,9 @@ function App() {
 
             {/* <Route path={path.MANAGE} element={<Manage />} ></Route> */}
             <Route path={path.PRODUCTADMIN} element={<ProductAdmin />} />
-            <Route path={path.CUSTOMERADMIN} element={<CustomerMana />} />
+            <Route path={path.CUSTOMERADMIN} element={<CustomerAdmin />} />
+            <Route path="detailCustomer" element={<CustomerDetail />} />
+
             <Route path={path.STAFF} element={<Staff />} />
             <Route path={path.POINT} element={<Point />} />
 
@@ -154,7 +156,7 @@ function App() {
           </Route>
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
-            <Route path={path.PAYMENTRESULT} element={<PaymentResult/>} />  
+            <Route path={path.PAYMENTRESULT} element={<PaymentResult />} />
             <Route path={path.CS_ORDER} element={<Cs_Order />}>
               <Route path={path.CS_WAITINGPAYMENT} element={<Cs_WaitingPayment />} />
               <Route path={path.CS_ONPROCESS} element={<Cs_OnProcess />} />

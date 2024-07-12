@@ -326,6 +326,9 @@ export default function CreateProduct() {
     useEffect(() => {
         resetData();
     }, [categoryType]);
+    const handleBack = () => {
+        navigate(-1); // Quay lại trang trước đó
+    };
     return (
         <div className="p-4 max-w-[1200px] mx-auto bg-white rounded-xl shadow-md space-y-4">
             <h2 className="text-3xl font-bold text-blue-800">Create New Product</h2>
@@ -726,7 +729,7 @@ export default function CreateProduct() {
                             <p className="mb-2"><strong>GemCost:</strong> {formData ? (formData.GemCost || '') : ''}</p>
                             <p><strong>PriceRate:</strong> {formData ? (formData.PriceRate || '') : ''}</p>
                         </div>
-                        {categoryType === '7' && (
+                        {categoryType !== '5' && categoryType !== '6' && (
                             <div>
                                 <p className="mb-2"><strong>Origin ID:</strong> {diamondData ? diamondData.originId : ''}</p>
                                 <p className="mb-2"><strong>Shape ID:</strong> {diamondData ? diamondData.shapeId : ''}</p>
@@ -740,7 +743,7 @@ export default function CreateProduct() {
                                 <p><strong>Diamond Grading Code:</strong> {diamondData ? diamondData.diamondGradingCode : ''}</p>
                             </div>
                         )}
-                        {categoryType === '5' && (
+                        {(categoryType === '5' || categoryType === '6') && (
                             <div>
                                 <p className="mb-2"><strong>Material ID:</strong> {createdRetailGold ? createdRetailGold.materialId : ''}</p>
                                 <p className="mb-2"><strong>weight:</strong> {createdRetailGold ? createdRetailGold.weight : ''}</p>
@@ -759,7 +762,15 @@ export default function CreateProduct() {
 
 
                 </div>
+
             </div>
+            <button
+                onClick={handleBack}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+                {/* <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> */}
+                Back
+            </button>
             {isYesNoOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800 bg-opacity-50">
                     <div className="bg-white rounded-lg p-8 max-w-md w-full">
