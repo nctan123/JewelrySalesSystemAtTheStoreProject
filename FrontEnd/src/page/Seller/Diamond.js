@@ -151,10 +151,10 @@ const Ring = () => {
           {listRing && listRing.length > 0 &&
             listRing.filter(item => item.categoryId === 7).map((item, index) => {
               return (
-                <div key={`ring-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
-                  <div className=' bg-[#fff] rounded-md shadow-md'>
-                    <img class="mt-0 w-28 h-28  rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={item.img} />
-                  </div>
+                <div key={`diamond-${index}`} class="relative flex flex-col justify-center items-center w-[200px] px-[20px] pb-8 h-[280px] bg-[#fff] shadow-xl rounded-lg mb-2">
+                <div className='bg-[#fff] rounded-lg shadow-[#918888] shadow-md'>
+                  <img class="mt-2 w-24 h-24 rounded-lg hover:-translate-y-30 duration-700 hover:scale-125" src={item.img} />
+                </div>
                   <div class="max-w-sm h-auto">
 
                     <div class="absolute top-[10px] w-full left-0 p-1 sm:justify-between">

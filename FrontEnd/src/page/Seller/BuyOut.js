@@ -144,7 +144,7 @@ const BuyOut = () => {
           </div>
 
           <div className="flex py-4 gap-2.5">
-            <div className="w-12/12 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-12/12 h-14 flex rounded-lg border-2 border-solid border-[#211758b4]  items-center">
               <input
                 value={CustomerPhone}
                 onChange={(event) => setCustomerPhone(event.target.value)}
@@ -196,7 +196,7 @@ const BuyOut = () => {
           <form onSubmit={(e) => { e.preventDefault(); handleAddProduct(); }}
             className='grid grid-cols-4'
           >
-            <div className="w-11/12 mb-2 h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-11/12 mb-2 h-14 flex rounded-lg border-2 border-solid border-[#211758b4] items-center">
               <input
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                 type="text"
@@ -206,7 +206,7 @@ const BuyOut = () => {
                 required
               />
             </div>
-            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-[#211758b4]  items-center">
               <input
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                 type="text"
@@ -215,7 +215,7 @@ const BuyOut = () => {
                 onChange={(e) => setDiamondGradingCode(e.target.value)}
               />
             </div>
-            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-[#211758b4]  items-center">
               <input
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                 type="number"
@@ -224,7 +224,7 @@ const BuyOut = () => {
                 onChange={(e) => setMaterialId(e.target.value)}
               />
             </div>
-            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-[#211758b4]  items-center">
               <input
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                 type="number"
@@ -233,7 +233,7 @@ const BuyOut = () => {
                 onChange={(e) => setMaterialWeight(e.target.value)}
               />
             </div>
-            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-[#211758b4]  items-center">
               <input
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                 type="number"
@@ -243,7 +243,7 @@ const BuyOut = () => {
                 required
               />
             </div>
-            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-[#211758b4]  items-center">
               <input
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                 type="number"
@@ -253,7 +253,7 @@ const BuyOut = () => {
                 required
               />
             </div>
-            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-gray-100 items-center">
+            <div className="w-11/12  h-14 flex rounded-lg border-2 border-solid border-[#211758b4]  items-center">
               <input
                 className="w-9/12 h-14 px-4 bg-transparent focus:outline-none text-black"
                 type="number"
