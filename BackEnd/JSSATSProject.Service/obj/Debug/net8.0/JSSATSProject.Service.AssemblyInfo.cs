@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("JSSATSProject.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b4dd84da3bda00f93d1ae3adcd268013fde2edab")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b54afa31d02cd586a37d186decb02ed5c72c306e")]
 [assembly: System.Reflection.AssemblyProductAttribute("JSSATSProject.Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("JSSATSProject.Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
