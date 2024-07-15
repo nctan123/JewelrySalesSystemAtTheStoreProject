@@ -20,7 +20,7 @@ const InvoiceMana = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const sellOrderPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
-    const [ascending, setAscending] = useState(true);
+    const [ascending, setAscending] = useState(false);
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -203,11 +203,10 @@ const InvoiceMana = () => {
                     </div>
                 </div>
                 <div className="w-[1200px] overflow-hidden ">
-                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-
-                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className=" rounded-l-lg"></th>
+                    <table className="font-inter w-full table-auto text-left">
+                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                            <tr className="whitespace-nowrap text-xl font-bold">
+                                <th className="rounded-l-lg"></th>
                                 <th className="py-3 pl-3">Code</th>
                                 <th >Staff name</th>
                                 <th >Customer</th>
@@ -223,8 +222,8 @@ const InvoiceMana = () => {
 
                         <tbody >
                             {listSellOrder.map((item, index) => (
-                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td >{item.code}</td>
                                     <td >{item.staffName}</td>
                                     <td >{item.customerName}</td>

@@ -314,23 +314,23 @@ const PromotionRequest = () => {
                 </div>
 
                 <div className="w-[1200px] overflow-hidden ">
-                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                    <table className="font-inter w-full table-auto text-left">
+                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                            <tr className="whitespace-nowrap text-xl  font-bold">
+                                <th className="rounded-l-lg"></th>
                                 <th >Name</th>
                                 {/* <th >Description</th> */}
                                 <th className=" text-center">Discount Rate</th>
                                 <th >From</th>
                                 <th >To</th>
-                                <th >Status</th>
+                                <th className='text-center' >Status</th>
                                 <th className=" py-3 rounded-r-lg">Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {listPromotion.map((item, index) => (
-                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td >{getNamefromDescription(item.description)}</td>
                                     {/* <td>{getDescription(item.description)}</td> */}
                                     <td className="text-center ">{item.discountRate}</td>
@@ -338,9 +338,9 @@ const PromotionRequest = () => {
                                     <td >{format(new Date(item.endDate), 'dd/MM/yyyy')}</td>
                                     <td className=" text-center">
                                         {item.status === 'approved'
-                                            ? (<span className="text-green-500 ">Approved</span>)
+                                            ? (<span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">Approved</span>)
                                             : item.status === 'rejected' ? (
-                                                <span className="text-red-500">Rejected</span>
+                                                <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">Rejected</span>
                                             ) : (<button
                                                 className="my-2 border border-white bg-blue-600 text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
                                                 onClick={() => openModal(item.requestId)} // Open modal with requestId on button click
@@ -421,9 +421,9 @@ const PromotionRequest = () => {
 
                             <p className="text-base text-gray-700 mb-2"><strong>Status: </strong>
                                 {selectedRequest.status === 'approved'
-                                    ? (<span className="text-green-500 ">Approved</span>)
+                                    ? (<span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">Approved</span>)
                                     : selectedRequest.status === 'rejected' ? (
-                                        <span className="text-red-500">Rejected</span>
+                                        <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">Rejected</span>
                                     ) : selectedRequest.status
                                 }
                             </p>

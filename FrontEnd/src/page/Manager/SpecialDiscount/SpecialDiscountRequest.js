@@ -242,10 +242,10 @@ const SpecialDiscountRequest = () => {
 
 
                 <div className="w-[1200px] overflow-hidden ">
-                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left ">
-                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                    <table className="font-inter w-full table-auto text-left">
+                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                            <tr className="whitespace-nowrap text-xl  font-bold">
+                                <th className="rounded-l-lg"></th>
                                 <th  >Sell Order</th>
                                 <th className='py-3' >Name</th>
                                 <th  >Phone</th>
@@ -257,8 +257,8 @@ const SpecialDiscountRequest = () => {
                         </thead>
                         <tbody>
                             {listSpecialDiscount.map((item, index) => (
-                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td >{item.sellOrderCode || 'null'}</td>
                                     <td >{item.customerName}</td>
                                     <td >{item.customerPhone}</td>
@@ -266,11 +266,11 @@ const SpecialDiscountRequest = () => {
                                     <td >{item.approvedName || 'null'}</td>
                                     <td className=" text-center">
                                         {item.status === 'approved'
-                                            ? (<span className="text-yellow-500 ">Approved</span>)
+                                            ? (<span className="text-yellow-500 bg-yellow-100 font-bold p-1 px-2 rounded-xl">Approved</span>)
                                             : item.status === 'rejected' ? (
-                                                <span className="text-red-500">Rejected</span>
+                                                <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">Rejected</span>
                                             ) : item.status === 'used' ? (
-                                                <span className="text-green-500">used</span>
+                                                <span className="text-green-500 bg-green-100 font-bold p-1 px-6 rounded-xl">used</span>
                                             ) : (<button
                                                 className="my-2 border border-white bg-blue-600 text-white rounded-md transition duration-200 ease-in-out hover:bg-[#1d3279] active:bg-[#4741b174] focus:outline-none"
                                                 onClick={() => openModal(item.requestId)} // Open modal with requestId on button click

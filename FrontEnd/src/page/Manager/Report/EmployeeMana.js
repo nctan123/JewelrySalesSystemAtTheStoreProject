@@ -21,7 +21,7 @@ const EmployeeMana = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
     const [sortBy, setSortBy] = useState('totalRevenue');
-    const [ascending, setAscending] = useState(true);
+    const [ascending, setAscending] = useState(false);
     const customersPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50]; // Options for page size
 
 
@@ -64,7 +64,7 @@ const EmployeeMana = () => {
                 const staffs = res.data.data;
                 setListStaff(staffs);
                 const total = Math.ceil(res.data.totalElements / pageSize);
-                setTotalPages(total);
+                setTotalPages(1);
             }
         } catch (error) {
             console.error('Error fetching staffs:', error);
@@ -93,7 +93,7 @@ const EmployeeMana = () => {
                 const staffs = res.data.data;
                 setListStaff(staffs);
                 const total = Math.ceil(res.data.totalElements / pageSize);
-                setTotalPages(total);
+                setTotalPages(1);
                 setCurrentPage(1); // Reset to first page when search results are returned
             }
         } catch (error) {
@@ -224,16 +224,15 @@ const EmployeeMana = () => {
                     </div>
                 </div>
 
-                <div className="w-[1200px] overflow-hidden">
-                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-
-                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className=" rounded-l-lg"></th>
+                <div className="w-[1200px] overflow-hidden ">
+                    <table className="font-inter w-full table-auto text-left">
+                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                            <tr className="whitespace-nowrap text-xl  font-bold">
+                                <th className="rounded-l-lg"></th>
                                 <th className="py-3 pl-3 ">Name</th>
                                 <th>Phone</th>
                                 <th>Email</th>
-                                <th className="cursor-pointer " onClick={handleSortByRevenue}>
+                                <th className="cursor-pointer text-center " onClick={handleSortByRevenue}>
                                     <span>Revenue</span>
                                     {sortBy === 'totalRevenue' && (
                                         <span>{ascending ? '▲' : '▼'}</span>
@@ -242,7 +241,7 @@ const EmployeeMana = () => {
                                         <BiExpandVertical className="inline-block text-xl pb-1" />
                                     )} */}
                                 </th>
-                                <th className="cursor-pointer " onClick={handleSortBySellOrder}>
+                                <th className="cursor-pointer text-center " onClick={handleSortBySellOrder}>
                                     <span>Sell Order</span>
                                     {sortBy === 'totalsellorder' && (
                                         <span>{ascending ? '▲' : '▼'}</span>
@@ -257,17 +256,20 @@ const EmployeeMana = () => {
                         </thead>
                         <tbody>
                             {listStaff.map((item, index) => (
-                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td>{item.firstname} {item.lastname}</td>
                                     <td>{item.phone}</td>
                                     <td>{item.email}</td>
-                                    <td>{formatCurrency(item.totalRevenue ? item.totalRevenue : 0)}</td>
-                                    <td>{item.totalSellOrder || 0}</td>
+                                    <td className='text-center'>{formatCurrency(item.totalRevenue ? item.totalRevenue : 0)}</td>
+                                    <td className='text-center'>{item.totalSellOrder || 0}</td>
                                     <td>
-                                        {item.status === 'active'
-                                            ? (<span className="text-green-500">Active</span>)
-                                            : <span className="text-red-500">Inactive</span>}
+                                        {item.status === 'active' ? (
+                                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">ACTIVE</span>
+                                        ) : item.status === 'inactive' ? (
+                                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">INACTIVE</span>
+                                        ) : 'null'
+                                        }
                                     </td>
                                 </tr>
                             ))}

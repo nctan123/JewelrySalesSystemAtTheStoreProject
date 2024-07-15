@@ -19,7 +19,7 @@ const ReturnPolicyView = () => {
     const [pageSize, setPageSize] = useState(10);
     const policyPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
     const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
-    const [ascending, setAscending] = useState(true);
+    const [ascending, setAscending] = useState(false);
 
     useEffect(() => {
         if (scrollRef.current) {
@@ -152,11 +152,11 @@ const ReturnPolicyView = () => {
                         <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
                     </div> */}
                 </div>
-                <div className="w-[1200px] overflow-hidden">
-                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                <div className="w-[1200px] overflow-hidden ">
+                    <table className="font-inter w-full table-auto text-left">
+                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                            <tr className="whitespace-nowrap text-xl  font-bold">
+                                <th className="rounded-l-lg"></th>
                                 <th className='py-3' >Name</th>
                                 <th className="cursor-pointer " onClick={handleSort}>
                                     <span>Effective Date</span>
@@ -168,14 +168,17 @@ const ReturnPolicyView = () => {
                         </thead>
                         <tbody>
                             {listPolicy.map((item, index) => (
-                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td >{getNamefromDescription(item.description)}</td>
                                     <td >{formatEffectiveDate(item.effectiveDate)}</td>
                                     <td className="text-center">
-                                        {item.status === 'active'
-                                            ? (<span className="text-green-500">Active</span>)
-                                            : <span className="text-red-500">Inactive</span>}
+                                        {item.status === 'active' ? (
+                                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">ACTIVE</span>
+                                        ) : (
+                                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">INACTIVE</span>
+                                        )
+                                        }
                                     </td>
                                     <td className="text-3xl text-[#000099] pl-2"><CiViewList onClick={() => handleDetailClick(item)} /></td>
 
@@ -221,9 +224,13 @@ const ReturnPolicyView = () => {
                         <p className="text-sm text-gray-700 mb-2 text-xl"><strong>Description: </strong>{getDescription(selectedPolicy.description)}</p>
 
                         <p className="text-sm text-gray-700 mb-2 text-xl"><strong>Effective Date:</strong> {formatEffectiveDate(selectedPolicy.effectiveDate)}</p>
-                        <p className="text-sm text-gray-700 mb-2 text-xl"><strong>Status:</strong> {selectedPolicy.status === 'active'
-                            ? (<span className="text-green-500">Active</span>)
-                            : <span className="text-red-500">Inactive</span>}</p>
+                        <p className="text-sm text-gray-700 mb-2 text-xl"><strong>Status:</strong>
+                            {selectedPolicy.status === 'active' ? (
+                                <span className="text-green-500 bg-green-100 font-bold p-1 px-2 mx-2 rounded-xl">ACTIVE</span>
+                            ) : (
+                                <span className="text-red-500 bg-red-100 font-bold p-1 px-2 mx-2 rounded-xl">INACTIVE</span>
+                            )
+                            }</p>
 
                         <button
                             className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md" onClick={() => setSelectedPolicy(null)}

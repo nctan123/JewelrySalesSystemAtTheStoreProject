@@ -309,7 +309,11 @@ const RetailGoldWarehouseManager = () => {
                                     <td >{item.categoryName}</td>
                                     <td> {item.code} </td>
                                     <td>{item.name}</td>
-                                    <td > <img src={logo} className="w-20 h-20" /> </td>
+                                    <td>
+                                        {' '}
+                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
+                                        {/* {item.img} */}
+                                    </td>
                                     <td >{formatCurrency(item.productValue)}</td>
                                     <td >
                                         {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}
