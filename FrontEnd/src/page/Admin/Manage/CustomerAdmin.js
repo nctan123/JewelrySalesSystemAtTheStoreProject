@@ -258,6 +258,14 @@ const Customer = () => {
         if (!validateForm()) return;
         setIsYesNoOpen(true);
     };
+    const formatPoint = (value) => {
+        return new Intl.NumberFormat('de-DE', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+            useGrouping: true,
+        }).format(value);
+    };
+
     const placeholders = Array.from({ length: pageSize - listCustomer.length });
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
@@ -294,11 +302,11 @@ const Customer = () => {
 
                 </div>
 
-                <div className="w-[1200px] overflow-hidden">
-                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36]">
-                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                <div className="w-[1200px] overflow-hidden ">
+                    <table className="font-inter w-full table-auto text-left">
+                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                            <tr className="whitespace-nowrap text-xl  font-bold">
+                                <th className="rounded-l-lg"></th>
                                 <th className='py-3'>Name</th>
                                 <th>Phone Number</th>
                                 <th>Email</th>
@@ -309,13 +317,16 @@ const Customer = () => {
                         </thead>
                         <tbody>
                             {listCustomer.map((item, index) => (
-                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td>{item.firstname} {item.lastname}</td>
                                     <td>{item.phone}</td>
                                     <td>{item.email}</td>
-                                    <td>{item.gender}</td>
-                                    <td>{item.point.totalpoint}</td>
+                                    <td>{item.gender === 'Male'
+                                        ? <span className='text-blue-500 font-bold'>Male</span>
+                                        : <span className='text-pink-500 font-bold'>Female</span>
+                                    }</td>
+                                    <td>{formatPoint(item.point.totalpoint)}</td>
                                     {/* <td className="text-2xl text-green-500 pl-4"><FiEdit3 onClick={() => handleEditClick(item)} /></td> */}
                                     <td className="flex space-x-2 mt-3">
                                         <CiViewList className="text-3xl text-[#000099]" onClick={() => handleDetailClick(item.phone)} />

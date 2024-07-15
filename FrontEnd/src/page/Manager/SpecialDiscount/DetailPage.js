@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { MdFace } from "react-icons/md";
 import { MdFace4 } from "react-icons/md";
+import { FaMoneyBillWave } from "react-icons/fa"; // cash
+import vnPayLogo from '../../../assets/vnpay.jpg'
 const DetailPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -94,8 +96,31 @@ const DetailPage = () => {
                     <p><strong>Time:</strong> {formatDateTime(sellOrderData.createDate)}</p>
                     <p><strong>Description:</strong> {sellOrderData.description}</p>
                     <p><strong>Total Amount:</strong> {formatCurrency(sellOrderData.finalAmount)}</p>
-                    <p><strong>Status:</strong> {sellOrderData.status}</p>
-                    <p><strong>Payment Method:</strong> {sellOrderData.paymentMethod}</p>
+                    <p><strong>Status:</strong>
+                        {sellOrderData.status === 'completed' ? (
+                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 mx-2 rounded-xl">COMPLETED</span>
+                        ) : sellOrderData.status === 'cancelled' ? (
+                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 mx-2 rounded-xl">CANCELLED</span>
+                        ) : sellOrderData.status === 'processing' ? (
+                            <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 mx-2 rounded-xl">PROCESSING</span>
+                        ) : sellOrderData.status === 'draft' ? (
+                            <span className="text-black bg-gray-100 font-bold p-1 px-7 mx-2 rounded-xl">DRAFT</span>
+                        ) : (
+                            <span className="relative group text-blue-500 bg-blue-100 font-bold p-1 px-2 mx-2 rounded-xl">
+                                WAITING...
+                            </span>
+                        )}
+                    </p>
+                    <p className="mb-4 flex items-center">
+                        <strong className="mr-2">Payment Method:</strong>{sellOrderData.paymentMethod}
+                        {sellOrderData.paymentMethod === 'VnPay' ? (
+                            <img src={vnPayLogo} alt="VNPay Logo" className="w-5 h-auto mx-2" />
+                        ) : sellOrderData.paymentMethod === 'Cash' ? (
+                            <FaMoneyBillWave className="text-green-500 text-2xl mx-2" />
+                        ) : (
+                            'null'
+                        )}
+                    </p>
                 </div>
                 {/* Customer Details */}
                 <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -103,16 +128,21 @@ const DetailPage = () => {
                     <p><strong>Name:</strong> {customerData.firstname} {customerData.lastname}</p>
                     <p><strong>Phone:</strong> {customerData.phone}</p>
                     <p><strong>Email:</strong> {customerData.email}</p>
-                    <p><strong>Gender:</strong> {customerData.gender}</p>
+                    <p><strong>Gender:</strong>
+                        {customerData.gender === 'Male'
+                            ? <span className='text-blue-500 font-bold mx-2'>Male</span>
+                            : <span className='text-pink-500 font-bold mx-2'>Female</span>
+                        }
+                    </p>
                     <p><strong>Address:</strong> {customerData.address}</p>
                 </div>
             </div>
-            <div className="w-[1200px] overflow-hidden ml-6">
-                <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                    <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                        <tr className="whitespace-nowrap text-xl font-bold text-[#212B36]">
-                            <th className="py-3 pl-3 rounded-l-lg"></th>
-                            <th>Product Code</th>
+            <div className="w-[1200px] overflow-hidden ">
+                <table className="font-inter w-full table-auto text-left">
+                    <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                        <tr className="whitespace-nowrap text-xl  font-bold">
+                            <th className="rounded-l-lg"></th>
+                            <th className='py-2'>Product Code</th>
                             <th>Name</th>
                             <th>Unit Price</th>
                             <th>Promotion Rate</th>
@@ -121,8 +151,8 @@ const DetailPage = () => {
                     </thead>
                     <tbody>
                         {sellOrderData.sellOrderDetails && sellOrderData.sellOrderDetails.map((item, index) => (
-                            <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                <td className="rounded-l-lg pl-3 py-4 text-black">{index + 1}</td>
+                            <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + 1}</td>
                                 <td>{item.productCode}</td>
                                 <td>{item.productName}</td>
                                 <td>{formatCurrency(item.unitPrice)}</td>
