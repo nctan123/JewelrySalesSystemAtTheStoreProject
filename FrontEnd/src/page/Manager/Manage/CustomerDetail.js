@@ -18,6 +18,8 @@ import { MdFace, MdFace4, MdPlace } from 'react-icons/md';
 import { PiGenderFemaleBold, PiGenderMaleBold } from "react-icons/pi";
 import { FaMoneyBillWave } from "react-icons/fa"; // cash
 import vnPayLogo from '../../../assets/vnpay.jpg'
+import { LiaBusinessTimeSolid } from "react-icons/lia";
+
 const CustomerDetail = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -708,6 +710,10 @@ const CustomerDetail = () => {
                                 <strong className="mr-2">• Total Point:</strong> {formatPoint(customerData.point.totalpoint)}
                             </div>
                         </div>
+                        <p className="flex items-center py-3">
+                            <LiaBusinessTimeSolid className="mr-3 text-red-500 text-2xl font-bold" />
+                            <strong className="mr-2">Create Date:</strong> {formatDateTime(customerData.createDate)}
+                        </p>
                     </div>
 
                 </div>
