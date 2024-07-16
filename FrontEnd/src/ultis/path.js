@@ -1,68 +1,62 @@
 const path = {
+
     HOME: '/',
     ADMIN: '/admin',
     LOGIN: '/login',
-    MANAGER: '/manager',
-    // Seller
+   
+// Seller
     PUBLIC: '/public',
+
     DIAMOND: '',
-    LOGIN: 'login',
+    LOGIN: '/login',
     STAR: '*',
     CUSTOMER: 'customer',
     JEWELRY: 'jewelry',
     NECKLACE: 'necklace',
     RING: 'ring',
+
     EARRING: 'earring',
     BANGLES: 'bangles',
     WHOLESALEGOLD: 'wholesalegold',
     RETAILGOLD: 'retailgold',
     SEARCHINVOICE: 'searchinvoice',
     PROMOTION: 'promotion',
-    RETURN_EX: 'purchase',
-
-    BUY: 'buy',
-    WARRANTY: 'warranty',
-    // Cashier
+    RETURN_EX: 'returnExchange',
+// Cashier
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
     CS_REVENUE: 'cs_revenue',
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
-    // ADMIN
-    DASHBOARD: 'Dashboard',
+ // ADMIN
+ DASHBOARD: 'Dashboard',
 
-    MANAGE: 'Manage',
-    CUSTOMERADMIN: 'customeradmin',
-    PRODUCTADMIN: 'productadmin',
-    STAFF: 'staff',
-    POINT: 'point',
+ MANAGE: 'Manage',
+ CUSTOMERADMIN: 'customeradmin',
+ PRODUCTADMIN: 'productadmin',
+ STAFF: 'staff',
+ POINT: 'point',
 
-    REPORT: 'Report',
-    INVOICE: 'Invoice',
-    PRODUCSOLD: 'ProductSold',
-    EMPLOYEE: 'Employee',
+ REPORT: 'Report',
+ INVOICE: 'Invoice',
+ PRODUCSOLD: 'ProductSold',
+ EMPLOYEE: 'Employee',
 
-    PROMOTIONADMIN: 'Promotionadmin',
-    PROMOTIONLIST: 'promotionlist',
-    PROMOTIONREQUEST: 'promotionrequest',
+ PROMOTIONADMIN: 'Promotionadmin',
+ PROMOTIONLIST: 'promotionlist',
+ PROMOTIONREQUEST: 'promotionrequest',
 
-    RETURNPOLICY: 'ReturnPolicy',
+ RETURNPOLICY: 'ReturnPolicy',
 
-    VOIDBILL: 'VoidBill',
+ VOIDBILL: 'VoidBill',
 
-    // end admin
+ // end admin
 
 
-    // manager
+ // manager
+ MANAGER: 'manager'
+ // end manager
 
-    PRODUCTMANAGER: 'productManager',
-    DIAMONDMANAGER: 'diamond',
-    RETAILGOLDMANAGER: 'rgold',
-    PROMOTIONMANAGER: 'Promotionmanager',
-    CUSTOMERMANA: 'customerMana',
-    PRODUCTMANA: 'productMana',
-    STALL: 'Stall'
-    // end manager
 
 
 }

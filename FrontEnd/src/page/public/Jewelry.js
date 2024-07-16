@@ -1,10 +1,13 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 
-const Cs_Order = () => {
+
+const Jewelry = () => {
   return (
-    <><Outlet/></>
+   <>
+   <Outlet/>
+   </>
   )
 }
 
-export default Cs_Order
+export default Jewelry

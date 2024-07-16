@@ -1,6 +1,6 @@
 import icons from "./icon"
 
-const { GiNecklaceDisplay, GiDiamondRing, LiaCircleNotchSolid, LiaMoneyBillWaveSolid, SlPeople, GiEmeraldNecklace, GiStonePile, AiOutlineGold, SlDiamond, LiaFileInvoiceDollarSolid, CiGift, TbArrowsExchange2, TbLogout2, MdDiamond, GiCrystalEarrings } = icons
+const { LiaMoneyBillWaveSolid, SlPeople, GiHeartNecklace, GiStonePile, AiOutlineGold, SlDiamond, LiaFileInvoiceDollarSolid, CiGift, TbArrowsExchange2, TbLogout2, MdDiamond } = icons
 
 export const sidebarMenu = [
     // {
@@ -14,30 +14,20 @@ export const sidebarMenu = [
         icons: <SlPeople size={24} color="white" />
     },
     {
-        path: 'jewelry/ring',
+        path: 'jewelry',
         text: 'Jewelry',
-        icons: <GiNecklaceDisplay size={24} color="white" />,
+        icons: <GiHeartNecklace size={24} color="white" />,
         subMenu: [
             {
                 path: 'jewelry/ring',
                 text: 'Ring',
-                icons: <GiDiamondRing size={24} color="white" />,
+                icons: <GiHeartNecklace size={24} color="white" />,
             },
             {
                 path: 'jewelry/necklace',
                 text: 'Necklace',
-                icons: <GiEmeraldNecklace size={24} color="white" />,
-            },
-            {
-                path: 'jewelry/earring',
-                text: 'Earring',
-                icons: <GiCrystalEarrings size={24} color="white" />,
-            },
-            {
-                path: 'jewelry/bangles',
-                text: 'Bangles',
-                icons: <LiaCircleNotchSolid size={24} color="white" />,
-            },
+                icons: <GiHeartNecklace size={24} color="white" />,
+            }
         ]
     },
     {
@@ -67,10 +57,9 @@ export const sidebarMenu = [
         icons: <CiGift size={24} color="white" />
     },
     {
-        path: 'purchase',
-        text:'Purchase',
-        icons: <TbArrowsExchange2 size={24} color="white"/>,
-      
+        path: 'returnExchange',
+        text: 'Return/Exchange',
+        icons: <TbArrowsExchange2 size={24} color="white" />
     },
     {
         path: '/login',
@@ -78,10 +67,5 @@ export const sidebarMenu = [
         icons: <TbLogout2 size={24} color="white"/>
 
     },
-    // {
-    //     path: '/login',
-    //     text: 'Log out',
-    //     icons: <TbLogout2 size={24} color="white" />
-    // },
 
 ]

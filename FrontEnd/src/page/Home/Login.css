@@ -1,10 +1,10 @@
-.login_container {
+.login-container {
     display: flex;
     flex-direction: column;
     margin: 100px 500px;
   }
   
-  .login_container .title_login {
+  .login-container .title-login {
     text-align: center;
     font-size: 35px;
     font-weight: 600;
@@ -12,7 +12,7 @@
     color: red;
   }
   
-  .login_container .text {
+  .login-container .text {
     font-weight: 600;
     padding-bottom: 3px;
     text-align: left;
@@ -20,7 +20,7 @@
     margin-left: 10px;
   }
   
-  .login_container input {
+  .login-container input {
     padding: 12px 17px;
     outline: none;
     background: #1618230f;
@@ -30,22 +30,22 @@
     width: 100%;
   }
   
-  .login_container input:hover {
+  .login-container input:hover {
     background-color: #dedede;
   }
   
-  .login_container .input_2 {
+  .login-container .input-2 {
     position: relative;
   }
   
-  .login_container .input_2 span {
+  .login-container .input-2 span {
     cursor: pointer;
     position: absolute;
     top: 17px;
     right: 10px;
   }
   
-  .login_container button {
+  .login-container button {
     margin-top: 15px;
     width: 100%;
     padding: 10px;
@@ -59,17 +59,17 @@
     /*  */
   }
   
-  .login_container button.active {
+  .login-container button.active {
     background-color: red;
     color: white;
   }
   
-  .login_container button[disabled=disabled], .login_container button:disabled {
+  .login-container button[disabled=disabled], .login-container button:disabled {
     cursor: not-allowed;
     
   }
   
-  .login_container .back {
+  .login-container .back {
     text-align: center;
     margin-top: 30px;
     cursor: pointer;
