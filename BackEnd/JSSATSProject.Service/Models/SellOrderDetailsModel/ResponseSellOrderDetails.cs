@@ -22,4 +22,6 @@ public class ResponseSellOrderDetails
     public virtual Product Product { get; set; }
 
     public decimal? PromotionRate { get; set; }
+
+    public string? Img { get; set; }
 }

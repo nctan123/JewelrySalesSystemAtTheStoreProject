@@ -7,6 +7,7 @@ using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PaymentModel;
 using JSSATSProject.Service.Service.IService;
 using System.Linq.Expressions;
+using JSSATSProject.Service.Extensions;
 
 namespace JSSATSProject.Service.Service.Service;
 
@@ -144,23 +145,36 @@ public class PaymentService : IPaymentService
         return payment.BuyorderId;
     }
 
-    public async Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate)
+    public async Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate, int order)
     {
-    
-        Expression<Func<Payment, bool>> filter = payment =>
+        Expression<Func<Payment, bool>> baseFilter = payment =>
             payment.Status == PaymentConstants.CompletedStatus &&
-            payment.SellorderId != null &&
             payment.Amount > 0 &&
             payment.CreateDate >= startDate &&
             payment.CreateDate <= endDate;
 
-    
+        // Adjust filter based on the order parameter
+        Expression<Func<Payment, bool>> specificFilter;
+        if (order == 1) // For BuyOrder
+        {
+            specificFilter = payment => payment.BuyorderId != null;
+        }
+        else if (order == 2) // For SellOrder
+        {
+            specificFilter = payment => payment.SellorderId != null;
+        }
+        else
+        {
+            throw new ArgumentException("Invalid order value. Use 1 for BuyOrder or 2 for SellOrder.");
+        }
+
+        var filter = baseFilter.AndAlso(specificFilter);
+
         var payments = await _unitOfWork.PaymentRepository.GetAsync(
             filter,
             includeProperties: "PaymentDetails.PaymentMethod"
-            );
+        );
 
-   
         var paymentMethodTotalSums = payments
             .SelectMany(payment => payment.PaymentDetails)
             .Where(pd => pd.Status == PaymentConstants.CompletedStatus)
@@ -172,10 +186,8 @@ public class PaymentService : IPaymentService
             })
             .ToList();
 
-
         var result = new List<Dictionary<string, object>>();
 
-      
         foreach (var paymentMethodSum in paymentMethodTotalSums)
         {
             result.Add(new Dictionary<string, object>
@@ -191,8 +203,4 @@ public class PaymentService : IPaymentService
             Data = result
         };
     }
-
-
-
-
 }

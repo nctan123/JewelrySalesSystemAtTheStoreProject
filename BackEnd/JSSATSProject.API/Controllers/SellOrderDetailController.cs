@@ -48,21 +48,23 @@ public class SellOrderDetailController : ControllerBase
         return Ok(responseModel);
     }
 
-    [HttpGet]
-    [Route("GetTotalRevenueStall")]
-    public async Task<IActionResult> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate, int pageIndex,
-        bool ascending = false)
-    {
-        var responseModel =
-            await _sellorderdetailService.GetTotalRevenueStallAsync(startDate, endDate, pageIndex, 10, ascending);
-        return Ok(responseModel);
-    }
 
     [HttpGet]
     [Route("GetProductSold")]
     public async Task<IActionResult> GetProductSoldAsync(bool ascending, int pageIndex, int pageSize)
     {
         var responseModel = await _sellorderdetailService.GetProductSoldAsync(ascending, pageIndex, pageSize);
+        return Ok(responseModel);
+    }
+
+
+    [HttpGet]
+    [Route("GetProductsByStall")]
+    public async Task<IActionResult> GetProductsByStallAsync(int stallId,DateTime startDate, DateTime endDate, int pageIndex,int pageSize,
+        bool ascending = false)
+    {
+        var responseModel =
+            await _sellorderdetailService.GetProductsByStallAsync(stallId,startDate, endDate, pageIndex, pageSize, ascending);
         return Ok(responseModel);
     }
 }

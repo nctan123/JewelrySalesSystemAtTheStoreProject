@@ -38,4 +38,19 @@ public class StallController : ControllerBase
         var responseModel = await _stallService.CreateStallAsync(requestStall);
         return Ok(responseModel);
     }
+
+    [HttpGet]
+    [Route("GetTotalRevenue")]
+    public async Task<IActionResult> GetTotalRevenueAsync(
+            [FromQuery] DateTime startDate,
+            [FromQuery] DateTime endDate,
+            [FromQuery] int pageIndex = 0,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] bool ascending = true)
+    {
+        var responseModel = await _stallService.GetTotalRevenueStallAsync(startDate, endDate, pageIndex, pageSize, ascending);
+        return Ok(responseModel);
+    }
+
+
 }
