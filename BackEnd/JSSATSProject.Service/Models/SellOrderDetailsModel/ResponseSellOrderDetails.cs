@@ -24,4 +24,6 @@ public class ResponseSellOrderDetails
     public decimal? PromotionRate { get; set; }
 
     public string? Img { get; set; }
+
+    public string? GuaranteeCode {  get; set; }
 }
