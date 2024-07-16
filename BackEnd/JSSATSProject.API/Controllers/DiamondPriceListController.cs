@@ -1,9 +1,10 @@
 ﻿using JSSATSProject.Service.Models.DiamondPriceListModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class DiamondPriceListController : ControllerBase

@@ -1,11 +1,14 @@
-﻿using JSSATSProject.Service.Models.ProductDiamondModel;
+﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.ProductDiamondModel;
 using JSSATSProject.Service.Models.ProductMaterialModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
+    [Authorize(Roles = RoleConstants.Manager)]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductDiamondController : ControllerBase

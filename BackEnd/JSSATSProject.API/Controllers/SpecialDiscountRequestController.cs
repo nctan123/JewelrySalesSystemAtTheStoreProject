@@ -7,11 +7,12 @@ using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace JSSATSProject.API.Controllers;
-
+[Authorize(RoleConstants.Manager + "," +  RoleConstants.Seller)]
 [ApiController]
 [Route("api/[controller]")]
 public class SpecialDiscountRequestController : ControllerBase

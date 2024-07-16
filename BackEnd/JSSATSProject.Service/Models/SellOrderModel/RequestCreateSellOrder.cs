@@ -1,5 +1,6 @@
 
 ﻿using System.ComponentModel.DataAnnotations;
+using JSSATSProject.Repository.CustomValidators;
 using JSSATSProject.Repository.Enums;
 
 
@@ -8,7 +9,7 @@ namespace JSSATSProject.Service.Models.OrderModel;
 public class RequestCreateSellOrder
 {
     public int? Id { get; set; }
-    [Phone]
+    [VietnamesePhone(ErrorMessage = "{0} must be a valid Vietnamese phone number.")]
     public required string CustomerPhoneNumber { get; set; }
     public required int StaffId { get; set; }
     public DateTime CreateDate { get; set; }

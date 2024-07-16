@@ -160,7 +160,7 @@ public class SellOrderService : ISellOrderService
             so => so.Id == id,
             includeProperties: "SellOrderDetails.Promotion,Staff,Customer,Payments," +
                                "SellOrderDetails.Product,SpecialDiscountRequest," +
-                               "Payments.PaymentDetails.PaymentMethod");
+                               "Payments.PaymentDetails.PaymentMethod,SellOrderDetails.Product.Guarantees");
         // var response = _mapper.Map<List<ResponseSellOrder>>(entities);
 
         // Map entities to response models

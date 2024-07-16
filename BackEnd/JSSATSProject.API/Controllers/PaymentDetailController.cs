@@ -7,11 +7,13 @@ using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Packaging;
 
 namespace JSSATSProject.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class PaymentDetailController : ControllerBase

@@ -8,10 +8,11 @@ using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-
+[Authorize(Roles = RoleConstants.Seller)]
 [Route("api/[controller]")]
 [ApiController]
 public class SellOrderController : ControllerBase

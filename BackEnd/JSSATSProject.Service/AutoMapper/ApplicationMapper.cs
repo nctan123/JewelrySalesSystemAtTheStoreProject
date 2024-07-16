@@ -159,6 +159,7 @@ public class ApplicationMapper : Profile
             .ForMember(dest => dest.ProductCode, opt => opt.MapFrom(src => src.Product.Code))
             .ForMember(dest => dest.PromotionRate, opt =>opt.MapFrom(src => src.Promotion.DiscountRate))
             .ForMember(dest => dest.Img,opt => opt.MapFrom(src => src.Product.Img))
+            .ForMember(dest =>dest.GuaranteeCode, opt => opt.MapFrom(src => src.Product.Guarantees.FirstOrDefault().Code))
             .ReverseMap();
 
 
