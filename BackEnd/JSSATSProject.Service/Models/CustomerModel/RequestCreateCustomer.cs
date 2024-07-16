@@ -6,8 +6,9 @@ namespace JSSATSProject.Service.Models.CustomerModel;
 
 public class RequestCreateCustomer
 {
+    [Required]
     public string Firstname { get; set; } = null!;
-
+    [Required]
     public string Lastname { get; set; } = null!;
 
     [VietnamesePhone(ErrorMessage = "{0} must be a valid Vietnamese phone number.")]

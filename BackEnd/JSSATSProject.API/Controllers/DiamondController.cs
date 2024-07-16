@@ -1,10 +1,11 @@
 ﻿using JSSATSProject.Service.Models.DiamondModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class DiamondController : ControllerBase

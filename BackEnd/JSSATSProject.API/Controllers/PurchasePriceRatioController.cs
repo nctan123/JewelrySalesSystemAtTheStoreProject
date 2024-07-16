@@ -1,9 +1,11 @@
-﻿using JSSATSProject.Service.Models.PurchasePriceRatioModel;
+﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.PurchasePriceRatioModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class PurchasePriceRatioController : ControllerBase

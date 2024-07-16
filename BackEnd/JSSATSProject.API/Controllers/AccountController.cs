@@ -1,9 +1,11 @@
-﻿using JSSATSProject.Service.Service.IService;
+﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
-//[Authorize]
+[Authorize(Roles =RoleConstants.Admin)]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase

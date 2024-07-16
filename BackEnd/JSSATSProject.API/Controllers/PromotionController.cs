@@ -1,9 +1,12 @@
-﻿using JSSATSProject.Service.Models.PromotionModel;
+﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.PromotionModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
+[Authorize(Roles = RoleConstants.Manager + "," + RoleConstants.Admin)]
 [Route("api/[controller]")]
 [ApiController]
 public class PromotionController : ControllerBase

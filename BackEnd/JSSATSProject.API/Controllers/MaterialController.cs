@@ -1,9 +1,12 @@
-﻿using JSSATSProject.Service.Models.Material;
+﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models.Material;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
+[Authorize(Roles = RoleConstants.Manager)]
 [Route("api/[controller]")]
 [ApiController]
 public class MaterialController : ControllerBase
