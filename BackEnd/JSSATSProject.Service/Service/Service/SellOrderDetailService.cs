@@ -141,7 +141,7 @@ public class SellOrderDetailService : ISellOrderDetailService
 
             productCodesAndPromotionIds?.TryGetValue(item.Key, out promotionId);
         
-            var basePrice = await _productService.CalculateProductPrice(product, item.Value);
+            var basePrice = await _productService.CalculateProductPrice(product, quantity);
             Promotion? promotion = null;
             if (promotionId is not null) promotion = await _unitOfWork.PromotionRepository.GetByIDAsync(promotionId.Value);
 

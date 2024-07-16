@@ -25,7 +25,7 @@ public class Program
 
         services.AddHttpContextAccessor();
         services.AddHttpClient();
-
+        
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
         {
             options.TokenValidationParameters = new TokenValidationParameters
@@ -119,12 +119,15 @@ public class Program
 
         services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IMailSenderService, MailSenderService>();
 
         //microservices
         services.AddHostedService<PromotionStatusUpdateService>();
         
         var app = builder.Build();
 
+        app.UseStaticFiles();
+        
         // Configure the HTTP request pipeline
         if (app.Environment.IsDevelopment())
         {

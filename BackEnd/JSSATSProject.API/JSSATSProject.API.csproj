@@ -23,4 +23,8 @@
         <ProjectReference Include="..\JSSATSProject.Service\JSSATSProject.Service.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\logo.jpg" />
+    </ItemGroup>
+
 </Project>
