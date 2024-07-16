@@ -336,6 +336,7 @@ public class ProductService : IProductService
             .ToList();
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);
+        var products = await _unitOfWork.ProductRepository.GetAsync(filter);
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
         return new ResponseModel
