@@ -61,11 +61,7 @@ export const sidebarMenu = [
         text: 'Invoice',
         icons: <FaFileInvoice className='bg-[#3c26cc] p-[6PX] rounded-lg' size={30} color="white" />
     },
-    // {
-    //     path: 'promotion',
-    //     text: 'Promotion',
-    //     icons: <CiGift classname='bg-[#3c26cc] p-[6PX] rounded-lg' size={30} color="white" />
-    // },
+ 
     {
 
         path: 'purchase/buyIn',
@@ -74,7 +70,14 @@ export const sidebarMenu = [
       
 
     },
-   
+    {
+
+        path: 'screengold',
+        text:'Screen Gold',
+        icons: <TbArrowsExchange2 className='bg-[#3c26cc] p-[6PX] rounded-lg' size={30} color="white"/>,
+      
+
+    },
     {
         path: '/login',
         text: 'Log out',

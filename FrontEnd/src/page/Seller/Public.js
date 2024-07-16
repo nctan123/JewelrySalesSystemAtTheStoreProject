@@ -16,14 +16,16 @@ const Public = () => {
   }, [navigate]);
 
   // Check if the current route is either /promotion or /return_ex
-  const hideSidebarRight = location.pathname.includes('/promotion') || location.pathname.includes('/purchase') || location.pathname.includes('/searchInvoice') ;
+  const hideSidebarRight = location.pathname.includes('/promotion') || location.pathname.includes('/purchase') || location.pathname.includes('/searchInvoice') || location.pathname.includes('/screengold');
+  const hideSidebarLeft = location.pathname.includes('/screengold') 
   const activeSidebarForBuy = location.pathname.includes('/purchase/buyIn') 
   return (
     <div className='w-full flex h-[100vh]'>
+         {!hideSidebarLeft && (
       <div className='w-[240px] overflow-y-scroll flex-none bg-[#211758]'>
         <SidebarLeft />
       </div>
-
+ )}
       <div className='flex-auto border'>
         <div className='h-[100%] flex justify-center w-full bg-[#ccccd481]'><Outlet/></div>
       </div>

@@ -90,13 +90,40 @@ const Customer = () => {
 
   const handleSubmitOrder = async (event) => {
     // event.preventDefault();
+
+    // Validation logic
+    if (!firstname) {
+      toast.error('First name is required');
+      return;
+    }
+    if (!lastname) {
+      toast.error('Last name is required');
+      return;
+    }
+    if (!phone) {
+      toast.error('Phone number is required');
+      return;
+    }
+    if (!email) {
+      toast.error('Email is required');
+      return;
+    }
+    if (!address) {
+      toast.error('Address is required');
+      return;
+    }
+    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      toast.error('Invalid email format');
+      return;
+    }
+
     let data = {
-      firstname: firstname,
-      lastname: lastname,
-      phone: phone,
-      email: email,
-      gender: gender,
-      address: address,
+      firstname,
+      lastname,
+      phone,
+      email,
+      gender,
+      address,
     };
 
     try {
@@ -108,11 +135,8 @@ const Customer = () => {
         setLastname('');
         setPhone('');
         setEmail('');
-
         setAddress('');
-
-        // Cập nhật danh sách khách hàng ngay lập tức
-        getCustomer(1)
+        getCustomer(1);
       } else {
         toast.error('Add Fail');
         console.error('Unexpected response:', res);
@@ -142,8 +166,8 @@ const Customer = () => {
         return (
           <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
             <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
-              <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
-              <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
+              <h1 className="text-lg font-semibold mb-4">Confirm to add</h1>
+              <p className="mb-6 text-center">Are you sure you want to add customer?</p>
               <div className="flex justify-end">
                 <button
                   onClick={(event) => {
@@ -243,11 +267,11 @@ const Customer = () => {
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
-                    <input value={phone} onChange={(event) => setPhone(event.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="0101010101" required />
+                    <input value={phone} onChange={(event) => setPhone(event.target.value)} type="number" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="0101010101" required />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                    <input value={email} onChange={(event) => setEmail(event.target.value)} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="jewelryStore@gmail.com" required />
+                    <input value={email} onChange={(event) => setEmail(event.target.value)} type="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5" placeholder="jewelryStore@gmail.com" required />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Address</label>
@@ -272,7 +296,7 @@ const Customer = () => {
             </div>
           </div>
         </Modal>
-        <div className="h-[75vh] flex justify-center overflow-y-auto">
+        <div className="h-[75vh] flex justify-center overflow-y-auto mb-2">
           <div className="w-[800px] overflow-hidden overflow-y-auto">
             <table className="font-inter w-full table-auto border-separate border-spacing-y-1 overflow-y-scroll text-left md:overflow-auto">
               <thead className="w-full rounded-lg bg-[#222E3A]/[6%] text-base font-semibold text-white">
@@ -315,13 +339,13 @@ const Customer = () => {
           pageClassName="mx-1"
           pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
           previousClassName="mx-1"
-          previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+          previousLinkClassName="px-3 py-2 h-0 rounded hover:bg-gray-200"
           nextClassName="mx-1"
-          nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+          nextLinkClassName="px-3 py-2 h-0 rounded hover:bg-gray-200"
           breakLabel="..."
           breakClassName="mx-1 "
-          breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-          containerClassName="flex justify-center items-center space-x-4"
+          breakLinkClassName="px-3 h-0 py-2 text-black rounded hover:bg-gray-200"
+          containerClassName="flex justify-center items-center space-x-4 h-0"
           activeClassName="bg-blue-500 text-white rounded-xl"
           renderOnZeroPageCount={null}
           previousLabel={

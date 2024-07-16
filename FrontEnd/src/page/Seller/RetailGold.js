@@ -190,7 +190,7 @@ const Ring = () => {
             <div className="">
               <div className="flex items-center py-2 mb-2 justify-between border-b rounded-t">
                 <h3 className="text-md ml-6 font-semibold text-gray-900">
-                  {selectedJewelry.name}
+                {selectedJewelry.name} - {selectedJewelry.stalls.name}
                 </h3>
                 <a className='cursor-pointer text-black text-[24px] py-0' onClick={closeModal} >&times;</a>
               </div>

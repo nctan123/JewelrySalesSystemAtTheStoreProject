@@ -13,7 +13,7 @@ import emailjs from '@emailjs/browser'
 import { saveAs } from 'file-saver';
 import Modal from 'react-modal';
 import { MdEmail } from 'react-icons/md';
-
+import { CiLogout } from "react-icons/ci";
 const Bill = () => {
   const { id } = useParams();
   const [Bill, setBill] = useState({});
@@ -60,63 +60,85 @@ const Bill = () => {
       toast.error('Failed to fetch rings');
     }
   };
-
   const captureAndSendEmail = async (event) => {
     event.preventDefault();
     console.log("Starting captureAndSendEmail function");
     console.log("Email to send to:", email);
-
+  
     try {
       const node = document.getElementById('bill-content');
       if (!node) {
         throw new Error('Bill content element not found');
       }
       console.log('Bill content element found');
-
-      // Increase node height before capturing the image
-      node.style.height = 'auto';
-
-      // Capture as PNG
-      const dataUrl = await toPng(node);
-      console.log(dataUrl)
-      console.log('Image captured as PNG:', dataUrl.length > 100 ? dataUrl.substring(0, 100) + '...' : dataUrl);
-
-      // Reset node height
-      node.style.height = '';
-
-      // Convert data URL to base64 string
-      const base64Image = dataUrl.split(',')[1];
-      console.log('Image converted to base64:', base64Image.length > 100 ? base64Image.substring(0, 100) + '...' : base64Image);
-
-      // Create a blob from the data URL
-      const blob = await fetch(dataUrl).then(res => res.blob());
-      console.log('Blob created from image data URL');
-
-      // Save as file using FileSaver.js (file-saver)
-      saveAs(blob, 'invoice.png');
-      console.log('Image saved as invoice.png');
-
-      // Create a FormData object
-      const formData = new FormData();
-      formData.append('image', blob, 'invoice.png'); // 'invoice.png' is the filename
-
-      // Prepare email template parameters
+  
+      // Generate HTML content
+      const htmlContent = `
+        <html>
+          <head>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+              }
+            </style>
+          </head>
+          <body>
+            <h2>Dear valued customer {{email_from}},</h2>
+            <p>We would like to express our heartfelt gratitude for your recent purchase at FPT Gold and Jewelry Store. It's an honor to have you as our customer, and we're thrilled that you've chosen to shop with us.</p>
+            <p>Thank you for trusting us with your jewelry needs. We hope you're enjoying your new purchase and that it brings you joy and happiness.</p>
+            <p>Best regards, FPT Gold and Jewelry Store team</p>
+            <br />
+            <h2>Bill Details:</h2>
+            <table border="1" cellpadding="5" cellspacing="0">
+              <tr>
+                <th>N.O</th>
+                <th>Product Code</th>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Promotion (%)</th>
+                <th>Unit Price</th>
+                <th>Value</th>
+              </tr>
+              ${Bill.sellOrderDetails.map((item, index) => {
+                return `
+                  <tr>
+                    <td>${index + 1}</td>
+                    <td>${item.productCode}</td>
+                    <td>${item.productName}</td>
+                    <td>${item.quantity}</td>
+                    <td>${formatPrice(item.unitPrice * item.promotionRate)}</td>
+                    <td>${formatPrice(item.unitPrice)}</td>
+                    <td>${formatPrice(item.unitPrice * item.quantity * (1 - item.promotionRate))}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </table>
+            <p>Total Value: ${formatPrice(Bill.finalAmount)}</p>
+            <p>Discount Promotion: ${formatPrice(totalPromotionValue)}</p>
+            <p>Discount Rate: ${Bill.specialDiscountRate}</p>
+          </body>
+        </html>
+      `;
+  
+      // Create a template parameter object
       const templateParams = {
         email_from: email,
-        message: ''
+        message: htmlContent,
       };
-      console.log('EmailJS template parameters:', templateParams);
-
+  
       // Send email using EmailJS
       const emailResponse = await emailjs.send(
         "service_ruiy2f7",
         "template_7lu84zn",
         templateParams,
-        '4y4GyC3_JZ8nJa4RU'
+        '4y4GyC3_JZ8nJa4RU',
+        {
+          contentType: 'text/html', // Add this line
+        }
       );
-
+  
       console.log('EmailJS response:', emailResponse);
-
+  
       if (emailResponse.status === 200 || emailResponse.text === 'OK') {
         toast.success('Email sent successfully!');
       } else {
@@ -128,7 +150,7 @@ const Bill = () => {
       toast.error('Failed to capture and send email');
     }
   };
-
+  
   const calculateTotalPromotionValue = () => {
     if (Bill && Bill.sellOrderDetails) {
       return Bill.sellOrderDetails.reduce((total, item) => {
@@ -148,9 +170,9 @@ const Bill = () => {
         <div className='relative grid grid-cols-10 p-4'>
           <div id="bill-content" className="col-span-6 mx-auto pt-3 p-3 border border-black bg-white w-[100%] flex flex-col ">
             <div className=" text-center mb-3 flex items-center gap-3 border border-black">
-              <Link to='/public/searchInvoice/onprocessSeller' className='w-[200px] h-[200px]'>
+              <div className='w-[200px] h-[200px]'>
                 <img src={abc} alt="PNJ logo" className="w-fit object-cover h-fit mx-auto p-2" />
-              </Link>
+              </div>
               <div className='text-start'>
                 <h1 className="text-xl font-bold mb-2">FPT GOLD, SILVER AND GEMSTONE JOINT STOCK COMPANY</h1>
                 <p className="text-sm mb-1">Address: Lot E2a-7, Street D1, D. D1, Long Thanh My, Thu Duc City, Ho Chi Minh 700000</p>
@@ -159,7 +181,8 @@ const Bill = () => {
                 <p className="text-sm mb-1">Tax code: <span className='font-bold ml-2'>0101248141</span></p>
                 <p className="text-sm mb-1">PhoneNumber:<span className='font-bold ml-2'>028.35118006</span></p>
               </div>
-              <IoCameraOutline onClick={openModal} className='cursor-pointer absolute top-5 right-3 bg-black text-white w-10 h-10 p-3 rounded-[50%]' />
+              <IoCameraOutline onClick={openModal} className='cursor-pointer absolute top-5 right-16 bg-black text-white w-10 h-10 p-3 rounded-[50%]' />
+             <Link to='/public/searchInvoice/onprocessSeller'><CiLogout className='cursor-pointer absolute top-5 right-3 bg-[#264e93] text-white w-10 h-10 p-3 rounded-[50%]' /></Link> 
             </div>
             <div className="bill border border-black p-4 ">
               <div className="flex mb-4">
@@ -291,9 +314,11 @@ const Bill = () => {
                   <img className='w-[30%] object-cover' src={logo_v2_seller} />
                   <span className='absolute bottom-[-5px] font-dancing text-3xl text-[#e8cd45]'>Jewelry Store</span>
                 </div>
-                <h1 className='text-center font-thin text-2xl  text-[#fff] py-5 '> INSURANCE CARD </h1>
+                <h1 className='text-center font-thin text-2xl  text-[#fff] py-5 '> WARRANTY CARD </h1>
               </div>
             </div>
+            {Bill && Bill.sellOrderDetails && Bill.sellOrderDetails.map((item, index) => {
+                        return (
             <div className=' w-[70%] h-[225px] bg-[#211758] p-2'>
               <div className=' h-[210px] '>
                 <h1 className='text-center font-thin text-xl  text-[#e8cd45] py-2 '>  PUBLISHING POLICY </h1>
@@ -303,18 +328,20 @@ const Bill = () => {
                 <p className='text-white px-3 text-[10px]' >- Completely free of other costs during product warranty</p>
                 <p className='text-[#e8cd45] px-3 text-[10px] text-end pb-1' >Thank you very much</p>
                 <div  className='h-[20%] bg-white flex items-center justify-between px-3'>
-                  <div><span>CODE: </span><span className='font-medium'>{Bill.code}</span></div>
+                  <div><span>CODE: </span><span className='font-medium'>{item.guaranteeCode}</span></div>
                   <div>
                   <QRCode
                     size={30}
                     style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                    value={Bill.code || ""}
+                    value={item.guaranteeCode || ""}
                     viewBox={`0 0 256 256`}
                   />
                   </div>
                 </div>
               </div>
             </div>
+             )
+            })}
           </div>
         </div>
 
