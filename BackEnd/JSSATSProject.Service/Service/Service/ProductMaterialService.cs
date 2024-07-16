@@ -34,5 +34,32 @@ namespace JSSATSProject.Service.Service.Service
                 MessageError = ""
             };
         }
+
+        public async Task<ResponseModel> UpdateAsync(RequestUpdateProductMaterial requestProductMaterial)
+        {
+            var entities = await _unitOfWork.ProductMaterialRepository.GetAsync(pm =>
+                pm.MaterialId == requestProductMaterial.MaterialId && pm.ProductId == requestProductMaterial.ProductId);
+            var entity = entities.FirstOrDefault();
+            if (entity == null)
+            {
+                return new ResponseModel
+                {
+                    Data = null,
+                    MessageError = "ProductMaterial not found"
+                };
+            }
+
+            _mapper.Map(requestProductMaterial, entity);
+            await _unitOfWork.ProductMaterialRepository.UpdateAsync(entity);
+            await _unitOfWork.SaveAsync();
+
+            return new ResponseModel
+            {
+                Data = entity,
+                MessageError = ""
+            };
+        }
+
+
     }
 }

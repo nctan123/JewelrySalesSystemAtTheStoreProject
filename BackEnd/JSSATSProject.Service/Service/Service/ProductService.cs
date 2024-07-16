@@ -340,7 +340,7 @@ public class ProductService : IProductService
 
         return new ResponseModel
         {
-            Data = responseList.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToList(),
+            Data = responseList,
             TotalElements = totalCount,
             TotalPages = totalPages,
             MessageError = ""

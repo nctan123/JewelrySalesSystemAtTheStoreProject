@@ -12,5 +12,6 @@ namespace JSSATSProject.Service.Service.IService
     public interface IProductMaterialService
     {
         Task<ResponseModel> CreateAsync(RequestCreateProductMaterial requestProductMaterial);
+        Task<ResponseModel> UpdateAsync(RequestUpdateProductMaterial requestProductMaterial);
     }
 }
