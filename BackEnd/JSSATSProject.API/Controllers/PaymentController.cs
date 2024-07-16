@@ -170,9 +170,9 @@ public class PaymentController : ControllerBase
 
     [HttpGet]
     [Route("GetTotalAllPayMent")]
-    public async Task<IActionResult> GetTotalAllPayMenAsync(DateTime startDate, DateTime endDate)
+    public async Task<IActionResult> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate, int order)
     {
-        var totalCount = await _paymentService.GetTotalAllPayMentAsync(startDate, endDate);
+        var totalCount = await _paymentService.GetTotalAllPayMentAsync(startDate, endDate, order);
             return Ok(totalCount);
     }
 

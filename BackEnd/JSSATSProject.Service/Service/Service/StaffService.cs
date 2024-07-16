@@ -86,7 +86,7 @@ public class StaffService : IStaffService
                 orderBy: orderBy,
                 pageIndex: pageIndex,
                 pageSize: pageSize,
-                includeProperties: "SellOrders,BuyOrders");
+                includeProperties: "SellOrders,BuyOrders, SellOrders.SpecialDiscountRequest");
 
             // Map entities to response model
             var responseList = entities.Select(entity =>
@@ -109,14 +109,21 @@ public class StaffService : IStaffService
                         order.Status.Equals(OrderConstants.CompletedStatus))
                     .ToList();
 
-                response.TotalRevenue = staffSellOrders.Sum(order => order.TotalAmount);
+                response.TotalRevenue = staffSellOrders
+                        .Sum(order =>
+                        {
+                             decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
+                                return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
+                        });
+
+
                 response.TotalSellOrder = staffSellOrders.Count;
                 response.TotalBuyOrder = staffBuyOrders.Count;
 
                 return response;
             }).ToList();
 
-            var totalCount = await _unitOfWork.StaffRepository.CountAsync();
+            var totalCount = await _unitOfWork.StaffRepository.CountAsync(filter: s => s.Account.Role.Name == RoleConstants.Seller);
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
             return new ResponseModel
@@ -262,7 +269,7 @@ public class StaffService : IStaffService
             {
                 StaffId = group.Key,
                 TotalRevenue = group.Sum(o => o.TotalAmount)
-           
+
             })
             .OrderByDescending(g => g.TotalRevenue)
             .ToList();
@@ -640,12 +647,12 @@ public class StaffService : IStaffService
 
     public async Task<ResponseModel> GetByIdAsync(int Id)
     {
-        var response =  await _unitOfWork.StaffRepository.GetByIDAsync(Id);
+        var response = await _unitOfWork.StaffRepository.GetByIDAsync(Id);
         return new ResponseModel
         {
-         
+
             Data = response,
-         
+
         };
 
     }

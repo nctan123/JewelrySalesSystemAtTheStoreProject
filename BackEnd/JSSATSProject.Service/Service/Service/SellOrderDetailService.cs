@@ -172,58 +172,6 @@ public class SellOrderDetailService : ISellOrderDetailService
         }
     }
 
-    public async Task<ResponseModel> GetTotalRevenueStallAsync(DateTime startDate, DateTime endDate, int pageIndex,
-        int pageSize, bool ascending)
-    {
-        try
-        {
-            var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
-                od => od.Order.CreateDate >= startDate
-                      && od.Order.CreateDate <= endDate
-                      && od.Order.Status.Equals(OrderConstants.CompletedStatus)
-                      && od.Status.Equals(SellOrderDetailsConstants.Delivered),
-                orderBy =>
-                {
-                    if (ascending)
-                        return orderBy.OrderBy(od => od.Product.Stalls.Name);
-                    return orderBy.OrderByDescending(od => od.Product.Stalls.Name);
-                },
-                "Product,Product.Stalls",
-                pageIndex,
-                pageSize
-            );
-
-            var revenuePerStall = orderDetails
-                .GroupBy(od => od.Product.Stalls.Name)
-                .Select(group => new
-                {
-                    StallName = group.Key,
-                    TotalRevenue = group.Sum(od => od.Quantity * od.UnitPrice)
-                })
-                .ToList();
-
-            var result = revenuePerStall.Select(item => new Dictionary<string, object>
-            {
-                { "StallName", item.StallName },
-                { "TotalRevenue", item.TotalRevenue }
-            }).ToList();
-
-            return new ResponseModel
-            {
-                Data = result,
-                MessageError = ""
-            };
-        }
-        catch (Exception ex)
-        {
-            return new ResponseModel
-            {
-                Data = null,
-                MessageError = ex.Message
-            };
-        }
-    }
-
     public async Task<List<ResponseProductDetails>> GetProductFromSellOrderDetailAsync(int orderId)
     {
         var sellOrderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
@@ -336,4 +284,54 @@ public class SellOrderDetailService : ISellOrderDetailService
             };
         }
     }
+
+    public async Task<ResponseModel> GetProductsByStallAsync(int stallId, DateTime startDate, DateTime endDate, int pageIndex, int pageSize, bool ascending)
+    {
+        try
+        {
+            var orderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
+                od => od.Order.CreateDate >= startDate
+                      && od.Order.CreateDate <= endDate
+                      && od.Order.Status.Equals(OrderConstants.CompletedStatus)
+                      && od.Status.Equals(SellOrderDetailsConstants.Delivered)
+                      && od.Product.Stalls.Id == stallId,
+                orderBy =>
+                {
+                    if (ascending)
+                        return orderBy.OrderBy(od => od.Product.Name);
+                    return orderBy.OrderByDescending(od => od.Product.Name);
+                },
+                "Product,Product.Stalls,Promotion",
+                pageIndex,
+                pageSize
+            );
+
+            var productList = orderDetails
+                .Select(od => new
+                {
+                    ProductId = od.Product.Id,
+                    ProductName = od.Product.Name,
+                    ProductCode = od.Product.Code,
+                    Quantity = od.Quantity,
+                    UnitPrice = od.UnitPrice,
+                    Promotion = od.Promotion != null ? od.Promotion.DiscountRate : (decimal?)null
+                })
+                .ToList();
+
+            return new ResponseModel
+            {
+                Data = productList,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = ex.Message
+            };
+        }
+    }
+
 }

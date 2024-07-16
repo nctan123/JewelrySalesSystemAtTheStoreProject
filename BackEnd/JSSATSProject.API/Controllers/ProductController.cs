@@ -49,11 +49,12 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("GetAll")]
-    public async Task<IActionResult> GetAllAsync(int categoryId, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
-    {
+    public async Task<IActionResult> GetAllAsync(int categoryId, int? stallId = null, int pageIndex = 1, int pageSize = 10,
+     bool ascending = true, bool includeNullStalls = true)
+    { 
         try
         {
-            var responseModel = await _productService.GetAllAsync(categoryId, pageIndex, pageSize, ascending, includeNullStalls);
+            var responseModel = await _productService.GetAllAsync(categoryId,stallId, pageIndex, pageSize, ascending, includeNullStalls);
             return Ok(responseModel);
         }
         catch (Exception ex)
@@ -64,9 +65,18 @@ public class ProductController : ControllerBase
 
     [HttpGet]
     [Route("Search")]
-    public async Task<IActionResult> SearchProductsAsync(int categoryId, string searchTerm, int pageIndex = 1, int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
+    public async Task<IActionResult> SearchProductsAsync(int categoryId, string searchTerm, int? stallId = null, int pageIndex = 1,
+    int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
-        var responseModel = await _productService.SearchProductsAsync(categoryId, searchTerm, pageIndex, pageSize, ascending, includeNullStalls);
+        var responseModel = await _productService.SearchProductsAsync(categoryId,searchTerm,stallId,pageIndex, pageSize, ascending, includeNullStalls);
         return Ok(responseModel);
+    }
+
+    [HttpPut]
+    [Route("UpdateEnityProduct")]
+    public async Task<IActionResult> UpdateEntityProductAsync(int id, [FromBody] RequestUpdateEntityProduct request)
+    {
+        var response = await _productService.UpdateEntityProductAsync(id, request);
+        return Ok(response);
     }
 }

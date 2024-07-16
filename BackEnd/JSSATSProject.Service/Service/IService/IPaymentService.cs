@@ -10,6 +10,6 @@ public interface IPaymentService
     public Task<ResponseModel> CreatePaymentAsync(RequestCreatePayment requestPayment);
     public Task<ResponseModel> UpdatePaymentAsync(int paymentId, RequestUpdatePayment requestPayment);
     public Task<int?> GetSellOrderIdByPaymentIdAsync(int id);
-    public Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate);
+    public Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate, int order);
     public Task<int?> GetBuyOrderIdByPaymentIdAsync(int id);
 }
