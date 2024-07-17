@@ -50,6 +50,7 @@ export default function P1() {
             if (!token) {
                 throw new Error('No token found');
             }
+
             const response = await axios.get(
                 `https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`,
                 {
@@ -58,14 +59,17 @@ export default function P1() {
                     }
                 }
             );
-            if (!response.ok) {
+
+            if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
-            const result = await response.json();
+
+            const result = response.data;
             setData(result.data || 0);
         } catch (error) {
             setError(error.message);
         }
+
     };
     const getNewCustomer = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
@@ -91,6 +95,7 @@ export default function P1() {
             if (!token) {
                 throw new Error('No token found');
             }
+
             const response = await axios.get(
                 `https://jssatsproject.azurewebsites.net/api/Customer/CountNewCustomer?startDate=${startDateString}&endDate=${endDateString}`,
                 {
@@ -99,14 +104,17 @@ export default function P1() {
                     }
                 }
             );
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+
+            if (response.status !== 200) {
+                throw new Error('Network response was not ok 3');
             }
-            const result = await response.json();
+
+            const result = response.data;
             setData(result.data || 0);
         } catch (error) {
             setError(error.message);
         }
+
     };
     const getQuantityOrder = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
@@ -132,6 +140,7 @@ export default function P1() {
             if (!token) {
                 throw new Error('No token found');
             }
+
             const response = await axios.get(
                 `https://jssatsproject.azurewebsites.net/api/sellorder/CountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`,
                 {
@@ -140,14 +149,17 @@ export default function P1() {
                     }
                 }
             );
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+
+            if (response.status !== 200) {
+                throw new Error('Network response was not ok 2');
             }
-            const result = await response.json();
+
+            const result = response.data;
             setData(result.data || 0);
         } catch (error) {
             setError(error.message);
         }
+
     };
     const getQuantityProduct = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
@@ -173,6 +185,7 @@ export default function P1() {
             if (!token) {
                 throw new Error('No token found');
             }
+
             const response = await axios.get(
                 `https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`,
                 {
@@ -181,14 +194,17 @@ export default function P1() {
                     }
                 }
             );
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+
+            if (response.status !== 200) {
+                throw new Error('Network response was not ok 1');
             }
-            const result = await response.json();
+
+            const result = response.data;
             setData(result);
         } catch (error) {
             setError(error.message);
         }
+
     };
 
     const handleDayClick = () => {

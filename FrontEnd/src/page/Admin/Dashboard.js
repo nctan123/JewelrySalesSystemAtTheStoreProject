@@ -7,12 +7,12 @@ export default function Dashboard() {
 
         <>
             <div className=" bg-white"><P1 /></div>
-            {/* 
+
             <div className=" bg-white">
                 <P2 />
-            </div> */}
+            </div>
 
-            {/* <div className=" bg-white"><P3 /></div> */}
+            <div className=" bg-white"><P3 /></div>
         </>
     )
 }
