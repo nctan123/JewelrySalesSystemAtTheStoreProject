@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { IoIosSearch } from "react-icons/io";
 import axios from "axios";
-
+import { CiViewList } from "react-icons/ci";
 const Stall = () => {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth() + 1; // getMonth() returns 0-11
@@ -40,7 +40,7 @@ const Stall = () => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellOrderDetail/getTotalRevenueStall?startDate=${startDate}&endDate=${endDate}`, {
+            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/stall/getTotalRevenue?startDate=${startDate}&endDate=${endDate}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -89,7 +89,9 @@ const Stall = () => {
             }
         }
     };
+    const handleDetailClick = async (id) => {
 
+    };
     const formatCurrency = (value) => {
         return new Intl.NumberFormat('vi-VN', {
             style: 'currency',
@@ -151,6 +153,7 @@ const Stall = () => {
                                 <th >Type</th>
                                 <th >Status</th>
                                 <th className=" rounded-r-lg  ">Revenue</th>
+                                {/* <th className=" rounded-r-lg  ">Action</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -167,9 +170,12 @@ const Stall = () => {
                                         ) : 'null'
                                         }
                                     </td>
-                                    <td className='rounded-r-lg '>
+                                    <td className='rounded-r-lg'>
                                         {formatCurrency(revenueData.find(re => re.StallName === item.name)?.TotalRevenue || 0)}
                                     </td>
+                                    {/* <td className="text-3xl text-[#000099] pl-2 rounded-r-lg">
+                                        <CiViewList onClick={() => handleDetailClick(item.id)} />
+                                    </td> */}
                                 </tr>
                             ))}
                         </tbody>

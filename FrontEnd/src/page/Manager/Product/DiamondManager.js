@@ -20,6 +20,7 @@ const DiamondManager = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [stalls, setStalls] = useState([]);
+    const [stallDetail, setStallDetail] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const productPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
     const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
@@ -41,7 +42,7 @@ const DiamondManager = () => {
             getProduct();
 
         }
-    }, [pageSize, currentPage, searchQuery, ascending]);
+    }, [pageSize, currentPage, searchQuery, stallDetail, ascending]);
 
     useEffect(() => {
         const fetchStalls = async () => {
@@ -133,7 +134,7 @@ const DiamondManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=7&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=7&stallid=${stallDetail}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -190,7 +191,7 @@ const DiamondManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=7&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=7&stallid=${stallDetail}&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -234,7 +235,7 @@ const DiamondManager = () => {
     };
     const placeholders = Array.from({ length: pageSize - listProduct.length });
 
-    const handleAddProduct = async (category) => {
+    const handleAddProduct = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -242,7 +243,7 @@ const DiamondManager = () => {
             }
 
             // Example of passing data through URL query parameters
-            navigate(`/manager/createProduct?category=${category}`);
+            navigate(`/manager/createProduct`);
         } catch (error) {
             console.error('Error handling detail click:', error);
         }
@@ -252,39 +253,11 @@ const DiamondManager = () => {
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
                 <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of diamond</h1>
-                {/* <div className="flex justify-between mb-4">
-                    <div className="flex items-center ml-2">
-                        <label className="block mb-1 mr-2">Page Size:</label>
-                        <select
-                            value={pageSize}
-                            onChange={(e) => {
-                                setPageSize(parseInt(e.target.value));
-                                setCurrentPage(1); // Reset to first page when page size changes
-                            }}
-                            className="px-3 py-2 border border-gray-300 rounded-md"
-                        >
-                            {productPerPageOptions.map((size) => (
-                                <option key={size} value={size}>{size}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="relative w-[400px]">
-                        <input
-                            type="text"
-                            placeholder="Search "
-                            value={searchQuery1}
-                            onChange={handleSearchChange}
-                            className="px-3 py-2 border border-gray-300 rounded-md w-full"
-                        />
-                        <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
-                    </div>
-                </div> */}
-
                 <div className="flex justify-between items-center">
                     <div className="ml-2">
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            onClick={() => handleAddProduct('diamond')}
+                            onClick={handleAddProduct}
                         >
                             <span className='font-bold'>+ Add new product</span>
                         </button>
@@ -305,7 +278,28 @@ const DiamondManager = () => {
                                 ))}
                             </select>
                         </div>
+                        <div className="flex items-center">
+                            <label className="block mr-2">Stall:</label>
+                            <select
+                                value={stallDetail}
+                                onChange={(e) => {
+                                    setStallDetail(e.target.value ? parseInt(e.target.value) : '');
 
+                                    setCurrentPage(1); // Reset to first page when page size changes
+                                }}
+                                className="px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                <option value="">All</option>
+                                {stalls
+                                    .filter(stall => stall.description === 'diamonds' || stall.description === 'counter')
+                                    .map(stall => (
+                                        <option key={stall.id} value={stall.id}>
+                                            {stall.name} - {stall.description && formatUpper(stall.description)}
+                                        </option>
+                                    ))}
+
+                            </select>
+                        </div>
                         <div className="relative w-[400px]">
                             <input
                                 type="text"
@@ -466,11 +460,13 @@ const DiamondManager = () => {
                                             <option value="" disabled selected>
                                                 {selectedProduct.stalls ? selectedProduct.stalls.name : 'null'}
                                             </option>
-                                            {stalls.map((stall) => (
-                                                <option key={stall.id} value={stall.id}>
-                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
-                                                </option>
-                                            ))}
+                                            {stalls
+                                                .filter(stall => stall.description === 'diamonds' || stall.description === 'counter')
+                                                .map(stall => (
+                                                    <option key={stall.id} value={stall.id}>
+                                                        {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                    </option>
+                                                ))}
                                             <option value="null">Null</option>
                                         </select>
 

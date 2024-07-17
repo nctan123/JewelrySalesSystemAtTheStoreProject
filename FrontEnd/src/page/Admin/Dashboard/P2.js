@@ -86,7 +86,7 @@ const P2 = () => {
             if (response.data && response.data.data) {
                 const seriesData = response.data.data.map(item => item.TotalRevenue);
                 const labelsData = response.data.data.map(item => item.Firstname);
-
+                // const formattedSeries = chartData.series.map(value => formatCurrency(value));
                 setChartData({
                     series: seriesData,
                     labels: labelsData
@@ -272,6 +272,7 @@ const P2 = () => {
         handleSetDefaultDates();
     }, []);
 
+
     return (
         <div className="flex justify-center items-center flex-col space-y-4 border border-gray-300 shadow-lg my-4  rounded-md">
             <div className="flex items-center space-x-2 ml-auto pr-4 pt-4">
@@ -336,9 +337,6 @@ const P2 = () => {
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     );
 };

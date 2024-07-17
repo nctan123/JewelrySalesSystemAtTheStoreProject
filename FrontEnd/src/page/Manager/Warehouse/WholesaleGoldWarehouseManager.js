@@ -375,11 +375,13 @@ const WholesaleGoldWarehouseManager = () => {
                                             <option value="" disabled selected>
                                                 {selectedWholesaleGold.stalls ? selectedWholesaleGold.stalls.name : 'null'}
                                             </option>
-                                            {stalls.map((stall) => (
-                                                <option key={stall.id} value={stall.id}>
-                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
-                                                </option>
-                                            ))}
+                                            {stalls
+                                                .filter(stall => stall.description === 'wholesale gold' || stall.description === 'counter')
+                                                .map(stall => (
+                                                    <option key={stall.id} value={stall.id}>
+                                                        {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                    </option>
+                                                ))}
                                             <option value="null">Null</option>
                                         </select>
                                     </div>

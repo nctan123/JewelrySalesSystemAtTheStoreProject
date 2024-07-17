@@ -227,7 +227,7 @@ const RetailGoldWarehouseManager = () => {
     const handleYesNo = () => {
         setIsYesNoOpen(true);
     };
-    const handleAddProduct = async (category) => {
+    const handleAddProduct = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -235,7 +235,7 @@ const RetailGoldWarehouseManager = () => {
             }
 
             // Example of passing data through URL query parameters
-            navigate(`/manager/createProduct?category=${category}`);
+            navigate(`/manager/createProduct`);
         } catch (error) {
             console.error('Error handling detail click:', error);
         }
@@ -249,7 +249,7 @@ const RetailGoldWarehouseManager = () => {
                     <div className="ml-2">
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            onClick={() => handleAddProduct('retailGold')}
+                            onClick={handleAddProduct}
                         >
                             <span className='font-bold'>+ Add new product</span>
                         </button>
@@ -404,11 +404,13 @@ const RetailGoldWarehouseManager = () => {
                                             <option value="" disabled selected>
                                                 {selectedRetailGold.stalls ? selectedRetailGold.stalls.name : 'null'}
                                             </option>
-                                            {stalls.map((stall) => (
-                                                <option key={stall.id} value={stall.id}>
-                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
-                                                </option>
-                                            ))}
+                                            {stalls
+                                                .filter(stall => stall.description === 'retail gold' || stall.description === 'counter')
+                                                .map(stall => (
+                                                    <option key={stall.id} value={stall.id}>
+                                                        {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                    </option>
+                                                ))}
                                             <option value="null">Null</option>
                                         </select>
                                     </div>

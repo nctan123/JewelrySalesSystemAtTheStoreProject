@@ -18,11 +18,11 @@ const JewelryManager = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
-    const [selectedJewelry, setSelectedJewelry] = useState(null);
     const [selectedDiamond, setSelectedDiamond] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [stalls, setStalls] = useState([]);
+    const [stallDetail, setStallDetail] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const productPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
     const [selectedCategory, setSelectedCategory] = useState(1); // Default category ID
@@ -41,7 +41,7 @@ const JewelryManager = () => {
         } else {
             getProduct(selectedCategory);
         }
-    }, [pageSize, currentPage, searchQuery, selectedCategory, ascending]);
+    }, [pageSize, currentPage, searchQuery, selectedCategory, stallDetail, ascending]);
 
     useEffect(() => {
         const fetchStalls = async () => {
@@ -141,7 +141,7 @@ const JewelryManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=${categoryID}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=${categoryID}&stallid=${stallDetail}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -197,7 +197,7 @@ const JewelryManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=${selectedCategory}&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=${selectedCategory}&stallid=${stallDetail}&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -229,7 +229,6 @@ const JewelryManager = () => {
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setSelectedJewelry(null);
     };
     const formatUpper = (str) => {
         if (!str) return '';
@@ -239,7 +238,7 @@ const JewelryManager = () => {
     const handleYesNo = () => {
         setIsYesNoOpen(true);
     };
-    const handleAddProduct = async (category) => {
+    const handleAddProduct = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -247,7 +246,7 @@ const JewelryManager = () => {
             }
 
             // Example of passing data through URL query parameters
-            navigate(`/manager/createProduct?category=${category}`);
+            navigate(`/manager/createProduct`);
         } catch (error) {
             console.error('Error handling detail click:', error);
         }
@@ -262,7 +261,7 @@ const JewelryManager = () => {
                     <div className="ml-2">
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            onClick={() => handleAddProduct('jewelry')}
+                            onClick={handleAddProduct}
                         >
                             <span className='font-bold'>+ Add new product</span>
                         </button>
@@ -281,6 +280,28 @@ const JewelryManager = () => {
                                 {productPerPageOptions.map((size) => (
                                     <option key={size} value={size}>{size}</option>
                                 ))}
+                            </select>
+                        </div>
+                        <div className="flex items-center">
+                            <label className="block mr-2">Stall:</label>
+                            <select
+                                value={stallDetail}
+                                onChange={(e) => {
+                                    setStallDetail(e.target.value ? parseInt(e.target.value) : '');
+
+                                    setCurrentPage(1); // Reset to first page when page size changes
+                                }}
+                                className="px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                <option value="">All</option>
+                                {stalls
+                                    .filter(stall => stall.description === 'jewelry' || stall.description === 'counter')
+                                    .map(stall => (
+                                        <option key={stall.id} value={stall.id}>
+                                            {stall.name} - {stall.description && formatUpper(stall.description)}
+                                        </option>
+                                    ))}
+
                             </select>
                         </div>
                         <div>
@@ -313,7 +334,7 @@ const JewelryManager = () => {
                         <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
                             <tr className="whitespace-nowrap text-xl  font-bold">
                                 <th className="rounded-l-lg"></th>
-                                <th className='py-3 pl-3' >Category</th>
+                                <th className='py-3 pl-3 text-center' >Category</th>
                                 <th>Code</th>
                                 <th>Name</th>
                                 <th className="pl-7">Img</th>
@@ -329,22 +350,10 @@ const JewelryManager = () => {
                         <tbody>
                             {listProduct.map((item, index) => (
                                 <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
-                                    <td>{item.categoryName}</td>
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black text-center">{index + (currentPage - 1) * pageSize + 1}</td>
+                                    <td className='text-center'>{item.categoryName}</td>
                                     <td>{item.code}</td>
                                     <td>{item.name}</td>
-                                    {/* <td>
-
-                                        {selectedCategory === 1
-                                            ? <img src={logoRing} className="w-20 h-20" alt="Product Logo" />
-                                            : selectedCategory === 2
-                                                ? <img src={logoEarrings} className="w-20 h-20" alt="Product Logo" />
-                                                : selectedCategory === 3
-                                                    ? <img src={logoBracelet} className="w-20 h-20" alt="Product Logo" />
-                                                    : selectedCategory === 4
-                                                        ? <img src={logoNecklace} className="w-20 h-20" alt="Product Logo" />
-                                                        : 'Null'}
-                                    </td> */}
                                     <td>
                                         {' '}
                                         <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
@@ -473,11 +482,13 @@ const JewelryManager = () => {
                                         <option value="" disabled selected>
                                             {selectedProduct.stalls ? selectedProduct.stalls.name : 'null'}
                                         </option>
-                                        {stalls.map((stall) => (
-                                            <option key={stall.id} value={stall.id}>
-                                                {stall.name} - {stall.description && formatUpper(stall.description)}
-                                            </option>
-                                        ))}
+                                        {stalls
+                                            .filter(stall => stall.description === 'jewelry' || stall.description === 'counter')
+                                            .map(stall => (
+                                                <option key={stall.id} value={stall.id}>
+                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                </option>
+                                            ))}
                                         <option value="null">Null</option>
                                     </select>
                                 </div>

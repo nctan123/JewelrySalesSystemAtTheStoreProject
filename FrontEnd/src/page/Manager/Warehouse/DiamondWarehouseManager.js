@@ -233,7 +233,7 @@ const DiamondWarehouseManager = () => {
     const handleYesNo = () => {
         setIsYesNoOpen(true);
     };
-    const handleAddProduct = async (category) => {
+    const handleAddProduct = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -241,7 +241,7 @@ const DiamondWarehouseManager = () => {
             }
 
             // Example of passing data through URL query parameters
-            navigate(`/manager/createProduct?category=${category}`);
+            navigate(`/manager/createProduct`);
         } catch (error) {
             console.error('Error handling detail click:', error);
         }
@@ -256,7 +256,7 @@ const DiamondWarehouseManager = () => {
                     <div className="ml-2">
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            onClick={() => handleAddProduct('diamond')}
+                            onClick={handleAddProduct}
                         >
                             <span className='font-bold'>+ Add new product</span>
                         </button>
@@ -439,11 +439,13 @@ const DiamondWarehouseManager = () => {
                                             <option value="" disabled selected>
                                                 {selectedProduct.stalls ? selectedProduct.stalls.name : 'null'}
                                             </option>
-                                            {stalls.map((stall) => (
-                                                <option key={stall.id} value={stall.id}>
-                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
-                                                </option>
-                                            ))}
+                                            {stalls
+                                                .filter(stall => stall.description === 'diamonds' || stall.description === 'counter')
+                                                .map(stall => (
+                                                    <option key={stall.id} value={stall.id}>
+                                                        {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                    </option>
+                                                ))}
                                             <option value="null">Null</option>
                                         </select>
 

@@ -18,6 +18,7 @@ const WholesaleGoldManager = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [stalls, setStalls] = useState([]);
+    const [stallDetail, setStallDetail] = useState([]);
     const [pageSize, setPageSize] = useState(10);
     const productPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
     const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
@@ -39,7 +40,7 @@ const WholesaleGoldManager = () => {
             getProduct();
 
         }
-    }, [pageSize, currentPage, searchQuery, ascending]);
+    }, [pageSize, currentPage, searchQuery, stallDetail, ascending]);
 
     useEffect(() => {
         const fetchStalls = async () => {
@@ -127,7 +128,7 @@ const WholesaleGoldManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&stallid=${stallDetail}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -185,7 +186,7 @@ const WholesaleGoldManager = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=6&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
+                `https://jssatsproject.azurewebsites.net/api/product/search?categoryID=6&stallid=${stallDetail}&searchTerm=${searchQuery}&pageIndex=${currentPage}&pageSize=${pageSize}&ascending=${ascending}&includeNullStalls=false`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -247,15 +248,39 @@ const WholesaleGoldManager = () => {
                             ))}
                         </select>
                     </div>
-                    <div className="relative w-[400px]">
-                        <input
-                            type="text"
-                            placeholder="Search by code or name"
-                            value={searchQuery1}
-                            onChange={handleSearchChange}
-                            className="px-3 py-2 border border-gray-300 rounded-md w-full"
-                        />
-                        <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center">
+                            <label className="block mr-2">Stall:</label>
+                            <select
+                                value={stallDetail}
+                                onChange={(e) => {
+                                    setStallDetail(e.target.value ? parseInt(e.target.value) : '');
+
+                                    setCurrentPage(1); // Reset to first page when page size changes
+                                }}
+                                className="px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                <option value="">All</option>
+                                {stalls
+                                    .filter(stall => stall.description === 'wholesale gold' || stall.description === 'counter')
+                                    .map(stall => (
+                                        <option key={stall.id} value={stall.id}>
+                                            {stall.name} - {stall.description && formatUpper(stall.description)}
+                                        </option>
+                                    ))}
+
+                            </select>
+                        </div>
+                        <div className="relative w-[400px]">
+                            <input
+                                type="text"
+                                placeholder="Search by code or name"
+                                value={searchQuery1}
+                                onChange={handleSearchChange}
+                                className="px-3 py-2 border border-gray-300 rounded-md w-full"
+                            />
+                            <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
+                        </div>
                     </div>
                 </div>
                 <div className="w-[1200px] overflow-hidden ">
@@ -379,11 +404,13 @@ const WholesaleGoldManager = () => {
                                             <option value="" disabled selected>
                                                 {selectedWholesaleGold.stalls ? selectedWholesaleGold.stalls.name : 'null'}
                                             </option>
-                                            {stalls.map((stall) => (
-                                                <option key={stall.id} value={stall.id}>
-                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
-                                                </option>
-                                            ))}
+                                            {stalls
+                                                .filter(stall => stall.description === 'wholesale gold' || stall.description === 'counter')
+                                                .map(stall => (
+                                                    <option key={stall.id} value={stall.id}>
+                                                        {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                    </option>
+                                                ))}
                                             <option value="null">Null</option>
                                         </select>
                                     </div>

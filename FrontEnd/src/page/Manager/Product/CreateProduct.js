@@ -44,6 +44,7 @@ export default function CreateProduct() {
     const searchParams = new URLSearchParams(location.search);
     const category = searchParams.get('category');
     const [categoryType, setCategoryType] = useState('');
+    const [categoryName, setCategoryName] = useState('');
     const [categoryOptions, setCategoryOptions] = useState([]);
     const [originOptions, setOriginOptions] = useState([]);
     const [shapeOptions, setShapeOptions] = useState([]);
@@ -56,7 +57,7 @@ export default function CreateProduct() {
     const [caratOptions, setCaratOptions] = useState([]);
     const [materialOptions, setMaterialOptions] = useState([]);
     const [done1, setDone1] = useState(true);
-    const [done, setDone] = useState(true);
+    const [addDiamond, setAddDiamond] = useState(false);
     useEffect(() => {
         fetchOptions();
     }, []);
@@ -143,7 +144,32 @@ export default function CreateProduct() {
                 ...formData,
                 [name]: value,
             });
-            setCategoryType(value)
+            setCategoryType(value);
+            switch (value) {
+                case '1':
+                    setCategoryName('Ring');
+                    break;
+                case '2':
+                    setCategoryName('Earrings');
+                    break;
+                case '3':
+                    setCategoryName('Bracelet');
+                    break;
+                case '4':
+                    setCategoryName('Necklace');
+                    break;
+                case '5':
+                    setCategoryName('Retail gold');
+                    break;
+                case '6':
+                    setCategoryName('Wholesale gold');
+                    break;
+                case '7':
+                    setCategoryName('Diamonds');
+                    break;
+                default:
+                    setCategoryName(''); // or any default value you want
+            }
         }
         else {
             setFormData({
@@ -184,8 +210,9 @@ export default function CreateProduct() {
                     },
                 }
             );
-            console.log('Product created successfully:', response.data);
+            // console.log('Product created successfully:', response.data);
             setCreatedProduct(response.data.data);
+            toast.success(` ${categoryName} created successfully !`);
         } catch (error) {
             console.error('Error creating product:', error);
         }
@@ -197,7 +224,7 @@ export default function CreateProduct() {
                 'https://jssatsproject.azurewebsites.net/api/Diamond/createDiamond',
                 diamondData
             );
-            console.log('Diamond created successfully:', response.data);
+            // console.log('Diamond created successfully:', response.data);
             setCreatedDiamond(response.data.data);
         } catch (error) {
             console.error('Error creating diamond:', error);
@@ -216,8 +243,7 @@ export default function CreateProduct() {
                     'https://jssatsproject.azurewebsites.net/api/ProductDiamond/Create',
                     productDiamondData
                 );
-                console.log('ProductDiamond created successfully:', response.data);
-                toast.success('Create product diamond success !')
+                // console.log('ProductDiamond created successfully:', response.data);
             } catch (error) {
                 console.error('Error creating ProductDiamond:', error);
             }
@@ -228,11 +254,8 @@ export default function CreateProduct() {
     }, [createdDiamond, createdProduct]);
     const handleCreateRetailGold = async () => {
         setCreatedRetailGold1(createdRetailGold);
-        console.log('setCreatedRetailGold', createdRetailGold);
-        console.log('setCreatedRetailGold1', createdRetailGold1);
-
-
-
+        // console.log('setCreatedRetailGold', createdRetailGold);
+        // console.log('setCreatedRetailGold1', createdRetailGold1);
     };
     const handleCreateProductRetailGold = async () => {
         if (createdProduct && createdRetailGold1) {
@@ -247,8 +270,7 @@ export default function CreateProduct() {
                     'https://jssatsproject.azurewebsites.net/api/ProductMaterial/create',
                     productRetailGoldData
                 );
-                console.log('Product Retail gold created successfully:', response.data);
-                toast.success('Create product retail gold success !')
+                // console.log('Product Retail gold created successfully:', response.data);
 
             } catch (error) {
                 console.error('Error creating ProductDiamond:', error);
@@ -278,7 +300,19 @@ export default function CreateProduct() {
                     return false;
                 }
             }
-        } else if (categoryType === '5') {
+        } else if (categoryType === '5' || addDiamond === false) {
+            for (const key in createdRetailGold) {
+                if (createdRetailGold[key] === '' || createdRetailGold[key] === null) {
+                    return false;
+                }
+            }
+        }
+        else {
+            for (const key in diamondData) {
+                if (diamondData[key] === '' || diamondData[key] === null) {
+                    return false;
+                }
+            }
             for (const key in createdRetailGold) {
                 if (createdRetailGold[key] === '' || createdRetailGold[key] === null) {
                     return false;
@@ -292,6 +326,7 @@ export default function CreateProduct() {
         setIsYesNoOpen(true);
     };
     const resetData = () => {
+        setAddDiamond(false);
         setFormData({
             CategoryId: categoryType,
             Name: '',
@@ -328,6 +363,24 @@ export default function CreateProduct() {
     }, [categoryType]);
     const handleBack = () => {
         navigate(-1); // Quay lại trang trước đó
+    };
+    const handleAddDiamond = () => {
+        setAddDiamond(!addDiamond);
+        setDiamondData({
+            originId: '',
+            shapeId: '',
+            fluorescenceId: '',
+            colorId: '',
+            symmetryId: '',
+            polishId: '',
+            cutId: '',
+            clarityId: '',
+            caratId: '',
+            diamondGradingCode: '',
+        });
+    };
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     };
     return (
         <div className="p-4 max-w-[1200px] mx-auto bg-white rounded-xl shadow-md space-y-4">
@@ -433,7 +486,7 @@ export default function CreateProduct() {
                                         type="number"
                                         name="PriceRate"
                                         step="0.001"
-                                        min="0"
+                                        min="1"
                                         max="5"
                                         value={formData.PriceRate}
                                         onChange={handleChange}
@@ -454,7 +507,7 @@ export default function CreateProduct() {
                                     />
                                 </div>
 
-                                {imagePreview && (
+                                {imagePreview && formData && formData.ImgFile && (
                                     <div className="flex items-center">
                                         <img
                                             src={imagePreview}
@@ -472,9 +525,9 @@ export default function CreateProduct() {
                                 Next
                             </button>
                         </form>
-                    ) : categoryType === '5'
-                        ? (<form onSubmit={handleChangeDone1} className=" space-y-4">
-                            <div>
+                    ) : categoryType !== '7'
+                        ? (<form onSubmit={handleChangeDone1} className=" space-y-4 flex flex-col h-full">
+                            <div className='flex-1'>
                                 <div className="flex items-center py-2">
                                     <label htmlFor="materialId" className="block text-sm font-bold text-black mr-2">
                                         Material Id:
@@ -505,16 +558,214 @@ export default function CreateProduct() {
                                         max="50"
                                         value={createdRetailGold.weight}
                                         onChange={handleRetailGoldChange}
-                                        placeholder="Production Cost"
+                                        placeholder="A mace of gold converted to gram equals 3.75g"
                                         className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
                                     />
                                 </div>
+                                {(categoryType === '1' || categoryType === '2' || categoryType === '3' || categoryType === '4') && (
 
+                                    <button
+                                        type="button"
+                                        onClick={handleAddDiamond}
+                                        className={`p-2 mr-4 text-white rounded-md ${addDiamond ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'}`}
+                                    >
+                                        {addDiamond ? 'Eliminate' : '+ Add Diamond'}
+                                    </button>
+
+
+                                )}
+
+
+
+
+
+                                {addDiamond && (
+
+                                    <div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="originId" className="block text-sm font-bold text-black mr-2">
+                                                Origin:
+                                            </label>
+                                            <select
+                                                name="originId"
+                                                value={diamondData.originId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Origin</option>
+                                                {originOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {option.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="shapeId" className="block text-sm font-bold text-black mr-2">
+                                                Shape:
+                                            </label>
+                                            <select
+                                                name="shapeId"
+                                                value={diamondData.shapeId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto ml-auto"
+                                            >
+                                                <option value="">Select Shape</option>
+                                                {shapeOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {option.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="fluorescenceId" className="block text-sm font-bold text-black mr-2">
+                                                Fluorescence:
+                                            </label>
+                                            <select
+                                                name="fluorescenceId"
+                                                value={diamondData.fluorescenceId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Fluorescence</option>
+                                                {fluorescenceOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {capitalizeFirstLetter(option.level)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="colorId" className="block text-sm font-bold text-black mr-2">
+                                                Color:
+                                            </label>
+                                            <select
+                                                name="colorId"
+                                                value={diamondData.colorId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Color</option>
+                                                {colorOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {option.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="symmetryId" className="block text-sm font-bold text-black mr-2">
+                                                Symmetry:
+                                            </label>
+                                            <select
+                                                name="symmetryId"
+                                                value={diamondData.symmetryId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Symmetry</option>
+                                                {symmetryOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {capitalizeFirstLetter(option.level)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="polishId" className="block text-sm font-bold text-black mr-2">
+                                                Polish:
+                                            </label>
+                                            <select
+                                                name="polishId"
+                                                value={diamondData.polishId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Polish</option>
+                                                {polishOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {capitalizeFirstLetter(option.level)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="cutId" className="block text-sm font-bold text-black mr-2">
+                                                Cut:
+                                            </label>
+                                            <select
+                                                name="cutId"
+                                                value={diamondData.cutId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Cut</option>
+                                                {cutOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {capitalizeFirstLetter(option.level)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="clarityId" className="block text-sm font-bold text-black mr-2">
+                                                Clarity:
+                                            </label>
+                                            <select
+                                                name="clarityId"
+                                                value={diamondData.clarityId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Clarity</option>
+                                                {clarityOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {capitalizeFirstLetter(option.level)}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="caratId" className="block text-sm font-bold text-black mr-2">
+                                                Carat:
+                                            </label>
+                                            <select
+                                                name="caratId"
+                                                value={diamondData.caratId}
+                                                onChange={handleDiamondChange}
+                                                className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            >
+                                                <option value="">Select Carat</option>
+                                                {caratOptions.map((option) => (
+                                                    <option key={option.id} value={option.id}>
+                                                        {option.weight}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center py-2">
+                                            <label htmlFor="diamondGradingCode" className="block text-sm font-bold text-black mr-2">
+                                                Diamond Grading Code:
+                                            </label>
+                                            <input
+                                                type="text"
+                                                name="diamondGradingCode"
+                                                value={diamondData.diamondGradingCode}
+                                                onChange={handleDiamondChange}
+                                                placeholder="Diamond Grading Code"
+                                                className="w-[300px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
+                                            />
+                                        </div>
+
+                                    </div>
+
+                                )}
 
                             </div>
                             <button
                                 type="submit"
-                                className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-auto"
                             >
                                 Back
                             </button>
@@ -572,7 +823,7 @@ export default function CreateProduct() {
                                             <option value="">Select Fluorescence</option>
                                             {fluorescenceOptions.map((option) => (
                                                 <option key={option.id} value={option.id}>
-                                                    {option.level}
+                                                    {capitalizeFirstLetter(option.level)}
                                                 </option>
                                             ))}
                                         </select>
@@ -608,7 +859,7 @@ export default function CreateProduct() {
                                             <option value="">Select Symmetry</option>
                                             {symmetryOptions.map((option) => (
                                                 <option key={option.id} value={option.id}>
-                                                    {option.level}
+                                                    {capitalizeFirstLetter(option.level)}
                                                 </option>
                                             ))}
                                         </select>
@@ -626,7 +877,7 @@ export default function CreateProduct() {
                                             <option value="">Select Polish</option>
                                             {polishOptions.map((option) => (
                                                 <option key={option.id} value={option.id}>
-                                                    {option.level}
+                                                    {capitalizeFirstLetter(option.level)}
                                                 </option>
                                             ))}
                                         </select>
@@ -644,7 +895,7 @@ export default function CreateProduct() {
                                             <option value="">Select Cut</option>
                                             {cutOptions.map((option) => (
                                                 <option key={option.id} value={option.id}>
-                                                    {option.level}
+                                                    {capitalizeFirstLetter(option.level)}
                                                 </option>
                                             ))}
                                         </select>
@@ -662,7 +913,7 @@ export default function CreateProduct() {
                                             <option value="">Select Clarity</option>
                                             {clarityOptions.map((option) => (
                                                 <option key={option.id} value={option.id}>
-                                                    {option.level}
+                                                    {capitalizeFirstLetter(option.level)}
                                                 </option>
                                             ))}
                                         </select>
@@ -700,6 +951,7 @@ export default function CreateProduct() {
                                     </div>
 
                                 </div>
+
                                 <button
                                     type="submit"
                                     className="w-full p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
@@ -709,11 +961,12 @@ export default function CreateProduct() {
 
                             </form>
                         )
+
                     }
                 </div>
                 <div className="mt-4 p-4 border border-gray-300 rounded-md shadow-md">
-                    <h3 className="text-xl text-blue-800 font-bold">Product Created</h3>
-                    {formData && formData.ImgFile && (
+                    <h3 className="text-xl text-blue-800 font-bold">{categoryName ? categoryName : 'Product'} information</h3>
+                    {imagePreview && formData && formData.ImgFile && (
                         <img
                             src={imagePreview}
                             alt="Product"
@@ -721,35 +974,42 @@ export default function CreateProduct() {
                         />
                     )}
                     <div className="grid grid-cols-2 gap-4 shadow-md p-4">
-                        <div>
+                        <div className='pl-4'>
                             <p className="mb-2"><strong>CategoryId:</strong> {formData ? (formData.CategoryId || '') : ''}</p>
                             <p className="mb-2"><strong>Name:</strong> {formData ? (formData.Name || '') : ''}</p>
-                            <p className="mb-2"><strong>MaterialCost:</strong> {formData ? (formData.MaterialCost || '') : ''}</p>
-                            <p className="mb-2"><strong>ProductionCost:</strong> {formData ? (formData.ProductionCost || '') : ''}</p>
-                            <p className="mb-2"><strong>GemCost:</strong> {formData ? (formData.GemCost || '') : ''}</p>
+                            <p className="mb-2"><strong>MaterialCost:</strong> {formData ? (formData.MaterialCost || '0') : '0'}</p>
+                            <p className="mb-2"><strong>ProductionCost:</strong> {formData ? (formData.ProductionCost || '0') : '0'}</p>
+                            <p className="mb-2"><strong>GemCost:</strong> {formData ? (formData.GemCost || '0') : '0'}</p>
                             <p><strong>PriceRate:</strong> {formData ? (formData.PriceRate || '') : ''}</p>
-                        </div>
-                        {categoryType !== '5' && categoryType !== '6' && (
-                            <div>
-                                <p className="mb-2"><strong>Origin ID:</strong> {diamondData ? diamondData.originId : ''}</p>
-                                <p className="mb-2"><strong>Shape ID:</strong> {diamondData ? diamondData.shapeId : ''}</p>
-                                <p className="mb-2"><strong>Fluorescence ID:</strong> {diamondData ? diamondData.fluorescenceId : ''}</p>
-                                <p className="mb-2"><strong>Color ID:</strong> {diamondData ? diamondData.colorId : ''}</p>
-                                <p className="mb-2"><strong>Symmetry ID:</strong> {diamondData ? diamondData.symmetryId : ''}</p>
-                                <p className="mb-2"><strong>Polish ID:</strong> {diamondData ? diamondData.polishId : ''}</p>
-                                <p className="mb-2"><strong>Cut ID:</strong> {diamondData ? diamondData.cutId : ''}</p>
-                                <p className="mb-2"><strong>Clarity ID:</strong> {diamondData ? diamondData.clarityId : ''}</p>
-                                <p className="mb-2"><strong>Carat ID:</strong> {diamondData ? diamondData.caratId : ''}</p>
-                                <p><strong>Diamond Grading Code:</strong> {diamondData ? diamondData.diamondGradingCode : ''}</p>
-                            </div>
-                        )}
-                        {(categoryType === '5' || categoryType === '6') && (
-                            <div>
-                                <p className="mb-2"><strong>Material ID:</strong> {createdRetailGold ? createdRetailGold.materialId : ''}</p>
-                                <p className="mb-2"><strong>weight:</strong> {createdRetailGold ? createdRetailGold.weight : ''}</p>
+                            {(categoryType !== '7') && (
+                                <div>
+                                    <p className="my-2">
+                                        <strong>Material:</strong>{createdRetailGold
+                                            ? materialOptions.find(material => material.id.toString() === createdRetailGold.materialId)?.name || ''
+                                            : ''}
+                                    </p>
 
+                                    <p className="mb-2"><strong>Weight:</strong> {createdRetailGold ? createdRetailGold.weight : ''}</p>
+
+                                </div>
+                            )}
+                        </div>
+
+                        {(categoryType === '7' || addDiamond === true) && (
+                            <div className=''>
+                                <p className="mb-2"><strong>Origin:</strong> {diamondData ? originOptions.find(origin => origin.id.toString() === diamondData.originId)?.name || '' : ''}</p>
+                                <p className="mb-2"><strong>Shape:</strong> {diamondData ? shapeOptions.find(shape => shape.id.toString() === diamondData.shapeId)?.name || '' : ''}</p>
+                                <p className="mb-2"><strong>Fluorescence :</strong> {diamondData ? fluorescenceOptions.find(fluorescence => fluorescence.id.toString() === diamondData.fluorescenceId)?.level || '' : ''}</p>
+                                <p className="mb-2"><strong>Color :</strong> {diamondData ? colorOptions.find(color => color.id.toString() === diamondData.colorId)?.name || '' : ''}</p>
+                                <p className="mb-2"><strong>Symmetry :</strong> {diamondData ? symmetryOptions.find(color => color.id.toString() === diamondData.symmetryId)?.level || '' : ''}</p>
+                                <p className="mb-2"><strong>Polish :</strong> {diamondData ? polishOptions.find(color => color.id.toString() === diamondData.polishId)?.level || '' : ''}</p>
+                                <p className="mb-2"><strong>Cut :</strong> {diamondData ? cutOptions.find(color => color.id.toString() === diamondData.cutId)?.level || '' : ''}</p>
+                                <p className="mb-2"><strong>Clarity :</strong> {diamondData ? clarityOptions.find(color => color.id.toString() === diamondData.clarityId)?.level || '' : ''}</p>
+                                <p className="mb-2"><strong>Carat :</strong> {diamondData ? caratOptions.find(color => color.id.toString() === diamondData.caratId)?.weight || '' : ''}</p>
+                                <p className=''><strong>Diamond Grading Code:</strong> {diamondData ? diamondData.diamondGradingCode : ''}</p>
                             </div>
                         )}
+
 
                     </div>
 
@@ -785,8 +1045,13 @@ export default function CreateProduct() {
                                     handleSubmitProduct();
                                     if (categoryType === '7') {
                                         handleSubmitDiamond();
-                                    } else if (categoryType === '5') {
+                                    } else if (categoryType === '5' || addDiamond === false) {
                                         handleCreateRetailGold();
+                                    }
+                                    else {
+                                        handleSubmitDiamond();
+                                        handleCreateRetailGold();
+
                                     }
                                     setIsYesNoOpen(false);
                                 }}

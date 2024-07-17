@@ -239,7 +239,7 @@ const JewelryWarehouseManager = () => {
     const handleYesNo = () => {
         setIsYesNoOpen(true);
     };
-    const handleAddProduct = async (category) => {
+    const handleAddProduct = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -247,7 +247,7 @@ const JewelryWarehouseManager = () => {
             }
 
             // Example of passing data through URL query parameters
-            navigate(`/manager/createProduct?category=${category}`);
+            navigate(`/manager/createProduct`);
         } catch (error) {
             console.error('Error handling detail click:', error);
         }
@@ -261,7 +261,7 @@ const JewelryWarehouseManager = () => {
                     <div className="ml-2">
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            onClick={() => handleAddProduct('jewelry')}
+                            onClick={handleAddProduct}
                         >
                             <span className='font-bold'>+ Add new product</span>
                         </button>
@@ -333,16 +333,9 @@ const JewelryWarehouseManager = () => {
                                     <td>{item.code}</td>
                                     <td>{item.name}</td>
                                     <td>
-
-                                        {selectedCategory === 1
-                                            ? <img src={logoRing} className="w-20 h-20" alt="Product Logo" />
-                                            : selectedCategory === 2
-                                                ? <img src={logoEarrings} className="w-20 h-20" alt="Product Logo" />
-                                                : selectedCategory === 3
-                                                    ? <img src={logoBracelet} className="w-20 h-20" alt="Product Logo" />
-                                                    : selectedCategory === 4
-                                                        ? <img src={logoNecklace} className="w-20 h-20" alt="Product Logo" />
-                                                        : 'Null'}
+                                        {' '}
+                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
+                                        {/* {item.img} */}
                                     </td>
                                     <td>{formatCurrency(item.productValue)}</td>
                                     <td>
@@ -466,11 +459,13 @@ const JewelryWarehouseManager = () => {
                                         <option value="" disabled selected>
                                             {selectedProduct.stalls ? selectedProduct.stalls.name : 'null'}
                                         </option>
-                                        {stalls.map((stall) => (
-                                            <option key={stall.id} value={stall.id}>
-                                                {stall.name} - {stall.description && formatUpper(stall.description)}
-                                            </option>
-                                        ))}
+                                        {stalls
+                                            .filter(stall => stall.description === 'jewelry' || stall.description === 'counter')
+                                            .map(stall => (
+                                                <option key={stall.id} value={stall.id}>
+                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                </option>
+                                            ))}
                                         <option value="null">Null</option>
                                     </select>
                                 </div>

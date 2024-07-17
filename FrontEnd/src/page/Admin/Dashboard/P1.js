@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
+import axios from 'axios';
 export default function P1() {
     const [todayRevenue, setTodayRevenue] = useState(null);
     const [yesterdayRevenue, setYesterdayRevenue] = useState(null);
@@ -45,7 +46,18 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`);
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -75,7 +87,18 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/Customer/CountNewCustomer?startDate=${startDateString}&endDate=${endDateString}`);
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/Customer/CountNewCustomer?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -105,7 +128,18 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/CountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`);
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/sellorder/CountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -135,7 +169,18 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`);
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
