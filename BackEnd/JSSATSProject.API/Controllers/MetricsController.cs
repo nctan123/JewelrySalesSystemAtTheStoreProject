@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
-    [Authorize(Roles = RoleConstants.Manager)]
+    // [Authorize(Roles = RoleConstants.Manager)]
     [ApiController]
     [Route("[controller]")]
     public class MetricsController : ControllerBase

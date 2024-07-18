@@ -37,41 +37,76 @@ public class StaffService : IStaffService
         };
     }
 
-    public async Task<ResponseModel> GetAllSellerAsync(DateTime startDate, DateTime endDate, int pageIndex, int pageSize,
-    string sortBy, bool ascending)
+    public async Task<ResponseModel> GetAllSellerAsync(DateTime startDate, DateTime endDate, int pageIndex,
+        int pageSize,
+        string sortBy, bool ascending)
     {
         try
         {
-            Func<IQueryable<Staff>, IOrderedQueryable<Staff>> orderBy = null;
+            Func<IQueryable<Staff>, IOrderedQueryable<Staff>> entitiesOrderBy = null;
 
             switch (sortBy?.ToLower())
             {
                 case "totalrevenue":
-                    orderBy = ascending
+                    entitiesOrderBy = ascending
                         ? q => q.OrderBy(s => s.SellOrders
-                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
+                            .Where(so =>
+                                so.CreateDate >= startDate && so.CreateDate <= endDate &&
+                                so.Status == OrderConstants.CompletedStatus)
                             .Sum(so => so.TotalAmount))
                         : q => q.OrderByDescending(s => s.SellOrders
-                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
+                            .Where(so =>
+                                so.CreateDate >= startDate && so.CreateDate <= endDate &&
+                                so.Status == OrderConstants.CompletedStatus)
                             .Sum(so => so.TotalAmount));
                     break;
                 case "totalsellorder":
-                    orderBy = ascending
+                    entitiesOrderBy = ascending
                         ? q => q.OrderBy(s => s.SellOrders
-                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
-                            .Count())
+                            .Count(so =>
+                                so.CreateDate >= startDate && so.CreateDate <= endDate &&
+                                so.Status == OrderConstants.CompletedStatus))
                         : q => q.OrderByDescending(s => s.SellOrders
-                            .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
-                            .Count());
+                            .Count(so =>
+                                so.CreateDate >= startDate && so.CreateDate <= endDate &&
+                                so.Status == OrderConstants.CompletedStatus));
+                    break;
+                case "totalbuyorder":
+                    entitiesOrderBy = ascending
+                        ? q => q.OrderBy(s => s.BuyOrders
+                            .Count(bo =>
+                                bo.CreateDate >= startDate && bo.CreateDate <= endDate &&
+                                bo.Status == OrderConstants.CompletedStatus))
+                        : q => q.OrderByDescending(s => s.BuyOrders
+                            .Count(bo =>
+                                bo.CreateDate >= startDate && bo.CreateDate <= endDate &&
+                                bo.Status == OrderConstants.CompletedStatus));
+                    break;
+                default:
+                    entitiesOrderBy = ascending
+                        ? q => q.OrderBy(s => s.Lastname).ThenBy(s => s.Firstname)
+                        : q => q.OrderByDescending(s => s.Lastname).ThenByDescending(s => s.Firstname);
+                    break;
+            }
+
+            Func<IQueryable<ResponseStaff>, IOrderedQueryable<ResponseStaff>> orderBy = null;
+
+            switch (sortBy.ToLower())
+            {
+                case "totalrevenue":
+                    orderBy = ascending
+                        ? q => q.OrderBy(s => s.TotalRevenue)
+                        : q => q.OrderByDescending(s => s.TotalRevenue);
+                    break;
+                case "totalsellorder":
+                    orderBy = ascending
+                        ? q => q.OrderBy(s => s.TotalSellOrder)
+                        : q => q.OrderByDescending(s => s.TotalSellOrder);
                     break;
                 case "totalbuyorder":
                     orderBy = ascending
-                        ? q => q.OrderBy(s => s.BuyOrders
-                            .Where(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == OrderConstants.CompletedStatus)
-                            .Count())
-                        : q => q.OrderByDescending(s => s.BuyOrders
-                            .Where(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == OrderConstants.CompletedStatus)
-                            .Count());
+                        ? q => q.OrderBy(s => s.TotalBuyOrder)
+                        : q => q.OrderByDescending(s => s.TotalBuyOrder);
                     break;
                 default:
                     orderBy = ascending
@@ -83,47 +118,50 @@ public class StaffService : IStaffService
             // Fetch staff entities with SellOrders and BuyOrders included, apply filter, sorting, and pagination
             var entities = await _unitOfWork.StaffRepository.GetAsync(
                 filter: s => s.Account.Role.Name == RoleConstants.Seller,
-                orderBy: orderBy,
+                orderBy: entitiesOrderBy,
                 pageIndex: pageIndex,
                 pageSize: pageSize,
                 includeProperties: "SellOrders,BuyOrders, SellOrders.SpecialDiscountRequest");
 
             // Map entities to response model
             var responseList = entities.Select(entity =>
-            {
-                var response = _mapper.Map<ResponseStaff>(entity);
+                {
+                    var response = _mapper.Map<ResponseStaff>(entity);
 
-                var staffSellOrders = entity.SellOrders
-                    .Where(order =>
-                        order.CreateDate >= startDate &&
-                        order.CreateDate <= endDate &&
-                        !string.IsNullOrEmpty(order.Status) &&
-                        order.Status.Equals(OrderConstants.CompletedStatus))
-                    .ToList();
+                    var staffSellOrders = entity.SellOrders
+                        .Where(order =>
+                            order.CreateDate >= startDate &&
+                            order.CreateDate <= endDate &&
+                            !string.IsNullOrEmpty(order.Status) &&
+                            order.Status.Equals(OrderConstants.CompletedStatus))
+                        .ToList();
 
-                var staffBuyOrders = entity.BuyOrders
-                    .Where(order =>
-                        order.CreateDate >= startDate &&
-                        order.CreateDate <= endDate &&
-                        !string.IsNullOrEmpty(order.Status) &&
-                        order.Status.Equals(OrderConstants.CompletedStatus))
-                    .ToList();
+                    var staffBuyOrders = entity.BuyOrders
+                        .Where(order =>
+                            order.CreateDate >= startDate &&
+                            order.CreateDate <= endDate &&
+                            !string.IsNullOrEmpty(order.Status) &&
+                            order.Status.Equals(OrderConstants.CompletedStatus))
+                        .ToList();
 
-                response.TotalRevenue = staffSellOrders
+                    response.TotalRevenue = staffSellOrders
                         .Sum(order =>
                         {
-                             decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
-                                return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
+                            decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
+                            return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
                         });
 
+                    response.TotalSellOrder = staffSellOrders.Count;
+                    response.TotalBuyOrder = staffBuyOrders.Count;
 
-                response.TotalSellOrder = staffSellOrders.Count;
-                response.TotalBuyOrder = staffBuyOrders.Count;
+                    return response;
+                })
+                .AsQueryable();
 
-                return response;
-            }).ToList();
+            responseList = orderBy(responseList);
 
-            var totalCount = await _unitOfWork.StaffRepository.CountAsync(filter: s => s.Account.Role.Name == RoleConstants.Seller);
+            var totalCount =
+                await _unitOfWork.StaffRepository.CountAsync(filter: s => s.Account.Role.Name == RoleConstants.Seller);
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
             return new ResponseModel
@@ -145,8 +183,8 @@ public class StaffService : IStaffService
     }
 
 
-
-    public async Task<ResponseModel> SearchSellerAsync(string nameSearch, DateTime startDate, DateTime endDate, int pageIndex, int pageSize)
+    public async Task<ResponseModel> SearchSellerAsync(string nameSearch, DateTime startDate, DateTime endDate,
+        int pageIndex, int pageSize)
     {
         // Define filter based on role name
         Expression<Func<Staff, bool>> filter = staff => staff.Account.Role.Name == RoleConstants.Seller;
@@ -259,8 +297,11 @@ public class StaffService : IStaffService
     {
         // Fetch orders within the specified date range
         var orders = await _unitOfWork.SellOrderRepository.GetAsync(
-            o => o.CreateDate >= startDate && o.CreateDate <= endDate &&
-                 o.Status.Equals(OrderConstants.CompletedStatus));
+            o => o.CreateDate >= startDate
+                 && o.CreateDate <= endDate
+                 && o.Status.Equals(OrderConstants.CompletedStatus),
+            includeProperties: "SpecialDiscountRequest"
+        );
 
         // Group orders by StaffId and calculate total revenue for each group
         var groupedOrders = orders
@@ -289,22 +330,22 @@ public class StaffService : IStaffService
         {
             var staffDetails = await _unitOfWork.StaffRepository.GetByIDAsync(staff.StaffId);
             result.Add(new Dictionary<string, object>
-        {
-            { "StaffId", staff.StaffId },
-            { "Firstname", staffDetails.Firstname },
-            { "Lastname", staffDetails.Lastname },
-            { "TotalRevenue", staff.TotalRevenue }
-        });
+            {
+                { "StaffId", staff.StaffId },
+                { "Firstname", staffDetails.Firstname },
+                { "Lastname", staffDetails.Lastname },
+                { "TotalRevenue", staff.TotalRevenue }
+            });
         }
 
         // Add other revenue to result
         result.Add(new Dictionary<string, object>
-    {
-        { "StaffId", 0 },
-        { "Firstname", "Other" },
-        { "Lastname", "" },
-        { "TotalRevenue", otherRevenue }
-    });
+        {
+            { "StaffId", 0 },
+            { "Firstname", "Other" },
+            { "Lastname", "" },
+            { "TotalRevenue", otherRevenue }
+        });
 
         // Return the response model with the result data
         return new ResponseModel
@@ -327,6 +368,7 @@ public class StaffService : IStaffService
                 Data = null
             };
         }
+
         var responseStaff = new ResponseStaff
         {
             Id = staff.Id,
@@ -339,12 +381,18 @@ public class StaffService : IStaffService
             Gender = staff.Gender,
             Status = staff.Status,
             TotalRevenue = staff.SellOrders
-                .Where(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus)
+                .Where(so =>
+                    so.CreateDate >= startDate && so.CreateDate <= endDate &&
+                    so.Status == OrderConstants.CompletedStatus)
                 .Sum(so => so.TotalAmount),
             TotalSellOrder = staff.SellOrders
-                .Count(so => so.CreateDate >= startDate && so.CreateDate <= endDate && so.Status == OrderConstants.CompletedStatus),
+                .Count(so =>
+                    so.CreateDate >= startDate && so.CreateDate <= endDate &&
+                    so.Status == OrderConstants.CompletedStatus),
             TotalBuyOrder = staff.BuyOrders
-                .Count(bo => bo.CreateDate >= startDate && bo.CreateDate <= endDate && bo.Status == OrderConstants.CompletedStatus)
+                .Count(bo =>
+                    bo.CreateDate >= startDate && bo.CreateDate <= endDate &&
+                    bo.Status == OrderConstants.CompletedStatus)
         };
 
         return new ResponseModel
@@ -353,7 +401,8 @@ public class StaffService : IStaffService
         };
     }
 
-    public async Task<ResponseModel> GetSellOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
+    public async Task<ResponseModel> GetSellOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize,
+        DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -376,7 +425,8 @@ public class StaffService : IStaffService
             }
 
             var filteredOrders = staffEntity.SellOrders
-                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate && order.Status == OrderConstants.CompletedStatus);
+                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate &&
+                                order.Status == OrderConstants.CompletedStatus);
 
             var totalCount = filteredOrders.Count();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -423,7 +473,8 @@ public class StaffService : IStaffService
         }
     }
 
-    public async Task<ResponseModel> GetBuyOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
+    public async Task<ResponseModel> GetBuyOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize,
+        DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -447,7 +498,8 @@ public class StaffService : IStaffService
             }
 
             var filteredOrders = staffEntity.BuyOrders
-                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate && order.Status == OrderConstants.CompletedStatus);
+                .Where(order => order.CreateDate >= startDate && order.CreateDate <= endDate &&
+                                order.Status == OrderConstants.CompletedStatus);
 
             var totalCount = filteredOrders.Count();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
@@ -502,15 +554,16 @@ public class StaffService : IStaffService
         return finalPrice;
     }
 
-    public async Task<ResponseModel> SearchSellOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
+    public async Task<ResponseModel> SearchSellOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex,
+        int pageSize, DateTime startDate, DateTime endDate)
     {
         try
         {
             var staff = await _unitOfWork.StaffRepository.GetAsync(
                 s => s.Id == staffId,
                 includeProperties:
-                    "SellOrders,SellOrders.SellOrderDetails,SellOrders.SpecialDiscountRequest," +
-                    "SellOrders.Payments.PaymentDetails.PaymentMethod,SellOrders.SellOrderDetails.Product,SellOrders.SellOrderDetails.Promotion");
+                "SellOrders,SellOrders.SellOrderDetails,SellOrders.SpecialDiscountRequest," +
+                "SellOrders.Payments.PaymentDetails.PaymentMethod,SellOrders.SellOrderDetails.Product,SellOrders.SellOrderDetails.Promotion");
 
             var staffEntity = staff.FirstOrDefault();
 
@@ -577,7 +630,8 @@ public class StaffService : IStaffService
         }
     }
 
-    public async Task<ResponseModel> SearchBuyOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex, int pageSize, DateTime startDate, DateTime endDate)
+    public async Task<ResponseModel> SearchBuyOrdersByStaffIdAsync(int staffId, string orderCode, int pageIndex,
+        int pageSize, DateTime startDate, DateTime endDate)
     {
         try
         {
@@ -654,11 +708,7 @@ public class StaffService : IStaffService
         var response = await _unitOfWork.StaffRepository.GetByIDAsync(Id);
         return new ResponseModel
         {
-
             Data = response,
-
         };
-
     }
-
 }

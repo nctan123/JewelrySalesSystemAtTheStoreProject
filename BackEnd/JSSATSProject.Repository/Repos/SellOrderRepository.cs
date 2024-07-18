@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -82,23 +83,27 @@ public class SellOrderRepository : GenericRepository<SellOrder>
     public async Task<Dictionary<DateTime, decimal>> GetTotalAmountByDateRange(DateTime startDate, DateTime endDate)
     {
         var result = new Dictionary<DateTime, decimal>();
-        var ordersCountByDate = await context.SellOrders
-            .Where(c => c.CreateDate >= startDate && c.CreateDate <= endDate)
-            .GroupBy(c => c.CreateDate)
-            .Select(g => new { g.Key.Date, Total = g.Select(g => g.TotalAmount).Sum() })
+
+        var ordersTotalByDate = await context.SellOrders
+            .Where(c => c.CreateDate >= startDate
+                        && c.CreateDate <= endDate
+                        && c.Status == OrderConstants.CompletedStatus
+            )
+            .GroupBy(c => c.CreateDate.Date)
+            .Select(g => new
+            {
+                Date = g.Key,
+                TotalSum = g.Sum(order =>
+                    order.SpecialDiscountRequestId != null
+                        ? order.TotalAmount * (1 - order.SpecialDiscountRequest.DiscountRate) - order.DiscountPoint
+                        : order.TotalAmount - order.DiscountPoint
+                )
+            })
             .ToListAsync();
 
-        foreach (var sellOrders in ordersCountByDate)
+        foreach (var sellOrder in ordersTotalByDate)
         {
-            var key = sellOrders.Date.Date;
-            if (result.ContainsKey(key))
-            {
-                result[key] += 1;
-            }
-            else
-            {
-                result.Add(sellOrders.Date, sellOrders.Total);
-            }
+            result[sellOrder.Date] = sellOrder.TotalSum;
         }
 
         return result;
