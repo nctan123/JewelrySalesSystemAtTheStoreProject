@@ -32,7 +32,17 @@ const Ring = () => {
 
   const getRing = async (page) => {
     try {
-      let res = await fetchAllEarring(page);
+      const token = localStorage.getItem('token')
+      if(!token){
+        throw new Error('No token found')
+      }
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=2&pageIndex=${page}&pageSize=12&ascending=true&includeNullStalls=false`,{
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+        });
+      // let res = await fetchAllBangles(page);
       if (res && res.data && res.data.data) {
         setListRing(res.data.data);
         setTotalProduct(res.data.totalElements);
@@ -41,7 +51,7 @@ const Ring = () => {
     } catch (error) {
       console.error('Error fetching rings:', error);
       toast.error('Failed to fetch rings');
-    } 
+    }
   };
   const closeModal = () => {
     setIsModalOpen(false);

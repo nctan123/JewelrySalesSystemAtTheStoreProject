@@ -17,7 +17,7 @@ const Cs_Public = () => {
   const name = localStorage.getItem('name');
   return (
     <div className='w-full flex h-[100vh] '>
-      <div className='w-[240px] overflow-y-scroll flex-none bg-[#5D5FEF] '>
+      <div className='w-[240px] overflow-y-scroll flex-none bg-[#211758]'>
         <Cs_SidebarLeft />
       </div>
 

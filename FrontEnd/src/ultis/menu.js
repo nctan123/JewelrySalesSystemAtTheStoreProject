@@ -1,5 +1,5 @@
 import icons from "./icon"
-
+import { MdOutlineScreenshotMonitor } from "react-icons/md";
 const { GiNecklaceDisplay, GiDiamondRing, LiaCircleNotchSolid, LiaMoneyBillWaveSolid, IoPeopleSharp , GiEmeraldNecklace, GiStonePile, AiFillGolden , RiVipDiamondFill, FaFileInvoice, CiGift, TbArrowsExchange2, TbLogout2, MdDiamond, GiCrystalEarrings } = icons
 
 export const sidebarMenu = [
@@ -74,7 +74,7 @@ export const sidebarMenu = [
 
         path: 'screengold',
         text:'Screen Gold',
-        icons: <TbArrowsExchange2 className='bg-[#3c26cc] p-[6PX] rounded-lg' size={30} color="white"/>,
+        icons: <MdOutlineScreenshotMonitor className='bg-[#3c26cc] p-[6PX] rounded-lg' size={30} color="white"/>,
       
 
     },

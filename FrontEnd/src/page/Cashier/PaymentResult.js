@@ -25,7 +25,6 @@ const PaymentResult = () => {
     
         try {
           let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data);
-          toast.success('Cash payment successful');
         } catch (error) {
           toast.error('Fail');
           console.error('Error invoice:', error);
@@ -74,8 +73,8 @@ const PaymentResult = () => {
         } else {
             setMessage(`Payment failed. Error code: ${vnp_ResponseCode}`);
             toast.error(`Payment failed. Error code: ${vnp_ResponseCode}`);
-            CreatePaymentDetail('fail')
-            UpdatePayment('fail')
+            CreatePaymentDetail('failed')
+            UpdatePayment('failed')
         }
     }, [location]);
 

@@ -109,7 +109,19 @@ const BuyOut = () => {
     };
     console.log(orderData)
     try {
-      await axios.post('https://jssatsproject.azurewebsites.net/api/BuyOrder/CreateNonCompanyOrder', orderData);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+    
+       await axios.post('https://jssatsproject.azurewebsites.net/api/BuyOrder/CreateNonCompanyOrder', 
+        orderData, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       setListInforCustomer(null); setInvoiceCode('');
       setCustomerPhone('');
       setDescription('')

@@ -40,15 +40,24 @@ const Customer = () => {
 
   const getCustomer = async (page) => {
     try {
-      const res = await fetchAllCustomer(page)
-      if (res.data && res.data.data) {
+      const token = localStorage.getItem('token')
+      if(!token){
+        throw new Error('No token found')
+      }
+      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Customer/GetAll?pageIndex=${page}`,{
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+        });
+      // let res = await fetchAllBangles(page);
+      if (res && res.data && res.data.data) {
         setListCustomer(res.data.data);
         setTotalProduct(res.data.totalElements);
         setTotalPage(res.data.totalPages);
       }
     } catch (error) {
-      console.error('Error fetching customers:', error);
-      toast.error('Failed to fetch customers');
+      console.error('Error fetching rings:', error);
+      toast.error('Failed to fetch rings');
     }
   };
 
@@ -67,8 +76,16 @@ const Customer = () => {
 
   const getCustomerSearch = async (searchTerm, page) => {
     try {
+      const token = localStorage.getItem('token')
+      if(!token){
+        throw new Error('No token found')
+      }
       const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${searchTerm}&pageIndex=${page}&pageSize=10`
+        `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${searchTerm}&pageIndex=${page}&pageSize=10`,{
+          headers:{
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
       if (res.data && res.data.data) {
         setListCustomer(res.data.data);
@@ -127,8 +144,20 @@ const Customer = () => {
     };
 
     try {
-      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/customer/Createcustomer', data);
-
+    
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+    
+      let res =  await axios.post('https://jssatsproject.azurewebsites.net/api/customer/Createcustomer', 
+         data, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       if (res.status === 201 || res.status === 200) {
         toast.success('Add Successful');
         setFirstname('');

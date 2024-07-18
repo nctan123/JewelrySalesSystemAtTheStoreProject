@@ -64,52 +64,12 @@ const SidebarForBuy = () => {
   const formatPrice = price => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
-  const handleSubmitNonCompany = async () => {
-    const data = {
-      customerPhoneNumber,
-      staffId:localStorage.getItem('staffId'),
-      productName,
-      diamondGradingCode,
-      materialId,
-      materialWeight,
-      categoryTypeId,
-      buyPrice,
-      createDate: new Date().toISOString(),
-      description,
-    }
-    console.log(data);
-    if (!productName || Object.keys(productName) === null) {
-      toast.error('No Product');
-      return;
-    }
-    try {
-      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/BuyOrder/CreateNonCompanyOrder', data);
-      if (res.status === 201 || res.status === 200) {
-        toast.success('Success');
-        setDescription('');
-      } else {
-        toast.error('Add Fail');
-        console.error('Unexpected response:', res);
-      }
-    } catch (error) {
-      console.error('Error adding invoice:', error);
-      if (error.response) {
-        console.error('Error response:', error.response);
-        toast.error(`Add Fail: ${error.response.data.message || 'Unknown error'}`);
-      } else if (error.request) {
-        console.error('Error request:', error.request);
-        toast.error('Add Fail: No response received from server');
-      } else {
-        console.error('Error message:', error.message);
-        toast.error(`Add Fail: ${error.message}`);
-      }
-    }
-  }
+ 
   const handleSubmitOrder = async (isDraft = false) => {
     const data = {
       customerPhoneNumber,
       createDate: new Date().toISOString(),
-      staffId: localStorage.getItem('staffId'), // Update this ID based on your logic
+      staffId: localStorage.getItem('staffId'), 
       description,
       productCodesAndQuantity,
       productCodesAndEstimatePrices,
@@ -122,7 +82,19 @@ const SidebarForBuy = () => {
     }
 
     try {
-      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/BuyOrder/CreateInCompanyOrder', data);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+    
+      let res =  await axios.post('https://jssatsproject.azurewebsites.net/api/BuyOrder/CreateInCompanyOrder', 
+         data, 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       if (res.status === 201 || res.status === 200) {
         toast.success('Success');
         dispatch(deleteCustomer());

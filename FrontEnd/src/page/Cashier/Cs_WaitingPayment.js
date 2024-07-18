@@ -202,6 +202,7 @@ const Cs_WaitingPayment = () => {
 
   const handleSubmitOrder = async (item, event) => {
     event.preventDefault();
+    console.log('item',item)
     const paymentId = item.paymentId
     if (paymentId === 0) {
       let data = {
@@ -214,12 +215,24 @@ const Cs_WaitingPayment = () => {
       console.log('Submitting order with data:', data, item.customerPhoneNumber);
 
       try {
-        // Simulate a possible error for testing
+
         if (!data.sellOrderId || !data.customerId || !data.createDate || !data.amount) {
           throw new Error('Missing required fields in order data');
         }
 
-        let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment', data);
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment',
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
         console.log('Response from payment API:', res);
 
         const item1 = res.data.data;
@@ -236,7 +249,7 @@ const Cs_WaitingPayment = () => {
         }
         // setPaymentID(paymentID);
       } catch (error) {
-        toast.error('Fail');
+        toast.error('Fail Create Payment');
         console.error('Error during payment process:', error);
 
         // Additional logging for detailed error information
@@ -255,7 +268,7 @@ const Cs_WaitingPayment = () => {
         console.error('Error config:', error.config);
       }
     } else {
-      let res = await axios.get('https://jssatsproject.azurewebsites.net/api/Payment/GetById?id=379');
+      let res = await axios.get(`https://jssatsproject.azurewebsites.net/api/Payment/GetById?id=${paymentId}`);
       console.log('Đã có payment id', res.data.data);
       if (ChosePayMethodID === 3) {
         handleCompleteCash(res.data.data, item.customerPhoneNumber);
@@ -318,7 +331,18 @@ const Cs_WaitingPayment = () => {
     };
 
     try {
-      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+      let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail',
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
       toast.success('Cash payment successful');
       getCompletedSearch(phone);
     } catch (error) {

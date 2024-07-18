@@ -24,14 +24,14 @@ const FormatDate = ({ isoString }) => {
 };
 const CompleteSeller = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
-  const [listInvoice, setlistInvoice] = useState([]); // list full invoice
+  const [listInvoice, setListInvoice] = useState([]); // list full invoice
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [IdOrder, setIdOrder] = useState('')
   const [ChosePayMethodID, setChosePayMethodID] = useState(3);
   const [PaymentID, setPaymentID] = useState();
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
-
+  const [searchTerm, setSearchTerm] = useState('');
 
   const handlePageClick = event => {
     getInvoice(event.selected + 1);
@@ -44,14 +44,24 @@ const CompleteSeller = () => {
 
   const getInvoice = async (page) => {
     try {
-      let res = await fetchStatusInvoice('completed', page);
-      if (res?.data?.data) {
-        setlistInvoice(res.data.data);
+      const token = localStorage.getItem('token')
+      if(!token){
+        throw new Error('No token found')
+      }
+      const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getall?statusList=completed&ascending=true&pageIndex=${page}&pageSize=10`,{
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+        });
+      // let res = await fetchAllBangles(page);
+      if (res && res.data && res.data.data) {
+        setListInvoice(res.data.data);
         setTotalProduct(res.data.totalElements);
         setTotalPage(res.data.totalPages);
       }
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error('Error fetching rings:', error);
+      toast.error('Failed to fetch rings');
     }
   };
 
@@ -68,10 +78,40 @@ const CompleteSeller = () => {
 
   const [createDate, setcreateDate] = useState(new Date().toISOString())
 
-  const handleComplete = () => {
-    
-  }
-
+  const handleSearch = (event) => {
+    const searchTerm = event.target.value.trim();
+    setSearchTerm(searchTerm);
+    if (searchTerm === '') {
+      getInvoice(1);
+    } else {
+      getWaitingSearch(searchTerm, 1);
+    }
+  };
+  const getWaitingSearch = async (phone, page) => {
+    try {
+      const token = localStorage.getItem('token')
+      if(!token){
+        throw new Error('No token found')
+      }
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=completed&customerPhone=${phone}&ascending=true&pageIndex=${page}&pageSize=10`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      if (res.data && res.data.data) {
+        console.log('Search Results:', res.data.data); 
+        setListInvoice(res.data.data);
+        setTotalProduct(res.data.totalElements);
+        setTotalPage(res.data.totalPages);
+      }
+    } catch (error) {
+      console.error('Error fetching customers:', error);
+      toast.error('Failed to fetch customers');
+    }
+  };
+  
 
 
   function calculateTotalPromotionValue(item) {
@@ -106,8 +146,8 @@ const CompleteSeller = () => {
             className="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
             placeholder="Search Item, ID in here..."
             required
-            // value={searchTerm}
-            // onChange={handleSearch}
+            value={searchTerm}
+            onChange={handleSearch}
           />
         </div>
       </form>
