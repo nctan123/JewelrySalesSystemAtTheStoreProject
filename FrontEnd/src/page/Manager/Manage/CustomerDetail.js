@@ -640,7 +640,7 @@ const CustomerDetail = () => {
                                             </td>
                                             <td className="text-3xl text-[#000099] pl-2 rounded-r-lg">
                                                 {item.sellOrderCode ? (
-                                                    <CiViewList onClick={() => handleDetailClick(item.sellorderId, activeTab)} />
+                                                    <CiViewList onClick={() => handleDetailClick(item.sellOrderId, activeTab)} />
                                                 ) : item.buyOrderCode ? (
                                                     <CiViewList onClick={() => handleDetailClick(item.buyOrderId, activeTab)} />
                                                 ) : null}
