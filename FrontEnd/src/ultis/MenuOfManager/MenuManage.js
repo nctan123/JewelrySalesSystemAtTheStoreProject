@@ -119,8 +119,13 @@ export const sidebarMenuManager = [
         iconAdmin3: <IoMdArrowDropup size={24} color="#000055" />,
         subMenu: [
             {
-                path: 'Invoice',
-                text: 'Invoice',
+                path: 'sellOrder',
+                text: 'Sell Order',
+                iconAdmin: <TbFileInvoice size={24} color="#000055" />
+            },
+            {
+                path: 'buyOrder',
+                text: 'Buy Order',
                 iconAdmin: <TbFileInvoice size={24} color="#000055" />
             },
             {

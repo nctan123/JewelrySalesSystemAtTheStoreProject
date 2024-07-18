@@ -6,11 +6,11 @@ import axios from "axios";
 import Modal from 'react-modal';
 import { CiViewList } from "react-icons/ci";
 import { toast } from 'react-toastify';
-
+import { useNavigate } from 'react-router-dom';
 const WholesaleGoldWarehouseManager = () => {
     const scrollRef = useRef(null);
     const [isYesNoOpen, setIsYesNoOpen] = useState(false);
-
+    const navigate = useNavigate();
     const [listProduct, setListProduct] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
@@ -226,36 +226,60 @@ const WholesaleGoldWarehouseManager = () => {
     const handleYesNo = () => {
         setIsYesNoOpen(true);
     };
+    const handleAddProduct = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error("No token found");
+            }
+
+            // Example of passing data through URL query parameters
+            navigate(`/manager/createProduct`);
+        } catch (error) {
+            console.error('Error handling detail click:', error);
+        }
+    };
     const placeholders = Array.from({ length: pageSize - listProduct.length });
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
                 <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of wholesale gold</h1>
-                <div className="flex justify-between mb-4">
-                    <div className="flex items-center ml-2">
-                        <label className="block mb-1 mr-2">Page Size:</label>
-                        <select
-                            value={pageSize}
-                            onChange={(e) => {
-                                setPageSize(parseInt(e.target.value));
-                                setCurrentPage(1); // Reset to first page when page size changes
-                            }}
-                            className="px-3 py-2 border border-gray-300 rounded-md"
+                <div className="flex justify-between items-center">
+                    <div className="ml-2">
+                        <button
+                            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            onClick={handleAddProduct}
                         >
-                            {productPerPageOptions.map((size) => (
-                                <option key={size} value={size}>{size}</option>
-                            ))}
-                        </select>
+                            <span className='font-bold'>+ Add new product</span>
+                        </button>
                     </div>
-                    <div className="relative w-[400px]">
-                        <input
-                            type="text"
-                            placeholder="Search by code or name"
-                            value={searchQuery1}
-                            onChange={handleSearchChange}
-                            className="px-3 py-2 border border-gray-300 rounded-md w-full"
-                        />
-                        <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center">
+                            <label className="block mr-2">Page Size:</label>
+                            <select
+                                value={pageSize}
+                                onChange={(e) => {
+                                    setPageSize(parseInt(e.target.value));
+                                    setCurrentPage(1); // Reset to first page when page size changes
+                                }}
+                                className="px-3 py-2 border border-gray-300 rounded-md"
+                            >
+                                {productPerPageOptions.map((size) => (
+                                    <option key={size} value={size}>{size}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="relative w-[400px]">
+                            <input
+                                type="text"
+                                placeholder="Search by code or name"
+                                value={searchQuery1}
+                                onChange={handleSearchChange}
+                                className="px-3 py-2 border border-gray-300 rounded-md w-full"
+                            />
+                            <IoIosSearch className="absolute top-0 right-0 mr-3 mt-3 cursor-pointer text-gray-500" onClick={handleSetQuery} />
+                        </div>
                     </div>
                 </div>
                 <div className="w-[1200px] overflow-hidden ">
@@ -284,7 +308,11 @@ const WholesaleGoldWarehouseManager = () => {
                                     <td >{item.categoryName}</td>
                                     <td> {item.code} </td>
                                     <td>{item.name}</td>
-                                    <td > <img src={logo} className="w-20 h-20" /> </td>
+                                    <td>
+                                        {' '}
+                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
+                                        {/* {item.img} */}
+                                    </td>
                                     <td >{formatCurrency(item.productValue)}</td>
                                     <td >
                                         {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}

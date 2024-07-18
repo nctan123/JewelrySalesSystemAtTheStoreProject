@@ -59,6 +59,8 @@ import Payment from './page/Manager/Report/Payment';
 import CustomerDetail from './page/Manager/Manage/CustomerDetail';
 import PaymentReturn from './page/Cashier/PaymentReturn';
 import CreateProduct from './page/Manager/Product/CreateProduct';
+import SellOrder from './page/Manager/Report/SellOrder';
+import BuyOrder from './page/Manager/Report/BuyOrder';
 function App() {
   // test redux có hoạt động không
   // const {test,homeData} = useSelector(state => state.app)
@@ -79,7 +81,8 @@ function App() {
             <Route path={path.DASHBOARD} element={<Dashboard />} />
 
             {/* <Route path={path.REPORT} element={<Report />} exact> </Route> */}
-            <Route path={path.INVOICE} element={<InvoiceMana />} />
+            <Route path={path.SELLORDER} element={<SellOrder />} />
+            <Route path={path.BUYORDER} element={<BuyOrder />} />
             <Route path={path.PAYMENT} element={<Payment />} />
             <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
             <Route path={path.STALL} element={<Stall />} />
@@ -119,7 +122,8 @@ function App() {
             <Route path={path.RETAILGOLDWAREHOUSE} element={<RetailGoldWarehouseManager />} />
 
             <Route path={path.DASHBOARD} element={<Dashboard />} />
-            <Route path={path.INVOICE} element={<InvoiceMana />} />
+            <Route path={path.SELLORDER} element={<SellOrder />} />
+            <Route path={path.BUYORDER} element={<BuyOrder />} />
             <Route path={path.PRODUCSOLD} element={<ProductSoldMana />} />
             <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
             <Route path={path.STALL} element={<Stall />} />

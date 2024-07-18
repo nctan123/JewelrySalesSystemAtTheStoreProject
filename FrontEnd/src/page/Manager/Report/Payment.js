@@ -51,7 +51,8 @@ const Payment = () => {
                 }
             });
             // console.log('check detail click', res.data.data[0])
-            if (res && res.data) {
+            if (res && res.data && res.data.data[0]) {
+                // console.log(res)
                 const details = res.data.data[0];
                 // console.log('check detail click', res.data.data[0].sellOrderDetails)
                 setSelectedSellOrder(details);
@@ -273,7 +274,7 @@ const Payment = () => {
                                     </td>
                                     <td className="text-3xl text-[#000099] pl-2 rounded-r-lg">
                                         {item.sellOrderCode ? (
-                                            <CiViewList onClick={() => handleDetailClick(item.sellorderId)} />
+                                            <CiViewList onClick={() => handleDetailClick(item.sellOrderId)} />
                                         ) : item.buyOrderCode ? (
                                             <CiViewList onClick={() => handleDetailClick(item.buyOrderId)} />
                                         ) : null}

@@ -4,7 +4,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 import moment from 'moment'; // Import moment.js for date manipulation
 import axios from 'axios';
 import ReactApexChart from 'react-apexcharts';
-
+import { FaFileDownload } from "react-icons/fa";
 const P2 = () => {
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
@@ -26,39 +26,6 @@ const P2 = () => {
             minimumFractionDigits: 0
         }).format(value);
     };
-
-    const handleCalculateDates = () => {
-        if (startDate && endDate) {
-            const start = moment(startDate);
-            const end = moment(endDate);
-            let dates = [];
-
-            while (start <= end) {
-                const dateObj = {
-                    date: start.format('YYYY-MM-DD'),
-                    start: moment(start).startOf('day').toISOString(),
-                    end: moment(start).endOf('day').toISOString(),
-                    revenue: 0 // Initialize revenue to 0
-                };
-                dates = [...dates, dateObj];
-                start.add(1, 'days');
-            }
-
-            setDatesInRange(dates);
-
-            dates.forEach((dateObj, index) => {
-                fetchRevenue(dateObj, index);
-            });
-
-            fetchData(startDate, endDate);
-        }
-        // else {
-        //     alert('Please enter both start date and end date.');
-        // }
-    };
-    useEffect(() => {
-        handleCalculateDates();
-    }, [startDate, endDate]);
 
     const fetchData = async (startDate, endDate) => {
         // Format startDate to 00:00
@@ -271,22 +238,35 @@ const P2 = () => {
     useEffect(() => {
         handleSetDefaultDates();
     }, []);
+    const handleSubmit = async () => {
+        try {
+            const response = await axios.post(`https://jssatsproject.azurewebsites.net/Metrics/csv/ExportChangeMetrics?startDate=${startDate}&endDate=${endDate}`, {}, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any required headers (e.g., Authorization)
+                },
+                responseType: 'blob' // Important for handling binary data
+            });
 
+            // Create a URL for the file
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'Dashboard.csv'); // Set the file name
+            document.body.appendChild(link);
+            link.click();
+
+            // Clean up and remove the link
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            // Handle errors (e.g., display error message)
+        }
+    };
 
     return (
         <div className="flex justify-center items-center flex-col space-y-4 border border-gray-300 shadow-lg my-4  rounded-md">
             <div className="flex items-center space-x-2 ml-auto pr-4 pt-4">
-                {/* <div className="flex flex-col space-y-2">
-                    <select
-                        value={selectedRange}
-                        onChange={handleRangeChange}
-                        className="border border-gray-300 rounded-md p-2"
-                    >
-                        <option value="week">Day</option>
-                        <option value="month">Month</option>
-                    </select>
-                </div> */}
-
                 <div className="flex flex-col space-y-2">
                     <input
                         type="date"
@@ -303,12 +283,14 @@ const P2 = () => {
                         onChange={(e) => setEndDate(e.target.value)}
                     />
                 </div>
-                {/* <button
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded"
-                    onClick={handleCalculateDates}
+                <button
+                    className="bg-white hover:bg-green-100 text-white font-bold py-2 px-2 rounded flex items-center border border-gray-300 shadow-md"
+                    onClick={handleSubmit}
                 >
-                    Calculate
-                </button> */}
+                    <FaFileDownload className='text-green-500' />
+                    <span className='text-black'>CSV</span>
+                </button>
+
             </div>
 
             <div className="w-full flex space-x-4 p-2">
