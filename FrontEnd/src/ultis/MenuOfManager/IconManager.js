@@ -32,7 +32,9 @@ import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import { GiStoneBlock } from "react-icons/gi";
 import { TbBasketDiscount } from "react-icons/tb";// special discount request
 import { MdOutlinePayments } from "react-icons/md";// payment
+import { RiCopperDiamondLine } from "react-icons/ri";
 const IconManager = {
+    RiCopperDiamondLine,
     MdOutlinePayments,
     TbBasketDiscount,
     MdOutlinePriceChange,

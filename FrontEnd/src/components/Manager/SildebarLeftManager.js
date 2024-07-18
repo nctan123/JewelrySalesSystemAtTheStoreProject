@@ -33,7 +33,7 @@ const SildebarManager = () => {
             </div>
             <div className='flex flex-col'>
                 {sidebarMenuManager.map(item => (
-                    <div key={item.path} className='my-4'>
+                    <div key={item.path} className='my-2'>
                         <NavLink
                             to={item.path}
                             end={item.end}

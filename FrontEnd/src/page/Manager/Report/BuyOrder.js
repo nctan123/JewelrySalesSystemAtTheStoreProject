@@ -7,10 +7,10 @@ import { CiViewList } from "react-icons/ci";
 import { FaMoneyBillWave } from "react-icons/fa"; // cash
 import vnPayLogo from '../../../assets/vnpay.jpg'
 
-const InvoiceMana = () => {
+const BuyOrder = () => {
     const scrollRef = useRef(null);
 
-    const [listSellOrder, setListSellOrder] = useState([]);
+    const [listBuyOrder, setListBuyOrder] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchQuery1, setSearchQuery1] = useState(''); // when click icon => search, if not click => not search
@@ -19,7 +19,7 @@ const InvoiceMana = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [totalPages, setTotalPages] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const sellOrderPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
+    const buyOrderPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
     const [ascending, setAscending] = useState(false);
 
     useEffect(() => {
@@ -35,7 +35,7 @@ const InvoiceMana = () => {
 
         } else {
 
-            getSellOrder();
+            getBuyOrder();
 
         }
     }, [pageSize, currentPage, searchQuery, ascending]);
@@ -46,15 +46,15 @@ const InvoiceMana = () => {
             if (!token) {
                 throw new Error("No token found");
             }
-            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getbyid?id=${id}`, {
+            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/buyorder/getbyid?id=${id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             // console.log('check detail clickcccc', res.data.data[0])
             if (res && res.data) {
-                const details = res.data.data[0];
-                // console.log('check detail click', res.data.data[0].sellOrderDetails)
+                const details = res.data.data;
+                // console.log('check detail click', res.data.data[0].buyOrderDetails)
                 setSelectedOrder(details);
                 setIsModalOpen(true); // Open modal when staff details are fetched
             }
@@ -63,20 +63,20 @@ const InvoiceMana = () => {
         }
     };
 
-    const getSellOrder = async () => {
+    const getBuyOrder = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
                 throw new Error("No token found");
             }
-            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getall?statusList=completed&ascending=${ascending}&pageIndex=${currentPage}&pageSize=${pageSize}`, {
+            const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/buyorder/getall?statusList=completed&ascending=${ascending}&pageIndex=${currentPage}&pageSize=${pageSize}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             if (res && res.data && res.data.data) {
-                const allSellOrders = res.data.data;
-                setListSellOrder(allSellOrders);
+                const allBuyOrders = res.data.data;
+                setListBuyOrder(allBuyOrders);
                 setTotalPages(res.data.totalPages);
             }
         } catch (error) {
@@ -118,7 +118,7 @@ const InvoiceMana = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/sellorder/search?statusList=completed&customerPhone=${searchQuery}&ascending=${ascending}&pageIndex=${currentPage}&pageSize=${pageSize}`,
+                `https://jssatsproject.azurewebsites.net/api/buyorder/search?statusList=completed&customerPhone=${searchQuery}&ascending=${ascending}&pageIndex=${currentPage}&pageSize=${pageSize}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -127,12 +127,12 @@ const InvoiceMana = () => {
             );
             if (res && res.data && res.data.data) {
                 const searched = res.data.data;
-                setListSellOrder(searched);
+                setListBuyOrder(searched);
                 setTotalPages(res.data.totalPages);
                 console.log('>>> check search', res)
             }
             else {
-                setListSellOrder([]);
+                setListBuyOrder([]);
                 setTotalPages(0);
             }
         } catch (error) {
@@ -169,12 +169,21 @@ const InvoiceMana = () => {
 
         return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
     };
-    const placeholders = Array.from({ length: pageSize - listSellOrder.length });
+    const capitalizeWords = (str) => {
+        if (!str) {
+            return '';
+        }
+        return str.split(' ').map(word => {
+            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+        }).join(' ');
+    };
+
+    const placeholders = Array.from({ length: pageSize - listBuyOrder.length });
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of order</h1>
+                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of buy order</h1>
                 <div className="flex justify-between mb-4">
                     <div className="flex items-center ml-2">
                         <label className="block mb-1 mr-2">Page Size:</label>
@@ -186,7 +195,7 @@ const InvoiceMana = () => {
                             }}
                             className="px-3 py-2 border border-gray-300 rounded-md"
                         >
-                            {sellOrderPerPageOptions.map((size) => (
+                            {buyOrderPerPageOptions.map((size) => (
                                 <option key={size} value={size}>{size}</option>
                             ))}
                         </select>
@@ -221,7 +230,7 @@ const InvoiceMana = () => {
                         </thead>
 
                         <tbody >
-                            {listSellOrder.map((item, index) => (
+                            {listBuyOrder.map((item, index) => (
                                 <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
                                     <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td >{item.code}</td>
@@ -229,7 +238,7 @@ const InvoiceMana = () => {
                                     <td >{item.customerName}</td>
                                     <td >{item.customerPhoneNumber}</td>
                                     <td >{formatDateTime(item.createDate)}</td>
-                                    <td className=''>{formatCurrency(item.finalAmount)}</td>
+                                    <td className=''>{formatCurrency(item.totalAmount)}</td>
                                     <td className="text-3xl text-[#000099] pl-2"><CiViewList onClick={() => handleDetailClick(item.id)} /></td>
                                 </tr>
                             ))}
@@ -273,23 +282,17 @@ const InvoiceMana = () => {
                     {selectedOrder && (
                         <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
                             <div className="bg-white rounded-lg p-8 w-full max-w-[1000px]">
-                                <h1 className='text-blue-800 text-center font-bold text-3xl mb-4'>Sell Order Detail ({selectedOrder.sellOrderDetails ? selectedOrder.sellOrderDetails.length : 0})</h1>
+                                <h1 className='text-blue-800 text-center font-bold text-3xl mb-4'>Buy Order Detail ({selectedOrder.buyOrderDetails ? selectedOrder.buyOrderDetails.length : 0})</h1>
                                 <div className="grid grid-cols-2 gap-4 ml-4 mb-4 mx-6">
                                     <div className="shadow-xl p-4 rounded-lg">
                                         <p className="mb-4">
-                                            <strong>Code:</strong> {selectedOrder.code}
+                                            <strong>Code:</strong> {selectedOrder.code || 'Null'}
                                         </p>
                                         <p className="mb-4">
-                                            <strong>Total Value:</strong> {formatCurrency(selectedOrder.finalAmount)}
+                                            <strong>Total Value:</strong> {formatCurrency(selectedOrder.totalAmount) || 'Null'}
                                         </p>
                                         <p className="mb-4">
-                                            <strong>Time:</strong> {formatDateTime(selectedOrder.createDate)}
-                                        </p>
-                                        <p className="mb-4">
-                                            <strong>Special Discount Rate:</strong> {selectedOrder.specialDiscountRate}
-                                        </p>
-                                        <p className="mb-4">
-                                            <strong>Special Discount Status:</strong> {selectedOrder.specialDiscountStatus || 'null'}
+                                            <strong>Time:</strong> {formatDateTime(selectedOrder.createDate) || 'Null'}
                                         </p>
                                         <p className="mb-4 flex items-center">
                                             <strong className="mr-2">Payment Method:</strong>{selectedOrder.paymentMethod}
@@ -300,23 +303,6 @@ const InvoiceMana = () => {
                                             ) : (
                                                 'null'
                                             )}
-                                        </p>
-                                        {/* <p className="mb-4">
-                                        <strong>Quantity Of Products:</strong> {selectedOrder.sellOrderDetails ? selectedOrder.sellOrderDetails.length : 0}
-                                    </p> */}
-                                    </div>
-                                    <div className="shadow-xl p-4 rounded-lg">
-                                        <p className="mb-4">
-                                            <strong>Customer:</strong> {selectedOrder.customerName}
-                                        </p>
-                                        <p className="mb-4">
-                                            <strong>Phone:</strong> {selectedOrder.customerPhoneNumber}
-                                        </p>
-                                        <p className="mb-4">
-                                            <strong>Seller:</strong> {selectedOrder.staffName}
-                                        </p>
-                                        <p className="mb-4 mr-4">
-                                            <strong>Description:</strong> {selectedOrder.description || 'null'}
                                         </p>
                                         <p className="mb-4">
                                             <strong>Status:</strong>
@@ -335,39 +321,48 @@ const InvoiceMana = () => {
                                             )}
                                         </p>
                                     </div>
+                                    <div className="shadow-xl p-4 rounded-lg">
+                                        <p className="mb-4">
+                                            <strong>Customer:</strong> {selectedOrder.customerName}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Phone:</strong> {selectedOrder.customerPhoneNumber}
+                                        </p>
+                                        <p className="mb-4">
+                                            <strong>Seller:</strong> {selectedOrder.staffName}
+                                        </p>
+                                        <p className="mb-4 mr-4">
+                                            <strong>Description:</strong> {selectedOrder.description || 'null'}
+                                        </p>
+
+                                    </div>
                                 </div>
                                 <div className="overflow-x-auto overflow-y-auto max-h-52">
                                     <table className="font-inter w-full table-auto text-left">
                                         <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white sticky top-0">
                                             <tr className="whitespace-nowrap text-xl font-bold">
                                                 <th className="py-3 pl-3 rounded-l-lg"></th>
-                                                <th className="py-3">Code</th>
-                                                <th>Name</th>
-                                                <th className='text-center'>Quantity</th>
-                                                <th className='text-center'>Promotion</th>
-                                                <th>Unit Price</th>
-                                                <th className="rounded-r-lg">Status</th>
+                                                <th className="py-3">Name</th>
+                                                <th>Category</th>
+                                                <th className='text-center'>Material</th>
+                                                <th className='text-center'>Weight</th>
+                                                <th className='text-center' title='Diamond Grading Code'>D.G.Code</th>
+                                                <th className='text-center' title='Purchase Price Ratio'>P.P.Ratio</th>
+                                                <th className='text-center rounded-r-lg'>Unit Price</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {selectedOrder.sellOrderDetails && selectedOrder.sellOrderDetails.map((item, index) => (
+                                            {selectedOrder.buyOrderDetails && selectedOrder.buyOrderDetails.map((item, index) => (
                                                 <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
                                                     <td className="rounded-l-lg pr-3 pl-5 py-4 text-black font-bold">{index + 1}</td>
-                                                    <td>{item.productCode}</td>
-                                                    <td>{item.productName}</td>
-                                                    <td className='text-center'>{item.quantity}</td>
-                                                    <td className='text-center'>{item.promotionRate || 0}</td>
-                                                    <td>{formatCurrency(item.unitPrice)}</td>
-                                                    <td className="rounded-r-lg">
-                                                        {item.status === 'delivered' ? (
-                                                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">Delivered</span>
-                                                        ) : item.status === 'cancelled' ? (
-                                                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">Cancelled</span>
-                                                        ) : item.status === 'awaiting' ? (
-                                                            <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 rounded-xl">Awaiting</span>
-                                                        ) : <span className="font-bold p-1 px-2 rounded-xl">{item.status}</span>
-                                                        }
-                                                    </td>
+                                                    <td>{capitalizeWords(item.productName) || 'Null'}</td>
+                                                    <td>{capitalizeWords(item.categoryType) || ''}</td>
+                                                    <td className='text-center'>{item.materialName || ''}</td>
+                                                    <td className='text-center'>{item.Weight || 0}</td>
+                                                    <td className='text-center'>{item.diamondGradingCode || 'Null'}</td>
+                                                    <td className='text-center'>{item.purchasePriceRatio || 0}</td>
+                                                    <td className="rounded-r-lg">{formatCurrency(item.unitPrice) || 0}</td>
+
                                                 </tr>
                                             ))}
                                         </tbody>
@@ -391,4 +386,4 @@ const InvoiceMana = () => {
     )
 }
 
-export default InvoiceMana
+export default BuyOrder

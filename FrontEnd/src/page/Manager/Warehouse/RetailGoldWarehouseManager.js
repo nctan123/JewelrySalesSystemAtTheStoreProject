@@ -227,7 +227,7 @@ const RetailGoldWarehouseManager = () => {
     const handleYesNo = () => {
         setIsYesNoOpen(true);
     };
-    const handleAddProduct = async (category) => {
+    const handleAddProduct = async () => {
         try {
             const token = localStorage.getItem('token');
             if (!token) {
@@ -235,7 +235,7 @@ const RetailGoldWarehouseManager = () => {
             }
 
             // Example of passing data through URL query parameters
-            navigate(`/manager/createProduct?category=${category}`);
+            navigate(`/manager/createProduct`);
         } catch (error) {
             console.error('Error handling detail click:', error);
         }
@@ -249,7 +249,7 @@ const RetailGoldWarehouseManager = () => {
                     <div className="ml-2">
                         <button
                             className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                            onClick={() => handleAddProduct('retailGold')}
+                            onClick={handleAddProduct}
                         >
                             <span className='font-bold'>+ Add new product</span>
                         </button>
@@ -274,7 +274,7 @@ const RetailGoldWarehouseManager = () => {
                         <div className="relative w-[400px]">
                             <input
                                 type="text"
-                                placeholder="Search  and name"
+                                placeholder="Search by code or name"
                                 value={searchQuery1}
                                 onChange={handleSearchChange}
                                 className="px-3 py-2 border border-gray-300 rounded-md w-full"
@@ -284,10 +284,10 @@ const RetailGoldWarehouseManager = () => {
                     </div>
                 </div>
                 <div className="w-[1200px] overflow-hidden ">
-                    <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                        <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                            <tr className="whitespace-nowrap text-xl font-bold text-[#212B36] ">
-                                <th className="py-3 pl-3 rounded-l-lg"></th>
+                    <table className="font-inter w-full table-auto text-left">
+                        <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                            <tr className="whitespace-nowrap text-xl  font-bold">
+                                <th className="rounded-l-lg"></th>
                                 <th className='py-3 pl-3'>Category</th>
                                 <th>Code</th>
                                 <th >Name</th>
@@ -304,19 +304,28 @@ const RetailGoldWarehouseManager = () => {
 
                         <tbody >
                             {listProduct.map((item, index) => (
-                                <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                    <td className="rounded-l-lg pl-3 py-4 text-black">{index + (currentPage - 1) * pageSize + 1}</td>
+                                <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                    <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
                                     <td >{item.categoryName}</td>
                                     <td> {item.code} </td>
                                     <td>{item.name}</td>
-                                    <td > <img src={logo} className="w-20 h-20" /> </td>
+                                    <td>
+                                        {' '}
+                                        <img src={item.img} className="w-20 h-15" alt="Product Logo" />{' '}
+                                        {/* {item.img} */}
+                                    </td>
                                     <td >{formatCurrency(item.productValue)}</td>
                                     <td >
                                         {item.stalls && item.stalls.name ? item.stalls.name : 'Null'}
                                     </td>
-                                    <td> {item.status === 'active'
-                                        ? (<span className="text-green-500">Active</span>)
-                                        : <span className="text-red-500">Inactive</span>} </td>
+                                    <td>
+                                        {item.status === 'active' ? (
+                                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">ACTIVE</span>
+                                        ) : item.status === 'inactive' ? (
+                                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">INACTIVE</span>
+                                        ) : 'null'
+                                        }
+                                    </td>
                                     <td className="text-3xl text-[#000099] pl-4"><CiViewList onClick={() => handleDetailClick(item.code)} /></td>
                                 </tr>
                             ))}
@@ -395,11 +404,13 @@ const RetailGoldWarehouseManager = () => {
                                             <option value="" disabled selected>
                                                 {selectedRetailGold.stalls ? selectedRetailGold.stalls.name : 'null'}
                                             </option>
-                                            {stalls.map((stall) => (
-                                                <option key={stall.id} value={stall.id}>
-                                                    {stall.name} - {stall.description && formatUpper(stall.description)}
-                                                </option>
-                                            ))}
+                                            {stalls
+                                                .filter(stall => stall.description === 'retail gold' || stall.description === 'counter')
+                                                .map(stall => (
+                                                    <option key={stall.id} value={stall.id}>
+                                                        {stall.name} - {stall.description && formatUpper(stall.description)}
+                                                    </option>
+                                                ))}
                                             <option value="null">Null</option>
                                         </select>
                                     </div>

@@ -21,11 +21,14 @@ const path = {
     RETURN_EX: 'purchase',
     ONPROCESS: 'onprocessSeller',
     COMPLETED: 'completedSeller',
-    BUY:'buyIn',
+    BUY: 'buyIn',
     BUYOUT: 'buyOut',
     BILL: 'bill',
+
     SCREENGOLD:'screengold',
-// Cashier
+
+
+  
 
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
@@ -33,11 +36,11 @@ const path = {
     CS_ONPROCESS: 'cs_onprocess',
     CS_COMPLETE: 'cs_complete',
     CS_WAITINGPAYMENT: 'cs_waitingPayment',
-    CS_BUYPRODUCT:'cs_buyProduct',
+    CS_BUYPRODUCT: 'cs_buyProduct',
     CS_ONPROCESSBUY: 'cs_onprocessBuy',
     CS_COMPLETEBUY: 'cs_completeBuy',
     PAYMENTRESULT: 'payment-result',
-// ADMIN
+    // ADMIN
     DASHBOARD: 'Dashboard',
     MANAGE: 'Manage',
     CUSTOMERADMIN: 'customeradmin',
@@ -74,6 +77,9 @@ const path = {
     CUSTOMERMANA: 'customerMana',
     PRODUCTMANA: 'productMana',
     STALL: 'Stall',
+    SELLORDER: 'sellOrder',
+    BUYORDER: 'buyOrder',
+    DIAMONDPRICE: 'diamondPrice',
     PRICE: 'price',
     MATERIAL: 'material',
     SPECIALDISCOUNT: 'specialDiscount',

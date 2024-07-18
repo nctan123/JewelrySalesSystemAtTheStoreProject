@@ -3,8 +3,21 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSpinner, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { MdFace } from "react-icons/md";
-import { MdFace4 } from "react-icons/md";
+
+
+import { CiViewList } from "react-icons/ci";
+import { FaPhoneVolume } from "react-icons/fa6";
+import { BsGenderFemale } from "react-icons/bs"; // female
+import { BsGenderMale } from "react-icons/bs";//male
+// import { MdPlace } from "react-icons/md";//address
+import { MdContactMail } from "react-icons/md";//mail
+import { RiAwardLine } from "react-icons/ri";//point
+import { IoIosSearch } from "react-icons/io";
+import { MdFace, MdFace4, MdPlace } from 'react-icons/md';
+import { PiGenderFemaleBold, PiGenderMaleBold } from "react-icons/pi";
+import { FaMoneyBillWave } from "react-icons/fa"; // cash
+import vnPayLogo from '../../../assets/vnpay.jpg'
+import { LiaBusinessTimeSolid } from "react-icons/lia";
 const DetailPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -80,39 +93,109 @@ const DetailPage = () => {
     const handleBack = () => {
         navigate(-1); // Quay lại trang trước đó
     };
-
+    const formatPoint = (value) => {
+        return new Intl.NumberFormat('de-DE', {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+            useGrouping: true,
+        }).format(value);
+    };
     return (
         <div className='min-h-screen bg-white mx-5 pt-5 rounded relative'>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-3 gap-4 mx-4">
                 {/* Sell Order Details */}
-                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <h2 className="text-lg font-bold mb-2">Sell Order</h2>
-                    <p><strong>Id:</strong> {sellOrderData.id}</p>
-                    <p><strong>Code:</strong> {sellOrderData.code}</p>
-                    <p><strong>Staff:</strong> {sellOrderData.staffName}</p>
-                    <p><strong>Time:</strong> {formatDateTime(sellOrderData.createDate)}</p>
-                    <p><strong>Description:</strong> {sellOrderData.description}</p>
-                    <p><strong>Total Amount:</strong> {formatCurrency(sellOrderData.finalAmount)}</p>
-                    <p><strong>Status:</strong> {sellOrderData.status}</p>
-                    <p><strong>Payment Method:</strong> {sellOrderData.paymentMethod}</p>
+                <div className="col-span-2 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-gray-300">
+                    <h2 className="text-2xl  text-blue-800 font-bold mb-2">Sell Order</h2>
+                    <p className='py-2'><strong>Id:</strong> {sellOrderData.id}</p>
+                    <p className='py-2'><strong>Code:</strong> {sellOrderData.code}</p>
+                    <p className='py-2'><strong>Staff:</strong> {sellOrderData.staffName}</p>
+                    <p className='py-2'><strong>Time:</strong> {formatDateTime(sellOrderData.createDate)}</p>
+                    <p className='py-2'><strong>Description:</strong> {sellOrderData.description}</p>
+                    <p className='py-2'><strong>Total Amount:</strong> {formatCurrency(sellOrderData.finalAmount)}</p>
+                    <p className='py-2'><strong>Status:</strong>
+                        {sellOrderData.status === 'completed' ? (
+                            <span className="text-green-500 bg-green-100 font-bold p-1 px-2 mx-2 rounded-xl">COMPLETED</span>
+                        ) : sellOrderData.status === 'cancelled' ? (
+                            <span className="text-red-500 bg-red-100 font-bold p-1 px-2 mx-2 rounded-xl">CANCELLED</span>
+                        ) : sellOrderData.status === 'processing' ? (
+                            <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 mx-2 rounded-xl">PROCESSING</span>
+                        ) : sellOrderData.status === 'draft' ? (
+                            <span className="text-black bg-gray-100 font-bold p-1 px-7 mx-2 rounded-xl">DRAFT</span>
+                        ) : (
+                            <span className="relative group text-blue-500 bg-blue-100 font-bold p-1 px-2 mx-2 rounded-xl">
+                                WAITING...
+                            </span>
+                        )}
+                    </p>
+                    <p className="mb-4 flex items-center py-2">
+                        <strong className="mr-2">Payment Method:</strong>{sellOrderData.paymentMethod}
+                        {sellOrderData.paymentMethod === 'VnPay' ? (
+                            <img src={vnPayLogo} alt="VNPay Logo" className="w-5 h-auto mx-2" />
+                        ) : sellOrderData.paymentMethod === 'Cash' ? (
+                            <FaMoneyBillWave className="text-green-500 text-2xl mx-2" />
+                        ) : (
+                            'null'
+                        )}
+                    </p>
                 </div>
                 {/* Customer Details */}
-                <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-                    <h2 className="text-lg font-bold mb-2">Customer Details</h2>
-                    <p><strong>Name:</strong> {customerData.firstname} {customerData.lastname}</p>
-                    <p><strong>Phone:</strong> {customerData.phone}</p>
-                    <p><strong>Email:</strong> {customerData.email}</p>
-                    <p><strong>Gender:</strong> {customerData.gender}</p>
-                    <p><strong>Address:</strong> {customerData.address}</p>
+                <div className="col-span-1 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 border border-gray-300">
+                    <div className="flex items-center justify-center mb-2">
+                        {customerData.gender === 'Male' ? (
+                            <MdFace className="text-4xl font-bold text-blue-800 mr-2" />
+                        ) : (
+                            <MdFace4 className="text-4xl font-bold text-pink-500 mr-2" />
+                        )}
+                        <h2 className="text-2xl font-bold text-blue-800">
+                            {customerData.firstname} {customerData.lastname}
+                        </h2>
+                    </div>
+
+                    <p className="flex items-center py-3">
+                        <FaPhoneVolume className="mr-3 text-green-500 text-2xl font-bold" />
+                        <strong className="mr-2">Phone:</strong> {customerData.phone}
+                    </p>
+                    <p className="flex items-center py-3">
+                        <MdContactMail className="mr-3 text-red-500 text-2xl font-bold" />
+                        <strong className="mr-2">Email:</strong> {customerData.email}
+                    </p>
+                    <p className="flex items-center py-3">
+                        {customerData.gender === "Male" ? (
+                            <PiGenderMaleBold className="text-blue-500 mr-3 text-2xl font-bold" />
+                        ) : (
+                            <PiGenderFemaleBold className="text-pink-500 mr-3 text-2xl font-bold" />
+                        )}
+                        <strong className="mr-2">Gender:</strong> {customerData.gender}
+                    </p>
+                    <p className="flex items-center py-3">
+                        <MdPlace className="mr-3 text-red-500 text-2xl font-bold" />
+                        <strong className="mr-2">Address:</strong> {customerData.address}
+                    </p>
+                    <div className="flex flex-col py-3 space-y-3">
+                        <div className="flex items-center">
+                            <RiAwardLine className="mr-3 text-yellow-500 text-2xl font-bold" />
+                            <strong className="mr-2">Point:</strong>
+                        </div>
+                        <div className="flex items-center ml-8 ">
+                            <strong className="mr-2 ">• Available Point:</strong> {formatPoint(customerData.point.availablePoint)}
+                        </div>
+                        <div className="flex items-center ml-8 ">
+                            <strong className="mr-2">• Total Point:</strong> {formatPoint(customerData.point.totalpoint)}
+                        </div>
+                    </div>
+                    <p className="flex items-center py-3">
+                        <LiaBusinessTimeSolid className="mr-3 text-red-500 text-2xl font-bold" />
+                        <strong className="mr-2">Create Date:</strong> {formatDateTime(customerData.createDate)}
+                    </p>
                 </div>
             </div>
-            <div className="w-[1200px] overflow-hidden ml-6">
-                <table className="font-inter w-full table-auto border-separate border-spacing-y-1 text-left">
-                    <thead className="w-full rounded-lg bg-sky-300 text-base font-semibold text-white sticky top-0">
-                        <tr className="whitespace-nowrap text-xl font-bold text-[#212B36]">
-                            <th className="py-3 pl-3 rounded-l-lg"></th>
-                            <th>Product Code</th>
+            <div className="w-[1200px] overflow-hidden mx-2 ml-4 ">
+                <table className="font-inter w-full table-auto text-left">
+                    <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
+                        <tr className="whitespace-nowrap text-xl  font-bold">
+                            <th className="rounded-l-lg"></th>
+                            <th className='py-2'>Product Code</th>
                             <th>Name</th>
                             <th>Unit Price</th>
                             <th>Promotion Rate</th>
@@ -121,8 +204,8 @@ const DetailPage = () => {
                     </thead>
                     <tbody>
                         {sellOrderData.sellOrderDetails && sellOrderData.sellOrderDetails.map((item, index) => (
-                            <tr key={index} className="cursor-pointer font-normal text-[#637381] bg-[#f6f8fa] drop-shadow-[0_0_10px_rgba(34,46,58,0.02)] text-base hover:shadow-2xl">
-                                <td className="rounded-l-lg pl-3 py-4 text-black">{index + 1}</td>
+                            <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
+                                <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + 1}</td>
                                 <td>{item.productCode}</td>
                                 <td>{item.productName}</td>
                                 <td>{formatCurrency(item.unitPrice)}</td>

@@ -7,7 +7,7 @@ import { CiViewList } from "react-icons/ci";
 import { FaMoneyBillWave } from "react-icons/fa"; // cash
 import vnPayLogo from '../../../assets/vnpay.jpg'
 
-const InvoiceMana = () => {
+const SellOrder = () => {
     const scrollRef = useRef(null);
 
     const [listSellOrder, setListSellOrder] = useState([]);
@@ -174,7 +174,7 @@ const InvoiceMana = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of order</h1>
+                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of sell order</h1>
                 <div className="flex justify-between mb-4">
                     <div className="flex items-center ml-2">
                         <label className="block mb-1 mr-2">Page Size:</label>
@@ -289,7 +289,16 @@ const InvoiceMana = () => {
                                             <strong>Special Discount Rate:</strong> {selectedOrder.specialDiscountRate}
                                         </p>
                                         <p className="mb-4">
-                                            <strong>Special Discount Status:</strong> {selectedOrder.specialDiscountStatus || 'null'}
+                                            <strong>Special Discount Status:</strong>
+                                            {selectedOrder.specialDiscountStatus === 'approved'
+                                                ? (<span className="text-yellow-500 bg-yellow-100 font-bold p-1 mx-2  rounded-xl">APPROVED</span>)
+                                                : selectedOrder.specialDiscountStatus === 'rejected' ? (
+                                                    <span className="text-red-500 bg-red-100 font-bold p-1 mx-2 rounded-xl">REJECTED</span>
+                                                ) : selectedOrder.specialDiscountStatus === 'used' ? (
+                                                    <span className="text-green-500 bg-green-100 font-bold p-1 px-2 mx-2 rounded-xl">USED</span>
+                                                ) : selectedOrder.specialDiscountStatus
+                                            }
+
                                         </p>
                                         <p className="mb-4 flex items-center">
                                             <strong className="mr-2">Payment Method:</strong>{selectedOrder.paymentMethod}
@@ -391,4 +400,4 @@ const InvoiceMana = () => {
     )
 }
 
-export default InvoiceMana
+export default SellOrder

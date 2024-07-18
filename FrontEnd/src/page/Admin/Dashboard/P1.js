@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
+import axios from 'axios';
 export default function P1() {
     const [todayRevenue, setTodayRevenue] = useState(null);
     const [yesterdayRevenue, setYesterdayRevenue] = useState(null);
@@ -45,15 +46,30 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`);
-            if (!response.ok) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.status !== 200) {
                 throw new Error('Network response was not ok');
             }
-            const result = await response.json();
+
+            const result = response.data;
             setData(result.data || 0);
         } catch (error) {
             setError(error.message);
         }
+
     };
     const getNewCustomer = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
@@ -75,15 +91,30 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/Customer/CountNewCustomer?startDate=${startDateString}&endDate=${endDateString}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
             }
-            const result = await response.json();
+
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/Customer/CountNewCustomer?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.status !== 200) {
+                throw new Error('Network response was not ok 3');
+            }
+
+            const result = response.data;
             setData(result.data || 0);
         } catch (error) {
             setError(error.message);
         }
+
     };
     const getQuantityOrder = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
@@ -105,15 +136,30 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/sellorder/CountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
             }
-            const result = await response.json();
+
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/sellorder/CountOrderByDateTime?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.status !== 200) {
+                throw new Error('Network response was not ok 2');
+            }
+
+            const result = response.data;
             setData(result.data || 0);
         } catch (error) {
             setError(error.message);
         }
+
     };
     const getQuantityProduct = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
@@ -135,15 +181,30 @@ export default function P1() {
             // console.log("endDateString (ISO 8601):", endDateString);
         }
         try {
-            const response = await fetch(`https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
             }
-            const result = await response.json();
+
+            const response = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/SellOrderDetail/CountProductsSoldByCategory?startDate=${startDateString}&endDate=${endDateString}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            if (response.status !== 200) {
+                throw new Error('Network response was not ok 1');
+            }
+
+            const result = response.data;
             setData(result);
         } catch (error) {
             setError(error.message);
         }
+
     };
 
     const handleDayClick = () => {
@@ -241,8 +302,8 @@ export default function P1() {
 
 
     return (
-        <div className="container mx-auto p-4 border border-gray-300 shadow-lg my-4 rounded-md">
-            <div className="flex justify-end mb-4">
+        <div className="container mx-auto px-4 border border-gray-300 shadow-lg  rounded-md">
+            <div className="flex justify-end">
                 <button
                     type="button"
                     onClick={handleDayClick}

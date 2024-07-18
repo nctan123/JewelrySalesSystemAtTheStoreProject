@@ -35,7 +35,18 @@ const P3 = () => {
             setLoadingApi(true);
             // Fetch data from the API
             try {
-                const response = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${formattedStartDate}&endDate=${formattedEndDate}`);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+                const response = await axios.get(
+                    `https://jssatsproject.azurewebsites.net/api/sellorder/SumTotalAmountOrderByDateTime?startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 const result = response.data && response.data.data ? response.data.data : 0;
                 fetchedValues.push({
                     month: startDate.toLocaleString('default', { month: 'long' }),
