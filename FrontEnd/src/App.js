@@ -86,7 +86,7 @@ function App() {
             <Route path={path.SELLORDER} element={<SellOrder />} />
             <Route path={path.BUYORDER} element={<BuyOrder />} />
             <Route path={path.PAYMENT} element={<Payment />} />
-            <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
+            <Route path={path.EMPLOYEE} element={<Employee />} />
             <Route path={path.STALL} element={<Stall />} />
 
 
