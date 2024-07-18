@@ -75,6 +75,7 @@ const path = {
     STALL: 'Stall',
     SELLORDER: 'sellOrder',
     BUYORDER: 'buyOrder',
+    DIAMONDPRICE: 'diamondPrice',
     PRICE: 'price',
     MATERIAL: 'material',
     SPECIALDISCOUNT: 'specialDiscount',

@@ -22,7 +22,7 @@ const { GrDocumentStore,
     VscGitPullRequestGoToChanges,
     GiGoldNuggets,
     GiReceiveMoney, GiEmeraldNecklace, GiCrystalEarrings, GiDiamondRing, GiNecklaceDisplay, AiOutlineGold,
-    LiaMoneyBillWaveSolid, LiaCircleNotchSolid, IoDiamondOutline, PiDiamondsFourLight, MdWarehouse, MdOutlinePriceChange, FaMoneyBillTrendUp, TbBasketDiscount, GiStoneBlock, MdOutlinePayments } = IconManager
+    LiaMoneyBillWaveSolid, LiaCircleNotchSolid, IoDiamondOutline, PiDiamondsFourLight, MdWarehouse, MdOutlinePriceChange, FaMoneyBillTrendUp, TbBasketDiscount, GiStoneBlock, MdOutlinePayments, RiCopperDiamondLine } = IconManager
 
 export const sidebarMenuManager = [
     {
@@ -38,6 +38,11 @@ export const sidebarMenuManager = [
         iconAdmin2: <IoMdArrowDropdown size={24} color="#000055" />,
         iconAdmin3: <IoMdArrowDropup size={24} color="#000055" />,
         subMenu: [
+            {
+                path: 'diamondPrice',
+                text: 'Diamond Price',
+                iconAdmin: <RiCopperDiamondLine size={24} color="#000055" />,
+            },
             {
                 path: 'price',
                 text: 'Price',

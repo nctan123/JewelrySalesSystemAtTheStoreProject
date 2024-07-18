@@ -20,18 +20,19 @@ import { FaMoneyBillWave } from "react-icons/fa"; // cash
 import vnPayLogo from '../../../assets/vnpay.jpg'
 import { LiaBusinessTimeSolid } from "react-icons/lia";
 
-const CustomerDetail = () => {
+const StaffDetail = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(location.search);
-    const phone = searchParams.get('phone');
-    const id = searchParams.get('id');
+    const id = searchParams.get('Id');
+    const startDate = searchParams.get('startDate');
+    const endDate = searchParams.get('endDate');
     const [selectedSellOrder, setSelectedSellOrder] = useState([]);
     const [selectedBuyOrder, setSelectedBuyOrder] = useState([]);
     const [selectedPaymentOrder, setSelectedPaymentOrder] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [customerData, setCustomerData] = useState(null);
+    const [staffData, setStaffData] = useState(null);
     const [sellOrderData, setSellOrderData] = useState(null);
     const [buyOrderData, setBuyOrderData] = useState(null);
     const [paymentData, setPaymentData] = useState(null);
@@ -55,30 +56,29 @@ const CustomerDetail = () => {
             case 'buyOrder':
                 setTotalPages(totalPagesBuy);
                 break;
-            case 'payment':
-                setTotalPages(totalPagesPayment);
-                break;
             default:
                 setTotalPages(0);
         }
-    }, [activeTab, totalPagesSell, totalPagesBuy, totalPagesPayment, pageSize]);
+    }, [activeTab, totalPagesSell, totalPagesBuy, pageSize]);
 
 
     useEffect(() => {
-        const fetchCustomerData = async () => {
+        const fetchStaffData = async () => {
             try {
-                const customerRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getbyphone?phonenumber=${phone}`);
-                if (customerRes && customerRes.data && customerRes.data.data) {
-                    setCustomerData(customerRes.data.data[0]);
+                const staffRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/staff/getStaffSymmary?id=${id}&startDate=${startDate}&endDate=${endDate}`);
+                console.log('checkkkkkkkkkkkkkkkk', staffRes.data.data)
+                if (staffRes && staffRes.data) {
+                    setStaffData(staffRes.data.data);
                 }
             } catch (error) {
-                console.error('Error fetching customer details:', error);
+                console.error('Error fetching staff details:', error);
             }
         };
 
         const fetchSellOrderData = async () => {
             try {
-                const sellOrderRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getSellOrderByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`);
+                const sellOrderRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/staff/getSellOrderByStaffId?id=${id}&pageSize=${pageSize}&pageIndex=${currentPage}&startDate=${startDate}&endDate=${endDate}`);
+                // console.log('>>>>>>chekc', sellOrderRes.data.data)
                 if (sellOrderRes && sellOrderRes.data && sellOrderRes.data.data) {
                     setSellOrderData(sellOrderRes.data.data);
                     setTotalPagesSell(sellOrderRes.data.totalPages);
@@ -90,7 +90,7 @@ const CustomerDetail = () => {
         };
         const fetchBuyOrderData = async () => {
             try {
-                const buyOrderRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getBuyOrdersByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`);
+                const buyOrderRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/staff/getBuyOrdersStaffId?id=${id}&pageSize=${pageSize}&pageIndex=${currentPage}&startDate=${startDate}&endDate=${endDate}`);
                 if (buyOrderRes && buyOrderRes.data && buyOrderRes.data.data) {
                     setBuyOrderData(buyOrderRes.data.data);
                     setTotalPagesBuy(buyOrderRes.data.totalPages);
@@ -100,37 +100,19 @@ const CustomerDetail = () => {
                 console.error('Error fetching sell orders:', error);
             }
         };
-        const fetchPaymentData = async () => {
-            try {
-                const paymentRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getPaymentsByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`);
-                if (paymentRes && paymentRes.data && paymentRes.data.data) {
-                    setPaymentData(paymentRes.data.data);
-                    setTotalPagesPayment(paymentRes.data.totalPages);
-                    // setTotalPages(buyOrderRes.data.totalPages);
-                }
-            } catch (error) {
-                console.error('Error fetching sell orders:', error);
-            }
-        };
-        if (phone) {
-            if (searchQuery) {
 
+        if (id) {
+            if (searchQuery) {
                 handleSearchSell(searchQuery);
                 handleSearchBuy(searchQuery);
-                handleSearchPay(searchQuery);
             } else {
-
-                fetchCustomerData();
+                fetchStaffData();
                 fetchSellOrderData();
                 fetchBuyOrderData();
-                fetchPaymentData();
-
             }
             // console.log('>>>> gtessttt', totalPages)
         }
-
-
-    }, [phone, currentPage, pageSize, activeTab, searchQuery]);
+    }, [id, currentPage, pageSize, activeTab, searchQuery]);
     // 'sellOrder', 'buyOrder', 'payment'
     const handleDetailClick = async (id, activeList) => {
         if (activeList === 'sellOrder') {
@@ -177,54 +159,10 @@ const CustomerDetail = () => {
                 console.error('Error fetching staff details:', error);
             }
         }
-        else if (activeList === 'payment') {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error("No token found");
-                }
-                const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/sellorder/getbyid?id=${id}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                // console.log('check detail click', res.data.data[0])
-                if (res && res.data) {
-                    const details = res.data.data[0];
-                    // console.log('check detail click', res.data.data[0].sellOrderDetails)
-                    setSelectedSellOrder(details);
-                    setIsModalOpen(true); // Open modal when staff details are fetched
-                }
-                else {
-                    try {
-                        const token = localStorage.getItem('token');
-                        if (!token) {
-                            throw new Error("No token found");
-                        }
-                        const res = await axios.get(`https://jssatsproject.azurewebsites.net/api/buyorder/getbyid?id=${id}`, {
-                            headers: {
-                                Authorization: `Bearer ${token}`
-                            }
-                        });
-                        // console.log('check detail click', res.data.data[0])
-                        if (res && res.data) {
-                            const details = res.data.data;
-                            console.log('check detail click', res)
-                            setSelectedBuyOrder(details);
-                            setIsModalOpen(true); // Open modal when staff details are fetched
-                        }
-                    } catch (error) {
-                        console.error('Error fetching staff details:', error);
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching staff details:', error);
-            }
 
-        }
     };
 
-    if (!customerData || !sellOrderData) {
+    if (!staffData || !sellOrderData || !buyOrderData) {
         return (
             <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 backdrop-blur-sm">
                 <FontAwesomeIcon
@@ -285,7 +223,7 @@ const CustomerDetail = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/customer/searchSellOrders?phone=${phone}&OrderCode=${code}&pageSize=${pageSize}&pageIndex=${currentPage}`,
+                `https://jssatsproject.azurewebsites.net/api/staff/searchSellOrders?id=${id}&OrderCode=${code}&pageSize=${pageSize}&pageIndex=${currentPage}&startDate=${startDate}&endDate=${endDate}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -324,7 +262,7 @@ const CustomerDetail = () => {
                 throw new Error('No token found');
             }
             const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/customer/searchBuyOrders?phone=${phone}&OrderCode=${code}&pageSize=${pageSize}&pageIndex=${currentPage}`,
+                `https://jssatsproject.azurewebsites.net/api/staff/searchBuyOrders?id=${id}&OrderCode=${code}&pageSize=${pageSize}&pageIndex=${currentPage}&startDate=${startDate}&endDate=${endDate}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -356,73 +294,30 @@ const CustomerDetail = () => {
         }
         // setSearchQuery1('');
     };
-    const handleSearchPay = async (code) => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                throw new Error('No token found');
-            }
-            const res = await axios.get(
-                `https://jssatsproject.azurewebsites.net/api/customer/searchPayments?phone=${phone}&OrderCode=${code}&pageSize=${pageSize}&pageIndex=${currentPage}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
-            if (res && res.data && res.data.data) {
-                // console.log('>>>> checkkk search', res)
-                const searched = res.data.data;
-                setPaymentData(searched);
-                setTotalPages(res.data.totalPages);
-                setTotalPagesPayment(res.data.totalPages);
-                // console.log('>>> check search', res)
-            }
-            else {
-                setPaymentData([]);
-                setTotalPages(0);
-                setTotalPagesPayment(0);
-            }
-        } catch (error) {
-            console.error('Error fetching search results:', error);
-            if (error.response) {
-                console.error('Error response:', error.response.data);
-            } else if (error.request) {
-                console.error('Error request:', error.request);
-            } else {
-                console.error('Error message:', error.message);
-            }
-        }
-        // setSearchQuery1('');
-    };
+
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedSellOrder(null);
         setSelectedBuyOrder(null);
 
     };
-    // const placeholders = Array.from({ length: pageSize - sellOrderData.length });
-    // const placeholdersBuy = Array.from({ length: pageSize - buyOrderData.length });
-    // const placeholdersPay = Array.from({ length: pageSize - paymentData.length });
+
     const placeholders = sellOrderData && sellOrderData.length !== 0
         ? Array.from({ length: pageSize - sellOrderData.length })
         : Array.from({ length: pageSize });
     const placeholdersBuy = buyOrderData && buyOrderData.length !== 0
         ? Array.from({ length: pageSize - buyOrderData.length })
         : Array.from({ length: pageSize });
-    const placeholdersPay = paymentData && paymentData.length !== 0
-        ? Array.from({ length: pageSize - paymentData.length })
-        : Array.from({ length: pageSize });
 
 
     return (
         <>
-            <div className='min-h-screen bg-white mx-8 pt-5 rounded relative'>
+            <div className='min-h-screen bg-white mx-8 pt-2 rounded relative'>
                 <div className="grid grid-cols-10 gap-4">
                     {/* Sell Order List */}
                     <div className="col-span-7 ml-4">
-                        <div className="grid grid-cols-3 gap-4 pb-8">
-                            {['sellOrder', 'buyOrder', 'payment'].map(tab => (
+                        <div className="grid grid-cols-2 gap-4 pb-8">
+                            {['sellOrder', 'buyOrder'].map(tab => (
                                 <div
                                     key={tab}
                                     onClick={() => {
@@ -439,7 +334,7 @@ const CustomerDetail = () => {
                                         ? 'Sell Order'
                                         : tab === 'buyOrder'
                                             ? 'Buy Order'
-                                            : 'Payment'
+                                            : ''
                                     }
                                 </div>
                             ))}
@@ -479,7 +374,6 @@ const CustomerDetail = () => {
                                         <th className="py-3 pl-3">Create Date</th>
                                         <th>Order Code</th>
                                         <th className='text-center'>Value</th>
-                                        {/* <th>Staff name</th> */}
                                         <th className='pl-6'>Status</th>
                                         <th className="rounded-r-lg">Detail</th>
                                     </tr>
@@ -492,7 +386,6 @@ const CustomerDetail = () => {
                                             <td className=''>{formatDateTime(item.createDate)}</td>
                                             <td className=''>{item.code}</td>
                                             <td className='text-right pr-8 '>{formatCurrency(item.finalAmount)}</td>
-                                            {/* <td>{item.staffName}</td> */}
                                             <td>
                                                 {item.status === 'completed' ? (
                                                     <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">COMPLETED</span>
@@ -539,7 +432,6 @@ const CustomerDetail = () => {
                                         <th className="py-3 pl-3">Create Date</th>
                                         <th>Order Code</th>
                                         <th className='text-center'>Value</th>
-                                        {/* <th>Staff name</th> */}
                                         <th className='pl-6'>Status</th>
                                         <th className="rounded-r-lg">Detail</th>
                                     </tr>
@@ -552,7 +444,6 @@ const CustomerDetail = () => {
                                             <td className=''>{formatDateTime(item.createDate)}</td>
                                             <td className=''>{item.code}</td>
                                             <td className='text-right pr-8 '>{formatCurrency(item.totalAmount)}</td>
-                                            {/* <td>{item.staffName}</td> */}
                                             <td>
                                                 {item.status === 'completed' ? (
                                                     <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">COMPLETED</span>
@@ -590,130 +481,52 @@ const CustomerDetail = () => {
                                 </tbody>
                             </table>
                         )}
-                        {activeTab === 'payment' && (
-                            <table className="font-inter w-full table-auto text-left">
-                                <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white  sticky top-0">
-                                    <tr className="whitespace-nowrap text-xl font-bold">
-                                        <th className="rounded-l-lg"></th>
-                                        <th className="py-3 pl-3">Create Date</th>
-                                        <th>Order Code</th>
-                                        <th className='text-center'>Value</th>
-                                        <th className='text-center'>Method</th>
-                                        <th className='pl-6'>Status</th>
-                                        <th className="rounded-r-lg">Detail</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    {paymentData.map((item, index) => (
-                                        <tr key={index} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
-                                            <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">{index + (currentPage - 1) * pageSize + 1}</td>
-                                            <td className=''>{formatDateTime(item.createDate)}</td>
-                                            <td >{item.sellOrderCode || item.buyOrderCode || 'null'}</td>
-                                            <td className='text-right pr-8 '>{formatCurrency(item.amount)}</td>
-                                            <td className='text-center align-middle'>
-                                                {item.paymentMethodName === 'VnPay' ? (
-                                                    <img src={vnPayLogo} alt="VNPay Logo" className="w-8 h-auto mx-auto" />
-                                                ) : item.paymentMethodName === 'Cash' ? (
-                                                    <FaMoneyBillWave className="text-green-500 text-2xl mx-auto" />
-                                                ) : (
-                                                    'null'
-                                                )}
-                                            </td>
-
-
-                                            <td>
-                                                {item.status === 'completed' ? (
-                                                    <span className="text-green-500 bg-green-100 font-bold p-1 px-2 rounded-xl">COMPLETED</span>
-                                                ) : item.status === 'cancelled' ? (
-                                                    <span className="text-red-500 bg-red-100 font-bold p-1 px-2 rounded-xl">CANCELLED</span>
-                                                ) : item.status === 'pending' ? (
-                                                    <span className="text-yellow-600 bg-yellow-100 font-bold p-1 px-2 rounded-xl">PENDING</span>
-                                                ) : (
-                                                    <span className="relative group text-blue-500 bg-blue-100 font-bold p-1 px-2 rounded-xl">
-                                                        WAITING...
-                                                        <span className="absolute left-0 bottom-full mb-1 w-max px-2 py-1 text-sm text-blue-500 bg-blue-100 border border-md border-blue-50 rounded-md opacity-0 group-hover:opacity-100 z-50">
-                                                            {item.status}
-                                                        </span>
-                                                    </span>
-                                                )}
-                                            </td>
-                                            <td className="text-3xl text-[#000099] pl-2 rounded-r-lg">
-                                                {item.sellOrderCode ? (
-                                                    <CiViewList onClick={() => handleDetailClick(item.sellorderId, activeTab)} />
-                                                ) : item.buyOrderCode ? (
-                                                    <CiViewList onClick={() => handleDetailClick(item.buyOrderId, activeTab)} />
-                                                ) : null}
-                                                {/* <CiViewList onClick={() => handleDetailClick(item.sellorderId, activeTab)} /> */}
-
-                                            </td>
-
-                                        </tr>
-                                    ))}
-                                    {placeholdersPay.map((_, index) => (
-                                        <tr key={`placeholder-${index}`} className="cursor-pointer font-normal text-black bg-white shadow-md rounded font-bold text-base hover:shadow-2xl">
-                                            <td className="rounded-l-lg pr-3 pl-5 py-4 text-black ">-</td>
-                                            <td className="">-</td>
-                                            <td className="">-</td>
-                                            <td className="">-</td>
-                                            <td className="">-</td>
-                                            <td className="">-</td>
-                                            <td className="rounded-r-lg">-</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        )}
                     </div>
-                    {/* Customer Details */}
+                    {/* Staff Details */}
                     <div className="col-span-3 bg-white shadow-md rounded border border-gray-300 px-4 pt-6 pb-8 mr-4">
                         <div className="flex items-center justify-center mb-2">
-                            {customerData.gender === 'Male' ? (
+                            {staffData.gender === 'Male' ? (
                                 <MdFace className="text-4xl font-bold text-blue-800 mr-2" />
                             ) : (
                                 <MdFace4 className="text-4xl font-bold text-pink-500 mr-2" />
                             )}
                             <h2 className="text-2xl font-bold text-blue-800">
-                                {customerData.firstname} {customerData.lastname}
+                                {staffData.firstname} {staffData.lastname}
                             </h2>
                         </div>
 
                         <p className="flex items-center py-3">
                             <FaPhoneVolume className="mr-3 text-green-500 text-2xl font-bold" />
-                            <strong className="mr-2">Phone:</strong> {customerData.phone}
+                            <strong className="mr-2">Phone:</strong> {staffData.phone}
                         </p>
                         <p className="flex items-center py-3">
                             <MdContactMail className="mr-3 text-red-500 text-2xl font-bold" />
-                            <strong className="mr-2">Email:</strong> {customerData.email}
+                            <strong className="mr-2">Email:</strong> {staffData.email}
                         </p>
                         <p className="flex items-center py-3">
-                            {customerData.gender === "Male" ? (
+                            {staffData.gender === "Male" ? (
                                 <PiGenderMaleBold className="text-blue-500 mr-3 text-2xl font-bold" />
                             ) : (
                                 <PiGenderFemaleBold className="text-pink-500 mr-3 text-2xl font-bold" />
                             )}
-                            <strong className="mr-2">Gender:</strong> {customerData.gender}
+                            <strong className="mr-2">Gender:</strong> {staffData.gender}
                         </p>
                         <p className="flex items-center py-3">
                             <MdPlace className="mr-3 text-red-500 text-2xl font-bold" />
-                            <strong className="mr-2">Address:</strong> {customerData.address}
+                            <strong className="mr-2">Address:</strong> {staffData.address}
                         </p>
                         <div className="flex flex-col py-3 space-y-3">
                             <div className="flex items-center">
                                 <RiAwardLine className="mr-3 text-yellow-500 text-2xl font-bold" />
-                                <strong className="mr-2">Point:</strong>
+                                <strong className="mr-2">Revenue:</strong> {formatCurrency(staffData.totalRevenue)}
                             </div>
                             <div className="flex items-center ml-8 ">
-                                <strong className="mr-2 ">• Available Point:</strong> {formatPoint(customerData.point.availablePoint)}
+                                <strong className="mr-2 ">• Total Sell Order:</strong> {formatPoint(staffData.totalSellOrder)}
                             </div>
                             <div className="flex items-center ml-8 ">
-                                <strong className="mr-2">• Total Point:</strong> {formatPoint(customerData.point.totalpoint)}
+                                <strong className="mr-2">• Total Buy Order:</strong> {formatPoint(staffData.totalBuyOrder)}
                             </div>
                         </div>
-                        <p className="flex items-center py-3">
-                            <LiaBusinessTimeSolid className="mr-3 text-red-500 text-2xl font-bold" />
-                            <strong className="mr-2">Create Date:</strong> {formatDateTime(customerData.createDate)}
-                        </p>
                     </div>
 
                 </div>
@@ -748,7 +561,6 @@ const CustomerDetail = () => {
                 className="bg-white p-6 rounded-lg shadow-lg w-full max-w-[1000px] mx-auto"
                 overlayClassName="fixed inset-0 z-30 bg-black bg-opacity-50 flex justify-center items-center"
             >
-
                 {selectedSellOrder
                     ? (
                         <div className="fixed inset-0 flex items-center justify-center z-10 bg-gray-800 bg-opacity-50">
@@ -891,10 +703,10 @@ const CustomerDetail = () => {
                                         </div>
                                         <div className="shadow-xl p-4 rounded-lg">
                                             <p className="mb-4">
-                                                <strong>Customer:</strong> {selectedBuyOrder.customerName}
+                                                <strong>Staff:</strong> {selectedBuyOrder.staffName}
                                             </p>
                                             <p className="mb-4">
-                                                <strong>Phone:</strong> {selectedBuyOrder.customerPhoneNumber}
+                                                <strong>Phone:</strong> {selectedBuyOrder.staffPhoneNumber}
                                             </p>
                                             <p className="mb-4">
                                                 <strong>Seller:</strong> {selectedBuyOrder.staffName}
@@ -984,4 +796,4 @@ const CustomerDetail = () => {
     );
 };
 
-export default CustomerDetail;
+export default StaffDetail;

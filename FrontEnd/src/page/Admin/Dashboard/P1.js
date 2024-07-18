@@ -302,8 +302,8 @@ export default function P1() {
 
 
     return (
-        <div className="container mx-auto p-4 border border-gray-300 shadow-lg my-4 rounded-md">
-            <div className="flex justify-end mb-4">
+        <div className="container mx-auto px-4 border border-gray-300 shadow-lg  rounded-md">
+            <div className="flex justify-end">
                 <button
                     type="button"
                     onClick={handleDayClick}
