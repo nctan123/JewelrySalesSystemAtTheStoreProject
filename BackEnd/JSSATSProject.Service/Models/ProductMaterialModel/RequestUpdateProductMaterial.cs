@@ -8,7 +8,6 @@ namespace JSSATSProject.Service.Models.ProductMaterialModel
 {
     public class RequestUpdateProductMaterial
     {
-        public int MaterialId { get; set; }
         public int ProductId { get; set; }
         public decimal? Weight { get; set; }
     }

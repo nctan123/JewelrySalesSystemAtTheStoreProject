@@ -177,6 +177,7 @@ public class ApplicationMapper : Profile
                 .ForMember(dest => dest.CustomerPhone, opt => opt.MapFrom(src => src.Customer.Phone))
                 .ForMember(dest => dest.CustomerId,opt => opt.MapFrom(src => src.Customer.Id))
                 .ReverseMap();
+        CreateMap<Payment, RequestCreatePayment>().ReverseMap();
 
         //Point
         CreateMap<Point, RequestCreatePoint>().ReverseMap();
@@ -316,6 +317,7 @@ public class ApplicationMapper : Profile
 
         //ProductMaterial
         CreateMap<ProductMaterial, RequestCreateProductMaterial>().ReverseMap();
+        CreateMap<ProductMaterial, RequestUpdateProductMaterial>().ReverseMap();
 
     }
 }

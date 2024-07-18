@@ -268,8 +268,11 @@ public class StaffService : IStaffService
             .Select(group => new
             {
                 StaffId = group.Key,
-                TotalRevenue = group.Sum(o => o.TotalAmount)
-
+                TotalRevenue = group.Sum(order =>
+                {
+                    decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
+                    return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
+                })
             })
             .OrderByDescending(g => g.TotalRevenue)
             .ToList();
@@ -286,22 +289,22 @@ public class StaffService : IStaffService
         {
             var staffDetails = await _unitOfWork.StaffRepository.GetByIDAsync(staff.StaffId);
             result.Add(new Dictionary<string, object>
-            {
-                { "StaffId", staff.StaffId },
-                { "Firstname", staffDetails.Firstname },
-                { "Lastname", staffDetails.Lastname },
-                { "TotalRevenue", staff.TotalRevenue }
-            });
+        {
+            { "StaffId", staff.StaffId },
+            { "Firstname", staffDetails.Firstname },
+            { "Lastname", staffDetails.Lastname },
+            { "TotalRevenue", staff.TotalRevenue }
+        });
         }
 
         // Add other revenue to result
         result.Add(new Dictionary<string, object>
-        {
-            { "StaffId", 0 },
-            { "Firstname", "Other" },
-            { "Lastname", "" },
-            { "TotalRevenue", otherRevenue }
-        });
+    {
+        { "StaffId", 0 },
+        { "Firstname", "Other" },
+        { "Lastname", "" },
+        { "TotalRevenue", otherRevenue }
+    });
 
         // Return the response model with the result data
         return new ResponseModel
@@ -309,6 +312,7 @@ public class StaffService : IStaffService
             Data = result
         };
     }
+
 
     public async Task<ResponseModel> GetStaffSymmaryAsync(int id, DateTime startDate, DateTime endDate)
     {

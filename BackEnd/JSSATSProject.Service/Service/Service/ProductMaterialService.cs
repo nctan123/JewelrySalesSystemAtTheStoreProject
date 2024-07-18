@@ -38,7 +38,7 @@ namespace JSSATSProject.Service.Service.Service
         public async Task<ResponseModel> UpdateAsync(RequestUpdateProductMaterial requestProductMaterial)
         {
             var entities = await _unitOfWork.ProductMaterialRepository.GetAsync(pm =>
-                pm.MaterialId == requestProductMaterial.MaterialId && pm.ProductId == requestProductMaterial.ProductId);
+                pm.ProductId == requestProductMaterial.ProductId);
             var entity = entities.FirstOrDefault();
             if (entity == null)
             {
@@ -48,8 +48,9 @@ namespace JSSATSProject.Service.Service.Service
                     MessageError = "ProductMaterial not found"
                 };
             }
-
-            _mapper.Map(requestProductMaterial, entity);
+            var newweight = entity.Weight + requestProductMaterial.Weight;
+            //_mapper.Map(requestProductMaterial, entity);
+            entity.Weight = newweight;
             await _unitOfWork.ProductMaterialRepository.UpdateAsync(entity);
             await _unitOfWork.SaveAsync();
 
