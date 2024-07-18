@@ -336,18 +336,44 @@ public class SellOrderService : ISellOrderService
 
     public async Task<ResponseModel> SumTotalAmountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
     {
-        Expression<Func<SellOrder, bool>> filter = order =>
-            order.CreateDate >= startDate && order.CreateDate <= endDate &&
-            order.Status.Equals(OrderConstants.CompletedStatus);
-
-        var sum = await _unitOfWork.SellOrderRepository.SumAsync(filter, order => order.TotalAmount);
-
-        return new ResponseModel
+        try
         {
-            Data = sum,
-            MessageError = sum == 0 ? "Not Found" : null
-        };
+            // Define the filter expression
+            Expression<Func<SellOrder, bool>> filter = order =>
+                order.CreateDate >= startDate && order.CreateDate <= endDate &&
+                order.Status.Equals(OrderConstants.CompletedStatus);
+
+            // Fetch orders matching the filter
+            var orders = await _unitOfWork.SellOrderRepository.GetAsync(
+                filter,
+                includeProperties: "SpecialDiscountRequest"
+                );
+
+            // Calculate the total sum of discounted total amounts
+            decimal totalSum = orders.Sum(order =>
+            {
+                decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
+                return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
+            });
+
+            // Return the response model with the total sum and an appropriate message
+            return new ResponseModel
+            {
+                Data = totalSum,
+                MessageError = totalSum == 0 ? "No orders found within the specified date range." : null
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or handle it as per your application's error handling strategy
+            return new ResponseModel
+            {
+                MessageError = "An error occurred while summing the total amount of orders.",
+         
+            };
+        }
     }
+
 
     public async Task<ResponseModel> CountOrderByDateTimeAsync(DateTime startDate, DateTime endDate)
     {
