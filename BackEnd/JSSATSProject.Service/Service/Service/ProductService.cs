@@ -80,7 +80,7 @@ public class ProductService : IProductService
             diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                 diamond.ClarityId,
                 diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, DateTime.Now);
-            totalPrice = (productionCost + diamondPrice) * priceRate ;
+            totalPrice = (productionCost + diamondPrice) * priceRate;
         }
         else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
                  or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
@@ -132,7 +132,7 @@ public class ProductService : IProductService
             diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                 diamond.ClarityId,
                 diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, DateTime.Now);
-            totalPrice = (productionCost + diamondPrice) * priceRate ;
+            totalPrice = (productionCost + diamondPrice) * priceRate;
         }
         else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
                  or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
@@ -276,8 +276,9 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task<ResponseModel> GetAllAsync(int categoryId, int? stallId = null, int pageIndex = 1, int pageSize = 10,
-       bool ascending = true, bool includeNullStalls = true)
+    public async Task<ResponseModel> GetAllAsync(int categoryId, int? stallId = null, int pageIndex = 1,
+        int pageSize = 10,
+        bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
@@ -295,9 +296,12 @@ public class ProductService : IProductService
             filter = filter.AndAlso(product => product.StallsId == stallId.Value);
         }
 
+        IOrderedQueryable<Product> OrderBy(IQueryable<Product> p) => p.OrderBy(pr => pr.Status);
+
         // Retrieve all products matching the filter
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
+            orderBy: OrderBy,
             includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
                                "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
@@ -313,7 +317,8 @@ public class ProductService : IProductService
         {
             var responseProduct = _mapper.Map<ResponseProduct>(entity);
             responseProduct.ProductValue = await CalculateProductPrice(entity);
-            var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+            var promotion =
+                await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
             if (promotion != null)
             {
                 responseProduct.PromotionId = promotion.Id;
@@ -327,13 +332,10 @@ public class ProductService : IProductService
         // If not, adjust the sorting to match available properties in ResponseProduct
         responseList = responseList
             .OrderBy(rp => rp.Status)
-            .ThenBy(ascending
-                ? (Func<ResponseProduct, object>)(rp => rp.ProductValue)
-                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue))
-            .ThenBy(ascending
-                ? (Func<ResponseProduct, object>)(rp => rp.Name)
-                : (Func<ResponseProduct, object>)(rp => rp.Name))
+            .ThenBy(rp => ascending ? rp.ProductValue : -rp.ProductValue)
+            .ThenBy(rp => ascending ? rp.Name : null)
             .ToList();
+
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);
         var products = await _unitOfWork.ProductRepository.GetAsync(filter);
@@ -349,9 +351,9 @@ public class ProductService : IProductService
     }
 
 
-
-    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int? stallId = null, int pageIndex = 1,
-    int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
+    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int? stallId = null,
+        int pageIndex = 1,
+        int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
@@ -374,8 +376,13 @@ public class ProductService : IProductService
             filter = filter.AndAlso(p => p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
         }
 
+        IOrderedQueryable<Product> OrderBy(IQueryable<Product> p)
+            => p.OrderBy(pr => pr.Status);
+                // .ThenBy(pr => pr.Stalls);
+        
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
+            orderBy: OrderBy,
             includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
                                "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
@@ -645,6 +652,4 @@ public class ProductService : IProductService
 
         return true;
     }
-
-
 }
