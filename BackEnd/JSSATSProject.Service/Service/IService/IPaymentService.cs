@@ -12,4 +12,5 @@ public interface IPaymentService
     public Task<int?> GetSellOrderIdByPaymentIdAsync(int id);
     public Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate, int order);
     public Task<int?> GetBuyOrderIdByPaymentIdAsync(int id);
+    Task<ResponseModel> GetByOrderCodeAsync(string orderCode);
 }

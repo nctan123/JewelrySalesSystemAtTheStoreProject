@@ -378,19 +378,15 @@ public class ProductService : IProductService
 
         IOrderedQueryable<Product> OrderBy(IQueryable<Product> p)
             => p.OrderBy(pr => pr.Status);
-                // .ThenBy(pr => pr.Stalls);
         
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
-            orderBy: OrderBy,
             includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
                                "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                               "ProductMaterials,ProductMaterials.Material,Stalls",
-            pageIndex: pageIndex,
-            pageSize: pageSize
+                               "ProductMaterials,ProductMaterials.Material,Stalls"
         );
 
         var responseList = new List<ResponseProduct>();
@@ -418,6 +414,8 @@ public class ProductService : IProductService
             .ThenBy(ascending
                 ? (Func<ResponseProduct, object>)(rp => rp.Name)
                 : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
+            .Skip((pageIndex-1) * pageSize)
+            .Take(pageSize)
             .ToList();
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);
