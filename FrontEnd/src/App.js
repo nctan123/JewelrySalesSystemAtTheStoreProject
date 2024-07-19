@@ -164,7 +164,7 @@ function App() {
               <Route path={path.ONPROCESS} element={<OnprocessSeller />} />
               <Route path={path.COMPLETED} element={<CompleteSeller />} />
             </Route>
-            <Route path={path.SCREENGOLD} element={<ScreenGold/>} />
+            <Route path={path.SCREENGOLD} element={<ScreenGold />} />
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
               <Route path={path.BUY} element={<Buy />} />
               <Route path={path.BUYOUT} element={<BuyOut />} />
@@ -187,7 +187,7 @@ function App() {
           </Route>
           <Route path='cs_bill/:id' element={<Cs_Bill />} />
           <Route path='bill/:id' element={<Bill />} />
-       
+
         </Routes>
       </div>
 

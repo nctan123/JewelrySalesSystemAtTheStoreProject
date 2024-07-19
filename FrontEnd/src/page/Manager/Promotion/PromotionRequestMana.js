@@ -31,7 +31,7 @@ const PromotionRequestMana = () => {
     startDate: '',
     endDate: '',
     managerID: localStorage.getItem('staffId'),
-    createdAt: new Date().toISOString(),
+    createdAt: new Date(new Date().setHours(new Date().getHours() + 7)).toISOString(),
     categoriIds: []
   });
 
@@ -284,7 +284,7 @@ const PromotionRequestMana = () => {
           startDate: '',
           endDate: '',
           managerID: localStorage.getItem('staffId'),
-          createdAt: new Date().toISOString(),
+          createdAt: new Date(new Date().setHours(new Date().getHours() + 7)).toISOString(),
           categoriIds: []
         });
       }
@@ -305,7 +305,7 @@ const PromotionRequestMana = () => {
       startDate: '',
       endDate: '',
       managerID: localStorage.getItem('staffId'),
-      createdAt: new Date().toISOString(),
+      createdAt: new Date(new Date().setHours(new Date().getHours() + 7)).toISOString(),
       categoriIds: []
     });
 
@@ -478,7 +478,7 @@ const PromotionRequestMana = () => {
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">Start Date</label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   name="startDate"
                   value={newPromotion.startDate}
                   onChange={handleInputChange}
@@ -490,7 +490,7 @@ const PromotionRequestMana = () => {
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">End Date</label>
                 <input
-                  type="date"
+                  type="datetime-local"
                   name="endDate"
                   value={newPromotion.endDate}
                   onChange={handleInputChange}
