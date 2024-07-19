@@ -1,4 +1,5 @@
-Jewelry sales management software for a jewelry company at a store with many stalls
+                                                        Jewelry sales management software for a jewelry company at a store with many stalls
+
  - Manage creating sales orders at customer counters and printing sales invoices. Items are imported by scanning barcodes or entering product codes directly into the program. The program supports printing warranty cards for jewelry items.
  << Selling price = product cost price * price ratio, Product cost price = [time gold price * product weight] + wages + stone fees >>
  - Manage company promotions when selling products. Customers also enjoy additional customer-specific preferential policies. In this case, confirmation from the manager must be made before the sales staff will record the discount for the customer.
