@@ -20,12 +20,14 @@ public partial class BuyOrder
     public string Status { get; set; }
 
     public string Code { get; set; }
-
+    
     public virtual ICollection<BuyOrderDetail> BuyOrderDetails { get; set; } = new List<BuyOrderDetail>();
 
+    [JsonIgnore]
     public virtual Customer Customer { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
+    [JsonIgnore]
     public virtual Staff Staff { get; set; }
 }

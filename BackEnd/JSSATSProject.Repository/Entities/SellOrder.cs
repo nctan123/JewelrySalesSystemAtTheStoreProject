@@ -30,7 +30,6 @@ public partial class SellOrder
 
     public int? SpecialDiscountRequestId { get; set; }
 
-
     public virtual Customer Customer { get; set; }
     [JsonIgnore]
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();

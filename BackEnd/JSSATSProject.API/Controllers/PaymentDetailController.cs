@@ -13,7 +13,7 @@ using NuGet.Packaging;
 
 namespace JSSATSProject.API.Controllers;
 
-[Authorize]
+// [Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class PaymentDetailController : ControllerBase

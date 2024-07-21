@@ -58,7 +58,8 @@ public class SellOrderService : ISellOrderService
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
             requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
         sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
-        var totalAmount = sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice);
+        var totalAmount =
+            sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice);
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
@@ -72,7 +73,7 @@ public class SellOrderService : ISellOrderService
 
         await _unitOfWork.SellOrderRepository.InsertAsync(sellOrder);
         await _unitOfWork.SaveAsync();
-        
+
 
         return new ResponseModel
         {
@@ -80,7 +81,7 @@ public class SellOrderService : ISellOrderService
             MessageError = ""
         };
     }
-    
+
     public async Task<decimal> GetFinalPriceAsync(SellOrder sellOrder)
     {
         var pointRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
@@ -88,7 +89,7 @@ public class SellOrderService : ISellOrderService
         var specialDiscountRequest = sellOrder.SpecialDiscountRequest;
         var specialDiscountRate = (specialDiscountRequest?.DiscountRate).GetValueOrDefault(0);
         if (specialDiscountRequest?.Status == SpecialDiscountRequestConstants.RejectedStatus) specialDiscountRate = 0;
-        decimal finalPrice = (sellOrder!.TotalAmount - discountPoint * pointRate) * (1-specialDiscountRate);
+        decimal finalPrice = (sellOrder!.TotalAmount - discountPoint * pointRate) * (1 - specialDiscountRate);
         return finalPrice;
     }
 
@@ -102,7 +103,6 @@ public class SellOrderService : ISellOrderService
     {
         var result = _unitOfWork.SellOrderRepository.GetTotalAmountByDateRange(startDate, endDate);
         return result;
-
     }
 
     public async Task<ResponseModel> GetAllAsync(List<string> statusList, bool ascending = true, int pageIndex = 1,
@@ -250,18 +250,17 @@ public class SellOrderService : ISellOrderService
                 order.CreateDate = oldtime;
                 await _unitOfWork.SellOrderRepository.UpdateAsync(order);
                 //neu update status = cancelled
-                if (order.Status.Equals(OrderConstants.CanceledStatus)) 
+                if (order.Status.Equals(OrderConstants.CanceledStatus))
                 {
                     await _sellOrderDetailService.UpdateAllOrderDetailsStatus(order, OrderConstants.CanceledStatus);
                     //update point 
-                    var pointId =  order.Customer.Point.Id;
+                    var pointId = order.Customer.Point.Id;
 
                     var updatepoint = new RequestUpdatePoint
                     {
                         AvailablePoint = order.DiscountPoint
                     };
                     await _pointService.UpdatePointAsync(pointId, updatepoint);
-
                 }
                 else if (order.Status.Equals(OrderConstants.CompletedStatus))
                     await _sellOrderDetailService.UpdateAllOrderDetailsStatus(order,
@@ -322,6 +321,7 @@ public class SellOrderService : ISellOrderService
                 {
                     Code = product.Code,
                     Name = product.Name,
+                    CanRepurchase = product.Status != ProductConstants.RepurchasedStatus,
                     Quantity = orderDetail.Quantity,
                     PriceInOrder = orderDetail.UnitPrice,
                     EstimateBuyPrice = buybackPrice,
@@ -347,7 +347,7 @@ public class SellOrderService : ISellOrderService
             var orders = await _unitOfWork.SellOrderRepository.GetAsync(
                 filter,
                 includeProperties: "SpecialDiscountRequest"
-                );
+            );
 
             // Calculate the total sum of discounted total amounts
             decimal totalSum = orders.Sum(order =>
@@ -369,7 +369,6 @@ public class SellOrderService : ISellOrderService
             return new ResponseModel
             {
                 MessageError = "An error occurred while summing the total amount of orders.",
-         
             };
         }
     }
@@ -439,8 +438,8 @@ public class SellOrderService : ISellOrderService
         {
             var prefix = OrderConstants.SellOrderCodePrefix;
             newCode = prefix + CustomLibrary.RandomString(14 - prefix.Length);
-        }
-        while (await _unitOfWork.Context.SellOrders.AnyAsync(so => so.Code == newCode));
+        } while (await _unitOfWork.Context.SellOrders.AnyAsync(so => so.Code == newCode));
+
         return newCode;
     }
 
@@ -455,7 +454,8 @@ public class SellOrderService : ISellOrderService
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
             requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
         sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
-        var totalAmount = sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice);
+        var totalAmount =
+            sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice);
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         return sellOrder;
@@ -472,10 +472,12 @@ public class SellOrderService : ISellOrderService
             {
                 await _productService.UpdateWholesaleGoldQuantity(product, -sellOrderDetail.Quantity);
             }
+
             await _productService.UpdateProductStatusAsync(sellOrderDetail.ProductId, ProductConstants.ActiveStatus);
             await _unitOfWork.SellOrderDetailRepository.DeleteAsync(sellOrderDetail);
         }
     }
+
     public async Task<ResponseModel> UpdateOrderAsync(int orderId, SellOrder targetOrder)
     {
         try

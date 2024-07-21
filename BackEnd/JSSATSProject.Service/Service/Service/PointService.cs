@@ -99,6 +99,12 @@ public class PointService : IPointService
         return Convert.ToInt32(result);
     }
 
+    public async Task<decimal> GetPointToCurrencyConversionRate(DateTime timeStamp)
+    {
+        var pointToCurrencyRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
+        return pointToCurrencyRate;
+    }
+
     public async Task<ResponseModel> DecreaseCustomerAvailablePointAsync(string customerPhoneNumber, int pointValue)
     {
         var pointObj = await _unitOfWork.PointRepository.GetByCustomerPhoneNumber(customerPhoneNumber);
@@ -118,7 +124,8 @@ public class PointService : IPointService
     public async Task<ResponseModel> AddCustomerPoint(string customerPhoneNumber, decimal orderAmount)
     {
         var pointObj = await _unitOfWork.PointRepository.GetByCustomerPhoneNumber(customerPhoneNumber);
-        var accumulativePointRate = await _unitOfWork.CampaignPointRepository.GetOrderValueToPointConversionRate(DateTime.Now);
+        var accumulativePointRate =
+            await _unitOfWork.CampaignPointRepository.GetOrderValueToPointConversionRate(DateTime.Now);
         var pointToCurrencyRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
 
 

@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
+
 [Authorize(Roles = RoleConstants.Seller)]
 [Route("api/[controller]")]
 [ApiController]

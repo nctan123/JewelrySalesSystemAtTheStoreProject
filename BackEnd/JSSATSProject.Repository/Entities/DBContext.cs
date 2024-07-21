@@ -40,6 +40,7 @@ public partial class DBContext : DbContext
 
     public virtual DbSet<Fluorescence> Fluorescences { get; set; }
     public virtual DbSet<Guarantee> Guarantees { get; set; }
+    public virtual DbSet<GuaranteePolicy> GuaranteePolicies { get; set; }
 
     public virtual DbSet<Material> Materials { get; set; }
 
@@ -176,6 +177,9 @@ public partial class DBContext : DbContext
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.BuyOrderId).HasColumnName("buy_order_id");
             entity.Property(e => e.CategoryTypeId).HasColumnName("category_type_id");
+            entity.Property(e => e.ProductCode)
+                .HasMaxLength(50)
+                .HasColumnName("product_code");
             entity.Property(e => e.DiamondGradingCode)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -538,6 +542,27 @@ public partial class DBContext : DbContext
                .HasForeignKey(d => d.SellorderdetailId)
                .HasConstraintName("FK__Guarantee__sello__09746778");
         });
+        
+        modelBuilder.Entity<GuaranteePolicy>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Guarante__3213E83F615C3585");
+
+            entity.ToTable("GuaranteePolicy");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Duration).HasColumnName("duration");
+            entity.Property(e => e.EndDate)
+                .HasColumnType("datetime")
+                .HasColumnName("end_date");
+            entity.Property(e => e.ProductCategoryId).HasColumnName("product_category_id");
+            entity.Property(e => e.StartDate)
+                .HasColumnType("datetime")
+                .HasColumnName("start_date");
+
+            entity.HasOne(d => d.ProductCategory).WithMany(p => p.GuaranteePolicies)
+                .HasForeignKey(d => d.ProductCategoryId)
+                .HasConstraintName("FK__Guarantee__produ__4589517F");
+        });
 
         modelBuilder.Entity<Material>(entity =>
         {
@@ -752,7 +777,7 @@ public partial class DBContext : DbContext
                 .HasColumnName("production_cost");
             entity.Property(e => e.StallsId).HasColumnName("stalls_id");
             entity.Property(e => e.Status)
-                .HasMaxLength(10)
+                .HasMaxLength(20)
                 .IsUnicode(false)
                  .HasDefaultValue("active")
                 .HasColumnName("status");

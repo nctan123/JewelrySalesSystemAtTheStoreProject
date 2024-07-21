@@ -378,7 +378,7 @@ public class ProductService : IProductService
 
         IOrderedQueryable<Product> OrderBy(IQueryable<Product> p)
             => p.OrderBy(pr => pr.Status);
-        
+
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
             includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
@@ -414,7 +414,7 @@ public class ProductService : IProductService
             .ThenBy(ascending
                 ? (Func<ResponseProduct, object>)(rp => rp.Name)
                 : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
-            .Skip((pageIndex-1) * pageSize)
+            .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
             .ToList();
 
@@ -526,6 +526,85 @@ public class ProductService : IProductService
                     MessageError = ""
                 };
             }
+
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "Product not found"
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            // Logger.LogError(ex, "An error occurred while updating the product.");
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the product: " + ex.Message
+            };
+        }
+    }
+
+    public async Task<ResponseModel> UpdateProductStatusAsync(string productCode, string newStatus)
+    {
+        try
+        {
+            var products = await _unitOfWork.ProductRepository.GetAsync(
+                p => p.Code == productCode,
+                includeProperties: "Stalls");
+            var product = products.FirstOrDefault();
+
+            if (product != null)
+            {
+                product.Status = newStatus;
+                await _unitOfWork.ProductRepository.UpdateAsync(product);
+                await _unitOfWork.SaveAsync();
+            }
+
+            return new ResponseModel
+            {
+                Data = product,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+            // Log the exception and return an appropriate error response
+            // Logger.LogError(ex, "An error occurred while updating the product.");
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the product: " + ex.Message
+            };
+        }
+    }
+
+    public async Task<ResponseModel> UpdateProductStatusAsync(IEnumerable<string> productCodes, string newStatus)
+    {
+        try
+        {
+            var result = new List<Product>();
+            foreach (var code in productCodes)
+            {
+                var products = await _unitOfWork.ProductRepository.GetAsync(
+                    p => p.Code == code,
+                    includeProperties: "Stalls");
+                var product = products.FirstOrDefault();
+
+                if (product != null)
+                {
+                    product.Status = newStatus;
+                    result.Add(product);
+                    await _unitOfWork.ProductRepository.UpdateAsync(product);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+
+            return new ResponseModel
+            {
+                Data = result,
+                MessageError = ""
+            };
 
             return new ResponseModel
             {

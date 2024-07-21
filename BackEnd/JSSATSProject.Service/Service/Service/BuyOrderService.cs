@@ -176,12 +176,12 @@ public class BuyOrderService : IBuyOrderService
                     var buyOrderDetails = buyOrder.BuyOrderDetails.ToList();
                     foreach (var buyOrderDetail in buyOrderDetails)
                     {
+                        await _productService.UpdateProductStatusAsync(buyOrderDetail.ProductCode,
+                            ProductConstants.InactiveStatus);
                         await _unitOfWork.BuyOrderDetailRepository.DeleteAsync(buyOrderDetail);
                     }
                 }
-
                 await _unitOfWork.BuyOrderRepository.UpdateAsync(buyOrder);
-
                 return new ResponseModel
                 {
                     Data = buyOrder,
@@ -260,6 +260,7 @@ public class BuyOrderService : IBuyOrderService
             //in-company buy orders
             var orderDetail = new BuyOrderDetail
             {
+                ProductCode = productCode,
                 Quantity = quantity,
                 BuyOrderId = buyOrderId,
                 CategoryTypeId = productObj.Category.TypeId,

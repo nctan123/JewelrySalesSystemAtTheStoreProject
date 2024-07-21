@@ -15,6 +15,8 @@ public class ProductConstants
 
     public const string ActiveStatus = "active";
     public const string InactiveStatus = "inactive";
+    public const string RepurchasedStatus = "repurchased";
+    
 
     public const int JWECategoryTypeId = 2; 
     public const int RGOCategoryTypeId = 3; 
