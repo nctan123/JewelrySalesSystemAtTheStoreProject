@@ -24,6 +24,13 @@ public class MaterialPriceListService : IMaterialPriceListService
         RequestCreateMaterialPriceList requestMaterialPriceList)
     {
         var entity = _mapper.Map<MaterialPriceList>(requestMaterialPriceList);
+        if (requestMaterialPriceList.BuyPrice > requestMaterialPriceList.SellPrice)
+        {
+            return new ResponseModel
+            {
+                MessageError = "Material buy price cannot larger than sell price"
+            };
+        }
         await _unitOfWork.MaterialPriceListRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
         return new ResponseModel

@@ -12,10 +12,10 @@ public class CampaignPointRepository : GenericRepository<CampaignPoint>
     public async Task<decimal> GetPointRate(DateTime timeStamp)
     {
         var rate = await context.CampaignPoints
-            .Where(c => c.StartDate >= timeStamp && c.EndDate <= timeStamp)
+            .Where(c => EF.Functions.Like(c.Description, "Point value to VND") && c.StartDate <= timeStamp && c.EndDate >= timeStamp)
             .Select(c => c.Rate)
             .FirstOrDefaultAsync();
-        return rate ?? 1;
+        return rate!.Value;
     }
 
     public async Task<decimal> GetOrderValueToPointConversionRate(DateTime timeStamp)

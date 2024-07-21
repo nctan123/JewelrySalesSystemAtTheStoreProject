@@ -406,7 +406,8 @@ public class SellOrderService : ISellOrderService
             q => (statusList == null || statusList.Contains(q.Status)) &&
                  (string.IsNullOrEmpty(customerPhone) || q.Customer.Phone.Contains(customerPhone)),
             includeProperties:
-            "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product,SpecialDiscountRequest",
+             "SellOrderDetails,Staff,Customer,Payments,SellOrderDetails.Product," +
+            "SpecialDiscountRequest,Payments.PaymentDetails.PaymentMethod,SellOrderDetails.Promotion",
             orderBy: ascending
                 ? q => q.OrderBy(p => p.CreateDate)
                 : q => q.OrderByDescending(p => p.CreateDate),

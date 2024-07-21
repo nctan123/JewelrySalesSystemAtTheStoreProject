@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
-    [ApiController]
+    //[ApiController]
     [Route("api/[controller]")]
     public class _4CController : ControllerBase
     {

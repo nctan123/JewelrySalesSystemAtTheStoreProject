@@ -307,9 +307,7 @@ public class ProductService : IProductService
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                               "ProductMaterials,ProductMaterials.Material,Stalls,Stalls.Type",
-            pageIndex: pageIndex,
-            pageSize: pageSize
+                               "ProductMaterials,ProductMaterials.Material,Stalls,Stalls.Type"
         );
 
         var responseList = new List<ResponseProduct>();
@@ -334,6 +332,8 @@ public class ProductService : IProductService
             .OrderBy(rp => rp.Status)
             .ThenBy(rp => ascending ? rp.ProductValue : -rp.ProductValue)
             .ThenBy(rp => ascending ? rp.Name : null)
+            .Skip((pageIndex -1) * pageSize)
+            .Take(pageSize)
             .ToList();
 
 
@@ -388,9 +388,7 @@ public class ProductService : IProductService
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                               "ProductMaterials,ProductMaterials.Material,Stalls",
-            pageIndex: pageIndex,
-            pageSize: pageSize
+                               "ProductMaterials,ProductMaterials.Material,Stalls"
         );
 
         var responseList = new List<ResponseProduct>();
@@ -418,6 +416,8 @@ public class ProductService : IProductService
             .ThenBy(ascending
                 ? (Func<ResponseProduct, object>)(rp => rp.Name)
                 : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
+            .Skip((pageIndex-1) * pageSize)
+            .Take(pageSize)
             .ToList();
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);

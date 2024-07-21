@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
-    [Authorize(Roles = RoleConstants.Manager)]
+    //[Authorize(Roles = RoleConstants.Manager)]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductDiamondController : ControllerBase

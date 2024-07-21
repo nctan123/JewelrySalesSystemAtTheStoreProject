@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
-    [Authorize(Roles =RoleConstants.Manager)]
+    //[Authorize(Roles =RoleConstants.Manager)]
     [ApiController]
     [Route("api/[controller]")]
     public class ProductMaterialController : ControllerBase
@@ -25,6 +25,14 @@ namespace JSSATSProject.API.Controllers
         public async Task<IActionResult> Create([FromBody] RequestCreateProductMaterial requestProductMaterial)
         {
             var responseModel = await _productMaterialService.CreateAsync(requestProductMaterial);
+            return Ok(responseModel);
+        }
+
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update([FromBody] RequestUpdateProductMaterial requestProductMaterial)
+        {
+            var responseModel = await _productMaterialService.UpdateAsync(requestProductMaterial);
             return Ok(responseModel);
         }
 

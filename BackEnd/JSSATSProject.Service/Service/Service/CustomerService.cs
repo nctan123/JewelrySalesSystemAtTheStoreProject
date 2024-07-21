@@ -122,6 +122,7 @@ public class CustomerService : ICustomerService
             Email = entity.Email,
             Gender = entity.Gender,
             Address = entity.Address,
+            CreateDate = entity.CreateDate,
             Point = entity.Point
         }).ToList();
 

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-[Authorize(Roles = RoleConstants.Seller)]
+//[Authorize(Roles = $"{RoleConstants.Manager},{RoleConstants.Admin},{RoleConstants.Seller}")]
 [Route("api/[controller]")]
 [ApiController]
 public class SellOrderController : ControllerBase

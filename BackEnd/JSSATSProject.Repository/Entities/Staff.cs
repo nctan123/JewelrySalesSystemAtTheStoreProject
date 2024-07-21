@@ -27,7 +27,7 @@ public partial class Staff
     public string Status { get; set; }
 
     public virtual Account Account { get; set; }
-
+    [JsonIgnore]
     public virtual ICollection<BuyOrder> BuyOrders { get; set; } = new List<BuyOrder>();
     [JsonIgnore]
     public virtual ICollection<PromotionRequest> PromotionRequestApprovedByNavigations { get; set; } = new List<PromotionRequest>();

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 
 namespace JSSATSProject.API.Controllers;
-[Authorize(Roles = RoleConstants.Manager + "," + RoleConstants.Seller)]
+//[Authorize(Roles = RoleConstants.Manager + "," + RoleConstants.Seller)]
 [ApiController]
 [Route("api/[controller]")]
 public class SpecialDiscountRequestController : ControllerBase
