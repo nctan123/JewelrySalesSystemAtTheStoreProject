@@ -177,7 +177,4 @@ public class PaymentController : ControllerBase
         var totalCount = await _paymentService.GetTotalAllPayMentAsync(startDate, endDate, order);
             return Ok(totalCount);
     }
-
-   
-
 }

@@ -19,6 +19,7 @@ public class UnitOfWork
     private DiamondPriceListRepository _diamondpricelist;
     private FluorescenceRepository _fluorescence;
     private GuaranteeRepository _guarantee;
+    private GuaranteePolicyRepository _guaranteePolicy;
     private MaterialRepository _material;
     private MaterialPriceListRepository _materialpricelist;
     private OriginRepository _origin;
@@ -57,7 +58,15 @@ public class UnitOfWork
     }
     // bổ sung mới Procedures
     public DBContext Context => _context;
-
+    public GuaranteePolicyRepository GuaranteePolicyRepository
+    {
+        get
+        {
+            if (_guaranteePolicy == null)
+                _guaranteePolicy = new GuaranteePolicyRepository(_context);
+            return _guaranteePolicy;
+        }
+    }
     public PurchasePriceRatioRepository PurchasePriceRatioRepository
     {
         get

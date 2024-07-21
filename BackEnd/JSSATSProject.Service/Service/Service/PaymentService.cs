@@ -146,6 +146,34 @@ public class PaymentService : IPaymentService
         return payment.BuyorderId;
     }
 
+    public async Task<ResponseModel> GetByOrderCodeAsync(string orderCode)
+    {
+        if (orderCode.StartsWith(OrderConstants.SellOrderCodePrefix))
+        {
+            var sellOrder = await _unitOfWork.SellOrderRepository.GetByCodeAsync(orderCode);
+            var result = _mapper.Map<List<ResponsePayment>>(sellOrder?.Payments.ToList());
+            return new ResponseModel()
+            {
+                Data = result
+            };
+        }
+
+        if (orderCode.StartsWith(OrderConstants.BuyOrderCodePrefix))
+        {
+            var buyOrder = await _unitOfWork.BuyOrderRepository.GetByCodeAsync(orderCode);
+            var result = _mapper.Map<List<ResponsePayment>>(buyOrder?.Payments.ToList());
+            return new ResponseModel()
+            {
+                Data = result
+            };
+        }
+
+        return new ResponseModel()
+        {
+            MessageError = $"Order with code {orderCode} not found."
+        };
+    }
+
     public async Task<ResponseModel> GetTotalAllPayMentAsync(DateTime startDate, DateTime endDate, int order)
     {
         Expression<Func<Payment, bool>> baseFilter = payment =>
@@ -192,10 +220,10 @@ public class PaymentService : IPaymentService
         foreach (var paymentMethodSum in paymentMethodTotalSums)
         {
             result.Add(new Dictionary<string, object>
-        {
-            { "PaymentMethodName", paymentMethodSum.PaymentMethodName },
-            { "TotalAmount", paymentMethodSum.TotalAmount }
-        });
+            {
+                { "PaymentMethodName", paymentMethodSum.PaymentMethodName },
+                { "TotalAmount", paymentMethodSum.TotalAmount }
+            });
         }
 
         // Return the response model with the result data

@@ -15,6 +15,9 @@ public partial class ProductCategory
     public int TypeId { get; set; }
 
     public string Status { get; set; }
+    
+    public virtual ICollection<GuaranteePolicy> GuaranteePolicies { get; set; } = new List<GuaranteePolicy>();
+
     [JsonIgnore]
     public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     [JsonIgnore]
