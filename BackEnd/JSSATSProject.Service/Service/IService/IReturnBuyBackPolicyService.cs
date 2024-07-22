@@ -13,4 +13,7 @@ public interface IReturnBuyBackPolicyService
 
     public Task<ResponseModel> UpdateReturnBuyBackPolicyAsync(int Id,
         RequestUpdateReturnBuyBackPolicy requestReturnBuyBackPolicy);
+
+    public Task UpdateStatusesAsync();
+
 }

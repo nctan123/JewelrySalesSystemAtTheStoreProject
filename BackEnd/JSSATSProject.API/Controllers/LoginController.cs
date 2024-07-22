@@ -37,6 +37,9 @@ public class LoginController : ControllerBase
         var tokenResponse = _mapper.Map<ResponseToken>(user);
         if (user is not null)
         {
+            if (user.Status != "active")
+                return Problem($"Account {userLogin.Username} has been deactivated.",
+                    statusCode: Convert.ToInt32(HttpStatusCode.Unauthorized), title: "Login Failed");
             var token = GenerateToken(user);
             tokenResponse.Token = token;
             return Ok(tokenResponse);

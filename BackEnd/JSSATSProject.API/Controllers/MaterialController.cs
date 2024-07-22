@@ -1,4 +1,5 @@
 ﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.Material;
 using JSSATSProject.Service.Service.IService;
 using Microsoft.AspNetCore.Authorization;
@@ -40,5 +41,16 @@ public class MaterialController : ControllerBase
     {
         var responseModel = await _materialService.CreateMaterialAsync(requestMaterial);
         return Ok(responseModel);
+    }
+
+    [HttpGet]
+    [Route("PriceChangesNotification")]
+    public async Task<IActionResult> PriceChangesNotification()
+    {
+        var expiredMaterialIds = await _materialService.ShouldSendPriceChangesNotification();
+        return Ok(new ResponseModel()
+        {
+            Data = expiredMaterialIds
+        });
     }
 }

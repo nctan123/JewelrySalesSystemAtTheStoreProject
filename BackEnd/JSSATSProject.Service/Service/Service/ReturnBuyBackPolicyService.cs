@@ -112,4 +112,9 @@ public class ReturnBuyBackPolicyService : IReturnBuyBackPolicyService
             };
         }
     }
+    
+    public async Task UpdateStatusesAsync()
+    {
+        await _unitOfWork.ReturnBuyBackPolicyRepository.UpdateStatusesAsync();
+    }
 }

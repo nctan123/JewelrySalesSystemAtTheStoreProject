@@ -121,8 +121,9 @@ public class Program
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IMailSenderService, MailSenderService>();
 
-        //microservices
+        //background services
         services.AddHostedService<PromotionStatusUpdateService>();
+        services.AddHostedService<ReturnBuybackPolicyStatusUpdateService>();
         
         var app = builder.Build();
 
