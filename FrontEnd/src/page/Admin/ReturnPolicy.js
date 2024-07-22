@@ -25,7 +25,7 @@ const ReturnPolicy = () => {
     const [totalPages, setTotalPages] = useState(1);
     const [pageSize, setPageSize] = useState(10);
     const policyPerPageOptions = [10, 15, 20, 25, 30, 35, 40, 45, 50];
-    const [ascending, setAscending] = useState(true);
+    const [ascending, setAscending] = useState(false);
     const [errors, setErrors] = useState({});
 
 

@@ -224,8 +224,8 @@ const CustomerDetail = () => {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                // console.log('check detail click', res.data.data[0])
-                if (res && res.data) {
+                console.log('check detail click', res)
+                if (res && res.data && res.data.data[0]) {
                     const details = res.data.data[0];
                     // console.log('check detail click', res.data.data[0].sellOrderDetails)
                     setSelectedSellOrder(details);
@@ -680,7 +680,7 @@ const CustomerDetail = () => {
                                                 ) : item.buyOrderCode ? (
                                                     <CiViewList onClick={() => handleDetailClick(item.buyOrderId, activeTab)} />
                                                 ) : null}
-                                                {/* <CiViewList onClick={() => handleDetailClick(item.sellorderId, activeTab)} /> */}
+
 
                                             </td>
 
@@ -962,13 +962,11 @@ const CustomerDetail = () => {
                                             <thead className="w-full rounded-lg bg-blue-900 text-base font-semibold text-white sticky top-0">
                                                 <tr className="whitespace-nowrap text-xl font-bold">
                                                     <th className="py-3 pl-3 rounded-l-lg" title="Column 1"></th>
-                                                    <th className="py-3" title="Category">Cat.</th>
+                                                    <th className="py-3" title="Category">Category</th>
                                                     <th className="py-3" title="Name">Name</th>
-                                                    <th className='text-center' title="Material Name">Mat. Name</th>
-                                                    <th className='text-center'>Quantity</th>
-                                                    <th className='text-center' title="Diamond Grading Code">DGC</th>
+                                                    <th className='text-center' >Material</th>
                                                     <th title="Value">Value</th>
-                                                    <th className="rounded-r-lg" title="Purchase Price Ratio">PP Ratio</th>
+                                                    <th className="text-center rounded-r-lg" title="Purchase Price Ratio">Purchase Price Ratio</th>
 
                                                 </tr>
                                             </thead>
@@ -979,18 +977,7 @@ const CustomerDetail = () => {
                                                         <td>{item.categoryType}</td>
                                                         <td>{item.productName}</td>
                                                         <td className='text-center'>{item.materialName}</td>
-                                                        <td className='  text-center'>
-                                                            <span className='text-center'>{item.materialWeight || 0}</span>
-                                                            {item.caregoryId === '7'
-                                                                ? <span className=' ml-2'>carat</span>
-                                                                : item.caregoryId === '6' || item.caregoryId === '5'
-                                                                    ? <span className='ml-2 '>grams</span>
-                                                                    : <span className=' ml-2'>piece</span>
-                                                            }
-                                                        </td>
 
-
-                                                        <td className='text-center'>{item.diamondGradingCode || 'null'}</td>
                                                         <td>{formatCurrency(item.unitPrice)}</td>
                                                         <td className="rounded-r-lg text-center">
                                                             {item.purchasePriceRatio}

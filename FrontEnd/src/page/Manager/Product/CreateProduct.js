@@ -66,6 +66,7 @@ export default function CreateProduct() {
     const [addDiamond, setAddDiamond] = useState(false);
     const [choseWholeGold, setChoseWholeGold] = useState(false);
     const [selectedWholeGold, setSelectedWholeGold] = useState(null);
+    const [error, setError] = useState('');
     useEffect(() => {
         fetchOptions();
     }, []);
@@ -247,12 +248,29 @@ export default function CreateProduct() {
             [name]: value,
         });
     };
+    // const handleWholeGoldChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setCreatedWholeGold({
+    //         ...createdWholeGold,
+    //         [name]: value,
+    //     });
+    // };
     const handleWholeGoldChange = (e) => {
         const { name, value } = e.target;
-        setCreatedWholeGold({
-            ...createdWholeGold,
-            [name]: value,
-        });
+
+        // Convert the value to a number
+        const numericValue = parseFloat(value);
+
+        // Check if the value is a number and less than 100
+        if (!isNaN(numericValue) && numericValue < 100) {
+            setCreatedWholeGold({
+                ...createdWholeGold,
+                [name]: value,
+            });
+        } else {
+            // Optionally, handle invalid input here (e.g., show an error message)
+            setError('Value must be a number less than 100');
+        }
     };
     const handleSubmitProduct = async () => {
         const formDataToSend = new FormData();
@@ -375,7 +393,7 @@ export default function CreateProduct() {
                     }
                 );
                 // console.log('Product Retail gold created successfully:', response.data);
-                toast.success('Product Retail Gold created successfully!');
+                // toast.success('Product Retail Gold created successfully!');
             } catch (error) {
                 console.error('Error creating Product Retail Gold:', error);
                 toast.error('Failed to create Product Retail Gold');
@@ -564,6 +582,7 @@ export default function CreateProduct() {
                                             placeholder="A mace of gold converted to gram equals 3.75g"
                                             className="w-[400px] p-2 mr-3 border border-gray-300 rounded-md ml-auto"
                                         />
+                                        {error && <span className='text-red-500'> error</span>}
                                     </div>
                                 </>
                             )}

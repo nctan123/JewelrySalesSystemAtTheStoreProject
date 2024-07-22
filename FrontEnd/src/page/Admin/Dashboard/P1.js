@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { FaArrowTrendUp } from "react-icons/fa6";
 import { FaArrowTrendDown } from "react-icons/fa6";
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 export default function P1() {
+    const navigate = useNavigate();
     const [todayRevenue, setTodayRevenue] = useState(null);
     const [yesterdayRevenue, setYesterdayRevenue] = useState(null);
     const [thisWeekRevenue, setThisWeekRevenue] = useState(null);
@@ -25,7 +28,7 @@ export default function P1() {
 
     const [view, setView] = useState('day'); // state to track which button was clicked
     const [error, setError] = useState(null);
-
+    let isLoginSessionExpired = false;
     const getRevenue = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
         formattedStartDate.setHours(0, 0, 0, 0);
@@ -67,9 +70,13 @@ export default function P1() {
             const result = response.data;
             setData(result.data || 0);
         } catch (error) {
-            setError(error.message);
+            // setError(error.message);
+            navigate('/login');
+            if (!isLoginSessionExpired) {
+                isLoginSessionExpired = true;
+                toast.error('Login session expired');
+            }
         }
-
     };
     const getNewCustomer = async (start, end, setData) => {
         const formattedStartDate = new Date(start);
