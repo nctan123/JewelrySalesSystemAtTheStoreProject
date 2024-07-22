@@ -178,6 +178,7 @@ public class ApplicationMapper : Profile
                 .ForMember(dest => dest.CustomerId,opt => opt.MapFrom(src => src.Customer.Id))
                 .ReverseMap();
         CreateMap<Payment, RequestCreatePayment>().ReverseMap();
+        CreateMap<Payment, RequestUpdatePayment>().ReverseMap();
 
         //Point
         CreateMap<Point, RequestCreatePoint>().ReverseMap();
