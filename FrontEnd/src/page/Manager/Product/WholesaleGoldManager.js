@@ -244,7 +244,7 @@ const WholesaleGoldManager = () => {
     return (
         <div className="flex items-center justify-center min-h-screen bg-white mx-5 pt-5 mb-5 rounded">
             <div>
-                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List of wholesale gold</h1>
+                <h1 ref={scrollRef} className="text-3xl font-bold text-center text-blue-800 mb-4">List Of Wholesale Gold</h1>
                 <div className="flex justify-between items-center">
                     <div className="ml-2">
                         <button

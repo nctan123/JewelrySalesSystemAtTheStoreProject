@@ -144,7 +144,7 @@ const Material = () => {
                                 <th className="py-3 px-4 border border-gray-300">Name</th>
                                 <th className="py-3 px-4 border border-gray-300">Buy Price (₫)</th>
                                 <th className="py-3 px-4 border border-gray-300">Sell Price (₫)</th>
-                                <th className="py-3 px-4 border border-gray-300">Effective Date</th>
+                                <th className="py-3 px-4 border border-gray-300">Last Update</th>
                             </tr>
                         </thead>
                         <tbody>
