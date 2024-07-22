@@ -25,10 +25,10 @@ const path = {
     BUYOUT: 'buyOut',
     BILL: 'bill',
 
-    SCREENGOLD:'screengold',
+    SCREENGOLD: 'screengold',
 
 
-  
+
 
     CS_PUBLIC: 'cs_public',
     CS_ORDER: 'cs_order',
@@ -82,6 +82,7 @@ const path = {
     DIAMONDPRICE: 'diamondPrice',
     PRICE: 'price',
     MATERIAL: 'material',
+    WORLDGOLDPRICE: 'worldGoldPrice',
     SPECIALDISCOUNT: 'specialDiscount',
     PAYMENT: 'Payment'
     // end manager

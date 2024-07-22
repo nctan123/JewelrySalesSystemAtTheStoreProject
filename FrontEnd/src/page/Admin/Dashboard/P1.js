@@ -293,9 +293,15 @@ export default function P1() {
         }).format(value);
     };
     // caculate %Change
+    // const calculatePercentageChange = (today, yesterday) => {
+    //     if (today === null) return null;
+    //     if (yesterday === null || yesterday === 0) return 100;
+    //     const change = ((today - yesterday) / yesterday) * 100;
+    //     return change.toFixed(2); // returns a string with 2 decimal places
+    // };
     const calculatePercentageChange = (today, yesterday) => {
-        if (today === null) return null;
-        if (yesterday === null || yesterday === 0) return today.toFixed(2);
+        if (today === 0 && yesterday === 0) return 0;
+        if (yesterday === 0) return 100;
         const change = ((today - yesterday) / yesterday) * 100;
         return change.toFixed(2); // returns a string with 2 decimal places
     };

@@ -74,11 +74,23 @@ const ReturnPolicy = () => {
 
     const handleSaveChanges = async () => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
             const res = await axios.put(
                 `https://jssatsproject.azurewebsites.net/api/ReturnBuyBackPolicy/UpdateReturnBuyBackPolicy?id=${selectedPolicy.id}`,
-                selectedPolicy
+                selectedPolicy,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
-            console.log('>>> check ', selectedPolicy)
+
+            console.log('>>> check ', selectedPolicy);
+
             if (res.status === 200) {
                 const updatedPolicy = originalListPolicy.map((policy) =>
                     policy.id === selectedPolicy.id ? selectedPolicy : policy
@@ -94,6 +106,7 @@ const ReturnPolicy = () => {
             toast.error("Failed to update policy");
         }
     };
+
 
     const handlePageChange = (page) => {
         setCurrentPage(page);

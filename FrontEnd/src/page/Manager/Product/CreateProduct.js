@@ -72,63 +72,82 @@ export default function CreateProduct() {
 
     const fetchOptions = async () => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const headers = { Authorization: `Bearer ${token}` };
+
             const whosaleGoldResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&includeNullStalls=false'
+                'https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&includeNullStalls=false',
+                { headers }
             );
             setWhosaleGoldList(whosaleGoldResponse.data.data);
 
             const materialResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/Material/getall'
+                'https://jssatsproject.azurewebsites.net/api/Material/getall',
+                { headers }
             );
             setMaterialOptions(materialResponse.data.data);
 
             const categoryResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/productcategory/getall'
+                'https://jssatsproject.azurewebsites.net/api/productcategory/getall',
+                { headers }
             );
             setCategoryOptions(categoryResponse.data.data);
 
             const originResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/Origin/GetAll'
+                'https://jssatsproject.azurewebsites.net/api/Origin/GetAll',
+                { headers }
             );
             setOriginOptions(originResponse.data.data);
 
             const shapeResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/Shape/GetAll'
+                'https://jssatsproject.azurewebsites.net/api/Shape/GetAll',
+                { headers }
             );
             setShapeOptions(shapeResponse.data.data);
 
             const fluorescenceResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/fluorescence/GetAll'
+                'https://jssatsproject.azurewebsites.net/api/fluorescence/GetAll',
+                { headers }
             );
             setFluorescenceOptions(fluorescenceResponse.data.data);
 
             const colorResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/_4C/GetColorAll'
+                'https://jssatsproject.azurewebsites.net/api/_4C/GetColorAll',
+                { headers }
             );
             setColorOptions(colorResponse.data.data);
 
             const symmetryResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/Symmetry/GetAll'
+                'https://jssatsproject.azurewebsites.net/api/Symmetry/GetAll',
+                { headers }
             );
             setSymmetryOptions(symmetryResponse.data.data);
 
             const polishResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/Polish/GetAll'
+                'https://jssatsproject.azurewebsites.net/api/Polish/GetAll',
+                { headers }
             );
             setPolishOptions(polishResponse.data.data);
 
             const cutResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/_4C/getCutAll'
+                'https://jssatsproject.azurewebsites.net/api/_4C/getCutAll',
+                { headers }
             );
             setCutOptions(cutResponse.data.data);
 
             const clarityResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/_4C/GetClarityAll'
+                'https://jssatsproject.azurewebsites.net/api/_4C/GetClarityAll',
+                { headers }
             );
             setClarityOptions(clarityResponse.data.data);
 
             const caratResponse = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/_4C/getCaratAll'
+                'https://jssatsproject.azurewebsites.net/api/_4C/getCaratAll',
+                { headers }
             );
             setCaratOptions(caratResponse.data.data);
 
@@ -138,14 +157,24 @@ export default function CreateProduct() {
     };
     const fetchWhosaleGold = async () => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const headers = { Authorization: `Bearer ${token}` };
+
             const response = await axios.get(
-                'https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&includeNullStalls=false'
+                'https://jssatsproject.azurewebsites.net/api/product/getall?categoryID=6&includeNullStalls=false',
+                { headers }
             );
+
             setWhosaleGoldList(response.data.data);
         } catch (error) {
             console.error('Error fetching wholesale gold:', error);
         }
     };
+
     useEffect(() => {
         fetchWhosaleGold();
     }, [choseWholeGold]);
@@ -232,33 +261,52 @@ export default function CreateProduct() {
         });
 
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
             const response = await axios.post(
                 'https://jssatsproject.azurewebsites.net/api/product/createProduct',
                 formDataToSend,
                 {
                     headers: {
                         'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`  // Include the Authorization header
                     },
                 }
             );
             // console.log('Product created successfully:', response.data);
             setCreatedProduct(response.data.data);
-            toast.success(` ${categoryName} created successfully !`);
+            toast.success(`${categoryName} created successfully!`);
         } catch (error) {
             console.error('Error creating product:', error);
+            toast.error('Failed to create product');
         }
     };
 
     const handleSubmitDiamond = async () => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
             const response = await axios.post(
                 'https://jssatsproject.azurewebsites.net/api/Diamond/createDiamond',
-                diamondData
+                diamondData,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',  // Adjust if you're sending different content
+                        Authorization: `Bearer ${token}`  // Include the Authorization header
+                    },
+                }
             );
             // console.log('Diamond created successfully:', response.data);
             setCreatedDiamond(response.data.data);
         } catch (error) {
             console.error('Error creating diamond:', error);
+            toast.error('Failed to create diamond');
         }
     };
 
@@ -270,16 +318,30 @@ export default function CreateProduct() {
             };
 
             try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
                 const response = await axios.post(
                     'https://jssatsproject.azurewebsites.net/api/ProductDiamond/Create',
-                    productDiamondData
+                    productDiamondData,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',  // Adjust if needed
+                            Authorization: `Bearer ${token}`  // Include the Authorization header
+                        },
+                    }
                 );
                 // console.log('ProductDiamond created successfully:', response.data);
+                toast.success('ProductDiamond created successfully!');
             } catch (error) {
                 console.error('Error creating ProductDiamond:', error);
+                toast.error('Failed to create ProductDiamond');
             }
         }
     };
+
     useEffect(() => {
         handleCreateProductDiamond();
     }, [createdDiamond, createdProduct]);
@@ -297,21 +359,34 @@ export default function CreateProduct() {
             };
 
             try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
                 const response = await axios.post(
                     'https://jssatsproject.azurewebsites.net/api/ProductMaterial/create',
-                    productRetailGoldData
+                    productRetailGoldData,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',  // Adjust if needed
+                            Authorization: `Bearer ${token}`  // Include the Authorization header
+                        },
+                    }
                 );
                 // console.log('Product Retail gold created successfully:', response.data);
-
+                toast.success('Product Retail Gold created successfully!');
             } catch (error) {
-                console.error('Error creating ProductDiamond:', error);
+                console.error('Error creating Product Retail Gold:', error);
+                toast.error('Failed to create Product Retail Gold');
             }
         }
-        // console.log('setCreatedReta1111ilGold1', createdProduct);
+        // console.log('setCreatedRetailGold1', createdRetailGold1);
     };
+
     useEffect(() => {
         handleCreateProductRetailGold();
-    }, [createdRetailGold1, createdProduct]);
+    }, [createdProduct, createdRetailGold1]);
 
 
     const handleChangeDone1 = async (e) => {
@@ -388,7 +463,7 @@ export default function CreateProduct() {
 
         setCreatedProduct(null);
         setCreatedDiamond(null);
-        setCreatedRetailGold1(null);
+        // setCreatedRetailGold1(null);
         setCreatedRetailGold({
             materialId: '',
             weight: '',
@@ -420,20 +495,37 @@ export default function CreateProduct() {
     };
     const handleUpdateWeight = async () => {
         try {
-            const response = await axios.put('https://jssatsproject.azurewebsites.net/api/ProductMaterial/update', {
-                productId: selectedWholeGold.id,
-                weight: createdWholeGold.weight,
-            });
-            toast.success('Add wholesale gold successfully !')
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+
+            const response = await axios.put(
+                'https://jssatsproject.azurewebsites.net/api/ProductMaterial/update',
+                {
+                    productId: selectedWholeGold.id,
+                    weight: createdWholeGold.weight,
+                },
+                {
+                    headers: {
+                        'Content-Type': 'application/json',  // Ensure correct content type
+                        Authorization: `Bearer ${token}`  // Include the Authorization header
+                    },
+                }
+            );
+
+            toast.success('Add wholesale gold successfully!');
             setChoseWholeGold(!choseWholeGold);
             setCreatedWholeGold({
                 productId: '',
                 weight: '',
-            })
+            });
         } catch (error) {
             console.error('Error updating weight:', error);
+            toast.error('Failed to update weight');
         }
     };
+
     return (
         <div className="p-4 max-w-[1200px] mx-auto bg-white rounded-xl shadow-md space-y-4">
             <h2 className="text-3xl font-bold text-blue-800">Create New Product</h2>

@@ -62,12 +62,21 @@ const CustomerDetail = () => {
                 setTotalPages(0);
         }
     }, [activeTab, totalPagesSell, totalPagesBuy, totalPagesPayment, pageSize]);
-
-
     useEffect(() => {
         const fetchCustomerData = async () => {
             try {
-                const customerRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getbyphone?phonenumber=${phone}`);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error("No token found");
+                }
+                const customerRes = await axios.get(
+                    `https://jssatsproject.azurewebsites.net/api/customer/getbyphone?phonenumber=${phone}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 if (customerRes && customerRes.data && customerRes.data.data) {
                     setCustomerData(customerRes.data.data[0]);
                 }
@@ -78,58 +87,85 @@ const CustomerDetail = () => {
 
         const fetchSellOrderData = async () => {
             try {
-                const sellOrderRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getSellOrderByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error("No token found");
+                }
+                const sellOrderRes = await axios.get(
+                    `https://jssatsproject.azurewebsites.net/api/customer/getSellOrderByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 if (sellOrderRes && sellOrderRes.data && sellOrderRes.data.data) {
                     setSellOrderData(sellOrderRes.data.data);
                     setTotalPagesSell(sellOrderRes.data.totalPages);
-                    // setTotalPages(sellOrderRes.data.totalPages);
                 }
             } catch (error) {
                 console.error('Error fetching sell orders:', error);
             }
         };
+
         const fetchBuyOrderData = async () => {
             try {
-                const buyOrderRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getBuyOrdersByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error("No token found");
+                }
+                const buyOrderRes = await axios.get(
+                    `https://jssatsproject.azurewebsites.net/api/customer/getBuyOrdersByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 if (buyOrderRes && buyOrderRes.data && buyOrderRes.data.data) {
                     setBuyOrderData(buyOrderRes.data.data);
                     setTotalPagesBuy(buyOrderRes.data.totalPages);
-                    // setTotalPages(buyOrderRes.data.totalPages);
                 }
             } catch (error) {
-                console.error('Error fetching sell orders:', error);
+                console.error('Error fetching buy orders:', error);
             }
         };
+
         const fetchPaymentData = async () => {
             try {
-                const paymentRes = await axios.get(`https://jssatsproject.azurewebsites.net/api/customer/getPaymentsByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`);
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error("No token found");
+                }
+                const paymentRes = await axios.get(
+                    `https://jssatsproject.azurewebsites.net/api/customer/getPaymentsByPhone?phoneNumber=${phone}&pageSize=${pageSize}&pageIndex=${currentPage}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
                 if (paymentRes && paymentRes.data && paymentRes.data.data) {
                     setPaymentData(paymentRes.data.data);
                     setTotalPagesPayment(paymentRes.data.totalPages);
-                    // setTotalPages(buyOrderRes.data.totalPages);
                 }
             } catch (error) {
-                console.error('Error fetching sell orders:', error);
+                console.error('Error fetching payment data:', error);
             }
         };
+
         if (phone) {
             if (searchQuery) {
-
                 handleSearchSell(searchQuery);
                 handleSearchBuy(searchQuery);
                 handleSearchPay(searchQuery);
             } else {
-
                 fetchCustomerData();
                 fetchSellOrderData();
                 fetchBuyOrderData();
                 fetchPaymentData();
-
             }
-            // console.log('>>>> gtessttt', totalPages)
         }
-
-
     }, [phone, currentPage, pageSize, activeTab, searchQuery]);
     // 'sellOrder', 'buyOrder', 'payment'
     const handleDetailClick = async (id, activeList) => {

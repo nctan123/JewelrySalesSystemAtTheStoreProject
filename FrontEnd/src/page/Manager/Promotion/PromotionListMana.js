@@ -140,10 +140,21 @@ const PromotionListMana = () => {
 
     const handleSaveChanges = async () => {
         try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error("No token found");
+            }
+
             const res = await axios.put(
                 `https://jssatsproject.azurewebsites.net/api/promotion/Updatepromotion?id=${selectedPromotion.id}`,
-                selectedPromotion
+                selectedPromotion,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
             );
+
             if (res.status === 200) {
                 const updatedPromotions = listPromotion.map((promotion) =>
                     promotion.id === selectedPromotion.id ? selectedPromotion : promotion
@@ -158,6 +169,7 @@ const PromotionListMana = () => {
             toast.error("Failed to update promotion");
         }
     };
+
 
     const placeholders = Array.from({ length: pageSize - listPromotion.length });
 
