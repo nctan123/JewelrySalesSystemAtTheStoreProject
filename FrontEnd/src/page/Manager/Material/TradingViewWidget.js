@@ -23,14 +23,14 @@ function TradingViewWidget() {
         "colorTheme": "light",
         "autosize": true,
         "showVolume": true,
-        "showMA": false,
+        "showMA": true,
         "hideDateRanges": false,
         "hideMarketStatus": false,
         "hideSymbolLogo": false,
         "scalePosition": "right",
         "scaleMode": "Normal",
         "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-        "fontSize": "10",
+        "fontSize": "12",
         "noTimeScale": false,
         "valuesTracking": "1",
         "changeMode": "price-and-percent",
@@ -62,4 +62,4 @@ function TradingViewWidget() {
   );
 }
 
-export default memo(TradingViewWidget);
+export default TradingViewWidget;

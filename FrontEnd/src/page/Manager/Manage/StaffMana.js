@@ -468,7 +468,7 @@ const StaffMana = () => {
                                     <option value="female">Female</option>
                                 </select>
                             </div>
-                            {/* <div className="mb-4">
+                            <div className="mb-4">
                                 <label className="block text-gray-700">Status:</label>
                                 <select
                                     name="status"
@@ -479,7 +479,7 @@ const StaffMana = () => {
                                     <option value="active">Active</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
-                            </div> */}
+                            </div>
                             <div className="flex justify-end">
                                 <button
                                     type="button"
