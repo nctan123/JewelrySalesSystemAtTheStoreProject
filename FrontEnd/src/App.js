@@ -2,7 +2,7 @@ import { ToastContainer, Zoom, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-
+import {ProductProvider} from './components/ProductContext'
 
 import { Public, Ring, Diamond, Customer, Jewelry, Necklace, Earring, Bangles, WholesaleGold, RetailGold, SearchInvoice, Promotion, Return_Ex, Buy, Warranty, BuyOut, OnprocessSeller, CompleteSeller, Bill } from './page/Seller';
 
@@ -66,6 +66,7 @@ import SellOrder from './page/Manager/Report/SellOrder';
 import BuyOrder from './page/Manager/Report/BuyOrder';
 import DiamondPrice from './page/Manager/Material/DiamondPrice';
 import StaffDetail from './page/Manager/Manage/StaffDetail';
+import TradingViewWidget from './page/Manager/Material/TradingViewWidget';
 
 function App() {
   // test redux có hoạt động không
@@ -74,7 +75,7 @@ function App() {
 
   return (
     <>
-
+      <ProductProvider>
       <div className=''>
 
         <Routes>
@@ -90,7 +91,7 @@ function App() {
             <Route path={path.SELLORDER} element={<SellOrder />} />
             <Route path={path.BUYORDER} element={<BuyOrder />} />
             <Route path={path.PAYMENT} element={<Payment />} />
-            <Route path={path.EMPLOYEE} element={<EmployeeMana />} />
+            <Route path={path.EMPLOYEE} element={<Employee />} />
             <Route path={path.STALL} element={<Stall />} />
 
 
@@ -117,6 +118,7 @@ function App() {
             <Route path={path.DIAMONDPRICE} element={<DiamondPrice />} />
             <Route path={path.PRICE} element={<Price />} />
             <Route path={path.MATERIAL} element={<Material />} />
+            <Route path={path.WORLDGOLDPRICE} element={<TradingViewWidget />} />
 
             <Route path={path.DIAMONDMANAGER} element={<DiamondManager />} />
             <Route path={'createProduct'} element={<CreateProduct />} />
@@ -149,6 +151,7 @@ function App() {
             <Route path="detailStaff" element={<StaffDetail />} />
           </Route>
           {/* Seller */}
+        
           <Route path={path.PUBLIC} element={<Public />}>
             <Route path={path.DIAMOND} element={<Diamond />} />
             <Route path={path.CUSTOMER} element={<Customer />} />
@@ -168,8 +171,10 @@ function App() {
             <Route path={path.RETURN_EX} element={<Return_Ex />} >
               <Route path={path.BUY} element={<Buy />} />
               <Route path={path.BUYOUT} element={<BuyOut />} />
+              <Route path={path.WARRANTY} element={<Warranty />} />
             </Route>
           </Route>
+         
           {/* Cashier */}
           <Route path={path.CS_PUBLIC} element={<Cs_Public />}>
             <Route path={path.PAYMENTRESULT} element={<PaymentResult />} />
@@ -196,8 +201,7 @@ function App() {
       <ToastContainer
 
       />
-
-
+</ProductProvider>
     </>
   );
 }

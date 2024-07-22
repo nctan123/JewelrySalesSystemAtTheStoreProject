@@ -12,6 +12,7 @@ import { IconContext } from "react-icons";
 import { toast } from 'react-toastify'
 import QRCode from "react-qr-code";
 import ScannerComponent from '../../components/ScannerComponent '
+import {useProduct} from '../../components/ProductContext'
 const Ring = () => {
   const dispatch = useDispatch()
 
@@ -26,7 +27,10 @@ const Ring = () => {
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const [showScanner, setShowScanner] = useState(false);
-
+  const { setGetRingFunction } = useProduct();
+  useEffect(() => {
+    setGetRingFunction(() => getRing);
+  }, [setGetRingFunction]);
   const handlePageClick = (event) => {
     getRing(+event.selected + 1);
   }
@@ -114,17 +118,17 @@ const Ring = () => {
   };
   const getRingSearch = async (searchTerm, page) => {
     try {
-      const token = localStorage.getItem('token')
-      if(!token){
-        throw new Error('No token found')
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error("No token found");
       }
       const res = await axios.get(
         `https://jssatsproject.azurewebsites.net/api/Product/Search?categoryId=3&searchTerm=${searchTerm}&pageIndex=${page}&pageSize=10&includeNullStalls=false`,{
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-
-        });
+          headers: {
+             Authorization: `Bearer ${token}`
+          }
+        }
+      );
       if (res.data && res.data.data) {
         setListRing(res.data.data);
         setTotalProduct(res.data.totalElements);

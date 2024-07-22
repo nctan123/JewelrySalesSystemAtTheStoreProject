@@ -14,6 +14,7 @@ import { FaFileInvoiceDollar } from "react-icons/fa6";
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import Modal from 'react-modal';
+import { useProduct } from '../components/ProductContext'
 
 const SidebarRight = () => {
   const [currentTime, setCurrentTime] = useState(new Date().toISOString());
@@ -21,7 +22,7 @@ const SidebarRight = () => {
   const [description, setDescription] = useState('');
   const [productCodesAndQuantity, setProductCodesAndQuantity] = useState({});
   const [productCodesAndPromotionIds, setProductCodesAndPromotionIds] = useState({})
-  const [specialDiscountRate, setSpecialDiscountRate] = useState('0');
+  const [specialDiscountRate, setSpecialDiscountRate] = useState(0);
   const [checkedItems, setCheckedItems] = useState({});
   const [totalProduct, setTotalProduct] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
@@ -34,13 +35,15 @@ const SidebarRight = () => {
   const [point, setpoint] = useState(0);
   const [IdTemPo, setIdTemPo] = useState();
   const [TotalInvoice, setTotalInvoice] = useState(0);
+  const [usePoint, setUsePoint] = useState(0)
+
+  const { getRingFunction, getNecklaceFunction, getBanglesFunction, getEarFunction, getDiamondFunction, getRetailFunction, getWholeFunction } = useProduct();
 
   const dispatch = useDispatch();
   const CartProduct = useSelector(state => state.cart.CartArr);
   const CusPoint = useSelector(state => state.cart.CusPoint);
   const Rate = useSelector(state => state.cart.Rate);
 
-  
   const handleSubmitOrder = async (isDraft = false) => {
     // Create a new object for ProductCodesAndPromotionIds with 0 values replaced by null
     const adjustedProductCodesAndPromotionIds = Object.fromEntries(
@@ -51,14 +54,16 @@ const SidebarRight = () => {
     const filteredProductCodesAndPromotionIds = Object.fromEntries(
       Object.entries(adjustedProductCodesAndPromotionIds).filter(([_, value]) => value !== null)
     );
-
+   
+    const finalPoint = isDraft ? 0 : point;
+    const finalId = isDraft ? null : IdTemPo;
     const data = {
-      id: IdTemPo,
+      id: finalId,
       customerPhoneNumber,
       staffId: localStorage.getItem('staffId'), // Replace with actual staffId if needed
       createDate: new Date().toISOString(),
       description,
-      discountPoint: point,
+      discountPoint: finalPoint,
       productCodesAndQuantity,
       productCodesAndPromotionIds: Object.keys(filteredProductCodesAndPromotionIds).length === 0 ? null : filteredProductCodesAndPromotionIds,
       isSpecialDiscountRequested: parseFloat(specialDiscountRate) !== 0,
@@ -67,7 +72,7 @@ const SidebarRight = () => {
       discountRejectedReason: '',
       specialDiscountRequestStatus: null,
     };
-    console.log(data);
+    console.log('data gui di',data);
 
     if (!productCodesAndQuantity || Object.keys(productCodesAndQuantity).length === 0) {
       toast.error('No Product');
@@ -75,35 +80,78 @@ const SidebarRight = () => {
     }
 
     try {
-      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder', data);
+      const token = localStorage.getItem('token')
+      if (!token) {
+        throw new Error('No token found')
+      }
+      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/SellOrder/CreateOrder', data, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+      );
       if (!isDraft) {
-        if (!specialDiscountRate === 0){
+        const token = localStorage.getItem('token')
+        if (!token) {
+          throw new Error('No token found')
+        }
+        if (specialDiscountRate !== 0) {
           toast.error('Must be Temporary');
           return;
         }
+       
         await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${res.data.id}`, {
           status: 'waiting for customer payment',
           createDate: new Date().toISOString(),
-        });
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+        );
       }
-      if (res.status === 201 || res.status === 200) {  
-        console.log('sp',res.data)      
+      if (res.status === 201 || res.status === 200) {
+        console.log('sp', res.data)
         dispatch(deleteCustomer());
         dispatch(deleteProductAll());
         setDescription('');
-        setSpecialDiscountRate('0');
+        setSpecialDiscountRate(0);
         setCustomerPhoneNumber()
         setTotalInvoice(0);
         setpoint(0)
+        setUsePoint(0)
+    
         toast.success('Success');
         // Update the invoice list immediately
         getListOrder(1);
         getResponseManager(1)
+        // Call the getRing and getNecklace functions from Ring and Necklace components
+        if (getRingFunction) {
+          getRingFunction(1);
+        }
+        if (getNecklaceFunction) {
+          getNecklaceFunction(1);
+        }
+        if (getBanglesFunction) {
+          getBanglesFunction(1);
+        }
+        if (getEarFunction) {
+          getEarFunction(1);
+        }
+        if (getDiamondFunction) {
+          getDiamondFunction(1);
+        }
+        if (getRetailFunction) {
+          getRetailFunction(1);
+        }
+        if (getWholeFunction) {
+          getWholeFunction(1);
+        }
       } else {
         toast.error('Add Fail');
         console.error('Unexpected response:', res);
       }
-    }  catch (error) {
+    } catch (error) {
       console.error('Error adding invoice:', error);
       if (error.response) {
         console.error('Error response:', error.response);
@@ -130,15 +178,25 @@ const SidebarRight = () => {
       totalOrderPrice: amount
     }
     try {
-      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/Point/GetPointForOrder', data)
-      console.log(res.data)
-      setpoint(res.data)
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }   
+      const res = await axios.post('https://jssatsproject.azurewebsites.net/api/Point/GetPointForOrder', data,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      console.log('Point', res.data.data)
+      setpoint(res.data.data.applicablePoint)
+      setUsePoint(res.data.data.applicablePoint * res.data.data.pointToCurrencyRate)
       toast.success('Point Success')
     } catch (error) {
       toast.error('Fail')
     }
 
   }
+ 
   useEffect(() => {
     const calculateTotals = () => {
       let totalValue = 0;
@@ -150,12 +208,7 @@ const SidebarRight = () => {
       setTotal(totalValue);
       setDiscount(totalDiscount);
 
-      console.log("Total Value:", totalValue);
-      console.log("Total Discount:", totalDiscount);
-      console.log("Point:", point);
-      console.log("Special Discount Rate:", specialDiscountRate);
-
-      const invoiceTotal = (totalValue - totalDiscount - point) * (1 - specialDiscountRate);
+      const invoiceTotal = (totalValue - totalDiscount - usePoint) * (1 - specialDiscountRate);
       // const invoiceTotal = totalValue 
 
       console.log("Calculated Total Invoice:", invoiceTotal);
@@ -181,21 +234,7 @@ const SidebarRight = () => {
     }
   }, [CartProduct, CusPoint, point, specialDiscountRate]);
 
-
-  useEffect(() => {
-    getListOrder(1);
-  }, []);
-
-  const pollingInterval = 5000; // Thời gian polling, ví dụ mỗi 30 giây
-  useEffect(() => {
-    getResponseManager(1);
-    const interval = setInterval(() => {
-      getResponseManager(1);
-    }, pollingInterval);
-
-    // Cleanup function để clear interval khi component unmount
-    return () => clearInterval(interval);
-  }, []);
+ 
   const formatNumber = price => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
@@ -206,28 +245,21 @@ const SidebarRight = () => {
       minimumFractionDigits: 0
     }).format(value);
   };
-
-  const handlePageClick = event => {
-    getListOrder(event.selected + 1);
-  };
   const handlePageClickForManager = event => {
     getResponseManager(event.selected + 1);
   };
-  const getListOrder = async page => {
-    try {
-      const res = await fetchDoubleStatusInvoice('draft', 'waiting for special discount response', page);
-      if (res?.data?.data) {
-        setListInvoiceDraft(res.data.data);
-        setTotalProduct(res.data.totalElements);
-        setTotalPage(res.data.totalPages);
-      }
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-    }
-  };
   const getResponseManager = async page => {
     try {
-      const res = await fetchStatusInvoice('waiting for customer confirmation for discount', page);
+      const token = localStorage.getItem('token')
+      if (!token) {
+        throw new Error('No token found')
+      }
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/sellorder/getall?statusList=waiting for customer confirmation for discount&ascending=true&pageIndex=${page}&pageSize=10`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (res?.data?.data) {
         setListResponseManager(res.data.data);
         setTotalProductForManger(res.data.totalElements);
@@ -237,15 +269,19 @@ const SidebarRight = () => {
       console.error('Error fetching orders:', error);
     }
   };
-
-
-
-
   const handlegetCodeEx = async (listsellorder) => {
     for (const item of listsellorder) {
       try {
+        const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }   
         const res = await axios.get(
-          `https://jssatsproject.azurewebsites.net/api/Product/GetByCode?code=${item.productCode}`
+          `https://jssatsproject.azurewebsites.net/api/Product/GetByCode?code=${item.productCode}`,{
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
         );
         console.log('product export', res.data.data[0]);
         dispatch(addProduct(res.data.data[0]))
@@ -255,11 +291,20 @@ const SidebarRight = () => {
     }
   };
   const handleRequestToScreen = async (event, phone, listsellorder, id, rate) => {
-    console.log('rate',rate)
+    console.log('rate', rate)
     event.preventDefault();
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      } 
       const res = await axios.get(
-        `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${phone}&pageIndex=1&pageSize=10`
+        `https://jssatsproject.azurewebsites.net/api/Customer/Search?searchTerm=${phone}&pageIndex=1&pageSize=10`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
       console.log('customer export', res.data.data[0]);
       console.log('list', listsellorder);
@@ -272,297 +317,73 @@ const SidebarRight = () => {
       console.error('Error fetching customer or products:', error);
     }
   };
-  const handleShowListTemPo = () => {
-    confirmAlert({
-      customUI: ({ onClose }) => {
-        return (
-          <div className="fixed inset-0 flex items-center justify-center bg-[#0602027d] bg-opacity-20 z-10">
-            <div className='bg-[#fff] mx-auto rounded-md w-[55%] shadow-[#b6b0b0] shadow-md h-[95vh] my-auto mt-4'>
-              <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-md font-semibold text-gray-900">
-                  List Temporary
-                </h3>
-                <a className='cursor-pointer text-black text-[24px] py-0' onClick={onClose}>&times;</a>
-              </div>
-              <form className="p-4 md:p-5">
-                <div className=''>
-                  <div class="relative overflow-x-auto shadow-md sm:rounded-lg h-[75vh]">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                      <thead class="text-xs text-white uppercase bg-gray-500 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                          <th scope="col" class="px-6 py-3">
-                            ID Invoice
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Customer Name
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Phone Number
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Total Amount
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Action
-                          </th>
+  const pollingInterval = 5000; // Thời gian polling, ví dụ mỗi 30 giây
+  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageRes, setCurrentPageRes] = useState(1);
+  useEffect(() => {
+    getResponseManager(currentPageRes);
+    const interval = setInterval(() => {
+      getResponseManager(currentPageRes);
+    }, pollingInterval);
 
-                        </tr>
-                      </thead>
-                      <tbody className='overflow-y-auto'>
-                        {listInvoiceDraft && listInvoiceDraft.map((item) => {
-                          return (
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
-                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.id}
-                              </th>
-                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.customerName}
-                              </th>
-                              <td class="px-6 py-4">
-                                {item.customerPhoneNumber}
-                              </td>
-                              <td class="px-6 py-4">
-                                {formatPrice(item.finalAmount)}
-                              </td>
-                              <td class="flex py-4 gap-1 items-center justify-center">
-                                <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id,item.specialDiscountRate)} className='m-0 p-3 bg-green-500'><VscGitStashApply /></button>
-                                <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
-                                  {close => (
-                                    <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
-                                      <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
-                                        <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
-                                        <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
-                                        <div className="flex justify-end">
-                                          <button
-                                            onClick={close}
-                                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
-                                          >
-                                            No
-                                          </button>
-                                          <button
-                                            onClick={async () => {
-                                              try {
-                                                await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
-                                                  status: 'cancelled',
-                                                });
-                                                // Update the invoice list immediately
-                                                getListOrder(1);
-                                                toast.success('Invoice deleted successfully');
-                                              } catch (error) {
-                                                console.error('Error deleting invoice:', error);
-                                                toast.error('Failed to delete invoice');
-                                              }
-                                              onClose();
-                                            }}
-                                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
-                                          >
-                                            Yes
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                </Popup>
-                              </td>
-                            </tr>
-                          )
-                        })}
+    // Cleanup function để clear interval khi component unmount
+    return () => clearInterval(interval);
+  }, [currentPageRes]);
+  useEffect(() => {
+    getListOrder(currentPage);
+    const interval = setInterval(() => {
+      getListOrder(currentPage);
+    }, pollingInterval);
 
-                      </tbody>
-                    </table>
-                  </div>
-                  <ReactPaginate
-                    onPageChange={handlePageClick}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={totalPage}
-                    pageClassName="mx-1"
-                    pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
-                    previousClassName="mx-1"
-                    previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                    nextClassName="mx-1"
-                    nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                    breakLabel="..."
-                    breakClassName="mx-1 "
-                    breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-                    containerClassName="flex justify-center items-center space-x-4"
-                    activeClassName="bg-blue-500 text-white rounded-xl"
-                    renderOnZeroPageCount={null}
-                    // className="bg-black flex justify-center items-center"
-                    previousLabel={
-                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                        <AiFillLeftCircle />
-                      </IconContext.Provider>
-                    }
-                    nextLabel={
-                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                        <AiFillRightCircle />
-                      </IconContext.Provider>
-                    }
-                  />
-                </div>
-              </form>
-            </div>
-          </div>
-        );
-      },
-    });
+    // Cleanup function để clear interval khi component unmount
+    return () => clearInterval(interval);
+  }, [currentPage]);
+ 
+  const getListOrder = async (page) => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) {
+        throw new Error('No token found')
+      }
+
+      const res = await axios.get(
+        `https://jssatsproject.azurewebsites.net/api/sellorder/getall?statusList=draft&statusList=waiting for special discount response&ascending=true&pageIndex=${page}&pageSize=10`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (res?.data?.data) {
+        setListInvoiceDraft(res.data.data);
+        setTotalProduct(res.data.totalElements);
+        setTotalPage(res.data.totalPages);
+        console.log('API Response:', res.data);
+
+      }
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
   };
-  const handleShowListResponse = () => {
-    confirmAlert({
-      customUI: ({ onClose }) => {
-        return (
-          <div className="fixed inset-0 flex items-center justify-center bg-[#0602027d] bg-opacity-20 z-10">
-            <div className='bg-[#fff] mx-auto rounded-md w-[55%] shadow-[#b6b0b0] shadow-md h-[95vh] my-auto mt-4'>
-              <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-md font-semibold text-gray-900">
-                  List Response
-                </h3>
-                <a className='cursor-pointer text-black text-[24px] py-0' onClick={onClose}>&times;</a>
-              </div>
-              <form className="p-4 md:p-5">
-                <div className=''>
-                  <div class="relative overflow-x-auto shadow-md sm:rounded-lg h-[75vh]">
-                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                      <thead class="text-xs text-white uppercase bg-gray-500 dark:bg-gray-700 dark:text-gray-400">
-                        <tr>
-                          <th scope="col" class="px-6 py-3">
-                            ID Invoice
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Customer Name
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Phone Number
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Total Amount
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Action
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Special Discount
-                          </th>
-                          <th scope="col" class="px-6 py-3">
-                            Status
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className='overflow-y-auto'>
-                        {listResponseManager && listResponseManager.map((item) => {
-                          return (
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
-                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.id}
-                              </th>
-                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {item.customerName}
-                              </th>
-                              <td class="px-6 py-4">
-                                {item.customerPhoneNumber}
-                              </td>
-                              <td class="px-6 py-4">
-                                {formatPrice(item.finalAmount)}
-                              </td>
-                              <td class="flex py-4 gap-1 items-center justify-center">
-                                {/* {item.specialDiscountStatus === 'approved' && ( */}
-                                  <button
-                                    onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id, item.specialDiscountRate)}
-                                    className='m-0 p-3 bg-green-500'>
-                                    <VscGitStashApply />
-                                  </button>
-                                {/* )} */}
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
-                                <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
-                                  {close => (
-                                    <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
-                                      <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
-                                        <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
-                                        <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
-                                        <div className="flex justify-end">
-                                          <button
-                                            onClick={close}
-                                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
-                                          >
-                                            No
-                                          </button>
-                                          <button
-                                            onClick={async () => {
-                                              try {
-                                                await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
-                                                  status: 'cancelled',
-                                                });
-                                                // Update the invoice list immediately
-                                                getListOrder(1);
-                                                toast.success('Invoice deleted successfully');
-                                              } catch (error) {
-                                                console.error('Error deleting invoice:', error);
-                                                toast.error('Failed to delete invoice');
-                                              }
-                                              onClose();
-                                            }}
-                                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
-                                          >
-                                            Yes
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  )}
-                                </Popup>
-                              </td>
-                              <td class="px-6 py-4 font-bold text-red-600">
-                                {item.specialDiscountRate}
-                              </td>
-                              <td class="px-6 py-4 font-bold text-red-600">
-                                {item.specialDiscountStatus}
-                              </td>
-                            </tr>
-                          )
-                        })}
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
 
-                      </tbody>
-                    </table>
-                  </div>
-                  <ReactPaginate
-                    onPageChange={handlePageClickForManager}
-                    pageRangeDisplayed={3}
-                    marginPagesDisplayed={2}
-                    pageCount={totalPageForManager}
-                    pageClassName="mx-1"
-                    pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
-                    previousClassName="mx-1"
-                    previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                    nextClassName="mx-1"
-                    nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
-                    breakLabel="..."
-                    breakClassName="mx-1 "
-                    breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
-                    containerClassName="flex justify-center items-center space-x-4"
-                    activeClassName="bg-blue-500 text-white rounded-xl"
-                    renderOnZeroPageCount={null}
-                    // className="bg-black flex justify-center items-center"
-                    previousLabel={
-                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                        <AiFillLeftCircle />
-                      </IconContext.Provider>
-                    }
-                    nextLabel={
-                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
-                        <AiFillRightCircle />
-                      </IconContext.Provider>
-                    }
-                  />
-                </div>
-              </form>
-            </div>
-          </div>
-        );
-      },
-    });
-  }
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
+  const [modalIsOpenRes, setModalIsOpenRes] = useState(false);
 
+  const openModalRes = () => {
+    setModalIsOpenRes(true);
+  };
+
+  const closeModalRes = () => {
+    setModalIsOpenRes(false);
+  };
+
+
+  
   return (<>
 
 
@@ -626,7 +447,7 @@ const SidebarRight = () => {
               <button className='m-0 p-0 px-4 w-fit bg-[#2b4fc6dc]' onClick={() => getDisCountPoint(total - discount, CusPoint.phone)} type='button'>Use</button>
             </div>
             <div>
-              <span>{formatPrice(point)}</span>
+              <span>{formatPrice(usePoint)}</span>
             </div>
           </div>
           <div className='row-start-4 font-mono'>Special Discount:</div>
@@ -654,12 +475,14 @@ const SidebarRight = () => {
                 setSpecialDiscountRate(0);
                 setpoint(0);
                 setTotalInvoice(0)
+                setUsePoint(0)
               }} className='col-start-6 ml-8 w-[20px] flex items-center cursor-pointer rounded-md bg-[#fef7f7] py-1 hover:bg-[#ffffff]'><MdDeleteOutline size='20px' color='#ef4e4e' />
             </span>
             <button onClick={() => {
               handleSubmitOrder(true);
               dispatch(deleteCustomer());
               dispatch(deleteProductAll());
+            
             }} title="Save" class="cursor-pointer flex items-center fill-lime-400 bg-lime-950 hover:bg-lime-900 active:border active:border-lime-400 rounded-md duration-100 p-2 m-0">
               <svg viewBox="0 -0.5 25 25" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M18.507 19.853V6.034C18.5116 5.49905 18.3034 4.98422 17.9283 4.60277C17.5532 4.22131 17.042 4.00449 16.507 4H8.50705C7.9721 4.00449 7.46085 4.22131 7.08577 4.60277C6.7107 4.98422 6.50252 5.49905 6.50705 6.034V19.853C6.45951 20.252 6.65541 20.6407 7.00441 20.8399C7.35342 21.039 7.78773 21.0099 8.10705 20.766L11.907 17.485C12.2496 17.1758 12.7705 17.1758 13.113 17.485L16.9071 20.767C17.2265 21.0111 17.6611 21.0402 18.0102 20.8407C18.3593 20.6413 18.5551 20.2522 18.507 19.853Z" clip-rule="evenodd" fill-rule="evenodd"></path>
@@ -675,8 +498,6 @@ const SidebarRight = () => {
         <button type='submit'
           onClick={() => {
             handleSubmitOrder();
-            // dispatch(deleteCustomer());
-            // dispatch(deleteProductAll());
           }} class="m-0 relative cursor-pointer opacity-90 hover:opacity-100 transition-opacity p-[2px] bg-black rounded-[16px] bg-gradient-to-t from-[#5d5fef6b] to-[#7b7deb] active:scale-95">
           <span class="w-full h-full flex items-center gap-2 px-8 py-3 text-white rounded-[14px] bg-gradient-to-t from-[#5D5FEF] to-[#5D5FEF]">
             <FaFileInvoiceDollar /> Invoice
@@ -685,15 +506,302 @@ const SidebarRight = () => {
       </div>
       <div className='grid grid-cols-2 justify-center my-4'>
         <div className='flex justify-center'>
-          <button onClick={() => handleShowListTemPo()} className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
+          <button onClick={openModal} className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
             Draft/Special Discount
           </button>
+          <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className="Modal">
+          <div className="fixed inset-0 flex items-center justify-center bg-[#0602027d] bg-opacity-20 z-10">
+            <div className='bg-[#fff] mx-auto rounded-md w-[55%] shadow-[#b6b0b0] shadow-md h-[95vh] my-auto mt-4'>
+              <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 className="text-md font-semibold text-gray-900">
+                  List Temporary
+                </h3>
+                <a className='cursor-pointer text-black text-[24px] py-0' onClick={closeModal}>&times;</a>
+              </div>
+              <form className="p-4 md:p-5">
+                <div className=''>
+                  <div class="relative overflow-x-auto shadow-md sm:rounded-lg h-[75vh]">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-white uppercase bg-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" class="px-6 py-3">
+                            ID Invoice
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Customer Name
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Phone Number
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Total Amount
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Action
+                          </th>
+
+                        </tr>
+                      </thead>
+                      <tbody className='overflow-y-auto'>
+                        {listInvoiceDraft && listInvoiceDraft.map((item) => (
+                          <tr key={item.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
+                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                              {item.id}
+                            </th>
+                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                              {item.customerName}
+                            </th>
+                            <td className="px-6 py-4">
+                              {item.customerPhoneNumber}
+                            </td>
+                            <td className="px-6 py-4">
+                              {formatPrice(item.finalAmount)}
+                            </td>
+                            <td className="flex py-4 gap-1 items-center justify-center">
+                              <button onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id, item.specialDiscountRate)} className='m-0 p-3 bg-green-500'>
+                                <VscGitStashApply />
+                              </button>
+                              <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
+                                {close => (
+                                  <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+                                    <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
+                                      <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
+                                      <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
+                                      <div className="flex justify-end">
+                                        <button
+                                          onClick={close}
+                                          className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
+                                        >
+                                          No
+                                        </button>
+                                        <button
+                                          onClick={async () => {
+                                            try {
+                                              const token = localStorage.getItem('token');
+                                              if (!token) {
+                                                throw new Error('No token found');
+                                              }
+                                              await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
+                                                status: 'cancelled',
+                                              }, {
+                                                headers: {
+                                                  Authorization: `Bearer ${token}`
+                                                }
+                                              });
+                                              // Update the invoice list immediately
+                                              getListOrder(1);
+                                              toast.success('Invoice deleted successfully');
+                                            } catch (error) {
+                                              console.error('Error deleting invoice:', error);
+                                              toast.error('Failed to delete invoice');
+                                            }
+                                            close();
+                                          }}
+                                          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
+                                        >
+                                          Yes
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </Popup>
+                            </td>
+                          </tr>
+                        ))}
+
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <ReactPaginate
+                     onPageChange={(e) => setCurrentPage(e.selected + 1)}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={totalPage}
+                    pageClassName="mx-1"
+                    pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
+                    previousClassName="mx-1"
+                    previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+                    nextClassName="mx-1"
+                    nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+                    breakLabel="..."
+                    breakClassName="mx-1 "
+                    breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
+                    containerClassName="flex justify-center items-center space-x-4"
+                    activeClassName="bg-blue-500 text-white rounded-xl"
+                    renderOnZeroPageCount={null}
+                    // className="bg-black flex justify-center items-center"
+                    previousLabel={
+                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                        <AiFillLeftCircle />
+                      </IconContext.Provider>
+                    }
+                    nextLabel={
+                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                        <AiFillRightCircle />
+                      </IconContext.Provider>
+                    }
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+          </Modal>
         </div>
 
         <div className='flex justify-center'>
-          <button onClick={() => handleShowListResponse()} className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
+          <button onClick={openModalRes} className="m-0 py-2 px-1 border border-[#ffffff] bg-[#3f6d67e3] text-white  rounded-md transition duration-200 ease-in-out hover:bg-[#5fa39a7e] active:bg-[#ffff] focus:outline-none">
             Response Manager
           </button>
+          <Modal isOpen={modalIsOpenRes} onRequestClose={closeModalRes} className="Modal">
+          <div className="fixed inset-0 flex items-center justify-center bg-[#0602027d] bg-opacity-20 z-10">
+            <div className='bg-[#fff] mx-auto rounded-md w-[55%] shadow-[#b6b0b0] shadow-md h-[95vh] my-auto mt-4'>
+              <div className="flex items-center justify-between p-2 md:p-5 border-b rounded-t dark:border-gray-600">
+                <h3 className="text-md font-semibold text-gray-900">
+                  List Response
+                </h3>
+                <a className='cursor-pointer text-black text-[24px] py-0' onClick={closeModalRes}>&times;</a>
+              </div>
+              <form className="p-4 md:p-5">
+                <div className=''>
+                  <div class="relative overflow-x-auto shadow-md sm:rounded-lg h-[75vh]">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-white uppercase bg-gray-500 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" class="px-6 py-3">
+                            ID Invoice
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Customer Name
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Phone Number
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Total Amount
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Action
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Special Discount
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className='overflow-y-auto'>
+                        {listResponseManager && listResponseManager.map((item) => {
+                          return (
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 text-center">
+                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {item.id}
+                              </th>
+                              <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                {item.customerName}
+                              </th>
+                              <td class="px-6 py-4">
+                                {item.customerPhoneNumber}
+                              </td>
+                              <td class="px-6 py-4">
+                                {formatPrice(item.finalAmount)}
+                              </td>
+                              <td class="flex py-4 gap-1 items-center justify-center">
+                                {/* {item.specialDiscountStatus === 'approved' && ( */}
+                                <button
+                                  onClick={(event) => handleRequestToScreen(event, item.customerPhoneNumber, item.sellOrderDetails, item.id, item.specialDiscountRate)}
+                                  className='m-0 p-3 bg-green-500'>
+                                  <VscGitStashApply />
+                                </button>
+                                {/* )} */}
+
+                                <Popup trigger={<button type="button" className="m-0 p-3 bg-red-500"><MdDeleteOutline /></button>} position="right center">
+                                  {close => (
+                                    <div className='fixed flex items-center justify-center top-0 bottom-0 left-0 right-0 bg-[#6f85ab61] overflow-y-auto'>
+                                      <div className="bg-[#fff] mx-auto rounded-md w-[23%] shadow-[#b6b0b0] shadow-md p-4">
+                                        <h1 className="text-lg font-semibold mb-4">Confirm to delete</h1>
+                                        <p className="mb-6 text-center">Are you sure you want to delete this invoice?</p>
+                                        <div className="flex justify-end">
+                                          <button
+                                            onClick={close}
+                                            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded m-0"
+                                          >
+                                            No
+                                          </button>
+                                          <button
+                                            onClick={async () => {
+                                              try {
+                                                await axios.put(`https://jssatsproject.azurewebsites.net/api/SellOrder/UpdateStatus?id=${item.id}`, {
+                                                  status: 'cancelled',
+                                                });
+                                                // Update the invoice list immediately
+                                                getResponseManager(1)
+                                                toast.success('Invoice deleted successfully');
+                                              } catch (error) {
+                                                console.error('Error deleting invoice:', error);
+                                                toast.error('Failed to delete invoice');
+                                              }
+                                              close();
+                                            }}
+                                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 m-0 ml-2 rounded"
+                                          >
+                                            Yes
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </Popup>
+                              </td>
+                              <td class="px-6 py-4 font-bold text-red-600">
+                                {item.specialDiscountRate}
+                              </td>
+                              <td class="px-6 py-4 font-bold text-red-600">
+                                {item.specialDiscountStatus}
+                              </td>
+                            </tr>
+                          )
+                        })}
+
+                      </tbody>
+                    </table>
+                  </div>
+                  <ReactPaginate
+                    onPageChange={(e) => setCurrentPageRes(e.selected + 1)}
+                    pageRangeDisplayed={3}
+                    marginPagesDisplayed={2}
+                    pageCount={totalPageForManager}
+                    pageClassName="mx-1"
+                    pageLinkClassName="px-3 py-2 rounded hover:bg-gray-200 text-black"
+                    previousClassName="mx-1"
+                    previousLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+                    nextClassName="mx-1"
+                    nextLinkClassName="px-3 py-2 rounded hover:bg-gray-200"
+                    breakLabel="..."
+                    breakClassName="mx-1 "
+                    breakLinkClassName="px-3 py-2 text-black rounded hover:bg-gray-200"
+                    containerClassName="flex justify-center items-center space-x-4"
+                    activeClassName="bg-blue-500 text-white rounded-xl"
+                    renderOnZeroPageCount={null}
+                    // className="bg-black flex justify-center items-center"
+                    previousLabel={
+                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                        <AiFillLeftCircle />
+                      </IconContext.Provider>
+                    }
+                    nextLabel={
+                      <IconContext.Provider value={{ color: "#B8C1CC", size: "36px" }}>
+                        <AiFillRightCircle />
+                      </IconContext.Provider>
+                    }
+                  />
+                </div>
+              </form>
+            </div>
+          </div>
+          </Modal>
         </div>
       </div>
     </div>

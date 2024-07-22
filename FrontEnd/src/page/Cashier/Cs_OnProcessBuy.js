@@ -80,9 +80,18 @@ const Cs_OnProcessBuy = () => {
     };
     const getWaitingSearch = async (phone, page) => {
         try {
+            const token = localStorage.getItem('token')
+            if (!token) {
+                throw new Error('No token found')
+            }
             const res = await axios.get(
                 `https://jssatsproject.azurewebsites.net/api/buyorder/search?statusList=processing&customerPhone=${phone}&ascending=true&pageIndex=${page}&pageSize=10`
-            );
+                , {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
             if (res.data && res.data.data) {
                 setlistInvoice(res.data.data);
                 setTotalProduct(res.data.totalElements);
@@ -95,9 +104,18 @@ const Cs_OnProcessBuy = () => {
     };
     const getCompletedSearch = async (phone) => {
         try {
+            const token = localStorage.getItem('token')
+            if (!token) {
+                throw new Error('No token found')
+            }
             const res = await axios.get(
                 `https://jssatsproject.azurewebsites.net/api/Buyorder/search?statusList=completed&customerPhone=${phone}&ascending=true&pageIndex=1&pageSize=10`
-            );
+                , {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
             console.log('search completed:', res.data.data)
             // if (res.data && res.data.data) {
             //   showBill(res.data.data[0]);
@@ -109,7 +127,17 @@ const Cs_OnProcessBuy = () => {
     };
     const getInvoice = async (page) => {
         try {
-            let res = await fetchStatusBuyInvoice('processing', page);
+            // let res = await fetchStatusBuyInvoice('processing', page);
+            const token = localStorage.getItem('token')
+            if (!token) {
+                throw new Error('No token found')
+            }
+            const res = await axios.get(
+                `https://jssatsproject.azurewebsites.net/api/Buyorder/getall?statusList=processing&ascending=true&pageIndex=${page}&pageSize=8`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             if (res?.data?.data) {
                 setlistInvoice(res.data.data);
                 setTotalProduct(res.data.totalElements);
@@ -123,7 +151,16 @@ const Cs_OnProcessBuy = () => {
         getPayMentMethod();
     }, []);
     const getPayMentMethod = async () => {
-        let res = await fetchPaymentMethod();
+        const token = localStorage.getItem('token');
+        if (!token) {
+            throw new Error('No token found');
+        }
+        let res = await axios.get(
+            `https://jssatsproject.azurewebsites.net/api/PaymentMethod/Getall`, {
+             headers: {
+                 Authorization: `Bearer ${token}`
+             }
+         });
         if (res && res.data && res.data.data) {
             setPaymentMethod(res.data.data)
         }
@@ -204,7 +241,18 @@ const Cs_OnProcessBuy = () => {
             if (!data.buyOrderId || !data.customerId || !data.createDate || !data.amount) {
                 throw new Error("Missing required fields in order data");
             }
-            let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment', data);
+            const token = localStorage.getItem('token')
+            if (!token) {
+                throw new Error('No token found')
+            }
+            let res = await axios.post('https://jssatsproject.azurewebsites.net/api/payment/createpayment',
+                data,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             console.log("Response from payment API:", res);
 
             const paymentID = res.data.data.id;
@@ -251,7 +299,15 @@ const Cs_OnProcessBuy = () => {
             status: 'completed',
         };
         try {
-            let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data);
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No token found');
+            }
+            let res = await axios.post('https://jssatsproject.azurewebsites.net/api/paymentdetail/createpaymentDetail', data, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             toast.success('Cash payment successful');
             getCompletedSearch(phone)
         } catch (error) {
@@ -259,134 +315,6 @@ const Cs_OnProcessBuy = () => {
             console.error('Error invoice:', error);
         }
     };
-    const showBill = (item) => {
-        confirmAlert({
-            customUI: ({ onClose }) => {
-                return (
-                    <div>
-                        <button onClick={onClose} className="btn btn-primary">Close</button>
-
-                        <div className='col-start-2 my-auto mx-3 h-[100vh] overflow-y-auto'>
-                            <div className="bg-white shadow-lg w-full border border-black rounded-lg">
-                                <div className="pt-4 mb-4 grid grid-cols-3 rounded-t">
-                                    <div className='h-auto mx-2 my-auto max-w-[64px] w-full'>
-                                        <QRCode
-                                            size={256}
-                                            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                                            value={item.id}
-                                            viewBox={`0 0 256 256`}
-                                        />
-                                    </div>
-                                    <div className='flex flex-col items-center justify-center'>
-                                        <h1 onClick={closeModal} className="cursor-pointer text-xl font-semibold text-gray-900">
-                                            JEWELRY BILL OF SALE
-                                        </h1>
-                                        <h2 className='text-center text-gray-600'>
-                                            {currentTime}
-                                        </h2>
-                                    </div>
-                                    <div></div>
-                                </div>
-                                <div className='border border-black mx-4 my-2 p-4'>
-                                    {/* Customer Information */}
-                                    <div className='flex justify-between mb-4'>
-                                        <div className='flex items-center'>
-                                            <h1 className='font-semibold'>Customer Name:</h1>
-                                            <h2 className='text-black ml-2'>{item.customerName}</h2>
-                                        </div>
-                                        <div className='flex items-center'>
-                                            <h1 className='font-semibold'>Phoner Number:</h1>
-                                            <h2 className='text-black ml-2'>
-                                                {item.customerPhoneNumber}
-                                            </h2>
-                                        </div>
-                                    </div>
-                                    <div className='flex items-center mb-4'>
-                                        <h1 className='font-semibold'>Address:</h1>
-                                        <h2 className='text-black ml-2'>
-                                            {[...Array(50)].map((_, index) => (
-                                                <span key={index}>.</span>
-                                            ))}
-                                        </h2>
-                                    </div>
-                                    <div className='flex items-center mb-4'>
-                                        <h1 className='font-semibold'>Payment methods:</h1>
-                                        <h2 className='text-black ml-2'>
-                                            {ChosePayMethod}
-                                        </h2>
-                                    </div>
-                                    {/* Product Information */}
-                                    <div className='border border-black mt-5 overflow-hidden'>
-                                        <table className="min-w-full text-left text-sm font-light text-gray-900">
-                                            <thead className="border-b bg-gray-100 font-medium">
-                                                <tr>
-                                                    <th scope="col" className="px-4 py-4 text-center">N.O</th>
-                                                    <th scope="col" className="px-6 py-4 text-center">Name Product</th>
-                                                    <th scope="col" className="px-4 py-4 text-center">Quantity</th>
-                                                    <th scope="col" className="px-6 py-4 text-center">Cost</th>
-                                                    <th scope="col" className="px-6 py-4 text-center">Value</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {item.sellOrderDetails && item.sellOrderDetails.length > 0 && item.sellOrderDetails.map((p) => {
-                                                    return (
-                                                        <tr className="border-b bg-gray-50">
-                                                            <td className="whitespace-nowrap px-4 py-4 text-center font-medium">1</td>
-                                                            <td className="whitespace-nowrap px-6 py-4">{p.productName}</td>
-                                                            <td className="whitespace-nowrap px-4 py-4 text-center">{formatPrice(p.quantity)}</td>
-                                                            <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.unitPrice)}</td>
-                                                            <td className="whitespace-nowrap px-6 py-4 text-right">{formatPrice(p.quantity * p.unitPrice)}</td>
-                                                        </tr>)
-                                                })}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className='border border-black mt-2 p-4'>
-                                        <div className='flex justify-between'>
-                                            <h1 className='font-bold'>Total Value</h1>
-                                            <h1>{formatPrice(item.finalAmount)}</h1>
-                                        </div>
-                                    </div>
-                                    <div className='h-40 flex justify-around items-center'>
-                                        <div className='text-center '>
-                                            <h1 className='font-bold'>Customer</h1>
-                                            <h1 className='pb-2'>(Sign, write full name)</h1>
-                                            <SignatureCanvas penColor='black'
-                                                canvasProps={{
-                                                    width: 300, height: 100, className: 'sigCanvas', style: {
-                                                        // border: '1px solid black', 
-                                                        backgroundColor: '#f0f0f085'
-                                                    }
-                                                }} />
-                                        </div>
-                                        <div className='text-center '>
-                                            <h1 className='font-bold'>Staff</h1>
-                                            <h1 className='pb-2'>(Sign, write full name)</h1>
-                                            <SignatureCanvas penColor='black'
-                                                canvasProps={{
-                                                    width: 300, height: 100, className: 'sigCanvas', style: {
-                                                        // border: '2px solid black', 
-                                                        backgroundColor: '#f0f0f085'
-                                                    }
-                                                }} />
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                )
-            },
-        });
-    };
-
-
-
-
-
-
 
     const handleCancle = async (id) => {
         confirmAlert({
@@ -400,10 +328,19 @@ const Cs_OnProcessBuy = () => {
                                 <button
                                     onClick={async () => {
                                         try {
-                                            const res = await axios.put(`https://jssatsproject.azurewebsites.net/api/BuyOrder/UpdateStatus?id=${id}`, {
-                                                status: 'cancelled',
-                                                createDate: currentTime,
-                                            });
+                                            const token = localStorage.getItem('token');
+                                            if (!token) {
+                                                throw new Error('No token found');
+                                            }
+                                            const res = await axios.put(`https://jssatsproject.azurewebsites.net/api/BuyOrder/UpdateStatus?orderId=${id}`, {
+                                                newStatus: 'cancelled',
+                                            },
+                                                {
+                                                    headers: {
+                                                        Authorization: `Bearer ${token}`
+                                                    }
+                                                }
+                                            );
                                             console.log(res.data)
                                             toast.success('Success');
                                             getInvoice(1);
@@ -493,7 +430,7 @@ const Cs_OnProcessBuy = () => {
                                     <div className='col-start-1 col-span-2 flex pl-[5px]'>Item</div>
                                     <div className='col-start-3 ml-6 flex justify-start'>Price</div>
                                 </div>
-                                <div id='screenSeller' className='grid-cols-3 h-[45%] overflow-y-auto'>
+                                <div id='screenSeller' className='relative grid-cols-3 h-[45%] overflow-y-auto'>
                                     {item.buyOrderDetails.map((orderDetail, index) => (
                                         <div className='grid grid-cols-3 mx-[10px] border-b-black pb-[2px]'>
                                             <div className='col-start-1 col-span-2 flex pl-[5px] items-center text-[12px]'>{orderDetail.productName}</div>
@@ -502,6 +439,9 @@ const Cs_OnProcessBuy = () => {
                                             </div>
                                         </div>
                                     ))}
+                                    <div className='absolute bottom-0 mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
+                                        {item.description}
+                                    </div>
                                 </div>
 
                                 <div className='border border-x-0 border-b-0 mx-[15px] border-t-black pt-2 flex justify-between'>
@@ -623,9 +563,7 @@ const Cs_OnProcessBuy = () => {
                                         )}
                                     </Popup>
                                 </div>
-                                <div className='mt-2 bg-white rounded-md shadow-md w-full flex justify-center overflow-x-auto'>
-                                    {item.description}
-                                </div>
+
                             </div>
                         )
                     })}
