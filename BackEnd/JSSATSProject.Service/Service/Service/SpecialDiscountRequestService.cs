@@ -106,7 +106,7 @@ public class SpecialDiscountRequestService : ISpecialDiscountRequestService
     {
         try
         {
-            // Fetch the promotion from the database
+            
             var existingSpecialDiscountRequest =
                 await _unitOfWork.SpecialDiscountRequestRepository.GetByIDAsync(specialdiscountId);
 
@@ -140,7 +140,7 @@ public class SpecialDiscountRequestService : ISpecialDiscountRequestService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
+           
             return new ResponseModel
             {
                 Data = null,

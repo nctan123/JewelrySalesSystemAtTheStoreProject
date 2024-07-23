@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-//[Authorize(Roles = RoleConstants.Manager + "," + RoleConstants.Admin)]
+[Authorize(Roles = RoleConstants.Manager + "," + RoleConstants.Admin)]
 [ApiController]
 [Route("api/[controller]")]
 public class PromotionRequestController : ControllerBase

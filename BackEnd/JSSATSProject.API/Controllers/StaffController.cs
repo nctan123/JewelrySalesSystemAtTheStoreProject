@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
-// [Authorize(Roles = RoleConstants.Manager)]
+[Authorize (Roles = RoleConstants.Manager + "," + RoleConstants.Admin)]
 [Route("api/[controller]")]
 [ApiController]
 public class StaffController : ControllerBase

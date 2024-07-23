@@ -16,4 +16,5 @@ public interface IReturnBuyBackPolicyService
 
     public Task UpdateStatusesAsync();
 
+    public Task<ResponseModel> GetDisplayPolicy();
 }

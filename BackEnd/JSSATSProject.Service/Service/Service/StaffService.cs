@@ -1,8 +1,8 @@
 ﻿using System.Linq.Expressions;
-using System.Runtime.CompilerServices;
 using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Repository.CustomLib;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.BuyOrderDetailModel;
@@ -18,11 +18,13 @@ public class StaffService : IStaffService
 {
     private readonly IMapper _mapper;
     private readonly UnitOfWork _unitOfWork;
+    private readonly IPointService _pointService;
 
-    public StaffService(UnitOfWork unitOfWork, IMapper mapper)
+    public StaffService(UnitOfWork unitOfWork, IMapper mapper, IPointService pointService)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        this._pointService = pointService;
     }
 
     public async Task<ResponseModel> CreateStaffAsync(RequestCreateStaff requestStaff)
@@ -95,27 +97,27 @@ public class StaffService : IStaffService
             {
                 case "totalrevenue":
                     orderBy = ascending
-                        ? q => q.OrderBy(s => s.TotalRevenue)
-                        : q => q.OrderByDescending(s => s.TotalRevenue);
+                        ? q => q.OrderBy(s => s.TotalRevenue).ThenBy(s => s.Status)
+                        : q => q.OrderByDescending(s => s.TotalRevenue).ThenBy(s => s.Status);
                     break;
                 case "totalsellorder":
                     orderBy = ascending
-                        ? q => q.OrderBy(s => s.TotalSellOrder)
-                        : q => q.OrderByDescending(s => s.TotalSellOrder);
+                        ? q => q.OrderBy(s => s.TotalSellOrder).ThenBy(s => s.Status)
+                        : q => q.OrderByDescending(s => s.TotalSellOrder).ThenBy(s => s.Status);
                     break;
                 case "totalbuyorder":
                     orderBy = ascending
-                        ? q => q.OrderBy(s => s.TotalBuyOrder)
-                        : q => q.OrderByDescending(s => s.TotalBuyOrder);
+                        ? q => q.OrderBy(s => s.TotalBuyOrder).ThenBy(s => s.Status)
+                        : q => q.OrderByDescending(s => s.TotalBuyOrder).ThenBy(s => s.Status);
                     break;
                 default:
                     orderBy = ascending
-                        ? q => q.OrderBy(s => s.Lastname).ThenBy(s => s.Firstname)
-                        : q => q.OrderByDescending(s => s.Lastname).ThenByDescending(s => s.Firstname);
+                        ? q => q.OrderBy(s => s.Lastname).ThenBy(s => s.Firstname).ThenBy(s => s.Status)
+                        : q => q.OrderByDescending(s => s.Lastname).ThenByDescending(s => s.Firstname).ThenBy(s => s.Status);
                     break;
             }
 
-            // Fetch staff entities with SellOrders and BuyOrders included, apply filter, sorting, and pagination
+           
             var entities = await _unitOfWork.StaffRepository.GetAsync(
                 filter: s => s.Account.Role.Name == RoleConstants.Seller,
                 orderBy: entitiesOrderBy,
@@ -123,7 +125,9 @@ public class StaffService : IStaffService
                 pageSize: pageSize,
                 includeProperties: "SellOrders,BuyOrders, SellOrders.SpecialDiscountRequest");
 
-            // Map entities to response model
+            var pointToCurrencyConversionRate = await _pointService.GetPointToCurrencyConversionRate(CustomLibrary.NowInVietnamTime());
+
+
             var responseList = entities.Select(entity =>
                 {
                     var response = _mapper.Map<ResponseStaff>(entity);
@@ -144,11 +148,12 @@ public class StaffService : IStaffService
                             order.Status.Equals(OrderConstants.CompletedStatus))
                         .ToList();
 
+            
                     response.TotalRevenue = staffSellOrders
                         .Sum(order =>
                         {
                             decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
-                            return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
+                            return order.TotalAmount * (1 - discountRate) - order.DiscountPoint * pointToCurrencyConversionRate;
                         });
 
                     response.TotalSellOrder = staffSellOrders.Count;
@@ -186,10 +191,10 @@ public class StaffService : IStaffService
     public async Task<ResponseModel> SearchSellerAsync(string nameSearch, DateTime startDate, DateTime endDate,
         int pageIndex, int pageSize)
     {
-        // Define filter based on role name
+       
         Expression<Func<Staff, bool>> filter = staff => staff.Account.Role.Name == RoleConstants.Seller;
 
-        // Add name search filter if provided
+       
         if (!string.IsNullOrEmpty(nameSearch))
         {
             filter = staff =>
@@ -197,10 +202,10 @@ public class StaffService : IStaffService
                 (staff.Firstname.Contains(nameSearch) || staff.Lastname.Contains(nameSearch));
         }
 
-        // Define ordering by total sell orders count
+        
         Func<IQueryable<Staff>, IOrderedQueryable<Staff>> orderBy = q => q.OrderByDescending(s => s.SellOrders.Count);
 
-        // Fetch staff entities with SellOrders and BuyOrders included, apply filter, sorting, and pagination
+       
         var staffEntities = await _unitOfWork.StaffRepository.GetAsync(
             filter: filter,
             orderBy: orderBy,
@@ -208,12 +213,12 @@ public class StaffService : IStaffService
             pageSize: pageSize,
             includeProperties: "SellOrders,BuyOrders,Account.Role");
 
-        // Map entities to response model
+        
         var responseList = staffEntities.Select(entity =>
         {
             var response = _mapper.Map<ResponseStaff>(entity);
 
-            // Filter SellOrders by date range and status, including null checks
+            
             var staffSellOrders = entity.SellOrders
                 .Where(order =>
                     order.CreateDate >= startDate &&
@@ -222,7 +227,7 @@ public class StaffService : IStaffService
                     order.Status.Equals(OrderConstants.CompletedStatus))
                 .ToList();
 
-            // Filter BuyOrders by date range and status, including null checks
+            
             var staffBuyOrders = entity.BuyOrders
                 .Where(order =>
                     order.CreateDate >= startDate &&
@@ -231,7 +236,7 @@ public class StaffService : IStaffService
                     order.Status.Equals(OrderConstants.CompletedStatus))
                 .ToList();
 
-            // Calculate TotalRevenue, TotalSellOrder, and TotalBuyOrder
+        
             response.TotalRevenue = staffSellOrders.Sum(order => order.TotalAmount);
             response.TotalSellOrder = staffSellOrders.Count;
             response.TotalBuyOrder = staffBuyOrders.Count;
@@ -263,9 +268,31 @@ public class StaffService : IStaffService
         try
         {
             var staff = await _unitOfWork.StaffRepository.GetByIDAsync(staffId);
+
             if (staff != null)
             {
+
                 _mapper.Map(requestStaff, staff);
+
+
+                if (requestStaff.Status?.ToLower() == "inactive")
+                {
+
+                    if (staff.Account != null)
+                    {
+                        staff.Account.Status = "inactive";
+                        await _unitOfWork.AccountRepository.UpdateAsync(staff.Account);
+                    }
+                }
+                else
+                {
+                    if (staff.Account != null)
+                    {
+                        staff.Account.Status = "active";
+                        await _unitOfWork.AccountRepository.UpdateAsync(staff.Account);
+                    }
+                }
+
 
                 await _unitOfWork.StaffRepository.UpdateAsync(staff);
 
@@ -284,18 +311,18 @@ public class StaffService : IStaffService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
             return new ResponseModel
             {
                 Data = null,
-                MessageError = "An error occurred while updating the customer: " + ex.Message
+                MessageError = "An error occurred while updating the staff: " + ex.Message
             };
         }
     }
 
+
     public async Task<ResponseModel> GetTop6ByDateAsync(DateTime startDate, DateTime endDate)
     {
-        // Fetch orders within the specified date range
+        
         var orders = await _unitOfWork.SellOrderRepository.GetAsync(
             o => o.CreateDate >= startDate
                  && o.CreateDate <= endDate
@@ -303,7 +330,9 @@ public class StaffService : IStaffService
             includeProperties: "SpecialDiscountRequest"
         );
 
-        // Group orders by StaffId and calculate total revenue for each group
+        var pointToCurrencyConversionRate = await _pointService.GetPointToCurrencyConversionRate(CustomLibrary.NowInVietnamTime());
+
+
         var groupedOrders = orders
             .GroupBy(o => o.StaffId)
             .Select(group => new
@@ -312,20 +341,20 @@ public class StaffService : IStaffService
                 TotalRevenue = group.Sum(order =>
                 {
                     decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
-                    return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
+                    return order.TotalAmount * (1 - discountRate) - order.DiscountPoint * pointToCurrencyConversionRate;
                 })
             })
             .OrderByDescending(g => g.TotalRevenue)
             .ToList();
 
-        // Get the top 5 staff members by revenue
+        
         var top5 = groupedOrders.Take(5).ToList();
         var otherRevenue = groupedOrders.Skip(5).Sum(g => g.TotalRevenue);
 
-        // Initialize result list
+       
         var result = new List<Dictionary<string, object>>();
 
-        // Add top 5 staff members to result
+        
         foreach (var staff in top5)
         {
             var staffDetails = await _unitOfWork.StaffRepository.GetByIDAsync(staff.StaffId);
@@ -338,7 +367,7 @@ public class StaffService : IStaffService
             });
         }
 
-        // Add other revenue to result
+      
         result.Add(new Dictionary<string, object>
         {
             { "StaffId", 0 },
@@ -347,7 +376,7 @@ public class StaffService : IStaffService
             { "TotalRevenue", otherRevenue }
         });
 
-        // Return the response model with the result data
+     
         return new ResponseModel
         {
             Data = result
@@ -360,6 +389,8 @@ public class StaffService : IStaffService
         var staff = (await _unitOfWork.StaffRepository.GetAsync(
             filter: s => s.Id == id,
             includeProperties: "SellOrders,BuyOrders")).FirstOrDefault();
+
+        var pointToCurrencyConversionRate = await _pointService.GetPointToCurrencyConversionRate(CustomLibrary.NowInVietnamTime());
 
         if (staff == null)
         {
@@ -384,7 +415,7 @@ public class StaffService : IStaffService
                 .Where(so =>
                     so.CreateDate >= startDate && so.CreateDate <= endDate &&
                     so.Status == OrderConstants.CompletedStatus)
-                .Sum(so => so.TotalAmount),
+                .Sum(so => so.TotalAmount - so.DiscountPoint * pointToCurrencyConversionRate),
             TotalSellOrder = staff.SellOrders
                 .Count(so =>
                     so.CreateDate >= startDate && so.CreateDate <= endDate &&
@@ -445,7 +476,6 @@ public class StaffService : IStaffService
                 // Calculate final price
                 responseSellOrder.FinalAmount = await GetFinalPriceAsync(order);
 
-                // Map sell order details
                 responseSellOrder.SellOrderDetails =
                     _mapper.Map<List<ResponseSellOrderDetails>>(order.SellOrderDetails);
 
@@ -462,7 +492,7 @@ public class StaffService : IStaffService
         }
         catch (Exception ex)
         {
-            // Log the exception (consider using a logging framework)
+            
             return new ResponseModel
             {
                 Data = null,
@@ -515,7 +545,7 @@ public class StaffService : IStaffService
             {
                 var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
 
-                // Map buy order details
+               
                 responseBuyOrder.BuyOrderDetails =
                     _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
 
@@ -532,7 +562,7 @@ public class StaffService : IStaffService
         }
         catch (Exception ex)
         {
-            // Log the exception (consider using a logging framework)
+        
             return new ResponseModel
             {
                 Data = null,
@@ -619,7 +649,7 @@ public class StaffService : IStaffService
         }
         catch (Exception ex)
         {
-            // Log the exception (consider using a logging framework)
+         
             return new ResponseModel
             {
                 Data = null,
@@ -675,7 +705,6 @@ public class StaffService : IStaffService
             {
                 var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(order);
 
-                // Map buy order details
                 responseBuyOrder.BuyOrderDetails =
                     _mapper.Map<List<ResponseBuyOrderDetail>>(order.BuyOrderDetails);
 
@@ -692,7 +721,7 @@ public class StaffService : IStaffService
         }
         catch (Exception ex)
         {
-            // Log the exception (consider using a logging framework)
+            
             return new ResponseModel
             {
                 Data = null,

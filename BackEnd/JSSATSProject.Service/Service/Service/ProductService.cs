@@ -34,6 +34,7 @@ public class ProductService : IProductService
     {
         string imageUrl = null;
         // Upload image and get URL
+
         if (requestProduct.ImgFile != null)
         {
             string fileName = $"{Guid.NewGuid()}_{requestProduct.ImgFile.FileName}";
@@ -266,8 +267,6 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
-            // Logger.LogError(ex, "An error occurred while updating the product.");
             return new ResponseModel
             {
                 Data = null,
@@ -298,7 +297,7 @@ public class ProductService : IProductService
 
         IOrderedQueryable<Product> OrderBy(IQueryable<Product> p) => p.OrderBy(pr => pr.Status);
 
-        // Retrieve all products matching the filter
+      
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
             orderBy: OrderBy,
@@ -326,8 +325,6 @@ public class ProductService : IProductService
             responseList.Add(responseProduct);
         }
 
-        // Ensure Stall property or a similar property exists in ResponseProduct
-        // If not, adjust the sorting to match available properties in ResponseProduct
         responseList = responseList
             .OrderBy(rp => rp.Status)
             .ThenBy(rp => ascending ? rp.ProductValue : -rp.ProductValue)
@@ -405,15 +402,15 @@ public class ProductService : IProductService
             responseList.Add(responseProduct);
         }
 
-        // Sort the response list based on the ascending parameter
+        
         responseList = responseList
             .OrderBy(rp => rp.Status)
             .ThenBy(ascending
                 ? (Func<ResponseProduct, object>)(rp => rp.ProductValue)
-                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
+                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) 
             .ThenBy(ascending
                 ? (Func<ResponseProduct, object>)(rp => rp.Name)
-                : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
+                : (Func<ResponseProduct, object>)(rp => rp.Name)) 
             .Skip((pageIndex-1) * pageSize)
             .Take(pageSize)
             .ToList();
@@ -477,6 +474,7 @@ public class ProductService : IProductService
         return validProductsDictionary.Count == productCodes.Count;
     }
 
+    // create product code
     public async Task<string> GenerateUniqueCodeAsync(int productcategorytypeId)
     {
         string prefix;
@@ -535,8 +533,7 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
-            // Logger.LogError(ex, "An error occurred while updating the product.");
+           
             return new ResponseModel
             {
                 Data = null,
@@ -569,8 +566,7 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
-            // Logger.LogError(ex, "An error occurred while updating the product.");
+           
             return new ResponseModel
             {
                 Data = null,
@@ -614,8 +610,6 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
-            // Logger.LogError(ex, "An error occurred while updating the product.");
             return new ResponseModel
             {
                 Data = null,
@@ -627,6 +621,7 @@ public class ProductService : IProductService
     public async Task<Product> UpdateWholesaleGoldQuantity(Product product, int quantity)
     {
         product.ProductMaterials.First().Weight -= quantity;
+        if (product.ProductMaterials.First().Weight <= 0) return null;
         var inventoryWeight = product.ProductMaterials.First().Weight;
         if (inventoryWeight == 0) product.Status = ProductConstants.InactiveStatus;
         await _unitOfWork.ProductRepository.UpdateAsync(product);
@@ -635,7 +630,6 @@ public class ProductService : IProductService
 
     public async Task<bool> UpdateEntityProductAsync(int id, RequestUpdateEntityProduct request)
     {
-        // Retrieve the product with related entities
         var products = await _unitOfWork.ProductRepository.GetAsync(
             p => p.Id == id,
             includeProperties: "ProductDiamonds,ProductMaterials");
@@ -673,7 +667,7 @@ public class ProductService : IProductService
         }
         else
         {
-            // Remove material if MaterialId is not provided
+            //remove material if MaterialId is not provided
             var materialToRemove = product.ProductMaterials
                 .FirstOrDefault(pm => pm.MaterialId == request.MaterialId);
             if (materialToRemove != null)
@@ -682,7 +676,7 @@ public class ProductService : IProductService
             }
         }
 
-        // Handle ProductDiamond
+        
         if (request.DiamondId.HasValue)
         {
             var existingProductDiamond = product.ProductDiamonds
@@ -714,7 +708,7 @@ public class ProductService : IProductService
         }
         else
         {
-            // Remove diamond if DiamondId is not provided
+            //remove diamond if DiamondId is not provided
             var diamondToRemove = product.ProductDiamonds
                 .FirstOrDefault(pd => pd.DiamondId == request.DiamondId);
             if (diamondToRemove != null)
@@ -723,7 +717,7 @@ public class ProductService : IProductService
             }
         }
 
-        // Update product
+        // update product
         _unitOfWork.ProductRepository.UpdateAsync(product);
         await _unitOfWork.SaveAsync();
 

@@ -23,4 +23,12 @@ public class ReturnBuyBackPolicyRepository : GenericRepository<ReturnBuyBackPoli
         }
         await context.SaveChangesAsync();
     }
+
+    public async Task<ReturnBuyBackPolicy> GetLastPolicyAsync()
+    {
+        var result = await context.ReturnBuyBackPolicies
+            .OrderByDescending(r => r.EffectiveDate)
+            .FirstAsync();
+        return result;
+    }
 }

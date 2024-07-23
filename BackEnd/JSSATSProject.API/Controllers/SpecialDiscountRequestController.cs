@@ -9,10 +9,10 @@ using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
+
 
 namespace JSSATSProject.API.Controllers;
-//[Authorize(Roles = RoleConstants.Manager + "," + RoleConstants.Seller)]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class SpecialDiscountRequestController : ControllerBase

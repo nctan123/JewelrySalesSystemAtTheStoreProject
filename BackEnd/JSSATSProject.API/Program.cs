@@ -5,6 +5,7 @@ using JSSATSProject.Repository.AzureBlob;
 using JSSATSProject.Repository.CacheManagers;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.AutoMapper;
+using JSSATSProject.Service.Middlewares;
 using JSSATSProject.Service.Service.BackgroundService;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
@@ -115,13 +116,14 @@ public class Program
 
         builder.Services.AddScoped<ISellOrderDetailService, SellOrderDetailService>();
         builder.Services.AddScoped<IPurchasePriceRatioService, PurchasePriceRatioService>();
+        services.AddSingleton<IActiveJWTService, ActiveJWTService>();
 
 
         services.AddScoped<IDiamondPriceListService, DiamondPriceListService>();
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IMailSenderService, MailSenderService>();
 
-        //background services
+        //Background services
         services.AddHostedService<PromotionStatusUpdateService>();
         services.AddHostedService<ReturnBuybackPolicyStatusUpdateService>();
         
@@ -135,6 +137,9 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        //Validate token
+        app.UseMiddleware<TokenValidationMiddleware>();
 
         app.UseHttpsRedirection();
         app.UseAuthentication();

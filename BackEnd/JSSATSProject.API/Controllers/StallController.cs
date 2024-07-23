@@ -1,9 +1,11 @@
 ﻿using JSSATSProject.Service.Models.StallModel;
 using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class StallController : ControllerBase

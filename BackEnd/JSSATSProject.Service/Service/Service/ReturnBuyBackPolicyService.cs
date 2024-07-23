@@ -22,8 +22,10 @@ public class ReturnBuyBackPolicyService : IReturnBuyBackPolicyService
         RequestCreateReturnBuyBackPolicy requestReturnBuyBackPolicy)
     {
         var entity = _mapper.Map<ReturnBuyBackPolicy>(requestReturnBuyBackPolicy);
+        entity.Status = "active";
         await _unitOfWork.ReturnBuyBackPolicyRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
+        await _unitOfWork.ReturnBuyBackPolicyRepository.UpdateStatusesAsync();
         return new ResponseModel
         {
             Data = entity,
@@ -104,7 +106,7 @@ public class ReturnBuyBackPolicyService : IReturnBuyBackPolicyService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
+           
             return new ResponseModel
             {
                 Data = null,
@@ -116,5 +118,14 @@ public class ReturnBuyBackPolicyService : IReturnBuyBackPolicyService
     public async Task UpdateStatusesAsync()
     {
         await _unitOfWork.ReturnBuyBackPolicyRepository.UpdateStatusesAsync();
+    }
+
+    public async Task<ResponseModel> GetDisplayPolicy()
+    {
+        var result = await _unitOfWork.ReturnBuyBackPolicyRepository.GetLastPolicyAsync();
+        return new ResponseModel()
+        {
+            Data = result
+        };
     }
 }

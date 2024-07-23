@@ -54,12 +54,20 @@ public class SellOrderService : ISellOrderService
             (Customer)(await _customerService.GetEntityByPhoneAsync(requestSellOrder.CustomerPhoneNumber)).Data!;
         var sellOrder = _mapper.Map<SellOrder>(requestSellOrder);
         sellOrder.Customer = customer;
+
         //fetch order details
         sellOrder.SellOrderDetails = await _sellOrderDetailService.GetAllEntitiesFromSellOrderAsync(sellOrder.Id,
             requestSellOrder.ProductCodesAndQuantity, requestSellOrder.ProductCodesAndPromotionIds);
+        if (sellOrder.SellOrderDetails.Count == 0) return new ResponseModel()
+        {
+           MessageError = "Wholesale gold quantity is larger than its quantity in the store inventory." 
+        };
+
         sellOrder.DiscountPoint = requestSellOrder.DiscountPoint;
+
         var totalAmount =
             sellOrder.SellOrderDetails.Sum(s => (1 - (s?.Promotion?.DiscountRate).GetValueOrDefault(0)) * s!.UnitPrice);
+
         sellOrder.TotalAmount = totalAmount;
         sellOrder.Description = requestSellOrder.Description;
         if (!requestSellOrder.IsSpecialDiscountRequested) sellOrder.Status = OrderConstants.DraftStatus;
@@ -105,10 +113,18 @@ public class SellOrderService : ISellOrderService
         return result;
     }
 
+    // Statuslist: 
+    // CanceledStatus = "cancelled";
+    // CompletedStatus = "completed";
+    // ProcessingStatus = "processing";
+    // DraftStatus = "draft";
+    // WaitingForDiscountResponseStatus = "waiting for special discount response";
+    // WaitingForCustomer = "waiting for customer confirmation for discount";
+    // WaitingForPayment = "waiting for customer payment";
     public async Task<ResponseModel> GetAllAsync(List<string> statusList, bool ascending = true, int pageIndex = 1,
         int pageSize = 10)
     {
-        // Validate the input
+      
         if (statusList == null || !statusList.Any())
             return new ResponseModel
             {
@@ -118,7 +134,7 @@ public class SellOrderService : ISellOrderService
 
         Expression<Func<SellOrder, bool>> filter = s => statusList.Contains(s.Status);
 
-        // Fetch entities with filtering, ordering, and pagination
+        
         var entities = await _unitOfWork.SellOrderRepository.GetAsync(
             // Filter based on the status list
             filter,
@@ -131,7 +147,7 @@ public class SellOrderService : ISellOrderService
             pageSize: pageSize,
             pageIndex: pageIndex);
 
-        // Map entities to response models
+      
         var responseSellOrders = new List<ResponseSellOrder>();
         foreach (var sellOrder in entities)
         {
@@ -142,7 +158,7 @@ public class SellOrderService : ISellOrderService
             responseSellOrders.Add(responseSellOrder);
         }
 
-        // Return the response model
+      
         var result = new ResponseModel
         {
             Data = responseSellOrders,
@@ -348,12 +364,13 @@ public class SellOrderService : ISellOrderService
                 filter,
                 includeProperties: "SpecialDiscountRequest"
             );
-
+            var pointToCurrencyConversionRate = await _pointService.GetPointToCurrencyConversionRate(CustomLibrary.NowInVietnamTime());
             // Calculate the total sum of discounted total amounts
             decimal totalSum = orders.Sum(order =>
             {
+                
                 decimal discountRate = order.SpecialDiscountRequest?.DiscountRate ?? 0;
-                return order.TotalAmount * (1 - discountRate) - order.DiscountPoint;
+                return order.TotalAmount * (1 - discountRate) - order.DiscountPoint * pointToCurrencyConversionRate;
             });
 
             // Return the response model with the total sum and an appropriate message
