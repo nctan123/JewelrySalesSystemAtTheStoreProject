@@ -14,3 +14,17 @@ Jewelry sales management software for a jewelry company at a store with many sta
  - Declare the jewelry return policy.
  - Declare the products in the stall, price list of goods,...
  - Statistics dashboard.
+
+**Login credentials:
+ - Seller: 
+ username: seller_user1  
+ password: seller_password1
+ - Cashier: 
+ username: cashier_user1  
+ password: cashier_password1
+ - Manager: 
+ username: manager_user1  
+ password: manager_password1
+ - Admin: 
+ username: admin_user 
+ password: admin_password
