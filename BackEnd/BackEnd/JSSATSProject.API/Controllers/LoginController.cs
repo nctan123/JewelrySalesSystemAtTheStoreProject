@@ -17,27 +17,41 @@ namespace JSSATSProject.API.Controllers;
 [ApiController]
 public class LoginController : ControllerBase
 {
+    private readonly IActiveJWTService _activeJwtService;
     private readonly IAccountService _accountService;
     private readonly IConfiguration _config;
     private readonly IMapper _mapper;
 
 
-    public LoginController(IAccountService accountService, IConfiguration config, IMapper mapper)
+    public LoginController(IAccountService accountService, IConfiguration config, IMapper mapper,
+        IActiveJWTService activeJwtService)
     {
         _accountService = accountService;
         _config = config;
         _mapper = mapper;
+        _activeJwtService = activeJwtService;
     }
 
     [AllowAnonymous]
     [HttpPost]
-    public ActionResult Login([FromBody] RequestSignIn userLogin)
+    public async Task<ActionResult> Login([FromBody] RequestSignIn userLogin)
     {
         var user = Authenticate(userLogin);
+        var username = userLogin.Username;
         var tokenResponse = _mapper.Map<ResponseToken>(user);
         if (user is not null)
         {
+            var lastJwtToken = await _activeJwtService.GetByUsernameAsync(username);
+            if (lastJwtToken is not null)
+            {
+                await _activeJwtService.DeleteAsync(lastJwtToken.Username);
+            }
+
+            if (user.Status != "active")
+                return Problem($"Account {userLogin.Username} has been deactivated.",
+                    statusCode: Convert.ToInt32(HttpStatusCode.Unauthorized), title: "Login Failed");
             var token = GenerateToken(user);
+            await _activeJwtService.SaveTokenAsync(username, token);
             tokenResponse.Token = token;
             return Ok(tokenResponse);
         }
@@ -59,10 +73,15 @@ public class LoginController : ControllerBase
         var token = new JwtSecurityToken(_config["Jwt:Issuer"],
             _config["Jwt:Audience"],
             claims,
-            expires: DateTime.Now.AddMinutes(30),
+            expires: DateTime.Now.AddMinutes(120),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private async Task InvalidateUserTokenAsync(string username)
+    {
+        await _activeJwtService.DeleteAsync(username);
     }
 
     //To authenticate user

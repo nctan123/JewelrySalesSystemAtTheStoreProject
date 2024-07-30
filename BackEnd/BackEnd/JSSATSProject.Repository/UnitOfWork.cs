@@ -19,6 +19,7 @@ public class UnitOfWork
     private DiamondPriceListRepository _diamondpricelist;
     private FluorescenceRepository _fluorescence;
     private GuaranteeRepository _guarantee;
+    private GuaranteePolicyRepository _guaranteePolicy;
     private MaterialRepository _material;
     private MaterialPriceListRepository _materialpricelist;
     private OriginRepository _origin;
@@ -46,6 +47,8 @@ public class UnitOfWork
     private ShapeRepository _shape;
     private ProductDiamondRespository _productDiamond;
     private BuyOrderDetailRepository _buyOrderDetail;
+    private ActiveJWTRepository _activeJwt;
+    
     private bool disposed;
 
     private readonly AzureBlobStorage _blobService;
@@ -57,7 +60,26 @@ public class UnitOfWork
     }
     // bổ sung mới Procedures
     public DBContext Context => _context;
-
+    
+    public ActiveJWTRepository ActiveJWTRepository
+    {
+        get
+        {
+            if (_activeJwt == null)
+                _activeJwt = new ActiveJWTRepository(_context);
+            return _activeJwt;
+        }
+    }
+    
+    public GuaranteePolicyRepository GuaranteePolicyRepository
+    {
+        get
+        {
+            if (_guaranteePolicy == null)
+                _guaranteePolicy = new GuaranteePolicyRepository(_context);
+            return _guaranteePolicy;
+        }
+    }
     public PurchasePriceRatioRepository PurchasePriceRatioRepository
     {
         get

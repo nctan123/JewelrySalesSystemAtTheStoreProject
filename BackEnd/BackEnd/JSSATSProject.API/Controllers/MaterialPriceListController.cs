@@ -39,6 +39,10 @@ public class MaterialPriceListController : ControllerBase
     public async Task<IActionResult> CreateAsync([FromBody] RequestCreateMaterialPriceList requestMaterialPriceList)
     {
         var responseModel = await _materialPriceListService.CreateMaterialPriceListAsync(requestMaterialPriceList);
+        if (responseModel.Data == null)
+        {
+            return BadRequest(responseModel);
+        }
         return Ok(responseModel);
     }
 

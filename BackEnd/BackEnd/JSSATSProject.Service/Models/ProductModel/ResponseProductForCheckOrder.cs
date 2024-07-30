@@ -11,6 +11,6 @@ public class ResponseProductForCheckOrder
     public decimal? Quantity { get; set; }
 
     public decimal? EstimateBuyPrice { get; set; }
-
+    public bool CanRepurchase { get; set; }
     public string? ReasonForEstimateBuyPrice { get; set; }
 }

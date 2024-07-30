@@ -20,7 +20,7 @@ namespace JSSATSProject.Repository.AzureBlob
             await containerClient.CreateIfNotExistsAsync();
             var blobClient = containerClient.GetBlobClient(fileName);
 
-            // Get the file extension to determine the content type
+            
             var extension = Path.GetExtension(fileName).ToLowerInvariant();
             string contentType;
 
@@ -40,11 +40,11 @@ namespace JSSATSProject.Repository.AzureBlob
                     contentType = "image/bmp";
                     break;
                 default:
-                    contentType = "application/octet-stream"; // Default content type
+                    contentType = "application/octet-stream"; 
                     break;
             }
 
-            // Upload the image with the correct content type
+           
             await blobClient.UploadAsync(imageStream, new BlobHttpHeaders { ContentType = contentType });
 
             return blobClient.Uri.ToString();

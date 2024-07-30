@@ -1,12 +1,12 @@
 ﻿using System.Net;
-using Azure;
 using JSSATSProject.Service.Models.GuaranteeModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class GuaranteeController : ControllerBase

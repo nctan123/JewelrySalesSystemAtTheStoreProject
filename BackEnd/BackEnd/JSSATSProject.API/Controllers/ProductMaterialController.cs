@@ -28,5 +28,13 @@ namespace JSSATSProject.API.Controllers
             return Ok(responseModel);
         }
 
+        [HttpPut]
+        [Route("Update")]
+        public async Task<IActionResult> Update([FromBody] RequestUpdateProductMaterial requestProductMaterial)
+        {
+            var responseModel = await _productMaterialService.UpdateAsync(requestProductMaterial);
+            return Ok(responseModel);
+        }
+
     }
 }

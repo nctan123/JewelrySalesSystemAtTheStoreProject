@@ -1,4 +1,5 @@
 ﻿using Azure;
+using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.PointModel;
 using JSSATSProject.Service.Service.IService;
 using JSSATSProject.Service.Service.Service;
@@ -57,13 +58,22 @@ public class PointController : ControllerBase
         return Ok();
     }
 
+
+   
     [HttpPost]
     [Route("GetPointForOrder")]
     public async Task<IActionResult> GetPointForOrder([FromBody] RequestGetPointForOrder requestGetPointForOrder)
     {
-        var response = await _pointService.GetMaximumApplicablePointForOrder(
+        var applicablePoint = await _pointService.GetMaximumApplicablePointForOrder(
             requestGetPointForOrder.CustomerPhoneNumber, requestGetPointForOrder.TotalOrderPrice);
-        return Ok(response);
+        var pointToCurrencyRate = await _pointService.GetPointToCurrencyConversionRate(DateTime.Now);
+        return Ok(new ResponseModel()
+        {
+            Data = new
+            {
+                applicablePoint = applicablePoint,
+                pointToCurrencyRate = pointToCurrencyRate
+            }
+        });
     }
-
 }

@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Net;
 using System.Text;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Service.Service.IService;
@@ -30,6 +31,10 @@ namespace JSSATSProject.API.Controllers
         [Route("csv/ExportChangeMetrics")]
         public async Task<IActionResult> CreateAsync(DateTime startDate, DateTime endDate)
         {
+            if (startDate > endDate)
+                return Problem(detail: "Start date cannot larger than End date.",
+                    statusCode: (int)HttpStatusCode.BadRequest);
+
             var sb = new StringBuilder();
             sb.AppendLine("Date,New Customers,Orders Number,Revenue");
 
@@ -46,17 +51,20 @@ namespace JSSATSProject.API.Controllers
                 if (allCustomers.TryGetValue(date.Date, out int customerCount))
                 {
                     totalNewCustomers += customerCount;
-                } 
-                if(allOrders.TryGetValue(date.Date, out int orderCount))
+                }
+
+                if (allOrders.TryGetValue(date.Date, out int orderCount))
                 {
                     totalOrdersNumber += orderCount;
                 }
-                if(allRevenue.TryGetValue(date.Date,out decimal totalAmount))
+
+                if (allRevenue.TryGetValue(date.Date, out decimal totalAmount))
                 {
                     totalRevenue += totalAmount;
                 }
 
-                sb.AppendLine($"{date:yyyy-MM-dd},{customerCount},{orderCount},{totalAmount.ToString(CultureInfo.InvariantCulture)}");
+                sb.AppendLine(
+                    $"{date:yyyy-MM-dd},{customerCount},{orderCount},{totalAmount.ToString(CultureInfo.InvariantCulture)}");
             }
 
             sb.AppendLine(

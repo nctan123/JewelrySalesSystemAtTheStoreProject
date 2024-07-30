@@ -61,66 +61,70 @@ public class PaymentDetailController : ControllerBase
         // Create Payment
         var responseModel = await _paymentDetailService.CreatePaymentDetailAsync(requestPaymentDetail);
 
-        //Update Status Payment
-        var payment = new RequestUpdatePayment
-        {
-            Status = "completed"
-        };
-        await _paymentService.UpdatePaymentAsync(requestPaymentDetail.PaymentId, payment);
+        if (requestPaymentDetail.Status != "failed") {
 
-
-        // Update Status SellOrder
-
-        var sellorderId = await _paymentService.GetSellOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
-        var buyorderId = await _paymentService.GetBuyOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
-
-        if (sellorderId != null)
-        {
-            //sellorder
-            var updatesellorderstatus = new UpdateSellOrderStatus()
+            //Update Status Payment
+            var payment = new RequestUpdatePayment
             {
-                Status = OrderConstants.ProcessingStatus
+                Status = "completed"
             };
+            await _paymentService.UpdatePaymentAsync(requestPaymentDetail.PaymentId, payment);
 
-            await _sellOrderService.UpdateStatusAsync(sellorderId.Value, updatesellorderstatus);
 
-            //Create Guarantee
-            var products = await _sellOrderDetailService.GetProductFromSellOrderDetailAsync(sellorderId.Value);
-            await _guaranteeService.CreateGuaranteeAsync(products);
+            // Update Status SellOrder
 
-            //Update Point
-            var sellorder = await _sellOrderService.GetEntityByIdAsync(sellorderId.Value);
-            var discountPoint = sellorder.DiscountPoint;
-            var customerPhone = sellorder.Customer.Phone;
-            var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
-            //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
-            await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
+            var sellorderId = await _paymentService.GetSellOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
+            var buyorderId = await _paymentService.GetBuyOrderIdByPaymentIdAsync(requestPaymentDetail.PaymentId);
 
-            //Update SpecialDiscount
-            var specialDiscount = sellorder.SpecialDiscountRequestId;
-
-            if (specialDiscount != null)
+            if (sellorderId != null)
             {
-                var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
-                var newspecialdiscount = new UpdateSpecialDiscountRequest
+                //sellorder
+                var updatesellorderstatus = new UpdateSellOrderStatus()
                 {
-                    DiscountRate = sellorder.SpecialDiscountRequest?.DiscountRate ?? 0,
-                    Status = "used",
-                    ApprovedBy = sellorder.SpecialDiscountRequest.ApprovedBy ?? 0
+                    Status = OrderConstants.ProcessingStatus
                 };
-                await _specialDiscountRequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
+
+                await _sellOrderService.UpdateStatusAsync(sellorderId.Value, updatesellorderstatus);
+
+                //Create Guarantee
+                var products = await _sellOrderDetailService.GetProductFromSellOrderDetailAsync(sellorderId.Value);
+                await _guaranteeService.CreateGuaranteeAsync(products);
+
+                //Update Point
+                var sellorder = await _sellOrderService.GetEntityByIdAsync(sellorderId.Value);
+                var discountPoint = sellorder.DiscountPoint;
+                var customerPhone = sellorder.Customer.Phone;
+                var sellorderAmount = await _sellOrderService.GetFinalPriceAsync(sellorder);
+                //await _pointService.DecreaseCustomerAvailablePointAsync(customerPhone, discountPoint);
+                await _pointService.AddCustomerPoint(customerPhone, sellorderAmount);
+
+                //Update SpecialDiscount
+                var specialDiscount = sellorder.SpecialDiscountRequestId;
+
+                if (specialDiscount != null)
+                {
+                    var specialDiscountId = sellorder.SpecialDiscountRequest.RequestId;
+                    var newspecialdiscount = new UpdateSpecialDiscountRequest
+                    {
+                        DiscountRate = sellorder.SpecialDiscountRequest?.DiscountRate ?? 0,
+                        Status = "used",
+                        ApprovedBy = sellorder.SpecialDiscountRequest.ApprovedBy ?? 0
+                    };
+                    await _specialDiscountRequestService.UpdateAsync(specialDiscountId, newspecialdiscount);
+                }
+            }
+            else
+            {
+                //buyorder
+                var updatebuyorderstatus = new RequestUpdateBuyOrderStatus()
+                {
+                    NewStatus = OrderConstants.CompletedStatus
+                };
+
+                await _buyOrderService.UpdateAsync(buyorderId.Value, updatebuyorderstatus);
             }
         }
-        else
-        {
-            //buyorder
-            var updatebuyorderstatus = new RequestUpdateBuyOrderStatus()
-            {
-                NewStatus = OrderConstants.CompletedStatus
-            };
-
-            await _buyOrderService.UpdateAsync(buyorderId.Value, updatebuyorderstatus);
-        }
+        
 
 
         return Ok();

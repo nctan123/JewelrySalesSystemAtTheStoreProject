@@ -115,7 +115,7 @@ public class GuaranteeService : IGuaranteeService
     {
         foreach (var product in products)
         {
-            var guaranteeMonths = GetGuaranteeMonths(product.CategoryId);
+            var guaranteeMonths = await GetGuaranteeMonths(product.CategoryId);
             var newCode = await GenerateUniqueCodeAsync();
 
             if (guaranteeMonths > 0)
@@ -143,25 +143,13 @@ public class GuaranteeService : IGuaranteeService
         };
     }
 
-    private int GetGuaranteeMonths(int categoryId)
+    private async Task<int> GetGuaranteeMonths(int categoryId)
     {
-        switch (categoryId)
-        {
-            case ProductConstants.RingCategory:
-                return GuaranteeConstants.RING_MONTHS;
-            case ProductConstants.EarringsCategory:
-                return GuaranteeConstants.EARRINGS_MONTHS;
-            case ProductConstants.BraceletCategory:
-                return GuaranteeConstants.BRACELET_MONTHS;
-            case ProductConstants.NecklaceCategory:
-                return GuaranteeConstants.NECKLACE_MONTHS;
-            case ProductConstants.DiamondsCategory:
-                return GuaranteeConstants.DIAMONDS_MONTHS;
-            default:
-                return 0;
-        }
+        var guaranteePolicyMonths = await _unitOfWork.GuaranteePolicyRepository.GetEntityAsync(categoryId, DateTime.Now);
+        return guaranteePolicyMonths?.Duration ?? 0;
     }
 
+    //create guarantee code
     public async Task<string> GenerateUniqueCodeAsync()
     {
         string newCode;
@@ -169,10 +157,8 @@ public class GuaranteeService : IGuaranteeService
         {
             var prefix = GuaranteeConstants.GuaranteePrefix;
             newCode = prefix + CustomLibrary.RandomString(14 - prefix.Length);
-        }
-        while (await _unitOfWork.Context.Guarantees.AnyAsync(so => so.Code == newCode));
+        } while (await _unitOfWork.Context.Guarantees.AnyAsync(so => so.Code == newCode));
+
         return newCode;
     }
-
-
 }

@@ -4,12 +4,12 @@ using Microsoft.Extensions.Logging;
 
 namespace JSSATSProject.Service.Service.BackgroundService;
 
-public class PromotionStatusUpdateService : Microsoft.Extensions.Hosting.BackgroundService
+public class ReturnBuybackPolicyStatusUpdateService : Microsoft.Extensions.Hosting.BackgroundService
 {
     private readonly IServiceScopeFactory _scopeFactory;
-    private readonly ILogger<PromotionStatusUpdateService> _logger;
+    private readonly ILogger<ReturnBuybackPolicyStatusUpdateService> _logger;
 
-    public PromotionStatusUpdateService(IServiceScopeFactory scopeFactory, ILogger<PromotionStatusUpdateService> logger)
+    public ReturnBuybackPolicyStatusUpdateService(IServiceScopeFactory scopeFactory, ILogger<ReturnBuybackPolicyStatusUpdateService> logger)
     {
         _scopeFactory = scopeFactory;
         _logger = logger;
@@ -23,13 +23,13 @@ public class PromotionStatusUpdateService : Microsoft.Extensions.Hosting.Backgro
             {
                 using (var scope = _scopeFactory.CreateScope())
                 {
-                    var promotionService = scope.ServiceProvider.GetRequiredService<IPromotionService>();
-                    await promotionService.UpdatePromotionStatusesAsync();
+                    var returnBuyBackPolicyService = scope.ServiceProvider.GetRequiredService<IReturnBuyBackPolicyService>();
+                    await returnBuyBackPolicyService.UpdateStatusesAsync();
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while updating promotion statuses.");
+                _logger.LogError(ex, "Error occurred while updating return buyback policy statuses.");
             }
 
             //delay for a day

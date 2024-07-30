@@ -8,4 +8,5 @@ public interface IMaterialService
     Task<ResponseModel> GetAllAsync();
     Task<ResponseModel> GetByIdAsync(int id);
     Task<ResponseModel> CreateMaterialAsync(RequestCreateMaterial requestMaterial);
+    Task<List<string>> ShouldSendPriceChangesNotification();
 }

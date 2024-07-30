@@ -3,9 +3,7 @@ using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models.BuyOrderModel;
-using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,15 +18,17 @@ public class BuyOrderController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ISellOrderService _sellOrderService;
     private readonly IBuyOrderDetailService _buyOrderDetailService;
+    private readonly IProductService _productService;
 
     public BuyOrderController(IMapper mapper, ISellOrderService sellOrderService, IBuyOrderService buyOrderService,
-        ICustomerService customerService, IBuyOrderDetailService buyOrderDetailService)
+        ICustomerService customerService, IBuyOrderDetailService buyOrderDetailService, IProductService productService)
     {
         _mapper = mapper;
         _sellOrderService = sellOrderService;
         _buyOrderService = buyOrderService;
         _customerService = customerService;
         _buyOrderDetailService = buyOrderDetailService;
+        _productService = productService;
     }
 
     [HttpGet]
@@ -58,11 +58,18 @@ public class BuyOrderController : ControllerBase
         if (orderCode.StartsWith(OrderConstants.SellOrderCodePrefix))
         {
             var sellOrder = await _sellOrderService.GetEntityByCodeAsync(orderCode);
-            if (sellOrder is null || !sellOrder.Status.Equals(OrderConstants.CompletedStatus))
+            if (sellOrder is null)
             {
                 return Problem(statusCode: Convert.ToInt32(HttpStatusCode.BadRequest),
                     title: "Order not found.",
                     detail: $"Cannot find data of order {orderCode}");
+            }
+
+            if (!sellOrder.Status.Equals(OrderConstants.CompletedStatus))
+            {
+                return Problem(statusCode: Convert.ToInt32(HttpStatusCode.BadRequest),
+                    title: "Order status is invalid.",
+                    detail: $"Order {orderCode} has not been completed. Current status: {sellOrder.Status}");
             }
 
             //map sp trong sellOrder details thanh response product dto
@@ -73,7 +80,7 @@ public class BuyOrderController : ControllerBase
                     CustomerName = string.Join(" ", sellOrder.Customer.Firstname, sellOrder.Customer.Lastname),
                     CustomerPhoneNumber = sellOrder.Customer.Phone,
                     CreateDate = sellOrder.CreateDate,
-                    TotalValue = await _sellOrderService.GetFinalPriceAsync(sellOrder) ,
+                    TotalValue = await _sellOrderService.GetFinalPriceAsync(sellOrder),
                     Products = products
                 }
             );
@@ -82,7 +89,6 @@ public class BuyOrderController : ControllerBase
         return Problem(statusCode: Convert.ToInt32(HttpStatusCode.BadRequest),
             title: "Order type is invalid.",
             detail: "The system can just check buyback products from Sell Orders.");
-
     }
 
     [HttpPost]
@@ -108,6 +114,10 @@ public class BuyOrderController : ControllerBase
         //save buyOrder
         await _buyOrderService.CreateAsync(buyOrder);
         buyOrder.BuyOrderDetails = await _buyOrderService.CreateOrderDetails(requestCreateBuyOrder, buyOrder.Id);
+
+        var productCodes = requestCreateBuyOrder.ProductCodesAndQuantity
+                .Select(p => p.Key);
+        await _productService.UpdateProductStatusAsync(productCodes, ProductConstants.RepurchasedStatus);
         var result = (await _buyOrderService.UpdateAsync(buyOrder.Id, buyOrder)).Data;
         return Ok(result);
     }
@@ -139,7 +149,7 @@ public class BuyOrderController : ControllerBase
 
     [HttpPut]
     [Route("UpdateStatus")]
-    public async Task<IActionResult> UpdateStatus(int orderId, [FromBody]RequestUpdateBuyOrderStatus buyOrder)
+    public async Task<IActionResult> UpdateStatus(int orderId, [FromBody] RequestUpdateBuyOrderStatus buyOrder)
     {
         var result = await _buyOrderService.UpdateAsync(orderId, buyOrder);
         return Ok(result);

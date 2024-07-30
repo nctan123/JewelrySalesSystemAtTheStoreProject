@@ -34,6 +34,7 @@ public class ProductService : IProductService
     {
         string imageUrl = null;
         // Upload image and get URL
+
         if (requestProduct.ImgFile != null)
         {
             string fileName = $"{Guid.NewGuid()}_{requestProduct.ImgFile.FileName}";
@@ -80,7 +81,7 @@ public class ProductService : IProductService
             diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                 diamond.ClarityId,
                 diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, DateTime.Now);
-            totalPrice = (productionCost + diamondPrice) * priceRate ;
+            totalPrice = (productionCost + diamondPrice) * priceRate;
         }
         else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
                  or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
@@ -132,7 +133,7 @@ public class ProductService : IProductService
             diamondPrice = await _diamondPriceListService.FindPriceBy4CAndOriginAndFactors(diamond.CutId,
                 diamond.ClarityId,
                 diamond.ColorId, diamond.CaratId, diamond.OriginId, totalFactors, DateTime.Now);
-            totalPrice = (productionCost + diamondPrice) * priceRate ;
+            totalPrice = (productionCost + diamondPrice) * priceRate;
         }
         else if (correspondingProduct.CategoryId is ProductConstants.BraceletCategory
                  or ProductConstants.EarringsCategory or ProductConstants.NecklaceCategory
@@ -266,8 +267,6 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
-            // Logger.LogError(ex, "An error occurred while updating the product.");
             return new ResponseModel
             {
                 Data = null,
@@ -276,8 +275,9 @@ public class ProductService : IProductService
         }
     }
 
-    public async Task<ResponseModel> GetAllAsync(int categoryId, int? stallId = null, int pageIndex = 1, int pageSize = 10,
-       bool ascending = true, bool includeNullStalls = true)
+    public async Task<ResponseModel> GetAllAsync(int categoryId, int? stallId = null, int pageIndex = 1,
+        int pageSize = 10,
+        bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
@@ -295,17 +295,18 @@ public class ProductService : IProductService
             filter = filter.AndAlso(product => product.StallsId == stallId.Value);
         }
 
-        // Retrieve all products matching the filter
+        IOrderedQueryable<Product> OrderBy(IQueryable<Product> p) => p.OrderBy(pr => pr.Status);
+
+      
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
+            orderBy: OrderBy,
             includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
                                "ProductDiamonds.Diamond.Color,ProductDiamonds.Diamond.Cut," +
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                               "ProductMaterials,ProductMaterials.Material,Stalls,Stalls.Type",
-            pageIndex: pageIndex,
-            pageSize: pageSize
+                               "ProductMaterials,ProductMaterials.Material,Stalls,Stalls.Type"
         );
 
         var responseList = new List<ResponseProduct>();
@@ -313,7 +314,8 @@ public class ProductService : IProductService
         {
             var responseProduct = _mapper.Map<ResponseProduct>(entity);
             responseProduct.ProductValue = await CalculateProductPrice(entity);
-            var promotion = await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
+            var promotion =
+                await _unitOfWork.PromotionRepository.GetPromotionByCategoryAsync(responseProduct.CategoryId);
             if (promotion != null)
             {
                 responseProduct.PromotionId = promotion.Id;
@@ -323,17 +325,14 @@ public class ProductService : IProductService
             responseList.Add(responseProduct);
         }
 
-        // Ensure Stall property or a similar property exists in ResponseProduct
-        // If not, adjust the sorting to match available properties in ResponseProduct
         responseList = responseList
             .OrderBy(rp => rp.Status)
-            .ThenBy(ascending
-                ? (Func<ResponseProduct, object>)(rp => rp.ProductValue)
-                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue))
-            .ThenBy(ascending
-                ? (Func<ResponseProduct, object>)(rp => rp.Name)
-                : (Func<ResponseProduct, object>)(rp => rp.Name))
+            .ThenBy(rp => ascending ? rp.ProductValue : -rp.ProductValue)
+            .ThenBy(rp => ascending ? rp.Name : null)
+            .Skip((pageIndex -1) * pageSize)
+            .Take(pageSize)
             .ToList();
+
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);
         var products = await _unitOfWork.ProductRepository.GetAsync(filter);
@@ -349,9 +348,9 @@ public class ProductService : IProductService
     }
 
 
-
-    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int? stallId = null, int pageIndex = 1,
-    int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
+    public async Task<ResponseModel> SearchProductsAsync(int categoryId, string searchTerm, int? stallId = null,
+        int pageIndex = 1,
+        int pageSize = 10, bool ascending = true, bool includeNullStalls = true)
     {
         Expression<Func<Product, bool>> filter;
 
@@ -374,6 +373,9 @@ public class ProductService : IProductService
             filter = filter.AndAlso(p => p.Code.Contains(searchTerm) || p.Name.Contains(searchTerm));
         }
 
+        IOrderedQueryable<Product> OrderBy(IQueryable<Product> p)
+            => p.OrderBy(pr => pr.Status);
+
         var entities = await _unitOfWork.ProductRepository.GetAsync(
             filter,
             includeProperties: "ProductDiamonds.Diamond.Carat,ProductDiamonds.Diamond.Clarity," +
@@ -381,9 +383,7 @@ public class ProductService : IProductService
                                "ProductDiamonds.Diamond.Fluorescence,ProductDiamonds.Diamond.Origin," +
                                "ProductDiamonds.Diamond.Polish,ProductDiamonds.Diamond.Shape," +
                                "ProductDiamonds.Diamond.Symmetry,ProductMaterials.Material.MaterialPriceLists,Category," +
-                               "ProductMaterials,ProductMaterials.Material,Stalls",
-            pageIndex: pageIndex,
-            pageSize: pageSize
+                               "ProductMaterials,ProductMaterials.Material,Stalls"
         );
 
         var responseList = new List<ResponseProduct>();
@@ -402,15 +402,17 @@ public class ProductService : IProductService
             responseList.Add(responseProduct);
         }
 
-        // Sort the response list based on the ascending parameter
+        
         responseList = responseList
             .OrderBy(rp => rp.Status)
             .ThenBy(ascending
                 ? (Func<ResponseProduct, object>)(rp => rp.ProductValue)
-                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) // ProductValue sorting
+                : (Func<ResponseProduct, object>)(rp => -rp.ProductValue)) 
             .ThenBy(ascending
                 ? (Func<ResponseProduct, object>)(rp => rp.Name)
-                : (Func<ResponseProduct, object>)(rp => rp.Name)) // Name sorting
+                : (Func<ResponseProduct, object>)(rp => rp.Name)) 
+            .Skip((pageIndex-1) * pageSize)
+            .Take(pageSize)
             .ToList();
 
         var totalCount = await _unitOfWork.ProductRepository.CountAsync(filter);
@@ -472,6 +474,7 @@ public class ProductService : IProductService
         return validProductsDictionary.Count == productCodes.Count;
     }
 
+    // create product code
     public async Task<string> GenerateUniqueCodeAsync(int productcategorytypeId)
     {
         string prefix;
@@ -530,8 +533,77 @@ public class ProductService : IProductService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
-            // Logger.LogError(ex, "An error occurred while updating the product.");
+           
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the product: " + ex.Message
+            };
+        }
+    }
+
+    public async Task<ResponseModel> UpdateProductStatusAsync(string productCode, string newStatus)
+    {
+        try
+        {
+            var products = await _unitOfWork.ProductRepository.GetAsync(
+                p => p.Code == productCode,
+                includeProperties: "Stalls");
+            var product = products.FirstOrDefault();
+
+            if (product != null)
+            {
+                product.Status = newStatus;
+                await _unitOfWork.ProductRepository.UpdateAsync(product);
+                await _unitOfWork.SaveAsync();
+            }
+
+            return new ResponseModel
+            {
+                Data = product,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
+           
+            return new ResponseModel
+            {
+                Data = null,
+                MessageError = "An error occurred while updating the product: " + ex.Message
+            };
+        }
+    }
+
+    public async Task<ResponseModel> UpdateProductStatusAsync(IEnumerable<string> productCodes, string newStatus)
+    {
+        try
+        {
+            var result = new List<Product>();
+            foreach (var code in productCodes)
+            {
+                var products = await _unitOfWork.ProductRepository.GetAsync(
+                    p => p.Code == code,
+                    includeProperties: "Stalls");
+                var product = products.FirstOrDefault();
+
+                if (product != null)
+                {
+                    product.Status = newStatus;
+                    result.Add(product);
+                    await _unitOfWork.ProductRepository.UpdateAsync(product);
+                    await _unitOfWork.SaveAsync();
+                }
+            }
+
+            return new ResponseModel
+            {
+                Data = result,
+                MessageError = ""
+            };
+        }
+        catch (Exception ex)
+        {
             return new ResponseModel
             {
                 Data = null,
@@ -543,6 +615,7 @@ public class ProductService : IProductService
     public async Task<Product> UpdateWholesaleGoldQuantity(Product product, int quantity)
     {
         product.ProductMaterials.First().Weight -= quantity;
+        if (product.ProductMaterials.First().Weight <= 0) return null;
         var inventoryWeight = product.ProductMaterials.First().Weight;
         if (inventoryWeight == 0) product.Status = ProductConstants.InactiveStatus;
         await _unitOfWork.ProductRepository.UpdateAsync(product);
@@ -551,7 +624,6 @@ public class ProductService : IProductService
 
     public async Task<bool> UpdateEntityProductAsync(int id, RequestUpdateEntityProduct request)
     {
-        // Retrieve the product with related entities
         var products = await _unitOfWork.ProductRepository.GetAsync(
             p => p.Id == id,
             includeProperties: "ProductDiamonds,ProductMaterials");
@@ -589,7 +661,7 @@ public class ProductService : IProductService
         }
         else
         {
-            // Remove material if MaterialId is not provided
+            //remove material if MaterialId is not provided
             var materialToRemove = product.ProductMaterials
                 .FirstOrDefault(pm => pm.MaterialId == request.MaterialId);
             if (materialToRemove != null)
@@ -598,7 +670,7 @@ public class ProductService : IProductService
             }
         }
 
-        // Handle ProductDiamond
+        
         if (request.DiamondId.HasValue)
         {
             var existingProductDiamond = product.ProductDiamonds
@@ -630,7 +702,7 @@ public class ProductService : IProductService
         }
         else
         {
-            // Remove diamond if DiamondId is not provided
+            //remove diamond if DiamondId is not provided
             var diamondToRemove = product.ProductDiamonds
                 .FirstOrDefault(pd => pd.DiamondId == request.DiamondId);
             if (diamondToRemove != null)
@@ -639,12 +711,10 @@ public class ProductService : IProductService
             }
         }
 
-        // Update product
+        // update product
         _unitOfWork.ProductRepository.UpdateAsync(product);
         await _unitOfWork.SaveAsync();
 
         return true;
     }
-
-
 }

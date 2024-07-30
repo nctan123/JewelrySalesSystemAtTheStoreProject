@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations;
-using JSSATSProject.Repository.CustomValidators;
 using JSSATSProject.Service.Models.ProductModel;
 
-namespace JSSATSProject.Service.Models.OrderModel;
+namespace JSSATSProject.Service.Models.BuyOrderModel;
 
 //an nut check de xem order details
 public class ResponseCheckOrder

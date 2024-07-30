@@ -6,8 +6,9 @@ namespace JSSATSProject.Service.Models.ProductModel;
 
 public class RequestCreateProduct
 {
+    [Required]
     public int CategoryId { get; set; }
-    
+    [Required]
     public string Name { get; set; } = null!;
     
     [Range(0, 99999999.99)]

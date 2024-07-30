@@ -30,6 +30,12 @@ public class MaterialService : IMaterialService
         };
     }
 
+    public async Task<List<string>> ShouldSendPriceChangesNotification()
+    {
+        var result = await _unitOfWork.MaterialRepository.GetIdsWithLastEffectiveDateMoreThanOneDayOldAsync();
+        return result;
+    }
+
     public async Task<ResponseModel> GetAllAsync()
     {
         var entities = await _unitOfWork.MaterialRepository.GetAsync();

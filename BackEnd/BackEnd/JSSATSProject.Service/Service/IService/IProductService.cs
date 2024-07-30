@@ -23,6 +23,8 @@ public interface IProductService
     public Task UpdateAllProductStatusAsync(SellOrder sellOrder, string newStatus);
     public Task<decimal> CalculateMaterialBuyPrice(int? materialId, decimal? materialWeight);
     public Task<ResponseModel> UpdateProductStatusAsync(int productId, string newStatus);
+    public Task<ResponseModel> UpdateProductStatusAsync(string productCode, string newStatus);
+    public Task<ResponseModel> UpdateProductStatusAsync(IEnumerable<string> productCodes, string newStatus);
     public Task<Product> UpdateWholesaleGoldQuantity(Product product, int quantity);
 
     public Task<bool> UpdateEntityProductAsync(int id, RequestUpdateEntityProduct request);

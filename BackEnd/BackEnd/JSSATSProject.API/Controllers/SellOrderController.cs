@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
+﻿using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
@@ -7,12 +6,13 @@ using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Models.SellOrderModel;
 using JSSATSProject.Service.Models.SpecialDiscountRequestModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-[Authorize(Roles = RoleConstants.Seller)]
+
+[Authorize(Roles =
+    $"{RoleConstants.Manager},{RoleConstants.Admin},{RoleConstants.Seller},{RoleConstants.Admin},{RoleConstants.Cashier}")]
 [Route("api/[controller]")]
 [ApiController]
 public class SellOrderController : ControllerBase
@@ -56,6 +56,7 @@ public class SellOrderController : ControllerBase
     [Route("CreateOrder")]
     public async Task<IActionResult> CreateAsync([FromBody] RequestCreateSellOrder requestSellOrder)
     {
+        var tempId = requestSellOrder.Id;
         if (!ModelState.IsValid) return Problem(statusCode: 400, detail: ModelState.ToString());
         var updatedOrder = new ResponseModel();
         var customerPhoneNumber = requestSellOrder.CustomerPhoneNumber;
@@ -64,6 +65,10 @@ public class SellOrderController : ControllerBase
         ResponseModel specialDiscountModel;
         ResponseUpdateSellOrderWithSpecialPromotion response;
 
+        var tempOrder = (await _sellOrderService.CreateOrderAsync(requestSellOrder));
+        if (tempOrder.MessageError == "Wholesale gold quantity is larger than its quantity in the store inventory.")
+            return BadRequest("Wholesale gold quantity is larger than its quantity in the store inventory.");
+
         //check if this is just an update, not create new order
         if (requestSellOrder.Id is not null)
         {
@@ -71,12 +76,13 @@ public class SellOrderController : ControllerBase
             await _sellOrderService.RemoveAllSellOrderDetails(requestSellOrder.Id.Value);
             var result = await _sellOrderService.UpdateOrderAsync(orderWithUpdatedData.Id, orderWithUpdatedData);
             await _productService.UpdateAllProductStatusAsync(orderWithUpdatedData, ProductConstants.InactiveStatus);
+            await _pointService.DecreaseCustomerAvailablePointAsync(customerPhoneNumber,
+                requestSellOrder.DiscountPoint);
             return Ok(_mapper.Map<ResponseUpdateSellOrderWithSpecialPromotion>((SellOrder)result.Data!));
         }
 
         //create truoc ti update lai special promotion sau
-        var currentOrder = (SellOrder)(await _sellOrderService.CreateOrderAsync(requestSellOrder)).Data!;
-
+        var currentOrder = (SellOrder)tempOrder.Data!;
         //handle order include special promotion 
         if (requestSellOrder.IsSpecialDiscountRequested)
         {
@@ -89,8 +95,10 @@ public class SellOrderController : ControllerBase
                 DiscountRate = specialDiscountRate
             });
             var specialDiscountRequest = (SpecialDiscountRequest)specialDiscountModel.Data!;
+
             //set special discount request id
             requestSellOrder.SpecialDiscountRequestId = specialDiscountRequest.RequestId;
+
             //create sell order
             updatedOrder = await _sellOrderService.UpdateOrderAsync(currentOrder.Id, new RequestUpdateSellOrder
             {
@@ -105,7 +113,6 @@ public class SellOrderController : ControllerBase
         }
 
         await _pointService.DecreaseCustomerAvailablePointAsync(customerPhoneNumber, requestSellOrder.DiscountPoint);
-
         return Ok(response);
     }
 

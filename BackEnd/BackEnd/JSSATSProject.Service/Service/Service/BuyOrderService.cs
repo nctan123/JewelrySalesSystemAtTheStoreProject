@@ -54,7 +54,7 @@ public class BuyOrderService : IBuyOrderService
             pageSize: pageSize,
             pageIndex: pageIndex);
 
-        // Map entities to response models
+      
 
         var responseBuyOrders = new List<ResponseBuyOrder>();
         foreach (var entity in entities)
@@ -64,8 +64,7 @@ public class BuyOrderService : IBuyOrderService
             responseBuyOrders.Add(responseBuyOrder);
         }
 
-        // Return the response model
-        // Return the response model
+      
         var result = new ResponseModel
         {
             Data = responseBuyOrders,
@@ -78,7 +77,7 @@ public class BuyOrderService : IBuyOrderService
 
     public async Task<ResponseModel> GetByIdAsync(int id)
     {
-        // Fetch the entities with the required related properties
+       
         var entities = await _unitOfWork.BuyOrderRepository.GetAsync(
             filter: q => q.Id == id,
             includeProperties:
@@ -87,10 +86,10 @@ public class BuyOrderService : IBuyOrderService
             "Payments.PaymentDetails.PaymentMethod"
         );
 
-        // Get the first matching entity
+        
         var entity = entities.FirstOrDefault();
 
-        // If entity is not found, return an error message
+        
         if (entity == null)
         {
             return new ResponseModel
@@ -100,11 +99,11 @@ public class BuyOrderService : IBuyOrderService
             };
         }
 
-        // Map the entity to the response model
+        
         var responseBuyOrder = _mapper.Map<ResponseBuyOrder>(entity);
         responseBuyOrder.BuyOrderDetails = _mapper.Map<List<ResponseBuyOrderDetail>>(entity.BuyOrderDetails);
 
-        // Return the response model
+        
         return new ResponseModel
         {
             Data = responseBuyOrder,
@@ -176,12 +175,12 @@ public class BuyOrderService : IBuyOrderService
                     var buyOrderDetails = buyOrder.BuyOrderDetails.ToList();
                     foreach (var buyOrderDetail in buyOrderDetails)
                     {
+                        await _productService.UpdateProductStatusAsync(buyOrderDetail.ProductCode,
+                            ProductConstants.InactiveStatus);
                         await _unitOfWork.BuyOrderDetailRepository.DeleteAsync(buyOrderDetail);
                     }
                 }
-
                 await _unitOfWork.BuyOrderRepository.UpdateAsync(buyOrder);
-
                 return new ResponseModel
                 {
                     Data = buyOrder,
@@ -260,13 +259,14 @@ public class BuyOrderService : IBuyOrderService
             //in-company buy orders
             var orderDetail = new BuyOrderDetail
             {
+                ProductCode = productCode,
                 Quantity = quantity,
                 BuyOrderId = buyOrderId,
                 CategoryTypeId = productObj.Category.TypeId,
                 DiamondGradingCode = diamondGradingCode,
                 PurchasePriceRatioId = purchasePriceRatioId,
-                MaterialId = productObj.ProductMaterials.First().Material.Id,
-                MaterialWeight = productObj.ProductMaterials.First().Weight,
+                MaterialId = productObj.ProductMaterials.FirstOrDefault()?.Material.Id,
+                MaterialWeight = productObj.ProductMaterials.FirstOrDefault()?.Weight,
                 UnitPrice = price,
                 ProductName = productObj.Name
             };
@@ -330,7 +330,7 @@ public class BuyOrderService : IBuyOrderService
     public async Task<ResponseModel> SearchByCriteriaAsync(List<string> statusList, string customerPhone,
         bool ascending, int pageIndex, int pageSize)
     {
-        // Validate the input
+       
         if ((statusList == null || !statusList.Any()) && string.IsNullOrEmpty(customerPhone))
             return new ResponseModel
             {
@@ -342,7 +342,7 @@ public class BuyOrderService : IBuyOrderService
             (statusList == null || statusList.Contains(b.Status)) &&
             (string.IsNullOrEmpty(customerPhone) || b.Customer.Phone.Contains(customerPhone));
 
-        // Fetch entities with filtering, ordering, and pagination
+        
         var entities = await _unitOfWork.BuyOrderRepository.GetAsync(
             filter,
             includeProperties: "BuyOrderDetails,Customer,Staff," +
@@ -353,7 +353,7 @@ public class BuyOrderService : IBuyOrderService
             pageSize: pageSize,
             pageIndex: pageIndex);
 
-        // Map entities to response models
+       
         var responseBuyOrders = new List<ResponseBuyOrder>();
         foreach (var buyOrder in entities)
         {
@@ -362,7 +362,7 @@ public class BuyOrderService : IBuyOrderService
             responseBuyOrders.Add(responseBuyOrder);
         }
 
-        // Return the response model
+       
         var result = new ResponseModel
         {
             Data = responseBuyOrders,

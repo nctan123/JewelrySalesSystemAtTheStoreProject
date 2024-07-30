@@ -24,6 +24,13 @@ public class MaterialPriceListService : IMaterialPriceListService
         RequestCreateMaterialPriceList requestMaterialPriceList)
     {
         var entity = _mapper.Map<MaterialPriceList>(requestMaterialPriceList);
+        if (requestMaterialPriceList.BuyPrice > requestMaterialPriceList.SellPrice)
+        {
+            return new ResponseModel
+            {
+                MessageError = "Material buy price cannot larger than sell price"
+            };
+        }
         await _unitOfWork.MaterialPriceListRepository.InsertAsync(entity);
         await _unitOfWork.SaveAsync();
         return new ResponseModel
@@ -41,7 +48,7 @@ public class MaterialPriceListService : IMaterialPriceListService
             {
                 var targetDateTime = effectiveDate.Value;
 
-                // Step 1: Find the largest EffectiveDate <= targetDateTime
+                //  EffectiveDate <= targetDateTime
                 var maxEffectiveDate = await _unitOfWork.MaterialPriceListRepository
                     .GetAsync(
                         filter: x => x.EffectiveDate <= targetDateTime,
@@ -53,7 +60,7 @@ public class MaterialPriceListService : IMaterialPriceListService
 
                 if (maxEffectiveDate == null)
                 {
-                    // No records found
+                    
                     return new ResponseModel
                     {
                         TotalPages = 0,
@@ -63,7 +70,7 @@ public class MaterialPriceListService : IMaterialPriceListService
                     };
                 }
 
-                // Step 2: Retrieve all records with the found EffectiveDate
+                
                 Expression<Func<MaterialPriceList, bool>> filter = x => x.EffectiveDate == maxEffectiveDate;
                 var entities = await _unitOfWork.MaterialPriceListRepository.GetAsync(
                     filter: filter,
@@ -75,7 +82,7 @@ public class MaterialPriceListService : IMaterialPriceListService
                 var totalCount = await _unitOfWork.MaterialPriceListRepository.CountAsync(filter);
                 var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-                // Map the results to the response model
+                
                 var response = _mapper.Map<List<ResponseMaterialPriceList>>(entities);
 
                 return new ResponseModel
@@ -88,7 +95,6 @@ public class MaterialPriceListService : IMaterialPriceListService
             }
             else
             {
-                // Handle the case where effectiveDate is null
                 var entities = await _unitOfWork.MaterialPriceListRepository.GetAsync(
                     orderBy: x => x.OrderBy(e => e.EffectiveDate),
                     pageIndex: page,

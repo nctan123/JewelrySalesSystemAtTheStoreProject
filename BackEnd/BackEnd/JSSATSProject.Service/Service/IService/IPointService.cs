@@ -14,5 +14,7 @@ public interface IPointService
     public Task<ResponseModel> DecreaseCustomerAvailablePointAsync(string customerPhoneNumber, int pointValue);
 
     public Task<ResponseModel> AddCustomerPoint(string customerPhoneNumber, decimal orderAmount);
+
+    public  Task<decimal> GetPointToCurrencyConversionRate(DateTime timeStamp);
     //Task DecreaseCustomerAvailablePointAsync(string customerPhone, int discountPoint);
 }
