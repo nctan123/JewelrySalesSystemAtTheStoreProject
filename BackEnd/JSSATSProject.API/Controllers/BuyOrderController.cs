@@ -3,14 +3,12 @@ using AutoMapper;
 using JSSATSProject.Repository.ConstantsContainer;
 using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models.BuyOrderModel;
-using JSSATSProject.Service.Models.OrderModel;
 using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class BuyOrderController : ControllerBase

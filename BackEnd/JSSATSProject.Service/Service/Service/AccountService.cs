@@ -33,11 +33,14 @@ public class AccountService : IAccountService
     {
         try
         {
-            // Define filter condition based on roleId
+           
             Expression<Func<Account, bool>> filter = a => !roleId.HasValue || a.RoleId == roleId.Value;
 
-            // Define sorting logic (always ascending by StaffName)
-            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q.OrderBy(e => e.Staff.Firstname);
+
+            Func<IQueryable<Account>, IOrderedQueryable<Account>> orderBy = q => q
+            .OrderBy(e => e.Staff.Status)
+            .ThenBy(e => e.Staff.Firstname);
+
 
             // Fetch data with filtering and sorting
             var entities = await _unitOfWork.AccountRepository.GetAsync(

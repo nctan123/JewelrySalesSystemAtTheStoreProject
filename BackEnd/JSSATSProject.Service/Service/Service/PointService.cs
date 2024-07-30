@@ -144,9 +144,4 @@ public class PointService : IPointService
             MessageError = ""
         };
     }
-    //public async Task<decimal> GetPointToCurrencyConversionRat(DateTime timeStamp)
-    //{
-    //    var pointToCurrencyRate = await _unitOfWork.CampaignPointRepository.GetPointRate(DateTime.Now);
-    //    return pointToCurrencyRate;
-    //}
 }

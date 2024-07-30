@@ -70,7 +70,7 @@ public class PaymentDetailService : IPaymentDetailService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
+           
             return new ResponseModel
             {
                 Data = null,

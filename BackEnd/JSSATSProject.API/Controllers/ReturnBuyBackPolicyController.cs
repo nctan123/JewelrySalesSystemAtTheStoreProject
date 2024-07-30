@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ReturnBuyBackPolicyController : ControllerBase
@@ -40,5 +40,13 @@ public class ReturnBuyBackPolicyController : ControllerBase
     {
         var response = await _returnBuyBackPolicyService.UpdateReturnBuyBackPolicyAsync(Id, requestReturnBuyBackPolicy);
         return Ok(response);
+    }
+
+    [HttpGet]
+    [Route("GetDisplayPolicy")]
+    public async Task<IActionResult> GetDisplayPolicyAsync()
+    {
+        var responseModel = await _returnBuyBackPolicyService.GetDisplayPolicy();
+        return Ok(responseModel);
     }
 }

@@ -4,12 +4,6 @@ using JSSATSProject.Repository.Entities;
 using JSSATSProject.Service.Models;
 using JSSATSProject.Service.Models.ProductMaterialModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace JSSATSProject.Service.Service.Service
 {
     public class ProductMaterialService : IProductMaterialService

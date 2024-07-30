@@ -19,6 +19,7 @@ public partial class DBContext : DbContext
     }
 
     public virtual DbSet<Account> Accounts { get; set; }
+    public virtual DbSet<ActiveJwt> ActiveJwts { get; set; }
     public virtual DbSet<BuyOrder> BuyOrders { get; set; }
 
     public virtual DbSet<BuyOrderDetail> BuyOrderDetails { get; set; }
@@ -127,6 +128,24 @@ public partial class DBContext : DbContext
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__Account__role_id__208CD6FA");
+        });
+        
+        modelBuilder.Entity<ActiveJwt>(entity =>
+        {
+            entity.HasKey(e => e.Username).HasName("PK__ActiveJW__F3DBC573988D0DC8");
+
+            entity.ToTable("ActiveJWT");
+
+            entity.Property(e => e.Username)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("username");
+            entity.Property(e => e.ExpiryDate)
+                .HasColumnType("datetime")
+                .HasColumnName("expiry_date");
+            entity.Property(e => e.Token)
+                .HasMaxLength(500)
+                .HasColumnName("token");
         });
 
         modelBuilder.Entity<BuyOrder>(entity =>

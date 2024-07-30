@@ -19,7 +19,7 @@ public interface IStaffService
 
     public Task<int?> CountAsync(Expression<Func<Staff, bool>> filter);
 
-    public Task<ResponseModel> GetStaffSymmaryAsync(int id, DateTime startDate, DateTime endDate);
+    public Task<ResponseModel> GetStaffSummaryAsync(int id, DateTime startDate, DateTime endDate);
 
     public Task<ResponseModel> GetSellOrdersByStaffIdAsync(int staffId, int pageIndex, int pageSize, DateTime startDate, DateTime endDate);
 

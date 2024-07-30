@@ -175,7 +175,7 @@ public class CustomerService : ICustomerService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
+            
             return new ResponseModel
             {
                 Data = null,
@@ -208,7 +208,7 @@ public class CustomerService : ICustomerService
     {
         try
         {
-            // Fetch the customer by phone number
+            
             var customerEntity = (await _unitOfWork.CustomerRepository.GetAsync(
                     c => c.Phone.Equals(phoneNumber),
                     includeProperties:
@@ -228,18 +228,18 @@ public class CustomerService : ICustomerService
                 };
             }
 
-            // Get the total count of sell orders
+            
             var totalCount = customerEntity.SellOrders.Count();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            // Paginate the sell orders
+            
             var paginatedOrders = customerEntity.SellOrders
                 .OrderByDescending(order => order.CreateDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            // Process each sell order asynchronously
+            
             var sellOrders = new List<ResponseSellOrder>();
             foreach (var order in paginatedOrders)
             {
@@ -265,7 +265,7 @@ public class CustomerService : ICustomerService
         }
         catch (Exception ex)
         {
-            // Log the exception (consider using a logging framework)
+        
             return new ResponseModel
             {
                 Data = null,
@@ -281,7 +281,7 @@ public class CustomerService : ICustomerService
     {
         try
         {
-            // Fetch the customer by phone number
+            
             var customer = await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
                 includeProperties:
@@ -300,19 +300,18 @@ public class CustomerService : ICustomerService
                 };
             }
 
-            // Get the total count of payments
+            
             var totalCount = customerEntity.Payments.Count();
             var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-            // Paginate the payments
+           
             var payments = customerEntity.Payments
-                .Where(p => p.SellorderId != null)
+                //.Where(p => p.SellorderId != null)
                 .OrderByDescending(payment => payment.CreateDate)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToList();
 
-            // Map payments to ResponsePayment DTOs
             var responsePayments = _mapper.Map<List<ResponsePayment>>(payments);
 
             return new ResponseModel
@@ -325,7 +324,7 @@ public class CustomerService : ICustomerService
         }
         catch (Exception ex)
         {
-            // Handle exceptions gracefully
+            
             return new ResponseModel
             {
                 Data = null,
@@ -338,7 +337,7 @@ public class CustomerService : ICustomerService
 
     public async Task<ResponseModel> GetBuyOrdersByPhoneAsync(string phoneNumber, int pageIndex, int pageSize)
     {
-        // Fetch the customer by phone number
+       
         var customerEntity = (await _unitOfWork.CustomerRepository.GetAsync(
                 c => c.Phone.Equals(phoneNumber),
                 includeProperties:
@@ -358,11 +357,10 @@ public class CustomerService : ICustomerService
             };
         }
 
-        // Get the total count of buy orders
+        
         var totalCount = customerEntity.BuyOrders.Count();
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-        // Paginate the buy orders
         var buyOrders = customerEntity.BuyOrders
             .OrderByDescending(order => order.CreateDate)
             .Skip((pageIndex - 1) * pageSize)

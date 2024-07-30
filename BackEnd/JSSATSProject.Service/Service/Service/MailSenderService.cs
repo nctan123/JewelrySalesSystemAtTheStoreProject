@@ -52,6 +52,7 @@ public class MailSenderService : IMailSenderService
         }
     }
 
+    // Html invoice
     private async Task<string> GetInvoiceHtmlContent(int sellOrderId, decimal totalPrice, decimal promotionDiscount,
         decimal pointDiscount)
     {

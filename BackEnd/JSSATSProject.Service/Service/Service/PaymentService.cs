@@ -38,7 +38,7 @@ public class PaymentService : IPaymentService
     public async Task<ResponseModel> GetAllAsync(int pageIndex, int pageSize)
     {
         // Define sorting order by creation date (always descending)
-        Func<IQueryable<Payment>, IOrderedQueryable<Payment>> orderBy = q => q.OrderBy(p => p.CreateDate);
+        Func<IQueryable<Payment>, IOrderedQueryable<Payment>> orderBy = q => q.OrderByDescending(p => p.CreateDate);
 
         // Fetch payment entities with sorting and pagination
         var entities = await _unitOfWork.PaymentRepository.GetAsync(

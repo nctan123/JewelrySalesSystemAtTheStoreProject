@@ -1,10 +1,11 @@
 ﻿using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers
 {
-    //[ApiController]
+    [Authorize]
+    [ApiController]
     [Route("api/[controller]")]
     public class FluorescenceController : ControllerBase
     {

@@ -149,6 +149,7 @@ public class GuaranteeService : IGuaranteeService
         return guaranteePolicyMonths?.Duration ?? 0;
     }
 
+    //create guarantee code
     public async Task<string> GenerateUniqueCodeAsync()
     {
         string newCode;

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JSSATSProject.API.Controllers;
 
-//[Authorize]
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ProductCategoryTypeController : ControllerBase

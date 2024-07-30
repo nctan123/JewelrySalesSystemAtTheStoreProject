@@ -57,7 +57,7 @@ public class StallService : IStallService
     {
         try
         {
-            // Fetch all stalls along with their products and associated sell order details
+            
             var stalls = await _unitOfWork.StallRepository.GetAsync(
                 includeProperties: "Products.SellOrderDetails.Promotion,Products.SellOrderDetails.Order",
                 filter: stall => stall.Products.Any(p => p.SellOrderDetails.Any(od =>
@@ -75,7 +75,7 @@ public class StallService : IStallService
                 pageSize: pageSize
             );
 
-            // Aggregate revenue per stall
+         
             var revenuePerStall = stalls
                 .Select(stall => new
                 {
@@ -91,12 +91,14 @@ public class StallService : IStallService
                             var unitPriceAfterDiscount = od.Promotion != null
                                 ? od.UnitPrice * (1 - od.Promotion.DiscountRate)
                                 : od.UnitPrice;
+                            if (od.Product.CategoryId == ProductConstants.WholesaleGoldCategory) return unitPriceAfterDiscount;
+
                             return od.Quantity * unitPriceAfterDiscount;
                         })
                 })
                 .ToList();
 
-            // Create response
+          
             var result = revenuePerStall.Select(item => new Dictionary<string, object>
         {
             { "StallName", item.StallName },

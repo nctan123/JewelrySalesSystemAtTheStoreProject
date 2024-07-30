@@ -83,6 +83,8 @@ public class SellOrderRepository : GenericRepository<SellOrder>
     public async Task<Dictionary<DateTime, decimal>> GetTotalAmountByDateRange(DateTime startDate, DateTime endDate)
     {
         var result = new Dictionary<DateTime, decimal>();
+        var pointToCurrencyConversionRate = await context.CampaignPoints.FirstAsync(p => p.EndDate >= DateTime.Now && p.StartDate <= DateTime.Now);
+       
 
         var ordersTotalByDate = await context.SellOrders
             .Where(c => c.CreateDate >= startDate
@@ -95,8 +97,8 @@ public class SellOrderRepository : GenericRepository<SellOrder>
                 Date = g.Key,
                 TotalSum = g.Sum(order =>
                     order.SpecialDiscountRequestId != null
-                        ? order.TotalAmount * (1 - order.SpecialDiscountRequest.DiscountRate) - order.DiscountPoint
-                        : order.TotalAmount - order.DiscountPoint
+                        ? order.TotalAmount * (1 - order.SpecialDiscountRequest.DiscountRate) - order.DiscountPoint * pointToCurrencyConversionRate.Rate!.Value
+                        : order.TotalAmount - order.DiscountPoint * pointToCurrencyConversionRate.Rate!.Value
                 )
             })
             .ToListAsync();

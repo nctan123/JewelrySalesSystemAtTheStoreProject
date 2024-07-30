@@ -80,7 +80,7 @@ public class SellOrderDetailService : ISellOrderDetailService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
+            
             return new ResponseModel
             {
                 Data = null,
@@ -124,6 +124,17 @@ public class SellOrderDetailService : ISellOrderDetailService
         Dictionary<string, int> productCodesAndQuantity, Dictionary<string, int?>? productCodesAndPromotionIds)
     {
         var result = new List<SellOrderDetail>();
+        foreach(var item in productCodesAndQuantity)
+        {
+            var productId = item.Key;
+            var quantity = item.Value;
+            var product = await _productService.GetEntityByCodeAsync(productId);
+            if (product.CategoryId == ProductConstants.WholesaleGoldCategory)
+            {
+                if ((product.ProductMaterials.First().Weight -= quantity) < 0) return new List<SellOrderDetail>();
+            }
+        }
+
         foreach (var item in productCodesAndQuantity)
         {
             var productId = item.Key;
@@ -193,10 +204,10 @@ public class SellOrderDetailService : ISellOrderDetailService
 
     public async Task<ResponseModel> GetProductSoldAsync(bool ascending, int pageIndex, int pageSize)
     {
-        // Define the filter for SellOrderDetail
+        
         Expression<Func<SellOrderDetail, bool>> filter = sod => sod.Status.Equals(SellOrderDetailsConstants.Delivered);
 
-        // Get sell order details with the specified filter and ordering
+        
         var sellOrderDetails = await _unitOfWork.SellOrderDetailRepository.GetAsync(
             filter,
             includeProperties: "Product, Guarantees, Promotion, Order",
@@ -207,7 +218,7 @@ public class SellOrderDetailService : ISellOrderDetailService
             pageSize: pageSize
         );
 
-        // Prepare the response products list
+        
         var responseProducts = new List<ResponseProductSold>();
         foreach (var sellOrderDetail in sellOrderDetails)
         {
@@ -228,11 +239,11 @@ public class SellOrderDetailService : ISellOrderDetailService
             responseProducts.Add(responseProduct);
         }
 
-        // Get the total count using the same filter
+       
         var totalCount = await _unitOfWork.SellOrderDetailRepository.CountAsync(filter);
         var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
 
-        // Prepare the response model
+     
         var responseModel = new ResponseModel
         {
             Data = responseProducts,
@@ -276,7 +287,7 @@ public class SellOrderDetailService : ISellOrderDetailService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
+       
             return new ResponseModel
             {
                 Data = null,

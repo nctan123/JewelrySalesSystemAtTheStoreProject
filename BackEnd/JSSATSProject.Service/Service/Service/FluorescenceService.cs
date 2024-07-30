@@ -1,14 +1,9 @@
 ﻿using AutoMapper;
 using JSSATSProject.Repository;
 using JSSATSProject.Service.Models;
-using JSSATSProject.Service.Models._4CModel;
 using JSSATSProject.Service.Models.FluorescenceModel;
 using JSSATSProject.Service.Service.IService;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace JSSATSProject.Service.Service.Service
 {

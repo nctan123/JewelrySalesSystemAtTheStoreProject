@@ -30,7 +30,7 @@ public class VnPayService : IVnPayService
         if (string.IsNullOrEmpty(urlCallBack))
             throw new ArgumentNullException("PaymentCallBack:ReturnUrl is not configured.");
 
-        // Add required request data
+        // add require request data
         pay.AddRequestData("vnp_Version", _configuration["Vnpay:Version"]);
         pay.AddRequestData("vnp_Command", _configuration["Vnpay:Command"]);
         pay.AddRequestData("vnp_TmnCode", _configuration["Vnpay:TmnCode"]);
@@ -41,7 +41,7 @@ public class VnPayService : IVnPayService
         pay.AddRequestData("vnp_Locale", _configuration["Vnpay:Locale"]);
         pay.AddRequestData("vnp_OrderInfo",
             $"{(model.OrderId)} {model.Amount} {model.PaymentId} {model.PaymentMethodId} {model.ReturnUrl}");
-        //Response from vnpay
+        //response from vnpay
         pay.AddRequestData("vnp_ReturnUrl", model.ReturnUrl);
         pay.AddRequestData("vnp_TxnRef", tick);
 

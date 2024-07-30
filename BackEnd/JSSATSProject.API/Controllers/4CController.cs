@@ -1,10 +1,13 @@
-﻿using JSSATSProject.Service.Service.IService;
-using JSSATSProject.Service.Service.Service;
+﻿using JSSATSProject.Repository.ConstantsContainer;
+using JSSATSProject.Service.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace JSSATSProject.API.Controllers
 {
-    //[ApiController]
+    [Authorize(Roles = RoleConstants.Manager)]
+    [ApiController]
     [Route("api/[controller]")]
     public class _4CController : ControllerBase
     {

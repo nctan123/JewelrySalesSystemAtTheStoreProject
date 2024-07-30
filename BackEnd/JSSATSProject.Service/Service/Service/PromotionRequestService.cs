@@ -78,7 +78,7 @@ public class PromotionRequestService : IPromotionRequestService
     {
         try
         {
-            // Fetch the promotion from the database
+           
             var existingPromotionRequest =
                 await _unitOfWork.PromotionRequestRepository.GetByIDAsync(promotionrequestId);
 
@@ -111,7 +111,7 @@ public class PromotionRequestService : IPromotionRequestService
         }
         catch (Exception ex)
         {
-            // Log the exception and return an appropriate error response
+            
             return new ResponseModel
             {
                 Data = null,

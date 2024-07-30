@@ -47,6 +47,8 @@ public class UnitOfWork
     private ShapeRepository _shape;
     private ProductDiamondRespository _productDiamond;
     private BuyOrderDetailRepository _buyOrderDetail;
+    private ActiveJWTRepository _activeJwt;
+    
     private bool disposed;
 
     private readonly AzureBlobStorage _blobService;
@@ -58,6 +60,17 @@ public class UnitOfWork
     }
     // bổ sung mới Procedures
     public DBContext Context => _context;
+    
+    public ActiveJWTRepository ActiveJWTRepository
+    {
+        get
+        {
+            if (_activeJwt == null)
+                _activeJwt = new ActiveJWTRepository(_context);
+            return _activeJwt;
+        }
+    }
+    
     public GuaranteePolicyRepository GuaranteePolicyRepository
     {
         get
