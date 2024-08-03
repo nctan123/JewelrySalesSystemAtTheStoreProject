@@ -148,7 +148,6 @@ public class Program
         app.UseCors();
 
         app.MapControllers();
-
         app.Run();
     }
 }
