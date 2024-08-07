@@ -16,15 +16,15 @@
  - Statistics dashboard.
 
 **Login credentials:
- - Seller: 
- seller_user1  
- seller_password1
- - Cashier: 
- cashier_user1  
- cashier_password1
- - Manager: 
- manager_user1  
- manager_password1
- - Admin: 
- admin_user 
- admin_password
+ - Seller:  
+     seller_user1  
+     seller_password1
+ - Cashier:  
+     cashier_user1  
+     cashier_password1
+ - Manager:  
+     manager_user1  
+     manager_password1
+ - Admin:  
+     admin_user 
+     admin_password
