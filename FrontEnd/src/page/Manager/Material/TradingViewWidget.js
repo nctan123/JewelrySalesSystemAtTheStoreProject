@@ -13,7 +13,7 @@ function TradingViewWidget() {
       {
         "symbols": [
           [
-            "OANDA:XAUUSD|1D"
+            "COSMOS:XAUUSD|1D"
           ]
         ],
         "chartOnly": false,

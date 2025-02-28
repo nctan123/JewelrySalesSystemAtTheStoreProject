@@ -76,7 +76,6 @@ function App() {
     <>
 
       <div className=''>
-
         <Routes>
           {/* home */}
           <Route path={path.HOME} element={<Login />} />
@@ -192,13 +191,7 @@ function App() {
         </Routes>
       </div>
 
-
-
-      <ToastContainer
-
-      />
-
-
+      <ToastContainer />
     </>
   );
 }

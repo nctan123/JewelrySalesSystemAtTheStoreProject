@@ -198,15 +198,42 @@ const CustomerMana = () => {
     const validateForm = () => {
         let tempErrors = {};
 
-        if (!selectedCustomer.firstname) tempErrors.firstname = 'First name is required';
-        if (!selectedCustomer.lastname) tempErrors.lastname = 'Last name is required';
-        if (!selectedCustomer.phone) tempErrors.phone = 'Phone is required';
-        else if (!validatePhoneNumber(selectedCustomer.phone)) tempErrors.phone = 'Invalid phone number';
-        if (!selectedCustomer.email) tempErrors.email = 'Email is required';
-        if (!selectedCustomer.gender) tempErrors.gender = 'Gender is required';
+        // Function to check if each word in a string is alphabetic with the first letter capitalized
+        const isEachWordAlphaWithFirstLetterCapitalized = (str) => {
+            return str.split(' ').every(word => /^[A-Z][a-z]*$/.test(word));
+        };
+
+        if (!selectedCustomer.firstname) {
+            tempErrors.firstname = 'First name is required';
+        } else if (!isEachWordAlphaWithFirstLetterCapitalized(selectedCustomer.firstname)) {
+            tempErrors.firstname = 'First name must be alphabetic with the first letter capitalized';
+        }
+
+        if (!selectedCustomer.lastname) {
+            tempErrors.lastname = 'Last name is required';
+        } else if (!isEachWordAlphaWithFirstLetterCapitalized(selectedCustomer.lastname)) {
+            tempErrors.lastname = 'Last name must be alphabetic with each word capitalized';
+        }
+
+        if (!selectedCustomer.phone) {
+            tempErrors.phone = 'Phone is required';
+        } else if (!validatePhoneNumber(selectedCustomer.phone)) {
+            tempErrors.phone = 'Invalid phone number';
+        }
+
+        if (!selectedCustomer.email) {
+            tempErrors.email = 'Email is required';
+        }
+
+        if (!selectedCustomer.gender) {
+            tempErrors.gender = 'Gender is required';
+        }
+
         setErrors(tempErrors);
         return Object.keys(tempErrors).length === 0;
     };
+
+
     const renderModal = () => {
         if (!isModalOpen || !selectedCustomer) return null;
         return (

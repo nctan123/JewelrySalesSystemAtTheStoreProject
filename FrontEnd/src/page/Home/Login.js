@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 // import backgroundVideo from '../../assets/swp_video4K.mp4';
+import backgroundVideo from '../../assets/video.mp4';
 
 export default function LoginToStore() {
   const [username, setUsername] = useState('');
@@ -59,6 +60,7 @@ export default function LoginToStore() {
     <div className="h-screen w-full flex items-center justify-center relative">
       <video
         className="absolute top-0 left-0 w-full h-full object-cover"
+        src={backgroundVideo}
         autoPlay
         loop
         muted
